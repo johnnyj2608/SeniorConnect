@@ -11,6 +11,9 @@
 		09500E442BC62B8C00CAE159 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09500E432BC62B8C00CAE159 /* ContentView.swift */; };
 		09500E462BC62B8E00CAE159 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09500E452BC62B8E00CAE159 /* Assets.xcassets */; };
 		09500E4A2BC62B8E00CAE159 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09500E492BC62B8E00CAE159 /* Preview Assets.xcassets */; };
+		099656DA2BC63933004725E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 099656D92BC63933004725E3 /* GoogleService-Info.plist */; };
+		099656DD2BC63B9C004725E3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 099656DC2BC63B9C004725E3 /* FirebaseAnalytics */; };
+		099656DF2BC63B9C004725E3 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 099656DE2BC63B9C004725E3 /* FirebaseAnalyticsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +23,7 @@
 		09500E452BC62B8E00CAE159 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09500E472BC62B8E00CAE159 /* SeniorConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeniorConnect.entitlements; sourceTree = "<group>"; };
 		09500E492BC62B8E00CAE159 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		099656D92BC63933004725E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +31,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099656DF2BC63B9C004725E3 /* FirebaseAnalyticsSwift in Frameworks */,
+				099656DD2BC63B9C004725E3 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +58,7 @@
 		09500E402BC62B8C00CAE159 /* SeniorConnect */ = {
 			isa = PBXGroup;
 			children = (
+				099656D92BC63933004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
 				09500E452BC62B8E00CAE159 /* Assets.xcassets */,
@@ -85,6 +92,10 @@
 			dependencies = (
 			);
 			name = SeniorConnect;
+			packageProductDependencies = (
+				099656DC2BC63B9C004725E3 /* FirebaseAnalytics */,
+				099656DE2BC63B9C004725E3 /* FirebaseAnalyticsSwift */,
+			);
 			productName = SeniorConnect;
 			productReference = 09500E3E2BC62B8C00CAE159 /* SeniorConnect.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +124,9 @@
 				Base,
 			);
 			mainGroup = 09500E352BC62B8C00CAE159;
+			packageReferences = (
+				099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 09500E3F2BC62B8C00CAE159 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -129,6 +143,7 @@
 			files = (
 				09500E4A2BC62B8E00CAE159 /* Preview Assets.xcassets in Resources */,
 				09500E462BC62B8E00CAE159 /* Assets.xcassets in Resources */,
+				099656DA2BC63933004725E3 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +383,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 10.24.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		099656DC2BC63B9C004725E3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		099656DE2BC63B9C004725E3 /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 09500E362BC62B8C00CAE159 /* Project object */;
 }
