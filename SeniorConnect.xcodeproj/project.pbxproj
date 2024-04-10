@@ -14,6 +14,12 @@
 		099656DA2BC63933004725E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 099656D92BC63933004725E3 /* GoogleService-Info.plist */; };
 		099656DD2BC63B9C004725E3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 099656DC2BC63B9C004725E3 /* FirebaseAnalytics */; };
 		099656DF2BC63B9C004725E3 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 099656DE2BC63B9C004725E3 /* FirebaseAnalyticsSwift */; };
+		099656E22BC63D67004725E3 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 099656E12BC63D67004725E3 /* FirebaseAuth */; };
+		099656E52BC63DBD004725E3 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656E42BC63DBD004725E3 /* AuthView.swift */; };
+		099656E72BC63E5F004725E3 /* EmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656E62BC63E5F004725E3 /* EmailView.swift */; };
+		099656E92BC63F63004725E3 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656E82BC63F63004725E3 /* AuthManager.swift */; };
+		099656EB2BC642B2004725E3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656EA2BC642B2004725E3 /* RootView.swift */; };
+		099656ED2BC64457004725E3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656EC2BC64457004725E3 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +30,11 @@
 		09500E472BC62B8E00CAE159 /* SeniorConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeniorConnect.entitlements; sourceTree = "<group>"; };
 		09500E492BC62B8E00CAE159 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		099656D92BC63933004725E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		099656E42BC63DBD004725E3 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		099656E62BC63E5F004725E3 /* EmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailView.swift; sourceTree = "<group>"; };
+		099656E82BC63F63004725E3 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		099656EA2BC642B2004725E3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		099656EC2BC64457004725E3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				099656DF2BC63B9C004725E3 /* FirebaseAnalyticsSwift in Frameworks */,
+				099656E22BC63D67004725E3 /* FirebaseAuth in Frameworks */,
 				099656DD2BC63B9C004725E3 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +56,7 @@
 			children = (
 				09500E402BC62B8C00CAE159 /* SeniorConnect */,
 				09500E3F2BC62B8C00CAE159 /* Products */,
+				099656E02BC63D67004725E3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +74,7 @@
 				099656D92BC63933004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
+				099656E32BC63D97004725E3 /* Authentication */,
 				09500E452BC62B8E00CAE159 /* Assets.xcassets */,
 				09500E472BC62B8E00CAE159 /* SeniorConnect.entitlements */,
 				09500E482BC62B8E00CAE159 /* Preview Content */,
@@ -74,6 +88,25 @@
 				09500E492BC62B8E00CAE159 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		099656E02BC63D67004725E3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		099656E32BC63D97004725E3 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				099656E82BC63F63004725E3 /* AuthManager.swift */,
+				099656EA2BC642B2004725E3 /* RootView.swift */,
+				099656E42BC63DBD004725E3 /* AuthView.swift */,
+				099656E62BC63E5F004725E3 /* EmailView.swift */,
+				099656EC2BC64457004725E3 /* SettingsView.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,6 +128,7 @@
 			packageProductDependencies = (
 				099656DC2BC63B9C004725E3 /* FirebaseAnalytics */,
 				099656DE2BC63B9C004725E3 /* FirebaseAnalyticsSwift */,
+				099656E12BC63D67004725E3 /* FirebaseAuth */,
 			);
 			productName = SeniorConnect;
 			productReference = 09500E3E2BC62B8C00CAE159 /* SeniorConnect.app */;
@@ -154,8 +188,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099656ED2BC64457004725E3 /* SettingsView.swift in Sources */,
 				09500E442BC62B8C00CAE159 /* ContentView.swift in Sources */,
+				099656E72BC63E5F004725E3 /* EmailView.swift in Sources */,
+				099656EB2BC642B2004725E3 /* RootView.swift in Sources */,
 				09500E422BC62B8C00CAE159 /* SeniorConnectApp.swift in Sources */,
+				099656E52BC63DBD004725E3 /* AuthView.swift in Sources */,
+				099656E92BC63F63004725E3 /* AuthManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +444,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsSwift;
+		};
+		099656E12BC63D67004725E3 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 099656DB2BC63B9C004725E3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
