@@ -62,4 +62,11 @@ final class AuthManager {
         }
         try await user.updatePassword(to: password)
     }
+    
+    func deleteUser() async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw URLError(.badServerResponse)
+        }
+        try await user.delete()
+    }
 }

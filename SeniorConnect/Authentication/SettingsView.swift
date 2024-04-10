@@ -23,6 +23,10 @@ final class SettingsViewModel: ObservableObject {
         
         try await AuthManager.shared.resetPassword(email: email)
     }
+    
+    func deleteAccount() async throws {
+        try await AuthManager.shared.deleteUser()
+    }
 }
 
 struct SettingsView: View {
@@ -40,6 +44,20 @@ struct SettingsView: View {
                         print(error)
                     }
                 }
+            }
+            
+            Button(role: .destructive) {
+                // Add confirmation for account deletion
+                Task {
+                    do {
+                        try await viewModel.deleteAccount()
+                        showSignInView = true
+                    } catch {
+                        print(error)
+                    }
+                }
+            } label: {
+                Text("Delete Account")
             }
             
             Button("Reset Password") {
