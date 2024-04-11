@@ -10,6 +10,14 @@ import SwiftUI
 @MainActor
 final class SettingsViewModel: ObservableObject {
     
+    @Published var authProviders: [AuthProviderOption] = []
+    
+    func loadAuthProviders() {
+        if let providers = try? AuthManager.shared.getProvider() {
+            authProviders = providers
+        }
+    }
+    
     func signOut() throws {
         try AuthManager.shared.signOut()
     }
@@ -45,7 +53,20 @@ struct SettingsView: View {
                     }
                 }
             }
-            
+            if viewModel.authProviders.contains(.email) {
+                emailSection
+            }
+        }
+        .onAppear {
+            viewModel.loadAuthProviders()
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+extension SettingsView {
+    private var emailSection: some View {
+        Section {
             Button(role: .destructive) {
                 // Add confirmation for account deletion
                 Task {
@@ -81,7 +102,8 @@ struct SettingsView: View {
                     }
                 }
             }
+        } header: {
+            Text("Email functions")
         }
-        .navigationTitle("Settings")
     }
 }
