@@ -53,20 +53,7 @@ struct SettingsView: View {
                     }
                 }
             }
-            if viewModel.authProviders.contains(.email) {
-                emailSection
-            }
-        }
-        .onAppear {
-            viewModel.loadAuthProviders()
-        }
-        .navigationTitle("Settings")
-    }
-}
-
-extension SettingsView {
-    private var emailSection: some View {
-        Section {
+            
             Button(role: .destructive) {
                 // Add confirmation for account deletion
                 Task {
@@ -81,6 +68,20 @@ extension SettingsView {
                 Text("Delete Account")
             }
             
+            if viewModel.authProviders.contains(.email) {
+                emailSection
+            }
+        }
+        .onAppear {
+            viewModel.loadAuthProviders()
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+extension SettingsView {
+    private var emailSection: some View {
+        Section {
             Button("Reset Password") {
                 Task {
                     do {
