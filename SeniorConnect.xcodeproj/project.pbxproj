@@ -24,6 +24,7 @@
 		099656F52BC764F8004725E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 099656F42BC764F8004725E3 /* GoogleService-Info.plist */; };
 		099656F82BC767AB004725E3 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656F72BC767AB004725E3 /* Utilities.swift */; };
 		099656FA2BC76D8A004725E3 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */; };
+		099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,8 @@
 		099656F42BC764F8004725E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		099656F72BC767AB004725E3 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
+		099656FB2BC895A2004725E3 /* SeniorConnectRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeniorConnectRelease.entitlements; sourceTree = "<group>"; };
+		099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +83,7 @@
 		09500E402BC62B8C00CAE159 /* SeniorConnect */ = {
 			isa = PBXGroup;
 			children = (
+				099656FB2BC895A2004725E3 /* SeniorConnectRelease.entitlements */,
 				099656F32BC7647E004725E3 /* Info.plist */,
 				099656F42BC764F8004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
@@ -117,6 +121,7 @@
 				099656E62BC63E5F004725E3 /* EmailView.swift */,
 				099656EC2BC64457004725E3 /* SettingsView.swift */,
 				099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */,
+				099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -211,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */,
 				099656FA2BC76D8A004725E3 /* SignInGoogleHelper.swift in Sources */,
 				099656ED2BC64457004725E3 /* SettingsView.swift in Sources */,
 				09500E442BC62B8C00CAE159 /* ContentView.swift in Sources */,
@@ -387,7 +393,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = SeniorConnect/SeniorConnect.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SeniorConnect/SeniorConnectRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Johnny Jiang (8QU55Y2Y7Q)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;

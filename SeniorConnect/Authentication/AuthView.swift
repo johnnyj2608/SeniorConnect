@@ -8,9 +8,13 @@
 import SwiftUI
 import GoogleSignIn
 import GoogleSignInSwift
+import AuthenticationServices
 
 @MainActor
-final class AuthViewModel: ObservableObject {
+final class AuthViewModel: NSObject, ObservableObject {
+    
+    private var currentNonce: String?
+    
     func signInGoogle() async throws {
         let helper = SignInGoogleHelper()
         let tokens = try await helper.signIn()
@@ -22,6 +26,7 @@ struct AuthView: View {
     
     @StateObject private var viewModel = AuthViewModel()
     @Binding var showSignInView: Bool
+    @State var currentNonce = ""
     
     var body: some View {
         VStack {
@@ -31,7 +36,7 @@ struct AuthView: View {
                 Text("Sign in with email")
                     .font(.headline)
                     .foregroundColor(.white)
-                    .frame(height: 55)
+                    .frame(height: 40)
                     .frame(maxWidth: .infinity)
                     .background(Color.blue)
                     .cornerRadius(10)
@@ -46,6 +51,21 @@ struct AuthView: View {
                     }
                 }
             }
+            
+            SignInWithAppleButton { request in
+                let nonce = randomNonceString()
+                currentNonce = nonce
+                request.requestedScopes = [.email, .fullName]
+                request.nonce = sha256(nonce)
+            } onCompletion: { result in
+                Task {
+                    await handleAppleSignIn(with: result, nonce: currentNonce)
+                    showSignInView = false
+                }
+            }
+            .frame(height: 40)
+            .cornerRadius(8)
+            
             Spacer()
         }
         .padding()
