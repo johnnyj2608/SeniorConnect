@@ -118,8 +118,8 @@
 				099656E82BC63F63004725E3 /* AuthManager.swift */,
 				099656EA2BC642B2004725E3 /* RootView.swift */,
 				099656E42BC63DBD004725E3 /* AuthView.swift */,
-				099656E62BC63E5F004725E3 /* EmailView.swift */,
 				099656EC2BC64457004725E3 /* SettingsView.swift */,
+				099656E62BC63E5F004725E3 /* EmailView.swift */,
 				099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */,
 				099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */,
 			);

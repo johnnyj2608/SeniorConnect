@@ -11,9 +11,7 @@ import GoogleSignInSwift
 import AuthenticationServices
 
 @MainActor
-final class AuthViewModel: NSObject, ObservableObject {
-    
-    private var currentNonce: String?
+final class AuthViewModel: ObservableObject {
     
     func signInGoogle() async throws {
         let helper = SignInGoogleHelper()
