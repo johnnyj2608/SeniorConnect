@@ -21,10 +21,10 @@
 		099656ED2BC64457004725E3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656EC2BC64457004725E3 /* SettingsView.swift */; };
 		099656F02BC7643F004725E3 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 099656EF2BC7643F004725E3 /* GoogleSignIn */; };
 		099656F22BC7643F004725E3 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 099656F12BC7643F004725E3 /* GoogleSignInSwift */; };
-		099656F52BC764F8004725E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 099656F42BC764F8004725E3 /* GoogleService-Info.plist */; };
 		099656F82BC767AB004725E3 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656F72BC767AB004725E3 /* Utilities.swift */; };
 		099656FA2BC76D8A004725E3 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */; };
 		099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */; };
+		099656FF2BC8BF74004725E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 099656FE2BC8BF73004725E3 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,11 +40,11 @@
 		099656EA2BC642B2004725E3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		099656EC2BC64457004725E3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		099656F32BC7647E004725E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		099656F42BC764F8004725E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		099656F72BC767AB004725E3 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		099656F92BC76D8A004725E3 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
 		099656FB2BC895A2004725E3 /* SeniorConnectRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeniorConnectRelease.entitlements; sourceTree = "<group>"; };
 		099656FC2BC8B748004725E3 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
+		099656FE2BC8BF73004725E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +85,7 @@
 			children = (
 				099656FB2BC895A2004725E3 /* SeniorConnectRelease.entitlements */,
 				099656F32BC7647E004725E3 /* Info.plist */,
-				099656F42BC764F8004725E3 /* GoogleService-Info.plist */,
+				099656FE2BC8BF73004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
 				099656F62BC76793004725E3 /* Utilities */,
@@ -204,7 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09500E4A2BC62B8E00CAE159 /* Preview Assets.xcassets in Resources */,
-				099656F52BC764F8004725E3 /* GoogleService-Info.plist in Resources */,
+				099656FF2BC8BF74004725E3 /* GoogleService-Info.plist in Resources */,
 				09500E462BC62B8E00CAE159 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
