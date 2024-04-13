@@ -31,7 +31,18 @@ struct EmailView: View {
                     } catch {
                         print(error)
                     }
-                    
+                }
+            } label: {
+                Text("Create New Account")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+            Button {
+                Task {
                     do {
                         try await viewModel.signIn()
                         showSignInView = false
@@ -41,7 +52,7 @@ struct EmailView: View {
                     }
                 }
             } label: {
-                Text("Create New Account")
+                Text("Sign In Account")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(height: 55)
