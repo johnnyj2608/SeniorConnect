@@ -10,16 +10,6 @@ import GoogleSignIn
 import GoogleSignInSwift
 import AuthenticationServices
 
-@MainActor
-final class AuthViewModel: ObservableObject {
-    
-    func signInGoogle() async throws {
-        let helper = SignInGoogleHelper()
-        let tokens = try await helper.signIn()
-        try await AuthManager.shared.signInGoogle(tokens: tokens)
-    }
-}
-
 struct AuthView: View {
     
     @StateObject private var viewModel = AuthViewModel()
@@ -57,7 +47,7 @@ struct AuthView: View {
                 request.nonce = sha256(nonce)
             } onCompletion: { result in
                 Task {
-                    await handleAppleSignIn(with: result, nonce: currentNonce)
+                    await viewModel.SignInApple(with: result, nonce: currentNonce)
                     showSignInView = false
                 }
             }
