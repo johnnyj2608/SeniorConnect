@@ -63,8 +63,6 @@ struct DBUser: Codable {
     }
 }
 
-
-
 final class UserManager {
     
     static let shared = UserManager()
