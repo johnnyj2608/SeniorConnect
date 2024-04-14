@@ -15,8 +15,10 @@ final class AuthViewModel: ObservableObject {
         let helper = SignInGoogleHelper()
         let tokens = try await helper.signIn()
         let authDataResult = try await AuthManager.shared.signInGoogle(tokens: tokens)
-        try await UserManager.shared.createUser(auth: authDataResult)
-    }
+        
+        let user = DBUser(auth: authDataResult)
+        try await UserManager.shared.createUser(user: user)
+ }
     
     func SignInApple(with result: Result<ASAuthorization, Error>, nonce: String) async {
         switch result {
@@ -30,7 +32,8 @@ final class AuthViewModel: ObservableObject {
                 
                 do {
                     let authDataResult = try await AuthManager.shared.signInApple(idTokenString: idTokenString, nonce: nonce, fullName: credential.fullName)
-                    try await UserManager.shared.createUser(auth: authDataResult)
+                    let user = DBUser(auth: authDataResult)
+                    try await UserManager.shared.createUser(user: user)
                 } catch {
                     print(error)
                 }
