@@ -9,18 +9,28 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+struct Activity: Codable {
+    let id: String
+    let name: String
+    let support: Bool
+}
+
 struct DBUser: Codable {
     
     let userId: String
     let email: String?
     let photoUrl: String?
     let dateCreated: Date?
+    let preferenceLanguage: [String]?
+    let favoriteActivity: Activity?
     
     init(auth: AuthDataResultModel) {
         self.userId = auth.uid
         self.email = auth.email
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
+        self.preferenceLanguage = nil
+        self.favoriteActivity = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -28,6 +38,8 @@ struct DBUser: Codable {
         case email = "email"
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
+        case languagePreference = "language_preference"
+        case favoriteActivity = "favorite_activity"
     }
     
     init(from decoder: Decoder) throws {
@@ -36,6 +48,8 @@ struct DBUser: Codable {
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
+        self.preferenceLanguage = try container.decodeIfPresent([String].self, forKey: .languagePreference)
+        self.favoriteActivity = try container.decodeIfPresent(Activity.self, forKey: .favoriteActivity)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -44,6 +58,8 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.email, forKey: .email)
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(self.preferenceLanguage, forKey: .languagePreference)
+        try container.encodeIfPresent(self.favoriteActivity, forKey: .favoriteActivity)
     }
 }
 
@@ -62,6 +78,18 @@ final class UserManager {
         userCollection.document(userId)
     }
     
+    private let encoder: Firestore.Encoder = {
+        let encoder = Firestore.Encoder()
+//        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
+    }()
+
+    private let decoder: Firestore.Decoder = {
+        let decoder = Firestore.Decoder()
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+    
     func createUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(
             from: user,
@@ -72,20 +100,43 @@ final class UserManager {
         try await userDocument(userId: userId).getDocument(
             as: DBUser.self)
     }
-   
+    
+    func addLanguagePreference(userId: String, preference: String) async throws {
+        let data: [String:Any] = [
+            DBUser.CodingKeys.languagePreference.rawValue : FieldValue.arrayUnion([preference])
+        ]
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func removeLanguagePreference(userId: String, preference: String) async throws {
+        let data: [String:Any] = [
+            DBUser.CodingKeys.languagePreference.rawValue : FieldValue.arrayRemove([preference])
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func addFavoriteActivity(userId: String, activity: Activity) async throws {
+        guard let data = try? encoder.encode(activity) else {
+            throw URLError(.badURL)
+        }
+        
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.favoriteActivity.rawValue : data
+        ]
+        
+        try await userDocument(userId: userId).updateData(dict)
+    }
+    
+    func removeFavoriteActivity(userId: String) async throws {
+        let data: [String:Any?] = [
+            DBUser.CodingKeys.favoriteActivity.rawValue : nil
+        ]
+        
+        try await userDocument(userId: userId).updateData(data as [AnyHashable : Any])
+    }
+    
     /*
-     
-    private let encoder: Firestore.Encoder = {
-        let encoder = Firestore.Encoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        return encoder
-    }()
-
-    private let decoder: Firestore.Decoder = {
-        let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return decoder
-    }()
      
     func createUser(auth: AuthDataResultModel) async throws {
         var userData: [String:Any] = [

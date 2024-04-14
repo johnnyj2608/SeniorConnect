@@ -32,6 +32,6 @@ final class EmailViewModel: ObservableObject {
             return
         }
         
-        let authDataResult = try await AuthManager.shared.signIn(email: email, password: password)
+        try await AuthManager.shared.signIn(email: email, password: password)
     }
 }
