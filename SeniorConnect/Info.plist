@@ -17,5 +17,10 @@
 	</array>
 	<key>GIDClientID</key>
 	<string>818788788783-rgdagr807hi4esvadcc7mac0iaciuaq9.apps.googleusercontent.com</string>
+    <key>UIApplicationSceneManifest</key>
+        <dict>
+            <key>UISceneConfigurations</key>
+            <dict/>
+        </dict>
 </dict>
 </plist>
