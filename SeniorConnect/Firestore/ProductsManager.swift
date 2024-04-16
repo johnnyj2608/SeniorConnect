@@ -9,6 +9,14 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+struct LastDocumentSnapshot {
+    var lastDocument: DocumentSnapshot?
+
+    init(_ lastDocument: DocumentSnapshot) {
+        self.lastDocument = lastDocument
+    }
+}
+
 final class ProductsManager {
     
     static let shared = ProductsManager()

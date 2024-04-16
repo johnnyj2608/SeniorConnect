@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseFirestore
 
 @MainActor
 final class ProductsViewModel: ObservableObject {
@@ -14,7 +13,7 @@ final class ProductsViewModel: ObservableObject {
     @Published private(set) var products: [Product] = []
     @Published var selectedFilter: SortOption? = nil
     @Published var selectedCategory: CategoryOption? = nil
-    private var lastDocument: DocumentSnapshot? = nil
+    private var lastDocument: LastDocumentSnapshot? = nil
     
     enum SortOption: String, CaseIterable {
         case noFilter
@@ -60,11 +59,11 @@ final class ProductsViewModel: ObservableObject {
     
     func getProducts() {
         Task {
-            let (newProducts, lastDocument) = try await ProductsManager.shared.getAllProducts(priceDescending: selectedFilter?.priceDescending, forCategory: selectedCategory?.categoryKey, count: 10, lastDocument: lastDocument)
+            let (newProducts, lastDocument) = try await ProductsManager.shared.getAllProducts(priceDescending: selectedFilter?.priceDescending, forCategory: selectedCategory?.categoryKey, count: 10, lastDocument: lastDocument?.lastDocument)
             
             self.products.append(contentsOf: newProducts)
             if let lastDocument {
-                self.lastDocument = lastDocument
+                self.lastDocument = LastDocumentSnapshot(lastDocument)
             }
         }
     }
