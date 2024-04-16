@@ -60,6 +60,7 @@ final class ProductsManager {
         }
         
         return try await query
+            .limit(to: count)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsSnapshot(as: Product.self)
     }
