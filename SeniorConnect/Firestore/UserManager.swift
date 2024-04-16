@@ -70,10 +70,18 @@ final class UserManager {
         
     }
     
-    private let userCollection = Firestore.firestore().collection("users")
+    private let userCollection: CollectionReference = Firestore.firestore().collection("users")
     
     private func userDocument(userId: String) -> DocumentReference {
         userCollection.document(userId)
+    }
+    
+    private func userFavoriteProductsCollection(userId: String) -> CollectionReference {
+        userDocument(userId: userId).collection("favorite_products")
+    }
+    
+    private func userFavoriteProductsDocument(userId: String, favoriteProductId: String) -> DocumentReference {
+        userFavoriteProductsCollection(userId: userId).document(favoriteProductId)
     }
     
     private let encoder: Firestore.Encoder = {
@@ -134,42 +142,50 @@ final class UserManager {
         try await userDocument(userId: userId).updateData(data as [AnyHashable : Any])
     }
     
-    /*
-     
-    func createUser(auth: AuthDataResultModel) async throws {
-        var userData: [String:Any] = [
-            "user_id" : auth.uid,
-            "date_created" : Timestamp(),
+    func addFavoriteProduct(userId: String, productId: Int) async throws {
+        let document = userFavoriteProductsCollection(userId: userId).document()
+        let documentId = document.documentID
+        
+        let data: [String:Any] = [
+            UserFavoriteProduct.CodingKeys.id.rawValue : documentId,
+            UserFavoriteProduct.CodingKeys.productId.rawValue : productId,
+            UserFavoriteProduct.CodingKeys.dateCreated.rawValue : Timestamp()
         ]
-
-        if let email = auth.email {
-            userData["email"] = email
-        }
-        if let photoUrl = auth.photoUrl {
-            userData["photo_url"] = photoUrl
-        }
-
-        try await userDocument(userId: auth.uid).setData(userData, merge: false)
+        
+        try await document.setData(data, merge: false)
     }
-
-    func getUser(userId: String) async throws -> DBUser {
-        let snapshot = try await userDocument(userId: userId).getDocument()
-
-        guard let data = snapshot.data(), let userId = data["user_id"] as? String else {
-            throw URLError(.badServerResponse)
-        }
-
-        let email = data["email"] as? String
-        let photoUrl = data["photo_url"] as? String
-        let dateCreated = data["date_created"] as? Date
-
-        return DBUser(
-            userId: userId,
-            email: email,
-            photoUrl: photoUrl,
-            dateCreated: dateCreated)
-
-    }
-     */
     
+    func removeFavoriteProduct(userId: String, favoriteProductId: String) async throws {
+        try await userFavoriteProductsDocument(userId: userId, favoriteProductId: favoriteProductId).delete()
+    }
+    
+    func getAllFavoriteProducts(userId: String) async throws -> [UserFavoriteProduct] {
+        try await userFavoriteProductsCollection(userId: userId).getDocuments(as: UserFavoriteProduct.self)
+    }
+}
+
+struct UserFavoriteProduct: Codable {
+    let id: String
+    let productId: Int
+    let dateCreated: Date
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case productId = "product_id"
+        case dateCreated = "date_created"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.productId = try container.decode(Int.self, forKey: .productId)
+        self.dateCreated = try container.decode(Date.self, forKey: .dateCreated)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.productId, forKey: .productId)
+        try container.encode(self.dateCreated, forKey: .dateCreated)
+    }
 }

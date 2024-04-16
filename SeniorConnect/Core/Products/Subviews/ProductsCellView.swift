@@ -16,8 +16,8 @@ struct ProductsCellView: View {
             AsyncImage(url: URL(string: product.thumbnail ?? "")) { image in
                 image
                     .resizable()
-                    .scaledToFit()
-                    
+                    .scaledToFill()
+                    .frame(width: 75, height: 75)
                     .cornerRadius(10)
             } placeholder: {
                 ProgressView()
@@ -25,7 +25,7 @@ struct ProductsCellView: View {
             .frame(width: 75, height: 75)
             .shadow(color: Color.black.opacity(0.3), radius: 4, x: 0, y: 2)
             
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(product.title ?? "N/A")
                     .font(.headline)
                     .foregroundColor(.primary)
