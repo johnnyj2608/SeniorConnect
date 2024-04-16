@@ -57,6 +57,12 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
+    func getProductsCount() {
+        Task {
+            let _ = try await ProductsManager.shared.getAllProductsCount()
+        }
+    }
+    
 }
 
 struct ProfileView: View {
