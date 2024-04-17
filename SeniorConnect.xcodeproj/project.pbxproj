@@ -39,6 +39,11 @@
 		099657222BCF27B3004725E3 /* TabbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657212BCF27B3004725E3 /* TabbarView.swift */; };
 		099657252BCF2937004725E3 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657242BCF2937004725E3 /* FavoritesView.swift */; };
 		099657272BCF37C5004725E3 /* ProductCellViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657262BCF37C5004725E3 /* ProductCellViewBuilder.swift */; };
+		0996572A2BCF71C3004725E3 /* Query+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657292BCF71C3004725E3 /* Query+Ext.swift */; };
+		0996572E2BCF7243004725E3 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996572D2BCF7243004725E3 /* OnFirstAppear.swift */; };
+		099657302BCF7289004725E3 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996572F2BCF7289004725E3 /* FavoritesViewModel.swift */; };
+		099657322BCF72F3004725E3 /* ProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657312BCF72F3004725E3 /* ProductsViewModel.swift */; };
+		099657342BCF7325004725E3 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657332BCF7325004725E3 /* ProfileViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +76,11 @@
 		099657212BCF27B3004725E3 /* TabbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarView.swift; sourceTree = "<group>"; };
 		099657242BCF2937004725E3 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		099657262BCF37C5004725E3 /* ProductCellViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellViewBuilder.swift; sourceTree = "<group>"; };
+		099657292BCF71C3004725E3 /* Query+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Query+Ext.swift"; sourceTree = "<group>"; };
+		0996572D2BCF7243004725E3 /* OnFirstAppear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppear.swift; sourceTree = "<group>"; };
+		0996572F2BCF7289004725E3 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
+		099657312BCF72F3004725E3 /* ProductsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewModel.swift; sourceTree = "<group>"; };
+		099657332BCF7325004725E3 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +127,9 @@
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
 				099656E32BC63D97004725E3 /* Authentication */,
+				0996572B2BCF721A004725E3 /* Components */,
 				099657042BCA3003004725E3 /* Core */,
+				099657282BCF71A5004725E3 /* Extensions */,
 				099657112BCA3432004725E3 /* Firestore */,
 				099657202BCF278C004725E3 /* Tabbar */,
 				099656F62BC76793004725E3 /* Utilities */,
@@ -187,9 +199,9 @@
 		099657082BCA30A7004725E3 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				0996570B2BCA30EF004725E3 /* Subviews */,
 				099656E42BC63DBD004725E3 /* AuthView.swift */,
 				099657092BCA30B5004725E3 /* AuthViewModel.swift */,
+				0996570B2BCA30EF004725E3 /* Subviews */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -207,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				0996570F2BCA318E004725E3 /* ProfileView.swift */,
+				099657332BCF7325004725E3 /* ProfileViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -223,8 +236,9 @@
 		099657182BCC7DFF004725E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0996571D2BCC8621004725E3 /* Subviews */,
 				099657192BCC7E26004725E3 /* ProductsView.swift */,
+				099657312BCF72F3004725E3 /* ProductsViewModel.swift */,
+				0996571D2BCC8621004725E3 /* Subviews */,
 			);
 			path = Products;
 			sourceTree = "<group>";
@@ -250,8 +264,33 @@
 			isa = PBXGroup;
 			children = (
 				099657242BCF2937004725E3 /* FavoritesView.swift */,
+				0996572F2BCF7289004725E3 /* FavoritesViewModel.swift */,
 			);
 			path = Favorites;
+			sourceTree = "<group>";
+		};
+		099657282BCF71A5004725E3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				099657292BCF71C3004725E3 /* Query+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		0996572B2BCF721A004725E3 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0996572C2BCF722C004725E3 /* ViewModifiers */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0996572C2BCF722C004725E3 /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				0996572D2BCF7243004725E3 /* OnFirstAppear.swift */,
+			);
+			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,16 +380,21 @@
 				099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */,
 				0996570D2BCA310A004725E3 /* EmailViewModel.swift in Sources */,
 				099656FA2BC76D8A004725E3 /* SignInGoogleHelper.swift in Sources */,
+				099657342BCF7325004725E3 /* ProfileViewModel.swift in Sources */,
 				099657132BCA3476004725E3 /* UserManager.swift in Sources */,
 				099656ED2BC64457004725E3 /* SettingsView.swift in Sources */,
+				099657302BCF7289004725E3 /* FavoritesViewModel.swift in Sources */,
+				0996572A2BCF71C3004725E3 /* Query+Ext.swift in Sources */,
 				09500E442BC62B8C00CAE159 /* ContentView.swift in Sources */,
 				099656E72BC63E5F004725E3 /* EmailView.swift in Sources */,
 				0996571C2BCC7FE3004725E3 /* ProductsManager.swift in Sources */,
 				099656EB2BC642B2004725E3 /* RootView.swift in Sources */,
 				09500E422BC62B8C00CAE159 /* SeniorConnectApp.swift in Sources */,
 				099656E52BC63DBD004725E3 /* AuthView.swift in Sources */,
+				0996572E2BCF7243004725E3 /* OnFirstAppear.swift in Sources */,
 				099657252BCF2937004725E3 /* FavoritesView.swift in Sources */,
 				099657172BCC7DB2004725E3 /* ProductsDatabase.swift in Sources */,
+				099657322BCF72F3004725E3 /* ProductsViewModel.swift in Sources */,
 				0996570A2BCA30B5004725E3 /* AuthViewModel.swift in Sources */,
 				0996571A2BCC7E26004725E3 /* ProductsView.swift in Sources */,
 				099657072BCA3065004725E3 /* SettingsViewModel.swift in Sources */,
