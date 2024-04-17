@@ -96,6 +96,8 @@ final class UserManager {
         return decoder
     }()
     
+    private var userFavoriteProductsListener: ListenerRegistration? = nil
+    
     func createUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(
             from: user,
@@ -162,7 +164,21 @@ final class UserManager {
     func getAllFavoriteProducts(userId: String) async throws -> [UserFavoriteProduct] {
         try await userFavoriteProductsCollection(userId: userId).getDocuments(as: UserFavoriteProduct.self)
     }
+    
+    func removeListenerForAllUserFavoriteProducts() {
+        self.userFavoriteProductsListener?.remove()
+    }
+    
+    func addListenerForAllUserFavoriteProducts(userId: String) -> AnyPublisher<[UserFavoriteProduct], Error> {
+        let (publisher, listener) = userFavoriteProductsCollection(userId: userId)
+            .addSnapshotListener(as: UserFavoriteProduct.self)
+        
+        self.userFavoriteProductsListener = listener
+        return publisher
+    }
 }
+
+import Combine
 
 struct UserFavoriteProduct: Codable {
     let id: String
