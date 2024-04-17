@@ -14,9 +14,7 @@ struct ProductCellViewBuilder: View {
     
     var body: some View {
         ZStack {
-            if let product {
-                ProductsCellView(product: product)
-            }
+            ProductsCellView(product: product)
         }
         .task {
             self.product = try? await ProductsManager.shared.getProduct(productId: productId)
