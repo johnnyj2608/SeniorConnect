@@ -44,6 +44,7 @@
 		099657302BCF7289004725E3 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996572F2BCF7289004725E3 /* FavoritesViewModel.swift */; };
 		099657322BCF72F3004725E3 /* ProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657312BCF72F3004725E3 /* ProductsViewModel.swift */; };
 		099657342BCF7325004725E3 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657332BCF7325004725E3 /* ProfileViewModel.swift */; };
+		099657372BD21A9A004725E3 /* SecurityRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657362BD21A9A004725E3 /* SecurityRules.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		0996572F2BCF7289004725E3 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
 		099657312BCF72F3004725E3 /* ProductsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewModel.swift; sourceTree = "<group>"; };
 		099657332BCF7325004725E3 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		099657362BD21A9A004725E3 /* SecurityRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityRules.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				099656FE2BC8BF73004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
+				099657352BD21A8D004725E3 /* SecurityRules */,
 				099656E32BC63D97004725E3 /* Authentication */,
 				0996572B2BCF721A004725E3 /* Components */,
 				099657042BCA3003004725E3 /* Core */,
@@ -293,6 +296,14 @@
 			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
+		099657352BD21A8D004725E3 /* SecurityRules */ = {
+			isa = PBXGroup;
+			children = (
+				099657362BD21A9A004725E3 /* SecurityRules.swift */,
+			);
+			path = SecurityRules;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -378,6 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */,
+				099657372BD21A9A004725E3 /* SecurityRules.swift in Sources */,
 				0996570D2BCA310A004725E3 /* EmailViewModel.swift in Sources */,
 				099656FA2BC76D8A004725E3 /* SignInGoogleHelper.swift in Sources */,
 				099657342BCF7325004725E3 /* ProfileViewModel.swift in Sources */,
