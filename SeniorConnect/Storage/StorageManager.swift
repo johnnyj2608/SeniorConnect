@@ -68,6 +68,5 @@ final class StorageManager {
     
     func deleteImage(url: String) async throws {
         try await Storage.storage().reference(forURL: url).delete()
-        //try await getPathForImage(path: path).delete()
     }
 }
