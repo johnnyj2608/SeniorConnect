@@ -54,6 +54,9 @@
 		099657492BD36795004725E3 /* PerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657482BD36795004725E3 /* PerformanceView.swift */; };
 		0996574B2BD367CE004725E3 /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996574A2BD367CE004725E3 /* PerformanceManager.swift */; };
 		0996574D2BD36946004725E3 /* PerformanceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996574C2BD36946004725E3 /* PerformanceHelper.swift */; };
+		0996574F2BD3731D004725E3 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0996574E2BD3731D004725E3 /* AdSupport.framework */; };
+		099657522BD37339004725E3 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657512BD37339004725E3 /* AnalyticsView.swift */; };
+		099657542BD37366004725E3 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657532BD37366004725E3 /* AnalyticsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +101,9 @@
 		099657482BD36795004725E3 /* PerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceView.swift; sourceTree = "<group>"; };
 		0996574A2BD367CE004725E3 /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
 		0996574C2BD36946004725E3 /* PerformanceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceHelper.swift; sourceTree = "<group>"; };
+		0996574E2BD3731D004725E3 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.2.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
+		099657512BD37339004725E3 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		099657532BD37366004725E3 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,7 @@
 				099657152BCA36C2004725E3 /* FirebaseFirestoreSwift in Frameworks */,
 				099656E22BC63D67004725E3 /* FirebaseAuth in Frameworks */,
 				099657392BD30F59004725E3 /* FirebaseStorage in Frameworks */,
+				0996574F2BD3731D004725E3 /* AdSupport.framework in Frameworks */,
 				0996573E2BD34CFD004725E3 /* FirebaseCrashlytics in Frameworks */,
 				099656DD2BC63B9C004725E3 /* FirebaseAnalytics in Frameworks */,
 				099657032BCA2F98004725E3 /* FirebaseFirestore in Frameworks */,
@@ -146,6 +153,7 @@
 				099656FE2BC8BF73004725E3 /* GoogleService-Info.plist */,
 				09500E412BC62B8C00CAE159 /* SeniorConnectApp.swift */,
 				09500E432BC62B8C00CAE159 /* ContentView.swift */,
+				099657502BD3732B004725E3 /* Analytics */,
 				099656E32BC63D97004725E3 /* Authentication */,
 				0996572B2BCF721A004725E3 /* Components */,
 				099657042BCA3003004725E3 /* Core */,
@@ -175,6 +183,7 @@
 		099656E02BC63D67004725E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0996574E2BD3731D004725E3 /* AdSupport.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -352,6 +361,15 @@
 			path = Performance;
 			sourceTree = "<group>";
 		};
+		099657502BD3732B004725E3 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				099657512BD37339004725E3 /* AnalyticsView.swift */,
+				099657532BD37366004725E3 /* AnalyticsManager.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -465,6 +483,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099657542BD37366004725E3 /* AnalyticsManager.swift in Sources */,
 				099656FD2BC8B749004725E3 /* SignInAppleHelper.swift in Sources */,
 				0996574B2BD367CE004725E3 /* PerformanceManager.swift in Sources */,
 				099657372BD21A9A004725E3 /* SecurityRules.swift in Sources */,
@@ -483,6 +502,7 @@
 				0996571C2BCC7FE3004725E3 /* ProductsManager.swift in Sources */,
 				099656EB2BC642B2004725E3 /* RootView.swift in Sources */,
 				09500E422BC62B8C00CAE159 /* SeniorConnectApp.swift in Sources */,
+				099657522BD37339004725E3 /* AnalyticsView.swift in Sources */,
 				099656E52BC63DBD004725E3 /* AuthView.swift in Sources */,
 				0996572E2BCF7243004725E3 /* OnFirstAppear.swift in Sources */,
 				099657252BCF2937004725E3 /* FavoritesView.swift in Sources */,
