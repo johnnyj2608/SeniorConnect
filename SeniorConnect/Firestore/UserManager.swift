@@ -23,6 +23,7 @@ struct DBUser: Codable {
     let dateCreated: Date?
     let preferenceLanguage: [String]?
     let favoriteActivity: Activity?
+    let profileImagePathUrl: String?
     
     init(auth: AuthDataResultModel) {
         self.userId = auth.uid
@@ -31,6 +32,7 @@ struct DBUser: Codable {
         self.dateCreated = Date()
         self.preferenceLanguage = nil
         self.favoriteActivity = nil
+        self.profileImagePathUrl = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -40,6 +42,7 @@ struct DBUser: Codable {
         case dateCreated = "date_created"
         case languagePreference = "language_preference"
         case favoriteActivity = "favorite_activity"
+        case profileImagePathUrl = "profile_image_path_url"
     }
     
     init(from decoder: Decoder) throws {
@@ -50,6 +53,7 @@ struct DBUser: Codable {
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.preferenceLanguage = try container.decodeIfPresent([String].self, forKey: .languagePreference)
         self.favoriteActivity = try container.decodeIfPresent(Activity.self, forKey: .favoriteActivity)
+        self.profileImagePathUrl = try container.decodeIfPresent(String.self, forKey: .profileImagePathUrl)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -60,6 +64,7 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.preferenceLanguage, forKey: .languagePreference)
         try container.encodeIfPresent(self.favoriteActivity, forKey: .favoriteActivity)
+        try container.encodeIfPresent(self.profileImagePathUrl, forKey: .profileImagePathUrl)
     }
 }
 
@@ -107,6 +112,14 @@ final class UserManager {
     func getUser(userId: String) async throws -> DBUser {
         try await userDocument(userId: userId).getDocument(
             as: DBUser.self)
+    }
+    
+    func updateUserProfileImagePath(userId: String, url: String?) async throws {
+        let data: [String:Any] = [
+            DBUser.CodingKeys.profileImagePathUrl.rawValue : url ?? NSNull()
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
     }
     
     func addLanguagePreference(userId: String, preference: String) async throws {

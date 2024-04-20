@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import PhotosUI
 
 @MainActor
 final class ProfileViewModel: ObservableObject {
@@ -60,6 +62,33 @@ final class ProfileViewModel: ObservableObject {
     func getProductsCount() {
         Task {
             let _ = try await ProductsManager.shared.getAllProductsCount()
+        }
+    }
+    
+    func saveProfileImage(item: PhotosPickerItem) {
+        guard let user else {
+            return
+        }
+        
+        Task {
+            guard let data = try await item.loadTransferable(type: Data.self) else { return
+                
+            }
+            deleteProfileImage()
+            let (path, _) = try await StorageManager.shared.saveImage(data: data, userId: user.userId)
+            let url = try await StorageManager.shared.getUrlForImage(path: path)
+            try await UserManager.shared.updateUserProfileImagePath(userId: user.userId, url: url.absoluteString)
+        }
+    }
+    
+    func deleteProfileImage() {
+        guard let user, let url = user.profileImagePathUrl else {
+            return
+            
+        }
+        Task {
+            try await StorageManager.shared.deleteImage(url: url)
+            try await UserManager.shared.updateUserProfileImagePath(userId: user.userId, url: nil)
         }
     }
 }
