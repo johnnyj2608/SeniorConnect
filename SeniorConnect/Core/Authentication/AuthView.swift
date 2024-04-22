@@ -19,18 +19,7 @@ struct AuthView: View {
     var body: some View {
         VStack {
             Spacer()
-            NavigationLink {
-                EmailView(showSignInView: $showSignInView)
-            } label: {
-                Text("Sign in with email")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(height: 40)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
-            GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark,  style: .wide, state: .normal)) {
+            GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .light,  style: .wide, state: .normal)) {
                 Task {
                     do {
                         try await viewModel.signInGoogle()
@@ -54,7 +43,20 @@ struct AuthView: View {
             }
             .frame(height: 40)
             .cornerRadius(8)
+            
+            NavigationLink {
+                EmailView(showSignInView: $showSignInView)
+            } label: {
+                Text("Sign in with email")
+                    .font(.system(size: 18))
+                    .foregroundColor(.white)
+                    .frame(height: 40)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(red: 0.7, green: 0.2, blue: 0.2))
+                    .cornerRadius(10)
+            }
         }
         .padding()
+        .background(Color(red: 111/255, green: 160/255, blue: 232/255))
     }
 }

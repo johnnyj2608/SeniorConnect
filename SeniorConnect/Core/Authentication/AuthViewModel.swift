@@ -18,7 +18,7 @@ final class AuthViewModel: ObservableObject {
         
         let user = DBUser(auth: authDataResult)
         try await UserManager.shared.createUser(user: user)
- }
+    }
     
     func SignInApple(with result: Result<ASAuthorization, Error>, nonce: String) async {
         switch result {
