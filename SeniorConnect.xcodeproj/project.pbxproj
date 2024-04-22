@@ -57,6 +57,7 @@
 		0996574F2BD3731D004725E3 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0996574E2BD3731D004725E3 /* AdSupport.framework */; };
 		099657522BD37339004725E3 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657512BD37339004725E3 /* AnalyticsView.swift */; };
 		099657542BD37366004725E3 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657532BD37366004725E3 /* AnalyticsManager.swift */; };
+		099657582BD5EC38004725E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 099657572BD5EC38004725E3 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,7 @@
 		0996574E2BD3731D004725E3 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.2.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
 		099657512BD37339004725E3 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		099657532BD37366004725E3 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		099657572BD5EC38004725E3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 				099656EA2BC642B2004725E3 /* RootView.swift */,
 				099657082BCA30A7004725E3 /* Authentication */,
 				099657232BCF291D004725E3 /* Favorites */,
+				099657552BD5EC05004725E3 /* Launch */,
 				0996570E2BCA3122004725E3 /* Profile */,
 				099657182BCC7DFF004725E3 /* Products */,
 				099657052BCA304A004725E3 /* Settings */,
@@ -370,6 +373,22 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
+		099657552BD5EC05004725E3 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				099657562BD5EC22004725E3 /* Views */,
+			);
+			name = Launch;
+			sourceTree = "<group>";
+		};
+		099657562BD5EC22004725E3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				099657572BD5EC38004725E3 /* LaunchScreen.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -446,6 +465,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09500E4A2BC62B8E00CAE159 /* Preview Assets.xcassets in Resources */,
+				099657582BD5EC38004725E3 /* LaunchScreen.storyboard in Resources */,
 				099656FF2BC8BF74004725E3 /* GoogleService-Info.plist in Resources */,
 				09500E462BC62B8E00CAE159 /* Assets.xcassets in Resources */,
 			);
@@ -659,6 +679,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -705,6 +726,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
