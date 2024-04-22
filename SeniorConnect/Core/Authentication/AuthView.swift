@@ -18,6 +18,7 @@ struct AuthView: View {
     
     var body: some View {
         VStack {
+            Spacer()
             NavigationLink {
                 EmailView(showSignInView: $showSignInView)
             } label: {
@@ -53,10 +54,7 @@ struct AuthView: View {
             }
             .frame(height: 40)
             .cornerRadius(8)
-            
-            Spacer()
         }
         .padding()
-        .navigationTitle("Sign In")
     }
 }
