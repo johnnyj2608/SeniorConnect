@@ -58,6 +58,7 @@
 		099657522BD37339004725E3 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657512BD37339004725E3 /* AnalyticsView.swift */; };
 		099657542BD37366004725E3 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657532BD37366004725E3 /* AnalyticsManager.swift */; };
 		099657582BD5EC38004725E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 099657572BD5EC38004725E3 /* LaunchScreen.storyboard */; };
+		0996575C2BD71A0A004725E3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996575B2BD71A0A004725E3 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		099657512BD37339004725E3 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		099657532BD37366004725E3 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		099657572BD5EC38004725E3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0996575B2BD71A0A004725E3 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				099657292BCF71C3004725E3 /* Query+Ext.swift */,
+				0996575B2BD71A0A004725E3 /* Color.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -513,6 +516,7 @@
 				0996573C2BD30FFB004725E3 /* StorageManager.swift in Sources */,
 				099657132BCA3476004725E3 /* UserManager.swift in Sources */,
 				099656ED2BC64457004725E3 /* SettingsView.swift in Sources */,
+				0996575C2BD71A0A004725E3 /* Color.swift in Sources */,
 				099657302BCF7289004725E3 /* FavoritesViewModel.swift in Sources */,
 				099657442BD34F86004725E3 /* CrashManager.swift in Sources */,
 				0996572A2BCF71C3004725E3 /* Query+Ext.swift in Sources */,
