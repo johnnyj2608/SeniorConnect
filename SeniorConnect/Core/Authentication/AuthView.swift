@@ -15,6 +15,7 @@ struct AuthView: View {
     @StateObject private var viewModel = AuthViewModel()
     @Binding var showSignInView: Bool
     @State var currentNonce = ""
+    @State private var emailSignIn: Bool = false
     @State private var yOffset: CGFloat = 0
     
     var body: some View {
@@ -46,8 +47,8 @@ struct AuthView: View {
                 .frame(height: 40)
                 .cornerRadius(8)
                 
-                NavigationLink {
-                    EmailView(showSignInView: $showSignInView)
+                Button {
+                    emailSignIn = true
                 } label: {
                     Text("Sign in with email")
                         .font(.system(size: 18))
@@ -56,6 +57,11 @@ struct AuthView: View {
                         .frame(maxWidth: .infinity)
                         .background(Color(red: 0.7, green: 0.2, blue: 0.2))
                         .cornerRadius(10)
+                }
+                .sheet(isPresented: $emailSignIn) {
+                    NavigationStack {
+                        EmailView(showSignInView: $showSignInView)
+                    }
                 }
             }
             .padding()
