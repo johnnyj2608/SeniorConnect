@@ -17,15 +17,29 @@ struct TabbarView: View {
                 ProductsView()
             }
             .tabItem {
-                Image(systemName: "cart")
-                Text("Products")
+                Image(systemName: "house")
+                Text("Home")
+            }
+            NavigationStack {
+                ProductsView()
+            }
+            .tabItem {
+                Image(systemName: "message")
+                Text("Community")
             }
             NavigationStack {
                 FavoritesView()
             }
             .tabItem {
-                Image(systemName: "star.fill")
-                Text("Favorites")
+                Image(systemName: "cross")
+                Text("Care")
+            }
+            NavigationStack {
+                ProductsView()
+            }
+            .tabItem {
+                Image(systemName: "pill")
+                Text("Medication")
             }
             NavigationStack {
                 ProfileView(showSignInView: $showSignInView)
