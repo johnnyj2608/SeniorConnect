@@ -14,6 +14,13 @@ final class ProfileViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
     
+    @Published var personalInfoExpanded: Bool = false
+    @Published var emergencyContactExpanded: Bool = false
+    @Published var primaryCarePhysicianExpanded: Bool = false
+    @Published var socialAdultDayCareExpanded: Bool = false
+    @Published var insuranceCompanyExpanded: Bool = false
+    
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthManager.shared.getUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
