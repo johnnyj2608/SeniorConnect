@@ -31,15 +31,8 @@ struct TabbarView: View {
                 ProductsView()
             }
             .tabItem {
-                Image(systemName: "cross")
-                Text("Care")
-            }
-            NavigationStack {
-                ProductsView()
-            }
-            .tabItem {
-                Image(systemName: "pill")
-                Text("Medication")
+                Image(systemName: "qrcode")
+                Text("Scan")
             }
             NavigationStack {
                 ProfileView(showSignInView: $showSignInView)
