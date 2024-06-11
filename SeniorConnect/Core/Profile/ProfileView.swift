@@ -16,9 +16,9 @@ struct ProfileView: View {
     @State private var url: URL? = nil
     
     let languages: [String] = ["English", "Mandarin", "Cantonese"]
-//    private func languageSelected(text: String) -> Bool {
-//        viewModel.user?.preferenceLanguage?.contains(text) == true
-//    }
+    //    private func languageSelected(text: String) -> Bool {
+    //        viewModel.user?.preferenceLanguage?.contains(text) == true
+    //    }
     
     var body: some View {
         List {
@@ -35,8 +35,8 @@ struct ProfileView: View {
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
-                
-            InfoRow(title: "Nickname", value: "Chinese Name")
+            
+            InfoRow(title: "Preferred Name", value: "Chinese Name")
             InfoRow(title: "Birth Date", value: "00/00/0000")
             InfoRow(title: "Gender", value: "Male")
             InfoRow(title: "Sign-In Number", value: "000")
@@ -54,7 +54,6 @@ struct ProfileView: View {
                 InfoRow(title: "Emergency Contact 2", value: ">")
                 InfoRow(title: "Primary Care Physician", value: ">")
                 InfoRow(title: "Pharmacy", value: ">")
-                InfoRow(title: "Case Manager", value: ">")
             }
             
             Section(header: Text("Insurance Company")) {
@@ -62,20 +61,6 @@ struct ProfileView: View {
                 InfoRow(title: "Member ID", value: "0000000000")
                 InfoRow(title: "Schedule", value: "M - F")
                 InfoRow(title: "Medicaid", value: "XX00000X")
-                InfoRow(title: "Case Manager", value: "Name")
-            }
-            
-            Section(header: Text("Social Adult Day Care")) {
-                InfoRow(title: "Name", value: "Name")
-                InfoRow(title: "Street", value: "000 00th St")
-                InfoRow(title: "City", value: "City")
-                InfoRow(title: "State", value: "State")
-                InfoRow(title: "Zip Code", value: "00000")
-                InfoRow(title: "Phone", value: "000-000-0000")
-                InfoRow(title: "Fax", value: "000-000-0000")
-                InfoRow(title: "Email", value: "email@email.com")
-                InfoRow(title: "Hours", value: "8:00 AM - 3:00 PM")
-                InfoRow(title: "Member Since", value: "April 2024")
             }
         }
         .listStyle(GroupedListStyle())
@@ -91,6 +76,8 @@ struct ProfileView: View {
                 
             }
         }
+    }
+}
         //        List {
         //            if let user = viewModel.user {
         //                Text("UserId: \(user.userId)")
@@ -170,5 +157,3 @@ struct ProfileView: View {
         //
         //            }
         //        }
-    }
-}
