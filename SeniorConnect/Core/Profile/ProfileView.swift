@@ -22,111 +22,64 @@ struct ProfileView: View {
     
     var body: some View {
         List {
-            VStack {
+            VStack(alignment: .center) {
                 Image("LOGIN")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
-                    .padding(.vertical, 4)
                     .cornerRadius(20)
-                Text("FIRST LAST")
+                Text("LAST, FIRST")
                     .font(.system(size: 40))
                     .fontWeight(.semibold)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
             }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-            
-            Section {
-                DisclosureGroup(isExpanded: $viewModel.personalInfoExpanded) {
-                    InfoRow(title: "Birth Date", value: "00/00/0000")
-                    InfoRow(title: "Gender", value: "Male")
-                    InfoRow(title: "Address", value: "000 00th St")
-                    InfoRow(title: "City", value: "City")
-                    InfoRow(title: "State", value: "State")
-                    InfoRow(title: "Zip Code", value: "00000")
-                    InfoRow(title: "Phone", value: "000-000-0000")
-                    InfoRow(title: "Email", value: "email@email.com")
-                } label: {
-                    Text("Personal Information")
-                }
-            }
-            
-            Section {
-                DisclosureGroup(isExpanded: $viewModel.emergencyContactExpanded) {
-                    Section(header: Text("Emergency Contact 1")) {
-                        InfoRow(title: "Name", value: "Name")
-                        InfoRow(title: "Relationship", value: "Family")
-                        InfoRow(title: "Phone", value: "000-000-0000")
-                        InfoRow(title: "Email", value: "email@email.com")
-                    }
-                    Section(header: Text("Emergency Contact 2")) {
-                        InfoRow(title: "Name", value: "Name")
-                        InfoRow(title: "Relationship", value: "Family")
-                        InfoRow(title: "Phone", value: "000-000-0000")
-                        InfoRow(title: "Email", value: "email@email.com")
-                    }
-                } label: {
-                    Text("Emergency Contact")
-                }
-            }
+            .frame(maxWidth: .infinity)
                 
-            Section {
-                DisclosureGroup(isExpanded: $viewModel.primaryCarePhysicianExpanded) {
-                    InfoRow(title: "Name", value: "Name")
-                    InfoRow(title: "Address", value: "000 00th St")
-                    InfoRow(title: "City", value: "City")
-                    InfoRow(title: "State", value: "State")
-                    InfoRow(title: "Zip Code", value: "00000")
-                    InfoRow(title: "Phone", value: "000-000-0000")
-                    InfoRow(title: "Fax", value: "000-000-0000")
-                    InfoRow(title: "Email", value: "email@email.com")
-                    InfoRow(title: "Hours", value: "8:00 AM - 3:00 PM")
-                } label: {
-                    Text("Primary Care Physician")
-                }
+            InfoRow(title: "Nickname", value: "Chinese Name")
+            InfoRow(title: "Birth Date", value: "00/00/0000")
+            InfoRow(title: "Gender", value: "Male")
+            InfoRow(title: "Sign-In Number", value: "000")
+            
+            Section(header: Text("Address")) {
+                InfoRow(title: "Street", value: "000 00th St")
+                InfoRow(title: "City", value: "City")
+                InfoRow(title: "State", value: "State")
+                InfoRow(title: "Zip Code", value: "00000")
             }
             
-            Section {
-                DisclosureGroup(isExpanded: $viewModel.socialAdultDayCareExpanded) {
-                    InfoRow(title: "Name", value: "Name")
-                    InfoRow(title: "Address", value: "000 00th St")
-                    InfoRow(title: "City", value: "City")
-                    InfoRow(title: "State", value: "State")
-                    InfoRow(title: "Zip Code", value: "00000")
-                    InfoRow(title: "Phone", value: "000-000-0000")
-                    InfoRow(title: "Fax", value: "000-000-0000")
-                    InfoRow(title: "Email", value: "email@email.com")
-                    InfoRow(title: "Hours", value: "8:00 AM - 3:00 PM")
-                    InfoRow(title: "Member Since", value: "April 2024")
-                } label: {
-                    Text("Social Adult Day Care")
-                }
+            Section(header: Text("Contacts")) {
+                InfoRow(title: "Self", value: ">")
+                InfoRow(title: "Emergency Contact 1", value: ">")
+                InfoRow(title: "Emergency Contact 2", value: ">")
+                InfoRow(title: "Primary Care Physician", value: ">")
+                InfoRow(title: "Pharmacy", value: ">")
+                InfoRow(title: "Case Manager", value: ">")
             }
             
-            Section {
-                DisclosureGroup(isExpanded: $viewModel.insuranceCompanyExpanded) {
-                    InfoRow(title: "Name", value: "Name")
-                    InfoRow(title: "Member ID", value: "0000000000")
-                    InfoRow(title: "Schedule", value: "M - F")
-                    InfoRow(title: "Medicaid", value: "XX00000X")
-                    InfoRow(title: "Care Manager", value: "Name")
-                    InfoRow(title: "Care Manager Phone", value: "000-000-0000")
-                } label: {
-                    Text("Insurance Company")
-                }
+            Section(header: Text("Insurance Company")) {
+                InfoRow(title: "Name", value: "Name")
+                InfoRow(title: "Member ID", value: "0000000000")
+                InfoRow(title: "Schedule", value: "M - F")
+                InfoRow(title: "Medicaid", value: "XX00000X")
+                InfoRow(title: "Case Manager", value: "Name")
             }
             
-            Section(header: Text("Notes")) {
-                // - Notes (Sign-in number)
+            Section(header: Text("Social Adult Day Care")) {
+                InfoRow(title: "Name", value: "Name")
+                InfoRow(title: "Street", value: "000 00th St")
+                InfoRow(title: "City", value: "City")
+                InfoRow(title: "State", value: "State")
+                InfoRow(title: "Zip Code", value: "00000")
+                InfoRow(title: "Phone", value: "000-000-0000")
+                InfoRow(title: "Fax", value: "000-000-0000")
+                InfoRow(title: "Email", value: "email@email.com")
+                InfoRow(title: "Hours", value: "8:00 AM - 3:00 PM")
+                InfoRow(title: "Member Since", value: "April 2024")
             }
-            
-            Section(header: Text("Tickets")) {
-                // - Tickets (Shows most recent)
-            }
-            
         }
         .listStyle(GroupedListStyle())
+        .navigationTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
@@ -217,11 +170,5 @@ struct ProfileView: View {
         //
         //            }
         //        }
-    }
-}
-
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView(showSignInView: .constant(false))
     }
 }
