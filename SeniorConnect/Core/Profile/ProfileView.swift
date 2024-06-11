@@ -33,8 +33,10 @@ struct ProfileView: View {
                     .fontWeight(.semibold)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
+                    .padding(.bottom, -10)
             }
             .frame(maxWidth: .infinity)
+            .listRowSeparator(.hidden)
             
             InfoRow(title: "Preferred Name", value: "Chinese Name")
             InfoRow(title: "Birth Date", value: "00/00/0000")
