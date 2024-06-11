@@ -16,9 +16,9 @@ struct ProfileView: View {
     @State private var url: URL? = nil
     
     let languages: [String] = ["English", "Mandarin", "Cantonese"]
-    private func languageSelected(text: String) -> Bool {
-        viewModel.user?.preferenceLanguage?.contains(text) == true
-    }
+//    private func languageSelected(text: String) -> Bool {
+//        viewModel.user?.preferenceLanguage?.contains(text) == true
+//    }
     
     var body: some View {
         List {

@@ -28,7 +28,7 @@ struct TabbarView: View {
                 Text("Community")
             }
             NavigationStack {
-                FavoritesView()
+                ProductsView()
             }
             .tabItem {
                 Image(systemName: "cross")
