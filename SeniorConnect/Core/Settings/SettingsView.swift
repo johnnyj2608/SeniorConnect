@@ -13,6 +13,20 @@ struct SettingsView: View {
     @Binding var showSignInView: Bool
     var body: some View {
         List {
+            // Employee Only
+            Section(header: Text("User Management").font(.system(size: 20))) {
+                // Enrollment
+                // Members (Select Insurance. Filter by schedule / birthday month. Can export)
+                // Employees (Filter by schedule)
+            }
+            // Employee Only
+            Section(header: Text("Audit Logs").font(.system(size: 20))) {
+                // Enrollees (Filter by month)
+                // Transfers (Filter by month)
+                // Withdraws (Filter by month)
+                // Vacations (Filter by insurance / date)
+                // Admins (Filter by staff)
+            }
             Section(header: Text("Social Adult Day Care").font(.system(size: 20))) {
                 // Edit Profile (Requires Employee Confirmation)
                 // View Documents
