@@ -59,7 +59,7 @@
 		099657542BD37366004725E3 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099657532BD37366004725E3 /* AnalyticsManager.swift */; };
 		099657582BD5EC38004725E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 099657572BD5EC38004725E3 /* LaunchScreen.storyboard */; };
 		0996575C2BD71A0A004725E3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996575B2BD71A0A004725E3 /* Color.swift */; };
-		09B748962BE4711E00782DC6 /* InfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B748952BE4711E00782DC6 /* InfoRowView.swift */; };
+		09B748962BE4711E00782DC6 /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B748952BE4711E00782DC6 /* ListRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,7 +109,7 @@
 		099657532BD37366004725E3 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		099657572BD5EC38004725E3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0996575B2BD71A0A004725E3 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		09B748952BE4711E00782DC6 /* InfoRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRowView.swift; sourceTree = "<group>"; };
+		09B748952BE4711E00782DC6 /* ListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,7 +260,7 @@
 			children = (
 				0996570F2BCA318E004725E3 /* ProfileView.swift */,
 				099657332BCF7325004725E3 /* ProfileViewModel.swift */,
-				09B748952BE4711E00782DC6 /* InfoRowView.swift */,
+				09B748952BE4711E00782DC6 /* ListRowView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -542,7 +542,7 @@
 				099656F82BC767AB004725E3 /* Utilities.swift in Sources */,
 				0996571F2BCC8637004725E3 /* ProductsCellView.swift in Sources */,
 				099657272BCF37C5004725E3 /* ProductCellViewBuilder.swift in Sources */,
-				09B748962BE4711E00782DC6 /* InfoRowView.swift in Sources */,
+				09B748962BE4711E00782DC6 /* ListRowView.swift in Sources */,
 				099657102BCA318E004725E3 /* ProfileView.swift in Sources */,
 				099657492BD36795004725E3 /* PerformanceView.swift in Sources */,
 				099657222BCF27B3004725E3 /* TabbarView.swift in Sources */,

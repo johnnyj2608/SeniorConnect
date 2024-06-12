@@ -22,47 +22,57 @@ struct ProfileView: View {
     
     var body: some View {
         List {
-            VStack(alignment: .center) {
-                Image("LOGIN")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200)
-                    .cornerRadius(20)
-                Text("LAST, FIRST")
-                    .font(.system(size: 40))
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, -10)
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+                Image(systemName: "car.side.fill")
+                    .font(.system(size: 20))
+                VStack(alignment: .center) {
+                    Image("LOGIN")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 200, height: 200)
+                        .cornerRadius(20)
+                        .padding(.bottom, -10)
+                    Text("LAST, FIRST")
+                        .font(.system(size: 35))
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                    Text("VCM #000")
+                        .font(.system(size: 20))
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity)
             .listRowSeparator(.hidden)
-            
-            InfoRow(title: "Preferred Name", value: "Chinese Name")
+            .padding(.bottom, -10)
+
+            InfoRow(title: "Nickname", value: "江涛")
             InfoRow(title: "Birth Date", value: "00/00/0000")
             InfoRow(title: "Gender", value: "Male")
-            InfoRow(title: "Sign-In Number", value: "000")
+            InfoRow(title: "Phone", value: "000-000-0000")
+            InfoRow(title: "Email", value: "email@email.com")
             
-            Section(header: Text("Address")) {
+            Section(header: Text("Address").font(.system(size: 20))) {
                 InfoRow(title: "Street", value: "000 00th St")
                 InfoRow(title: "City", value: "City")
                 InfoRow(title: "State", value: "State")
                 InfoRow(title: "Zip Code", value: "00000")
             }
             
-            Section(header: Text("Contacts")) {
-                InfoRow(title: "Self", value: ">")
-                InfoRow(title: "Emergency Contact 1", value: ">")
-                InfoRow(title: "Emergency Contact 2", value: ">")
-                InfoRow(title: "Primary Care Physician", value: ">")
-                InfoRow(title: "Pharmacy", value: ">")
+            Section(header: Text("Contacts").font(.system(size: 20))) {
+                ContactRow(name: "Ron Smith", title: "Driver", number: "000-000-0000")
+                ContactRow(name: "John Doe", title: "Son", number: "000-000-0000")
+                ContactRow(name: "Jane Doe", title: "Daughter", number: "000-000-0000")
+                ContactRow(name: "Luigi Mario", title: "Doctor", number: "000-000-0000")
+                ContactRow(name: "Medicine", title: "Pharmacy", number: "000-000-0000")
             }
             
-            Section(header: Text("Insurance Company")) {
+            Section(header: Text("Insurance").font(.system(size: 20))) {
                 InfoRow(title: "Name", value: "Name")
                 InfoRow(title: "Member ID", value: "0000000000")
                 InfoRow(title: "Schedule", value: "M - F")
                 InfoRow(title: "Medicaid", value: "XX00000X")
+                InfoRow(title: "Authorization", value: "XYZ0000000")
             }
         }
         .listStyle(GroupedListStyle())
