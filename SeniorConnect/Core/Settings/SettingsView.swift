@@ -13,30 +13,57 @@ struct SettingsView: View {
     @Binding var showSignInView: Bool
     var body: some View {
         List {
-            Button("Log Out") {
-                Task {
-                    do {
-                        try viewModel.signOut()
-                        showSignInView = true
-                    } catch {
-                        print(error)
+            Section(header: Text("Social Adult Day Care").font(.system(size: 20))) {
+                // Edit Profile (Requires Employee Confirmation)
+                // View Documents
+                // Submit Feedback (Toggle for Anonymous)
+                // Contact Information (Name, Address, Contact)
+                // Policy & Procedures (BoR, Visitor, Holidays)
+            }
+            Section(header: Text("App Preferences").font(.system(size: 20))) {
+                // Appearance (Dark Mode Toggle)
+                // Notifications (Toggle)
+                // Text Size (Slider)
+            }
+            Section(header: Text("App Information").font(.system(size: 20))) {
+                // FAQ
+                // Privacy Policy
+                // Terms of Service
+            }
+            Section(header: Text("My Account").font(.system(size: 20))) {
+                // Change Email
+                // Change Password
+                // Link Accounts
+            }
+            Section(header: Text("Account Actions").font(.system(size: 20))) {
+                Button("Log Out") {
+                    Task {
+                        do {
+                            try viewModel.signOut()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
                     }
+                }
+                // Leave SADC
+                Button(role: .destructive) {
+                    // Add confirmation for account deletion
+                    Task {
+                        do {
+                            try await viewModel.deleteAccount()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
+                    }
+                } label: {
+                    Text("Delete Account")
                 }
             }
             
-            Button(role: .destructive) {
-                // Add confirmation for account deletion
-                Task {
-                    do {
-                        try await viewModel.deleteAccount()
-                        showSignInView = true
-                    } catch {
-                        print(error)
-                    }
-                }
-            } label: {
-                Text("Delete Account")
-            }
+            
+            
             
             if viewModel.authProviders.contains(.email) {
                 emailSection
