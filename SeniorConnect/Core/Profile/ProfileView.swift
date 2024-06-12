@@ -46,11 +46,13 @@ struct ProfileView: View {
             .listRowSeparator(.hidden)
             .padding(.bottom, -10)
 
-            InfoRow(title: "Nickname", value: "江涛")
-            InfoRow(title: "Birth Date", value: "00/00/0000")
-            InfoRow(title: "Gender", value: "Male")
-            InfoRow(title: "Phone", value: "000-000-0000")
-            InfoRow(title: "Email", value: "email@email.com")
+            Group {
+                InfoRow(title: "Nickname", value: "江涛")
+                InfoRow(title: "Birth Date", value: "00/00/0000")
+                InfoRow(title: "Gender", value: "Male")
+                InfoRow(title: "Phone", value: "000-000-0000")
+                InfoRow(title: "Email", value: "email@email.com")
+            }
             
             Section(header: Text("Address").font(.system(size: 20))) {
                 InfoRow(title: "Street", value: "000 00th St")
@@ -72,7 +74,29 @@ struct ProfileView: View {
                 InfoRow(title: "Member ID", value: "0000000000")
                 InfoRow(title: "Schedule", value: "M - F")
                 InfoRow(title: "Medicaid", value: "XX00000X")
-                InfoRow(title: "Authorization", value: "XYZ0000000")
+            }
+            
+            // Employee Only
+            Section(header: Text("Billing").font(.system(size: 20))) {
+                InfoRow(title: "Auth #", value: "XYZ0000000")
+                InfoRow(title: "Auth Range", value: "01/01/24 - 12/31/24")
+                InfoRow(title: "Dx Code", value: "M15.0")
+                InfoRow(title: "Vacation Range", value: "N/A")
+                
+            }
+            
+            // Employee Only
+            Section(header: Text("Documents").font(.system(size: 20))) {
+                Text("Button to upload and view documents")
+                Text("Sign In Logs")
+            }
+            
+            // Employee Only
+            Section(header: Text("Actions").font(.system(size: 20))) {
+                Text("Button for Vacation")
+                Text("Button for Transfer")
+                Text("Button for Withdraw")
+                // Confirm action by manually add date / optional note
             }
         }
         .listStyle(GroupedListStyle())
