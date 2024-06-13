@@ -69,6 +69,7 @@ struct ProfileView: View {
                 ContactRow(name: "Medicine", title: "Pharmacy", number: "000-000-0000")
             }
             
+            // Member Only
             Section(header: Text("Insurance").font(.system(size: 20))) {
                 InfoRow(title: "Name", value: "Name")
                 InfoRow(title: "Member ID", value: "0000000000")
@@ -95,7 +96,7 @@ struct ProfileView: View {
             // Employee Only
             Section(header: Text("Actions").font(.system(size: 20))) {
                 Text("Button for Vacation")
-                Text("Button for Transfer")
+                Text("Button for Transfer") // Member Only
                 Text("Button for Withdraw")
                 // Confirm action by manually add date / optional note
             }
