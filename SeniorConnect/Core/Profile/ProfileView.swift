@@ -77,18 +77,19 @@ struct ProfileView: View {
             }
             
             // Employee Only
+            Section(header: Text("Documents").font(.system(size: 20))) {
+                Text("Sign In Logs")
+                Text("Document 1")
+                Text("Document 2")
+                // Button to upload documents
+            }
+            
+            // Employee Only
             Section(header: Text("Billing").font(.system(size: 20))) {
                 InfoRow(title: "Auth #", value: "XYZ0000000")
                 InfoRow(title: "Auth Range", value: "01/01/24 - 12/31/24")
                 InfoRow(title: "Dx Code", value: "M15.0")
                 InfoRow(title: "Vacation Range", value: "N/A")
-                
-            }
-            
-            // Employee Only
-            Section(header: Text("Documents").font(.system(size: 20))) {
-                Text("Button to upload and view documents")
-                Text("Sign In Logs")
             }
             
             // Employee Only
