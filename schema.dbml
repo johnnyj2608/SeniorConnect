@@ -1,0 +1,115 @@
+Table member {
+  id integer [primary key]
+  sadc_member_id integer [not null]
+  insurance_id integer [ref: > insurance.id, not null]
+  photo blob
+  last_name varchar [not null]
+  first_name varchar [not null]
+  birth_date date [not null]
+  gender varchar(1) [not null]  // M, F
+  address_id integer [ref: > address.id, not null]
+  phone varchar(10) [not null]
+  email varchar
+  medicaid varchar(8) [not null]
+  care_manager_id integer [ref: > care_manager.id, null]
+  primary_care_provider_id integer [ref: > primary_care_provider.id, null]
+  pharmacy_id integer [ref: > pharmacy.id, null]
+  spouse_id integer [ref: > member.id, null]
+  active boolean [default: true, not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (sadc_member_id, insurance_id) [unique] // Ensures fast lookups and uniqueness
+  }
+}
+
+
+Table address {
+  id integer [primary key]
+  street_address varchar [not null]
+  city_id integer [ref: > city.id, not null]
+  state_id integer [ref: > state.id, not null]
+  zip_code_id integer [ref: > zip_code.id, not null]
+}
+
+Table city {
+  id integer [primary key]
+  name varchar [not null] // Brooklyn, Staten Island, etc
+}
+
+Table state {
+  id integer [primary key]
+  name varchar(2) [not null]  // NY, NJ, etc
+}
+
+Table zip_code {
+  id integer [primary key]
+  code varchar [not null]
+}
+
+Table insurance {
+  id integer [primary key]
+  name varchar [not null] // VCM, HF, etc
+  phone varchar(10) [not null]
+}
+
+Table care_manager {
+  id integer [primary key]
+  name varchar [not null]
+  phone varchar(10) [not null]
+  insurance_id integer [ref: > insurance.id, not null]
+}
+
+Table member_emergency_contact {
+  id integer [primary key]
+  member_id integer [ref: > member.id, not null]
+  contact_name varchar [not null]
+  contact_phone varchar(10) [not null]
+  relationship_type_id integer [ref: > relationship_type.id, not null]
+}
+
+Table relationship_type {
+  id integer [primary key]
+  name varchar [not null] // Husband, Daughter, etc
+}
+
+Table sadc {
+  id integer [primary key]
+  name varchar [not null]
+  address_id integer [ref: > address.id, not null]
+  phone varchar(10) [not null]
+  npi varchar(10) [not null]
+}
+
+Table authorization {
+  id integer [primary key]
+  auth_id varchar [not null]
+  insurance_member_id varchar [not null]
+  member_id integer [ref: > member.id, not null]
+  insurance_id integer [ref: > insurance.id, not null]
+  schedule varchar [not null]
+  diagnosis_id integer  [ref: > diagnosis.id]
+  transportation boolean [default: true, not null]
+  start_date date [not null]
+  end_date date [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table diagnosis {
+  id integer [primary key]
+  dx_code varchar [not null]// M15.0, R71, etc
+}
+
+Table primary_care_provider {
+  id integer [primary key]
+  name varchar [not null]
+  phone varchar(10) [not null]
+}
+
+Table pharmacy {
+  id integer [primary key]
+  name varchar [not null]
+  phone varchar(10) [not null]
+}
