@@ -5,15 +5,15 @@ const MembersListPage = () => {
 
     let [members, setMembers] = useState([])
 
-    useEffect(() => {
-        getMembers()
-    }, [])
-
     let getMembers = async () => {
-        let response = await fetch('http://127.0.0.1:8000/core/members/')
+        let response = await fetch('/core/members/')
         let data = await response.json()
         setMembers(data)
     }
+
+    useEffect(() => {
+        getMembers()
+    }, [])
 
   return (
     <div>
