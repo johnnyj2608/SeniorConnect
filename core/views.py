@@ -56,15 +56,24 @@ def getMember(request, pk):
     serializer = MemberSerializer(member, many=False)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def createMember(request):
+    data = request.data
+    member = Member.objects.create(
+        first_name=data['first_name'],
+        last_name=data['last_name'],
+    )
+    serializer = MemberSerializer(member, many=False)
+    return Response(serializer.data)
+
 @api_view(['PUT'])
 def updateMember(request, pk):
     data = request.data
     member = Member.objects.get(id=pk)
     serializer = MemberSerializer(instance=member, data=data)
-
+    
     if serializer.is_valid():
         serializer.save()
-
     return Response(serializer.data)
 
 @api_view(['DELETE'])
