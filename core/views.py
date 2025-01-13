@@ -66,3 +66,9 @@ def updateMember(request, pk):
         serializer.save()
 
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteMember(request, pk):
+    member = Member.objects.get(id=pk)
+    member.delete()
+    return Response('Member was deleted')

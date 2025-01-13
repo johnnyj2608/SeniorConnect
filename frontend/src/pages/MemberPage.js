@@ -43,6 +43,16 @@ const MemberPage = () => {
       })
     }
 
+    let deleteMember = async () => {
+      fetch(`/core/members/${id}/delete`, {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      navigate('/')
+    }
+
     let handleSubmit = () => {
       updateMember()
       navigate('/')
@@ -53,7 +63,9 @@ const MemberPage = () => {
       <div className="member-header">
         <h3>
           <Arrowleft onClick={handleSubmit} />
+          
         </h3>
+        <button onClick={deleteMember}>Delete</button>
       </div>
       <input 
         type="text" 
