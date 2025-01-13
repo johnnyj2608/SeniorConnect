@@ -33,64 +33,57 @@ const MemberPage = () => {
     };
 
     let createMember = async () => {
-      fetch(`/core/members/create/`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            first_name: member.first_name,
-            last_name: member.last_name,
-          }),
-      })
-    }
+      await fetch(`/core/members/create/`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: member.first_name,
+          last_name: member.last_name,
+        }),
+      });
+    };
 
     let updateMember = async () => {
-      fetch(`/core/members/${id}/update/`, {
-          method: "PUT",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            first_name: member.first_name,
-            last_name: member.last_name,
-          }),
-      })
-    }
+      await fetch(`/core/members/${id}/update/`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: member.first_name,
+          last_name: member.last_name,
+        }),
+      });
+    };
 
     let deleteMember = async () => {
-      fetch(`/core/members/${id}/delete/`, {
+      await fetch(`/core/members/${id}/delete/`, {
         method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          'Content-Type': 'application/json',
+        },
+      });
       navigate('/')
-    }
+    };
 
-    let handleSubmit = () => {
+    let handleSubmit = async () => {
       const firstNameFilled = member.first_name.trim() !== ''
       const lastNameFilled = member.last_name.trim() !== ''
-      
 
-      if (id !== 'new') {
-        if (firstNameFilled && lastNameFilled) {
-          updateMember()
-        } else if (firstNameFilled || lastNameFilled) {
-          alert('Please fill in all required fields')
-          return
+      if (firstNameFilled && lastNameFilled) {
+        if (id !== 'new') {
+          await updateMember()
         } else {
-          deleteMember()
+          await createMember()
         }
+        navigate('/')
+      } else if (firstNameFilled || lastNameFilled) {
+        alert('Please fill in all required fields')
       } else {
-        if (firstNameFilled && lastNameFilled) {
-          createMember()
-        } else if (firstNameFilled || lastNameFilled) {
-          alert('Please fill in all required fields');
-          return;
-        }
+        await deleteMember()
       }
-      navigate('/')
     }
 
   return (
