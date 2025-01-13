@@ -33,7 +33,7 @@ const MemberPage = () => {
     };
 
     let createMember = async () => {
-      await fetch(`/core/members/create/`, {
+      await fetch(`/core/members/`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const MemberPage = () => {
     };
 
     let updateMember = async () => {
-      await fetch(`/core/members/${id}/update/`, {
+      await fetch(`/core/members/${id}/`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const MemberPage = () => {
     };
 
     let deleteMember = async () => {
-      await fetch(`/core/members/${id}/delete/`, {
+      await fetch(`/core/members/${id}/`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',

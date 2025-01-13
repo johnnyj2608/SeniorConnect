@@ -15,3 +15,4 @@ pip install django-cors-headers
 npx create-react-app frontend
 npm start
 npm install react-router-dom
+npm run build
