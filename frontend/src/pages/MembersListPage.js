@@ -6,7 +6,7 @@ const MembersListPage = () => {
     let [members, setMembers] = useState([])
 
     let getMembers = async () => {
-        let response = await fetch('/core/members/')
+        let response = await fetch('/core/members')
         let data = await response.json()
         setMembers(data)
     }

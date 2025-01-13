@@ -46,7 +46,7 @@ def getRoutes(request):
 
 @api_view(['GET'])
 def getMembers(request):
-    members = Member.objects.all()
+    members = Member.objects.all().order_by('-updated')
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data)
 
@@ -54,4 +54,15 @@ def getMembers(request):
 def getMember(request, pk):
     member = Member.objects.get(id=pk)
     serializer = MemberSerializer(member, many=False)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def updateMember(request, pk):
+    data = request.data
+    member = Member.objects.get(id=pk)
+    serializer = MemberSerializer(instance=member, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+
     return Response(serializer.data)
