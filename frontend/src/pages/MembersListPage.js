@@ -16,7 +16,11 @@ const MembersListPage = () => {
     }, [])
 
   return (
-    <div>
+    <div className="members">
+      <div className="members-header">
+        <h2 className="members-title">&#9782; Members</h2>
+        <p className="members-count">{members.length}</p>
+      </div>
       <div className="members-list">
         {members.map((member, index) => (
             <ListItem key={index} member={member}/>

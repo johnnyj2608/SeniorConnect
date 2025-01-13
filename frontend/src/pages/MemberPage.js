@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 
 const MemberPage = () => {
     const { id } = useParams();
@@ -16,9 +17,33 @@ const MemberPage = () => {
         // eslint-disable-next-line
     }, [id])
 
+    const handleChange = (field) => (event) => {
+      const { value } = event.target;
+      setMember((prevMember) => ({
+        ...prevMember,
+        [field]: value,
+      }));
+    };
+
   return (
-    <div>
-      <p>{member?.first_name} {member?.last_name}</p>
+    <div className="member">
+      <div className="member-header">
+        <h3>
+          <Link to="/">
+            <Arrowleft />
+          </Link>
+        </h3>
+      </div>
+      <input 
+        type="text" 
+        value={member?.first_name} 
+        onChange={handleChange('first_name')}
+      />
+      <input 
+        type="text" 
+        value={member?.last_name}
+        onChange={handleChange('last_name')}
+      />
     </div>
   );
 };

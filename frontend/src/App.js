@@ -12,12 +12,14 @@ import MemberPage from './pages/MemberPage'
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<MembersListPage />} />
-          <Route path="/member/:id" element={<MemberPage />} />
-        </Routes>
+      <div className="container dark">
+        <div className="app">
+          <Header />
+          <Routes>
+            <Route path="/" element={<MembersListPage />} />
+            <Route path="/member/:id" element={<MemberPage />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
