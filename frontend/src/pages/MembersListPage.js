@@ -23,8 +23,8 @@ const MembersListPage = () => {
         <p className="members-count">{members.length}</p>
       </div>
       <div className="members-list">
-        {members.map((member, index) => (
-            <ListItem key={index} member={member}/>
+        {members.map((member) => (
+            <ListItem key={member.id} member={member}/>
         ))}
       </div>
       <AddButton />
