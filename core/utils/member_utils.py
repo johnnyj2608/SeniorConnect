@@ -1,6 +1,6 @@
 from rest_framework.response import Response
-from ..models import Member
-from ..serializers import MemberSerializer
+from ..models.member_model import Member
+from ..serializers.member_serializer import MemberSerializer
 
 def getMemberList(request):
     members = Member.objects.all().order_by('-updated')
