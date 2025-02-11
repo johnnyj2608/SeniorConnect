@@ -1,6 +1,6 @@
 from rest_framework.response import Response
-from .models import Member
-from .serializers import MemberSerializer
+from ..models import Member
+from ..serializers import MemberSerializer
 
 def getMemberList(request):
     members = Member.objects.all().order_by('-updated')
@@ -9,7 +9,7 @@ def getMemberList(request):
 
 def getMemberDetail(request, pk):
     member = Member.objects.get(id=pk)
-    serializer = MemberSerializer(member, many=False)
+    serializer = MemberSerializer(member)
     return Response(serializer.data)
 
 def createMember(request):
@@ -18,7 +18,7 @@ def createMember(request):
         first_name=data['first_name'],
         last_name=data['last_name'],
     )
-    serializer = MemberSerializer(member, many=False)
+    serializer = MemberSerializer(member)
     return Response(serializer.data)
 
 def updateMember(request, pk):
