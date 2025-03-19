@@ -12,7 +12,7 @@ class Member(models.Model):
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=False, blank=False)
     address = models.ForeignKey('Address', null=True, blank=True, on_delete=models.SET_NULL)
     phone = models.CharField(max_length=10, null=False, blank=False)
-    email = models.EmailField(null=False, blank=True)
+    email = models.EmailField(null=True, blank=True)
     medicaid = models.CharField(max_length=8, null=False, blank=False)
 
     # Relationships

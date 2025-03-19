@@ -15,8 +15,20 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data
     member = Member.objects.create(
+        sadc_member_id=data['sadc_member_id'],
+        mltc_id=data['mltc'],
         first_name=data['first_name'],
         last_name=data['last_name'],
+        birth_date=data['birth_date'],
+        gender=data['gender'],
+        address_id=data['address'],
+        phone=data['phone'],
+        email=data.get('email', None),
+        medicaid=data['medicaid'],
+        care_manager_id=data.get('care_manager', None),
+        primary_care_provider_id=data.get('primary_care_provider', None),
+        pharmacy_id=data.get('pharmacy', None),
+        spouse_id=data.get('spouse', None),
     )
     serializer = MemberSerializer(member)
     return Response(serializer.data)
