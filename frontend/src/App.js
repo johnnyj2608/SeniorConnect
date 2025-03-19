@@ -5,7 +5,7 @@ import {
 } from "react-router-dom"
 
 import './App.css';
-import Header from './components/Header'
+import Navbar from './components/Navbar'
 import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
 
@@ -14,7 +14,7 @@ function App() {
     <Router>
       <div className="container dark">
         <div className="app">
-          <Header />
+          <Navbar />
           <Routes>
             <Route path="/" element={<MembersListPage />} />
             <Route path="/member/:id" element={<MemberPage />} />
