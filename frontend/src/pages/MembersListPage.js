@@ -4,11 +4,11 @@ import AddButton from '../components/AddButton'
 
 const MembersListPage = () => {
 
-    let [members, setMembers] = useState([])
+    const [members, setMembers] = useState([]);
 
-    let getMembers = async () => {
-        let response = await fetch('/core/members')
-        let data = await response.json()
+    const getMembers = async () => {
+      const response = await fetch('/core/members')
+      const data = await response.json()
         setMembers(data)
     }
 

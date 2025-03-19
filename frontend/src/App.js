@@ -6,6 +6,7 @@ import {
 
 import './App.css';
 import Navbar from './components/Navbar'
+import HomePage from './pages/HomePage'
 import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
 
@@ -16,7 +17,8 @@ function App() {
         <div className="app">
           <Navbar />
           <Routes>
-            <Route path="/" element={<MembersListPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/members" element={<MembersListPage />} />
             <Route path="/member/:id" element={<MemberPage />} />
           </Routes>
         </div>

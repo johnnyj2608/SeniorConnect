@@ -3,7 +3,7 @@
 
 
 :root {
-  --color-main: #f68657;
+  --color-main: #76A9FA;
   --color-text: #383a3f;
   --color-dark: #1f2124;
   --color-gray: #677;
@@ -15,7 +15,7 @@
 }
 
 .dark {
-  --color-main: #f68657;
+  --color-main: #76A9FA;
   --color-text: #d6d1d1;
   --color-dark: #f5f6f7;
   --color-gray: #999;
@@ -101,7 +101,7 @@ a {
 }
 
 .app-header button:hover {
-  background-color: #6495ED;
+  background-color: var(--color-main);
 }
 
 .app-header button:hover .button-text {
@@ -131,7 +131,7 @@ a {
 
 .members-title,
 .members-count {
-  color: var(--color-main);
+  color: var(--color-text);
   font-size: 24px;
   font-weight: 600;
 }

@@ -6,7 +6,7 @@ const MemberPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  let [member, setMember] = useState({
+  const [member, setMember] = useState({
     sadc_member_id: '',
     mltc: '',
     first_name: '',
@@ -23,19 +23,19 @@ const MemberPage = () => {
     spouse: '',
   });
 
-  let [mltcOptions, setMltcOptions] = useState([]);
+  const [mltcOptions, setMltcOptions] = useState([]);
 
-  let getMember = async () => {
+  const getMember = async () => {
     if (id === 'new') return
 
-    let response = await fetch(`/core/members/${id}/`)
-    let data = await response.json()
+    const response = await fetch(`/core/members/${id}/`)
+    const data = await response.json()
     setMember(data)
   }
 
-  let getMltcOptions = async () => {
-    let response = await fetch('/core/mltc/');
-    let data = await response.json();
+  const getMltcOptions = async () => {
+    const response = await fetch('/core/mltc/');
+    const data = await response.json();
     setMltcOptions(data);
   };
 
@@ -53,7 +53,7 @@ const MemberPage = () => {
     }));
   };
 
-  let createMember = async () => {
+  const createMember = async () => {
     await fetch(`/core/members/`, {
       method: "POST",
       headers: {
@@ -78,7 +78,7 @@ const MemberPage = () => {
     });
   };
 
-  let updateMember = async () => {
+  const updateMember = async () => {
     await fetch(`/core/members/${id}/`, {
       method: "PUT",
       headers: {
@@ -103,7 +103,7 @@ const MemberPage = () => {
     });
   };
 
-  let deleteMember = async () => {
+  const deleteMember = async () => {
     await fetch(`/core/members/${id}/`, {
       method: "DELETE",
       headers: {
@@ -113,7 +113,7 @@ const MemberPage = () => {
     navigate('/')
   };
 
-  let handleSubmit = async () => {
+  const handleSubmit = async () => {
 
     const requiredFields = [
       'sadc_member_id', 
