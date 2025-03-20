@@ -37,7 +37,12 @@ const MemberPage = () => {
 
     const response = await fetch(`/core/members/${id}/`)
     const data = await response.json()
-    setMember(data)
+
+    const sanitizedData = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [key, value ?? ""])
+    );
+
+    setMember(sanitizedData)
   }
 
   useEffect(() => {
