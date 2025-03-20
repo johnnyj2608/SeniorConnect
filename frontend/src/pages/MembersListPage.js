@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import ListItem from '../components/ListItem'
 import AddButton from '../components/AddButton'
+import DownloadButton from '../components/DownloadButton'
 import MltcDropdown from '../components/MltcDropdown';
 import SearchInput from '../components/SearchInput';
 
@@ -50,14 +51,13 @@ const MembersListPage = () => {
         <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
       </div>
+      <DownloadButton />
 
       {filteredMembers.map((member) => (
           <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />
       ))}
 
       {/* Download button to xlsx */}
-      {/* Preview: MLTC, SADC ID, Name, Image */}
-
       <AddButton />
     </div>
   )
