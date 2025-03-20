@@ -1,0 +1,14 @@
+import React from 'react';
+
+const SearchInput = ({ value, onChange }) => {
+  return (
+    <input
+      type="text"
+      placeholder={'Search by ID or Name'}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
+};
+
+export default SearchInput;

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
+import MltcDropdown from '../components/MltcDropdown';
 
 const MemberPage = () => {
   const { id } = useParams()
@@ -23,8 +24,6 @@ const MemberPage = () => {
     spouse: '',
   });
 
-  const [mltcOptions, setMltcOptions] = useState([]);
-
   const getMember = async () => {
     if (id === 'new') return
 
@@ -33,15 +32,8 @@ const MemberPage = () => {
     setMember(data)
   }
 
-  const getMltcOptions = async () => {
-    const response = await fetch('/core/mltc/');
-    const data = await response.json();
-    setMltcOptions(data);
-  };
-
   useEffect(() => {
     getMember()
-    getMltcOptions();
     // eslint-disable-next-line
   }, [id])
 
@@ -146,11 +138,11 @@ const MemberPage = () => {
       } else {
         await createMember()
       }
-      navigate('/')
+      navigate('/members')
     } else if (atLeastOneFieldFilled) {
       alert('Please fill in all required fields')
     } else {
-      navigate('/')
+      navigate('/members')
     }
   }
 
@@ -192,16 +184,7 @@ const MemberPage = () => {
       />
 
       <label>MLTC:</label>
-      <select 
-        value={mltc} 
-        onChange={handleChange('mltc')}>
-        <option value="">Select MLTC</option>
-        {mltcOptions.map(option => (
-          <option key={option.id} value={option.id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
+      <MltcDropdown value={mltc} onChange={handleChange('mltc')} />
 
       <label>First Name:</label>
       <input 
