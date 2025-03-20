@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 
-const MltcDropdown = ({ value, onChange }) => {
-    const [mltcOptions, setMltcOptions] = useState([]);
-
-    const getMltcOptions = async () => {
-        const response = await fetch('/core/mltc/');
-        const data = await response.json();
-        setMltcOptions(data);
-    };
-
-    useEffect(() => {
-        getMltcOptions();
-    }, [])
+const MltcDropdown = ({ value, onChange, options=[] }) => {
 
     return (
         <select value={value} onChange={onChange}>
-            <option value="">Select MLTC</option>
-            {mltcOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                    {option.name}
-                </option>
-            ))}
-        </select>
+        <option value="">Select MLTC</option>
+        {options.length > 0 ? (
+            options.map((option) => (
+            <option key={option.id} value={option.id}>
+                {option.name}
+            </option>
+            ))
+        ) : (
+            <option disabled>No MLTC options available</option>
+        )}
+    </select>
     )
 }
 

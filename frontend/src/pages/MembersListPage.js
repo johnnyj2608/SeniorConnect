@@ -9,6 +9,7 @@ const MembersListPage = () => {
   const [members, setMembers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [mltcFilter, setMltcFilter] = useState('');
+  const [mltcOptions, setMltcOptions] = useState([]);
 
   const getMembers = async () => {
     const response = await fetch('/core/members')
@@ -16,9 +17,16 @@ const MembersListPage = () => {
       setMembers(data)
   }
 
+  const getMltcOptions = async () => {
+    const response = await fetch('/core/mltc/');
+    const data = await response.json();
+    setMltcOptions(data);
+  };
+
   useEffect(() => {
-      getMembers()
-  }, [])
+    getMembers();
+    getMltcOptions();
+  }, []);
 
   const filteredMembers = members.filter((member) => {
     const matchesSearch = 
@@ -39,12 +47,12 @@ const MembersListPage = () => {
       </div>
 
       <div className="filters">
-        <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} />
+        <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
       </div>
 
       {filteredMembers.map((member) => (
-          <ListItem key={member.id} member={member}/>
+          <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />
       ))}
 
       {/* Download button to xlsx */}

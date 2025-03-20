@@ -8,8 +8,8 @@ const MemberPage = () => {
   const navigate = useNavigate()
 
   const [member, setMember] = useState({
-    sadc_member_id: '',
-    mltc: '',
+    sadc_member_id: 0,
+    mltc: 0,
     first_name: '',
     last_name: '',
     birth_date: '',
@@ -24,6 +24,14 @@ const MemberPage = () => {
     spouse: '',
   });
 
+  const [mltcOptions, setMltcOptions] = useState([]);
+
+  const getMltcOptions = async () => {
+    const response = await fetch('/core/mltc/');
+    const data = await response.json();
+    setMltcOptions(data);
+  };
+
   const getMember = async () => {
     if (id === 'new') return
 
@@ -34,6 +42,7 @@ const MemberPage = () => {
 
   useEffect(() => {
     getMember()
+    getMltcOptions()
     // eslint-disable-next-line
   }, [id])
 
@@ -184,7 +193,7 @@ const MemberPage = () => {
       />
 
       <label>MLTC:</label>
-      <MltcDropdown value={mltc} onChange={handleChange('mltc')} />
+      <MltcDropdown value={mltc} onChange={handleChange('mltc')} options={mltcOptions} />
 
       <label>First Name:</label>
       <input 
