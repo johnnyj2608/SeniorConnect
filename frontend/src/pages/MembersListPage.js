@@ -51,7 +51,7 @@ const MembersListPage = () => {
         <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
       </div>
-      <DownloadButton />
+      <DownloadButton members={members} mltcOptions={mltcOptions} />
 
       {filteredMembers.map((member) => (
           <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />

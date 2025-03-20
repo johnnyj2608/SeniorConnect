@@ -3,32 +3,14 @@ import { ReactComponent as DownloadIcon } from '../assets/download.svg';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-const DownloadButton = () => {
-  const [mltcMap, setMltcMap] = useState({});
-
-  useEffect(() => {
-    const fetchMltcNames = async () => {
-      try {
-        const response = await fetch('/core/mltc/');
-        const mltcList = await response.json();
-        const map = mltcList.reduce((acc, mltc) => {
-          acc[mltc.id] = mltc.name;
-          return acc;
-        }, {});
-        setMltcMap(map);
-      } catch (error) {
-        console.error("Error fetching MLTC names:", error);
-      }
-    };
-
-    fetchMltcNames();
-  }, []);
-
+const DownloadButton = ({ members, mltcOptions }) => {
   const handleDownload = async () => {
     try {
-      const response = await fetch('/core/members/');
-      const members = await response.json();
-
+      const mltcMap = mltcOptions.reduce((acc, mltc) => {
+        acc[mltc.id] = mltc.name;
+        return acc;
+      }, {});
+      
       const membersByMltc = members.reduce((acc, member) => {
         const mltcName = mltcMap[member.mltc] || "Unknown";
         if (!acc[mltcName]) {
