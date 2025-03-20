@@ -44,15 +44,15 @@ const MembersListPage = () => {
     <div className="members">
       <div className="members-header">
         <h2 className="members-title">&#9782; Members</h2>
-        <p className="members-count">{members.length}</p>
+        <DownloadButton members={members} mltcOptions={mltcOptions} />
       </div>
 
       <div className="filters">
         <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
+        <p className="members-count">{members.length} results</p>
       </div>
-      <DownloadButton members={members} mltcOptions={mltcOptions} />
-
+      
       {filteredMembers.map((member) => (
           <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />
       ))}

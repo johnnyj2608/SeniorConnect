@@ -10,7 +10,7 @@ const DownloadButton = ({ members, mltcOptions }) => {
         acc[mltc.id] = mltc.name;
         return acc;
       }, {});
-      
+
       const membersByMltc = members.reduce((acc, member) => {
         const mltcName = mltcMap[member.mltc] || "Unknown";
         if (!acc[mltcName]) {
@@ -42,7 +42,7 @@ const DownloadButton = ({ members, mltcOptions }) => {
   };
 
   return (
-    <button onClick={handleDownload} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+    <button onClick={handleDownload} className="download-button">
       <DownloadIcon width={32} height={32} />
     </button>
   );
