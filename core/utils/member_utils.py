@@ -3,7 +3,7 @@ from ..models.member_model import Member
 from ..serializers.member_serializer import MemberSerializer
 
 def getMemberList(request):
-    members = Member.objects.all().order_by('-updated')
+    members = Member.objects.all().order_by('mltc', 'sadc_member_id')
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data)
 
