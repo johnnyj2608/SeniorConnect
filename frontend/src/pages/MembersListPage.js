@@ -59,7 +59,6 @@ const MembersListPage = () => {
           <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />
       ))}
 
-      {/* Download button to xlsx */}
       <AddButton />
     </div>
   )
