@@ -208,11 +208,13 @@ a {
 
 .download-button {
   font-size: 48px;
-  background: var(--color-main);
+  background: transparent;
   border: none;
-  width: 60px;
-  border-radius: 50%;
   cursor: pointer;
+}
+
+.download-button > svg {
+  fill: var(--color-text);
 }
 
 .filters {
@@ -225,13 +227,18 @@ a {
   margin: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 200px;
+  width: 250px;
   background-color: #f9f9f9;
 }
 
 .member-search {
   width: 300px;
 }
+
+.member-search::placeholder {
+  color: var(--color-text);
+}
+
 
 /*==============================
 =>  Member Styles

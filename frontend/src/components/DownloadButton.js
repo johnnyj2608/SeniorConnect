@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { ReactComponent as DownloadIcon } from '../assets/download.svg';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
