@@ -165,10 +165,12 @@ a {
 
 .members-list-item h3,
 .members-list-item p {
-  display: flex;
   padding: 20px 10px;
   font-weight: 600;
   border-right: 1px solid  var(--color-gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .members-list-item h3:last-child,
@@ -243,12 +245,12 @@ a {
 
 .members-list-birthdate {
   justify-content: center;
-  width: 150px;
+  width: 141px;
 }
 
 .members-list-phone {
   justify-content: center;
-  width: 175px;
+  width: 170px;
 }
 
 
