@@ -50,7 +50,9 @@ const MembersListPage = () => {
       <div className="filters">
         <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
-        <p className="members-count">{members.length} results</p>
+        <p className="members-count">
+          {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
+        </p>
       </div>
       
       {filteredMembers.map((member) => (
