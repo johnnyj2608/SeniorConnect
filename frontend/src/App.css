@@ -232,6 +232,7 @@ a {
 }
 
 .mltc-dropdown, .member-search {
+  color: var(--color-gray);
   font-size: 16px;
   padding: 10px;
   margin-left: 15px;
@@ -246,7 +247,7 @@ a {
 }
 
 .member-search::placeholder {
-  color: var(--color-text);
+  color: var(--color-gray);
 }
 
 

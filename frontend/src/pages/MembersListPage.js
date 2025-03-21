@@ -36,7 +36,7 @@ const MembersListPage = () => {
         member.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.last_name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesMltc = mltcFilter ? member.mltc.toString() === mltcFilter : true;
+    const matchesMltc = mltcFilter ? member.mltc === mltcFilter : true;
 
     return matchesSearch && matchesMltc;
   });
