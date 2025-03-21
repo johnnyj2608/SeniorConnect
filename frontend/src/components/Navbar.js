@@ -19,6 +19,11 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleNavigate = (path) => {
+    navigate(path);
+    setNavbarOpen(false);
+  };
+
   return (
     <div className="app-header">
       <h1>Senior Connect</h1>
@@ -28,19 +33,19 @@ const Navbar = () => {
       </button>
 
       <div className={`nav-links ${navbarOpen ? "open" : ""}`}>
-        <button onClick={() => navigate('/')}>
+        <button onClick={() => handleNavigate('/')}>
           <span className="button-text">Home</span>
         </button>
-        <button onClick={() => navigate('/members')}>
+        <button onClick={() => handleNavigate('/members')}>
           <span className="button-text">Members</span>
         </button>
-        <button onClick={() => navigate('/reports')}>
+        <button onClick={() => handleNavigate('/reports')}>
           <span className="button-text">Reports</span>
         </button>
-        <button onClick={() => navigate('/auditlog')}>
+        <button onClick={() => handleNavigate('/auditlog')}>
           <span className="button-text">Audit Log</span>
         </button>
-        <button onClick={() => navigate('/settings')}>
+        <button onClick={() => handleNavigate('/settings')}>
           <span className="button-text">Settings</span>
         </button>
       </div>
