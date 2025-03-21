@@ -8,8 +8,8 @@ const MemberPage = () => {
   const navigate = useNavigate()
 
   const [member, setMember] = useState({
-    sadc_member_id: 0,
-    mltc: 0,
+    sadc_member_id: '',
+    mltc: '',
     first_name: '',
     last_name: '',
     birth_date: '',
