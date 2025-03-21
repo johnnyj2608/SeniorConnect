@@ -31,12 +31,12 @@ const MembersListPage = () => {
   }, []);
 
   const filteredMembers = members.filter((member) => {
-    const matchesSearch = 
-        member.sadc_member_id.toString().includes(searchQuery) || 
-        member.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.last_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      member.sadc_member_id.toString().includes(searchQuery) ||
+      member.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.last_name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesMltc = mltcFilter ? member.mltc === mltcFilter : true;
+    const matchesMltc = mltcFilter ? member.mltc === parseInt(mltcFilter) : true;
 
     return matchesSearch && matchesMltc;
   });
