@@ -4,6 +4,7 @@ import AddButton from '../components/AddButton'
 import DownloadButton from '../components/DownloadButton'
 import MltcDropdown from '../components/MltcDropdown';
 import SearchInput from '../components/SearchInput';
+import groupMembersByMltc from '../utils/groupMembersByMltc';
 
 const MembersListPage = () => {
 
@@ -40,11 +41,13 @@ const MembersListPage = () => {
     return matchesSearch && matchesMltc;
   });
 
+  const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
+
   return (
     <div className="members">
       <div className="members-header">
         <h2 className="members-title">&#9782; Members</h2>
-        <DownloadButton members={members} mltcOptions={mltcOptions} />
+        <DownloadButton membersByMltc={membersByMltc} />
       </div>
 
       <div className="filters">
@@ -54,9 +57,14 @@ const MembersListPage = () => {
           {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
         </p>
       </div>
-      
-      {filteredMembers.map((member) => (
-          <ListItem key={member.id} member={member} mltcOptions={mltcOptions} />
+
+      {Object.entries(membersByMltc).map(([mltcName]) => (
+        <div key={mltcName}>
+          <h3 className="mltc-section">{mltcName}</h3>
+          {filteredMembers.map((member) => (
+            <ListItem key={member.id} member={member} />
+          ))}
+        </div>
       ))}
 
       <AddButton />

@@ -3,23 +3,9 @@ import { ReactComponent as DownloadIcon } from '../assets/download.svg';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-const DownloadButton = ({ members, mltcOptions }) => {
+const DownloadButton = ({ membersByMltc  }) => {
   const handleDownload = async () => {
     try {
-      const mltcMap = mltcOptions.reduce((acc, mltc) => {
-        acc[mltc.id] = mltc.name;
-        return acc;
-      }, {});
-
-      const membersByMltc = members.reduce((acc, member) => {
-        const mltcName = mltcMap[member.mltc] || "Unknown";
-        if (!acc[mltcName]) {
-          acc[mltcName] = [];
-        }
-        acc[mltcName].push(member);
-        return acc;
-      }, {});
-
       const spreadsheet = XLSX.utils.book_new();
 
       Object.entries(membersByMltc).forEach(([mltc, members]) => {

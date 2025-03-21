@@ -7,7 +7,7 @@ const Navbar = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
 
   const handleResize = () => {
-    if (window.innerWidth > 869) {
+    if (window.innerWidth > 820) {
       setNavbarOpen(false);
     }
   };
