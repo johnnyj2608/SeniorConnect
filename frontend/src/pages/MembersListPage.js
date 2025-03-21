@@ -58,10 +58,10 @@ const MembersListPage = () => {
         </p>
       </div>
 
-      {Object.entries(membersByMltc).map(([mltcName]) => (
+      {Object.entries(membersByMltc).map(([mltcName, members]) => (
         <div key={mltcName}>
           <h3 className="mltc-section">{mltcName}</h3>
-          {filteredMembers.map((member) => (
+          {members.map((member) => (
             <ListItem key={member.id} member={member} />
           ))}
         </div>

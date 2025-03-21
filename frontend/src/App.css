@@ -133,19 +133,9 @@ a {
   font-size: 25px;
   padding-top: 20px;
   padding-left: 10px;
+  padding-bottom: 5px;
   position: relative;
-}
-
-
-.mltc-section::after {
-  content: "";
-  height: 1px;
-  background-color: gray;
-  width: 98%;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  border-bottom: 1px solid var(--color-gray);
 }
 
 .members-list {
@@ -162,12 +152,9 @@ a {
 
 .members-list-item {
   display: flex;
-  gap: 30px;
   font-size: 20px;
   align-items: center;
-  border-bottom: 1px solid  var(--color-border);
-  margin-bottom: 12px;
-  padding: 8px 16px;
+  border-bottom: 1px solid  var(--color-gray);
   transition: all 0.2s ease-in-out;
 }
 
@@ -177,19 +164,19 @@ a {
 }
 
 .members-list-item h3,
-.members-list-item p span {
+.members-list-item p {
+  display: flex;
+  padding: 20px 10px;
   font-weight: 600;
+  border-right: 1px solid  var(--color-gray);
 }
 
-
-.members-list-item p span {
-  color: var(--color-gray);
-  display: inline-block;
-  margin-right: 8px;
+.members-list-item h3:last-child,
+.members-list-item p:last-child {
+  border-right: none;
 }
 
 .members-list-item p {
-  font-size: 20px;
   color: var(--color-light);
 }
 
@@ -248,6 +235,20 @@ a {
 
 .member-search::placeholder {
   color: var(--color-gray);
+}
+
+.members-list-name {
+  width: 250px;
+}
+
+.members-list-birthdate {
+  justify-content: center;
+  width: 150px;
+}
+
+.members-list-phone {
+  justify-content: center;
+  width: 175px;
 }
 
 
