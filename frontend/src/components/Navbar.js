@@ -1,14 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as MenuIcon } from '../assets/menu.svg'
 
-
-const Header = () => {
+const Navbar = () => {
   const navigate = useNavigate()
+  const [navbarOpen, setNavbarOpen] = useState(false);
+
+  const handleResize = () => {
+    if (window.innerWidth > 869) {
+      setNavbarOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className="app-header">
       <h1>Senior Connect</h1>
-      <div>
+
+      <button className="navbar-toggle" onClick={() => setNavbarOpen(!navbarOpen)}>
+        <MenuIcon />  
+      </button>
+
+      <div className={`nav-links ${navbarOpen ? "open" : ""}`}>
         <button onClick={() => navigate('/')}>
           <span className="button-text">Home</span>
         </button>
@@ -29,4 +48,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Navbar
