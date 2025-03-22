@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
-import MltcDropdown from '../components/MltcDropdown';
+import { ReactComponent as Pencil } from '../assets/pencil.svg'
 
 const MemberPage = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [member, setMember] = useState({
     sadc_member_id: '',
@@ -24,269 +24,94 @@ const MemberPage = () => {
     spouse: '',
   });
 
-  const [mltcOptions, setMltcOptions] = useState([]);
+  const [editing, setEditing] = useState(false);
 
-  const getMltcOptions = async () => {
-    const response = await fetch('/core/mltc/');
-    const data = await response.json();
-    setMltcOptions(data);
+  const handleBack = () => {
+    navigate('/members')
   };
 
-  const getMember = async () => {
-    if (id === 'new') return
-
-    const response = await fetch(`/core/members/${id}/`)
-    const data = await response.json()
-
-    const sanitizedData = Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [key, value ?? ""])
-    );
-
-    setMember(sanitizedData)
-  }
-
-  useEffect(() => {
-    getMember()
-    getMltcOptions()
-    // eslint-disable-next-line
-  }, [id])
-
-  const handleChange = (field) => (event) => {
-    const { value } = event.target;
-    setMember((prevMember) => ({
-      ...prevMember,
-      [field]: value,
-    }));
+  const handleEdit = () => {
+    setEditing(true);
+    console.log('editing')
   };
 
-  const createMember = async () => {
-    await fetch(`/core/members/`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sadc_member_id: parseInt(member.sadc_member_id),
-        mltc: parseInt(member.mltc),
-        first_name: member.first_name,
-        last_name: member.last_name,
-        birth_date: member.birth_date,
-        gender: member.gender,
-        address: member.address || null,
-        phone: member.phone,
-        email: member.email || null,
-        medicaid: member.medicaid,
-        care_manager: member.care_manager ? parseInt(member.care_manager) : null,
-        primary_care_provider: member.primary_care_provider ? parseInt(member.primary_care_provider) : null,
-        pharmacy: member.pharmacy ? parseInt(member.pharmacy) : null,
-        spouse: member.spouse ? parseInt(member.spouse) : null,
-      }),
-    });
+  const handleCancel = () => {
+    setEditing(false);
+    setMember(member);
+    console.log('cancel')
   };
 
-  const updateMember = async () => {
-    await fetch(`/core/members/${id}/`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sadc_member_id: member.sadc_member_id,
-        mltc: member.mltc,
-        first_name: member.first_name,
-        last_name: member.last_name,
-        birth_date: member.birth_date,
-        gender: member.gender,
-        address: member.address || null,
-        phone: member.phone,
-        email: member.email || null,
-        medicaid: member.medicaid,
-        care_manager: member.care_manager || null,
-        primary_care_provider: member.primary_care_provider || null,
-        pharmacy: member.pharmacy || null,
-        spouse: member.spouse || null,
-      }),
-    });
+  const handleSave = () => {
+    setEditing(false);
+    console.log('saving')
   };
 
-  const deleteMember = async () => {
-    await fetch(`/core/members/${id}/`, {
-      method: "DELETE",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    navigate('/')
+  const handleDelete = () => {
+    setEditing(false);
+    handleBack();
   };
-
-  const handleSubmit = async () => {
-
-    const requiredFields = [
-      'sadc_member_id', 
-      'first_name', 
-      'last_name', 
-      'birth_date', 
-      'gender', 
-      'phone', 
-      'medicaid'
-    ];
-  
-    const allFieldsFilled = requiredFields.every((field) => {
-      const value = member[field];
-      if (typeof value === 'string') {
-        return value.trim() !== '';
-      }
-      return value !== null && value !== undefined && value !== '';
-    });
-    const atLeastOneFieldFilled = requiredFields.some((field) => {
-      const value = member[field];
-      if (typeof value === 'string') {
-        return value.trim() !== '';
-      }
-      return value !== null && value !== undefined && value !== '';
-    });
-    
-    if (allFieldsFilled) {
-      if (id !== 'new') {
-        await updateMember()
-      } else {
-        await createMember()
-      }
-      navigate('/members')
-    } else if (atLeastOneFieldFilled) {
-      alert('Please fill in all required fields')
-    } else {
-      navigate('/members')
-    }
-  }
-
-  const {
-    sadc_member_id,
-    mltc,
-    first_name,
-    last_name,
-    birth_date,
-    gender,
-    phone,
-    email,
-    medicaid,
-    address,
-    care_manager,
-    primary_care_provider,
-    pharmacy,
-    spouse,
-  } = member;
 
   return (
     <div className="member">
       <div className="member-header">
         <h3>
-          <Arrowleft onClick={handleSubmit} />
+          {editing ? (
+            <button onClick={handleCancel}>Cancel</button>
+          ) : (
+            <Arrowleft onClick={handleBack} />
+          )}
         </h3>
-        {id !== 'new' ? (
-          <button onClick={deleteMember}>Delete</button>
-        ): (
-          <button onClick={handleSubmit}>Done</button>
-        )}
-        
+        <h3>
+          {editing ? (
+            <button onClick={handleSave}>Save</button>
+          ) : (
+            <Pencil onClick={handleEdit} />
+          )}
+        </h3>
       </div>
-      <label>SADC Member ID:</label>
-      <input 
-        type="number" 
-        value={sadc_member_id} 
-        onChange={handleChange('sadc_member_id')}
-      />
-
-      <label>MLTC:</label>
-      <MltcDropdown value={mltc} onChange={handleChange('mltc')} options={mltcOptions} />
-
-      <label>First Name:</label>
-      <input 
-        type="text"
-        value={first_name} 
-        onChange={handleChange('first_name')}
-      />
-
-      <label>Last Name:</label>
-      <input 
-        type="text" 
-        value={last_name}
-        onChange={handleChange('last_name')}
-      />
-
-      <label>Birth Date:</label>
-      <input 
-        type="date" 
-        value={birth_date}
-        onChange={handleChange('birth_date')}
-      />
-
-      <label>Gender:</label>
-      <select 
-        value={gender} 
-        onChange={handleChange('gender')}>
-        <option value="">Select Gender</option>
-        <option value="M">Male</option>
-        <option value="F">Female</option>
-      </select>
-
-      <label>Phone:</label>
-      <input 
-        type="number" 
-        value={phone}
-        onChange={handleChange('phone')}
-      />
-
-      <label>Email:</label>
-      <input 
-        type="email" 
-        value={email}
-        onChange={handleChange('email')}
-      />
-
-      <label>Medicaid:</label>
-      <input 
-        type="text" 
-        value={medicaid}
-        onChange={handleChange('medicaid')}
-      />
-
-      <label>Address:</label>
-      <input 
-        type="text" 
-        value={address}
-        onChange={handleChange('address')}
-      />
-
-      <label>Care Manager:</label>
-      <input 
-        type="text" 
-        value={care_manager}
-        onChange={handleChange('care_manager')}
-      />
-      
-      <label>Primary Care Provider:</label>
-      <input 
-        type="text" 
-        value={primary_care_provider}
-        onChange={handleChange('primary_care_provider')}
-      />
-      
-      <label>Pharmacy:</label>
-      <input 
-        type="text" 
-        value={pharmacy}
-        onChange={handleChange('pharmacy')}
-      />
-      
-      <label>Spouse:</label>
-      <input 
-        type="text" 
-        value={spouse}
-        onChange={handleChange('spouse')}
-      />
+      <div className="member-main">
+        <div className="info-card">
+            {/* Photo */}
+            {/* SADC Member ID. Last Name, First Name (Adjacent to photo) */}
+            {/* Birth Date */}
+            {/* Gender */}
+            {/* Phone */}
+            {/* Address */}
+            {/* Email */}
+            {/* Medicaid */}
+            {/* Note */}
+        </div>
+        <div className="auth-card">
+            {/* MLTC */}
+            {/* Auth ID */}
+            {/* Member ID */}
+            {/* Diagnosis */}
+            {/* Days of Service */}
+            {/* Start / End Date */}
+            {/* Transportation */}
+            {/* Care Manager */}
+            {/* If updating auth, prefill with previous info except dates */}
+        </div>
+      </div>
+      <div className="member-secondary">
+        <div className="contacts-card">
+            {/* Primary Care Provider */}
+            {/* Pharmacy */}
+            {/* Spouse */}
+        </div>
+        <div className="absences-card">
+            {/* Upcoming absences */}
+            {/* Click plus button to add range */}
+        </div>
+      </div>
+      <div className="files-card">
+        {/* Upload and nickname file */}
+        {/* Dispalyed as a gallery of files */}
+        {/* Click to open new tab for PDF */}
+      </div>
+      {/* Delete Member Button */}
     </div>
-  );
-};
+  )
+}
 
-export default MemberPage;
+export default MemberPage

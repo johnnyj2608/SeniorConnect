@@ -47,7 +47,9 @@ const MembersListPage = () => {
     <div className="members">
       <div className="members-header">
         <h2 className="members-title">&#9782; Members</h2>
+        <h3>
         <DownloadButton membersByMltc={membersByMltc} />
+        </h3>
       </div>
 
       <div className="filters">
