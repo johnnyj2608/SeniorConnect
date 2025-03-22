@@ -6,9 +6,15 @@ const ListItem = ({ member }) => {
   return (
     <Link to={`/member/${member.id}`}>
       <div className="members-list-item">
-        <h3 className="members-list-name">{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>
-        <p className="members-list-birthdate">{formatDate(member.birth_date)}</p>
-        <p className="members-list-phone">{formatPhone(member.phone)}</p>
+        <div className="members-list-name">
+          <h3>{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>
+        </div>
+        <div className="members-list-birthdate">
+          <p >{formatDate(member.birth_date)}</p>
+        </div>
+        <div className="members-list-phone">
+          <p>{formatPhone(member.phone)}</p>
+        </div>
         <p>{member.address}</p>
         {/* Display SADC schedule when authorization table set up */}
       </div>
