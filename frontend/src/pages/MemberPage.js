@@ -65,14 +65,16 @@ const MemberPage = () => {
       return;
     }
 
+    const formData = new FormData();
+    for (const key in updatedMember) {
+      formData.append(key, updatedMember[key]);
+    }
+
     let response;
     if (id === 'new') {
       response = await fetch(`/core/members/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedMember),
+        body: formData,
       });
 
       if (response.ok) {
@@ -82,10 +84,7 @@ const MemberPage = () => {
     } else {
       response = await fetch(`/core/members/${id}/`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedMember),
+        body: formData,
       });
 
       if (response.ok) {
@@ -117,10 +116,11 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
         <img 
-            src={member.photo || "/default-profile.jpg"} 
+            src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
             alt="Member Photo" 
             className="member-photo"
             onClick={() => handleModalOpen('photo')}
+            onError={(e) => e.target.src = "/default-profile.jpg"}
         />
       </div>
       <div className="member-row">

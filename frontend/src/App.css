@@ -242,6 +242,12 @@ a {
   color: var(--color-gray);
 }
 
+.members-list-photo {
+  width: 150px;
+  height: 100px;
+  padding: 5px;
+}
+
 .members-list-name {
   width: 250px;
 }

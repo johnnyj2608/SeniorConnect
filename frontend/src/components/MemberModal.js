@@ -30,6 +30,7 @@ const MemberModal = ({ member, onClose, onSave, type }) => {
                     src={localMember.photo instanceof File ? URL.createObjectURL(localMember.photo) : localMember.photo || "/default-profile.jpg"} 
                     alt="Member Photo" 
                     className="preview-photo"
+                    onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
             </div>
             <input type="file" accept="image/*" onChange={handleChange('photo')} />
