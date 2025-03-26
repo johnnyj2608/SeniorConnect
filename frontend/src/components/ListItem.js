@@ -7,10 +7,10 @@ const ListItem = ({ member }) => {
     <Link to={`/member/${member.id}`}>
       <div className="members-list-item">
         <div className="members-list-name">
-          <h3>{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>
+          <p>{member.sadc_member_id}. {member.last_name}, {member.first_name}</p>
         </div>
         <div className="members-list-birthdate">
-          <p >{formatDate(member.birth_date)}</p>
+          <p>{formatDate(member.birth_date)}</p>
         </div>
         <div className="members-list-phone">
           <p>{formatPhone(member.phone)}</p>

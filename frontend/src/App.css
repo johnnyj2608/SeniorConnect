@@ -35,6 +35,10 @@
   overscroll-behavior: none;
 }
 
+body {
+  background-color: var(--color-text);
+}
+
 a {
   text-decoration: none;
 }
