@@ -295,7 +295,7 @@ a {
 .member-row {
   display: flex;
   justify-content: space-evenly;
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 .member-half-card {
@@ -307,6 +307,7 @@ a {
   border-radius: 10px;
   padding: 10px;
   max-width: 400px;
+  position: relative;
 }
 
 .member-full-card {
@@ -316,32 +317,42 @@ a {
   border-radius: 10px;
   padding: 10px;
   max-width: 800px;
+  position: relative;
 }
 
-.member-input {
+.edit-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.member-detail {
   display: flex;
   align-items: center;
   padding: 1px 5px;
 }
 
-.member-input label {
+.member-detail label {
   white-space: nowrap;
   width: 120px;
   padding: 10px;
 }
 
-.member-input input, 
-.member-input select {
+.member-detail input, 
+.member-detail select {
   flex: 1;
   padding: 5px;
   width: 100%;
 }
 
-.member-input select {
-  text-indent:-2px;
+.member-detail select {
+  text-indent:-1px;
 }
 
-.member-input span {
+.member-detail span {
   padding-left: 7px;
 }
 
@@ -371,4 +382,56 @@ a {
   .nav-links.open {
     display: flex;
   }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: var(--color-white);
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  max-width: 500px;
+}
+
+.modal input, .modal select {
+  color: var(--color-white);
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #45a049;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

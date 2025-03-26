@@ -1,30 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import MemberModal from '../components/MemberModal';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
+import { ReactComponent as AddButton } from '../assets/add.svg'
 
 const MemberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [member, setMember] = useState({
-    sadc_member_id: '',
-    mltc: '',
-    first_name: '',
-    last_name: '',
-    birth_date: '',
-    gender: '',
-    address: '',
-    phone: '',
-    email: '',
-    medicaid: '',
-    care_manager: '',
-    primary_care_provider: '',
-    pharmacy: '',
-    spouse: '',
-  });
-
-  const [editing, setEditing] = useState(false);
+  const [member, setMember] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getMember = async () => {
     if (id === 'new') return
@@ -44,260 +30,99 @@ const MemberPage = () => {
     // eslint-disable-next-line
   }, [id])
 
-  const handleCreate = async () => {
-    await fetch(`/core/members/`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sadc_member_id: parseInt(member.sadc_member_id),
-        mltc: parseInt(member.mltc),
-        first_name: member.first_name,
-        last_name: member.last_name,
-        birth_date: member.birth_date,
-        gender: member.gender,
-        address: member.address || null,
-        phone: member.phone,
-        email: member.email || null,
-        medicaid: member.medicaid,
-        care_manager: member.care_manager ? parseInt(member.care_manager) : null,
-        primary_care_provider: member.primary_care_provider ? parseInt(member.primary_care_provider) : null,
-        pharmacy: member.pharmacy ? parseInt(member.pharmacy) : null,
-        spouse: member.spouse ? parseInt(member.spouse) : null,
-      }),
-    });
-  };
-
-  const handleUpdate = async () => {
-    await fetch(`/core/members/${id}/`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sadc_member_id: member.sadc_member_id,
-        mltc: member.mltc,
-        first_name: member.first_name,
-        last_name: member.last_name,
-        birth_date: member.birth_date,
-        gender: member.gender,
-        address: member.address || null,
-        phone: member.phone,
-        email: member.email || null,
-        medicaid: member.medicaid,
-        care_manager: member.care_manager || null,
-        primary_care_provider: member.primary_care_provider || null,
-        pharmacy: member.pharmacy || null,
-        spouse: member.spouse || null,
-      }),
-    });
-    
-  };
-
-  const handleSave = async () => {
-    if (id !== 'new') {
-      await handleUpdate()
-    } else {
-      await handleCreate()
-    }
-    console.log('Saving')
-  };
-
   const handleBack = () => {
     navigate('/members')
   };
 
-  const handleEdit = () => {
-    setEditing(true);
-    console.log('editing')
-  };
-
-  const handleCancel = () => {
-    setEditing(false);
-    setMember(member);
-    console.log('cancel')
-  };
-
   const handleDelete = async () => {
-    await fetch(`/core/members/${id}/`, {
-      method: "DELETE",
+    const isConfirmed = window.confirm('Are you sure you want to delete this member?');
+    if (isConfirmed) {
+      const response = await fetch(`/core/members/${id}/`, {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        handleBack();
+      }
+    }
+  };
+
+  const handleSave = async (updatedMember) => {
+    const response = await fetch(`/core/members/${id}/`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(updatedMember),
     });
-    setEditing(false);
-    handleBack();
-  };
 
-  const handleChange = (field) => (event) => {
-    const { value } = event.target;
-    setMember((prevMember) => ({
-      ...prevMember,
-      [field]: value,
-    }));
+    if (response.ok) {
+      setMember(updatedMember);
+      setModalOpen(false);
+    }
   };
-
-  const {
-    sadc_member_id,
-    mltc,
-    first_name,
-    last_name,
-    birth_date,
-    gender,
-    phone,
-    email,
-    medicaid,
-    address,
-    care_manager,
-    primary_care_provider,
-    pharmacy,
-    spouse,
-  } = member;
 
   return (
     <div className="member">
       <div className="member-header">
         <h3>
-          {editing ? (
-            <button onClick={handleCancel}>Cancel</button>
-          ) : (
-            <Arrowleft onClick={handleBack} />
-          )}
-        </h3>
-        <h3>
-          {editing ? (
-            <button onClick={handleSave}>Save</button>
-          ) : (
-            <Pencil onClick={handleEdit} />
-            // If new, initialize save button
-          )}
+          <Arrowleft onClick={handleBack} />
         </h3>
       </div>
       <div className="member-row">
         <div className="member-half-card">
+          <Pencil className="edit-icon" onClick={() => setModalOpen(true)} />
           {/* Member Photo */}
-          <div className="member-input">
+          <div className="member-detail">
             <label>Member ID:</label>
-            {editing ? (
-              <input 
-                type="number"
-                value={sadc_member_id} 
-                onChange={handleChange('sadc_member_id')}
-              />
-            ) : (
-              <span>{sadc_member_id || 'N/A'}</span>
-            )}
+            <span>{member.sadc_member_id || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Last Name:</label>
-            {editing ? (
-              <input 
-                type="text"
-                value={last_name} 
-                onChange={handleChange('last_name')}
-              />
-            ) : (
-              <span>{last_name || 'N/A'}</span>
-            )}
+            <span>{member.last_name || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>First Name:</label>
-            {editing ? (
-              <input 
-                type="text"
-                value={first_name} 
-                onChange={handleChange('first_name')}
-              />
-            ) : (
-              <span>{first_name || 'N/A'}</span>
-            )}
+            <span>{member.first_name || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
-            <label>Date of Birth:</label>
-            {editing ? (
-              <input 
-                type="date"
-                value={birth_date} 
-                onChange={handleChange('birth_date')}
-              />
-            ) : (
-              <span>{birth_date || 'N/A'}</span>
-            )}
+          <div className="member-detail">
+            <label>Birth Date:</label>
+            <span>{member.birth_date || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Gender: </label>
-            {editing ? (
-              <select 
-                value={gender} 
-                onChange={handleChange('gender')}>
-                <option value="">Select Gender</option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-              </select>
-            ) : (
-              <span>{gender || 'N/A'}</span>
-            )}
+            <span>{member.gender || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Phone:</label>
-            {editing ? (
-              <input 
-                type="number"
-                value={phone} 
-                onChange={handleChange('phone')}
-              />
-            ) : (
-              <span>{phone || 'N/A'}</span>
-            )}
+            <span>{member.phone || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Address:</label>
-            {editing ? (
-              <input 
-                type="text"
-                value={address} 
-                onChange={handleChange('address')}
-              />
-            ) : (
-              <span>{address || 'N/A'}</span>
-            )}
+            <span>{member.address || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Email:</label>
-            {editing ? (
-              <input 
-                type="email"
-                value={email} 
-                onChange={handleChange('email')}
-              />
-            ) : (
-              <span>{email || 'N/A'}</span>
-            )}
+            <span>{member.email || 'N/A'}</span>
           </div>
 
-          <div className="member-input">
+          <div className="member-detail">
             <label>Medicaid:</label>
-            {editing ? (
-              <input 
-                type="text"
-                value={medicaid} 
-                onChange={handleChange('medicaid')}
-              />
-            ) : (
-              <span>{medicaid || 'N/A'}</span>
-            )}
+            <span>{member.medicaid || 'N/A'}</span>
           </div>
         </div>
         <div className="member-half-card">
-
+          <AddButton className="edit-icon" onClick={handleBack} />
           <label>MLTC:</label>
           <label>Member ID:</label>
           <label>Auth ID:</label>
@@ -313,30 +138,34 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
         <div className="member-half-card">
+          <Pencil className="edit-icon" onClick={handleBack} />
           <label>Emergency Contact:</label>
           <label>Primary Care Provider:</label>
           <label>Pharmacy:</label>
           <label>Spouse:</label>
         </div>
         <div className="member-half-card">
-          {/* Upcoming absences */}
-          {/* Click plus button to add range */}
+          <AddButton className="edit-icon" onClick={handleBack} />
         </div>
       </div>
       <div className="member-row">
         <div className="member-full-card">
+          <AddButton className="edit-icon" onClick={handleBack} />
           {/* Upload and nickname file */}
           {/* Dispalyed as a gallery of files */}
           {/* Click to open new tab for PDF */}
         </div>
       </div>
       <div className="member-row">
-          {editing ? (
-            <h3><button className="delete-button" onClick={handleDelete}>Delete</button></h3>
-          ) : (
-            null
-          )}
+        <h3><button className="delete-button" onClick={handleDelete}>Delete</button></h3>
       </div>
+      {modalOpen && (
+        <MemberModal
+          member={member}
+          onClose={() => setModalOpen(false)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   )
 }
