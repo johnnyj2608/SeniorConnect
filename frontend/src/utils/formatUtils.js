@@ -12,4 +12,14 @@ const formatPhone = (phone) => {
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 };
 
-export { formatDate, formatPhone };
+const formatGender = (gender) => {
+    if (gender === 'M') {
+      return 'Male';
+    } else if (gender === 'F') {
+      return 'Female';
+    } else {
+      return 'Unknown';
+    }
+  };
+
+export { formatDate, formatPhone, formatGender };

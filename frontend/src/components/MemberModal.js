@@ -11,11 +11,6 @@ const MemberModal = ({ member, onClose, onSave }) => {
         }));
     };
 
-    const handleSave = () => {
-        onSave(localMember);
-        onClose();
-    };
-
     useEffect(() => {
         setLocalMember({ ...member });
     }, [member]);
@@ -108,7 +103,7 @@ const MemberModal = ({ member, onClose, onSave }) => {
                 </div>
             <div className="modal-buttons">
                 <button onClick={onClose}>Cancel</button>
-                <button onClick={handleSave}>Save</button>
+                <button onClick={() => onSave(localMember)}>Save</button>
             </div>
             </div>
         </div>

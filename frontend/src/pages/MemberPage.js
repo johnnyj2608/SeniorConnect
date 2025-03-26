@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MemberModal from '../components/MemberModal';
+import { formatDate, formatPhone, formatGender } from '../utils/formatUtils';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
 import { ReactComponent as AddButton } from '../assets/add.svg'
@@ -26,7 +27,11 @@ const MemberPage = () => {
   }
 
   useEffect(() => {
-    getMember()
+    if (id === 'new') {
+      setModalOpen(true);
+    } else {
+      getMember();
+    }
     // eslint-disable-next-line
   }, [id])
 
@@ -51,16 +56,47 @@ const MemberPage = () => {
   };
 
   const handleSave = async (updatedMember) => {
-    const response = await fetch(`/core/members/${id}/`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedMember),
-    });
+    const requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender', 'phone', 'medicaid'];
+    const missingFields = requiredFields.filter(field => !updatedMember[field]);
+    if (missingFields.length > 0) {
+      alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+      return;
+    }
 
-    if (response.ok) {
-      setMember(updatedMember);
+    let response;
+    if (id === 'new') {
+      response = await fetch(`/core/members/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedMember),
+      });
+
+      if (response.ok) {
+        const savedMember = await response.json();
+        navigate(`/members/${savedMember.id}`);
+      }
+    } else {
+      response = await fetch(`/core/members/${id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedMember),
+      });
+
+      if (response.ok) {
+        setMember(updatedMember);
+        setModalOpen(false);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    if (id === 'new') {
+      navigate('/members');
+    } else {
       setModalOpen(false);
     }
   };
@@ -73,87 +109,132 @@ const MemberPage = () => {
         </h3>
       </div>
       <div className="member-row">
+        {/* Member Photo */}
+      </div>
+      <div className="member-row">
         <div className="member-half-card">
-          <Pencil className="edit-icon" onClick={() => setModalOpen(true)} />
-          {/* Member Photo */}
-          <div className="member-detail">
-            <label>Member ID:</label>
-            <span>{member.sadc_member_id || 'N/A'}</span>
-          </div>
+          <h2>Details</h2>
+          <div className="member-container">
+            <Pencil className="edit-icon" onClick={() => setModalOpen(true)} />
+            <div className="member-detail">
+              <label>Member ID:</label>
+              <span>{member.sadc_member_id || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Last Name:</label>
-            <span>{member.last_name || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Last Name:</label>
+              <span>{member.last_name || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>First Name:</label>
-            <span>{member.first_name || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>First Name:</label>
+              <span>{member.first_name || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Birth Date:</label>
-            <span>{member.birth_date || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Birth Date:</label>
+              <span>{formatDate(member.birth_date) || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Gender: </label>
-            <span>{member.gender || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Gender: </label>
+              <span>{formatGender(member.gender) || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Phone:</label>
-            <span>{member.phone || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Phone:</label>
+              <span>{member.phone ? formatPhone(member.phone) : 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Address:</label>
-            <span>{member.address || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Address:</label>
+              <span>{member.address || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Email:</label>
-            <span>{member.email || 'N/A'}</span>
-          </div>
+            <div className="member-detail">
+              <label>Email:</label>
+              <span>{member.email || 'N/A'}</span>
+            </div>
 
-          <div className="member-detail">
-            <label>Medicaid:</label>
-            <span>{member.medicaid || 'N/A'}</span>
+            <div className="member-detail">
+              <label>Medicaid:</label>
+              <span>{member.medicaid || 'N/A'}</span>
+            </div>
           </div>
         </div>
         <div className="member-half-card">
-          <AddButton className="edit-icon" onClick={handleBack} />
-          <label>MLTC:</label>
-          <label>Member ID:</label>
-          <label>Auth ID:</label>
-          <label>Diagnosis:</label>
-          <label>Schedule:</label>
-          <label>Start Date:</label>
-          <label>End Date:</label>
-          <label>Transportation:</label>
-          <label>CM Name:</label>
-          <label>CM Phone:</label>
-          {/* If updating auth, prefill with previous info except dates */}
+          <h2>Authorization</h2>
+          <div className="member-container">
+            <AddButton className="edit-icon" onClick={handleBack} />
+            <div className="member-detail">
+              <label>MLTC:</label>
+            </div>
+            <div className="member-detail">
+              <label>Member ID:</label>
+            </div>
+            <div className="member-detail">
+              <label>Auth ID:</label>
+            </div>
+            <div className="member-detail">
+              <label>Diagnosis:</label>
+            </div>
+            <div className="member-detail">
+              <label>Schedule:</label>
+            </div>
+            <div className="member-detail">
+              <label>Start Date:</label>
+            </div>
+            <div className="member-detail">
+              <label>End Date:</label>
+            </div>
+            <div className="member-detail">
+              <label>Transportation:</label>
+            </div>
+            <div className="member-detail">
+              <label>CM Name:</label>
+            </div>
+            <div className="member-detail">
+              <label>CM Phone:</label>
+            </div>
+            {/* If updating auth, prefill with previous info except dates */}
+          </div>
         </div>
       </div>
       <div className="member-row">
         <div className="member-half-card">
-          <Pencil className="edit-icon" onClick={handleBack} />
-          <label>Emergency Contact:</label>
-          <label>Primary Care Provider:</label>
-          <label>Pharmacy:</label>
-          <label>Spouse:</label>
+          <h2>Contacts</h2>
+          <div className="member-container">
+            <Pencil className="edit-icon" onClick={handleBack} />
+            <div className="member-detail">
+              <label>Emergency Contact:</label>
+            </div>
+            <div className="member-detail">
+              <label>Primary Care Provider:</label>
+            </div>
+            <div className="member-detail">
+              <label>Pharmacy:</label>
+            </div>
+            <div className="member-detail">
+              <label>Spouse:</label>
+            </div>
+          </div>
         </div>
         <div className="member-half-card">
-          <AddButton className="edit-icon" onClick={handleBack} />
+          <h2>Absences</h2>
+          <div className="member-container">
+            <AddButton className="edit-icon" onClick={handleBack} />
+          </div>
         </div>
       </div>
       <div className="member-row">
         <div className="member-full-card">
-          <AddButton className="edit-icon" onClick={handleBack} />
-          {/* Upload and nickname file */}
-          {/* Dispalyed as a gallery of files */}
-          {/* Click to open new tab for PDF */}
+          <h2>Files</h2>
+          <div className="member-container">
+            <AddButton className="edit-icon" onClick={handleBack} />
+            {/* Upload and nickname file */}
+            {/* Dispalyed as a gallery of files */}
+            {/* Click to open new tab for PDF */}
+          </div>
         </div>
       </div>
       <div className="member-row">
@@ -162,7 +243,7 @@ const MemberPage = () => {
       {modalOpen && (
         <MemberModal
           member={member}
-          onClose={() => setModalOpen(false)}
+          onClose={handleCancel}
           onSave={handleSave}
         />
       )}

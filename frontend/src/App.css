@@ -31,8 +31,8 @@
   box-sizing: border-box;
   font-family: 'Lexend', sans-serif;
   color: inherit;
-  font-size: inherit;
   scroll-behavior: smooth;
+  overscroll-behavior: none;
 }
 
 a {
@@ -47,7 +47,7 @@ a {
 }
 
 .app {
-  height: 100svh;
+  height: 100%;
   background-color: var(--color-white);
 }
 
@@ -300,23 +300,21 @@ a {
 
 .member-half-card {
   display: flex;
-  color: var(--color-white);
-  background: var(--color-gray);
   width: 49%;
   flex-direction: column;
-  border-radius: 10px;
-  padding: 10px;
-  max-width: 400px;
-  position: relative;
 }
 
 .member-full-card {
+  display: flex;
+  width: 98%;
+  flex-direction: column;
+}
+
+.member-container {
   color: var(--color-white);
   background: var(--color-gray);
-  width: 95%;
-  border-radius: 10px;
   padding: 10px;
-  max-width: 800px;
+  border-radius: 10px;
   position: relative;
 }
 
@@ -338,7 +336,7 @@ a {
 .member-detail label {
   white-space: nowrap;
   width: 120px;
-  padding: 10px;
+  padding: 5px;
 }
 
 .member-detail input, 
@@ -361,6 +359,7 @@ a {
 }
 
 .delete-button {
+  font-size: 24px;
   color: red;
 }
 
