@@ -116,7 +116,12 @@ const MemberPage = () => {
         </h3>
       </div>
       <div className="member-row">
-        {/* Member Photo */}
+        <img 
+            src={member.photo || "/default-profile.jpg"} 
+            alt="Member Photo" 
+            className="member-photo"
+            onClick={() => handleModalOpen('photo')}
+        />
       </div>
       <div className="member-row">
         <div className="member-half-card">

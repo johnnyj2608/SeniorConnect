@@ -4,19 +4,41 @@ const MemberModal = ({ member, onClose, onSave, type }) => {
     const [localMember, setLocalMember] = useState({ ...member });
 
     const handleChange = (field) => (event) => {
-        const { value } = event.target;
-        setLocalMember((prevMember) => ({
-          ...prevMember,
-          [field]: value,
-        }));
+        const { value, type, files } = event.target;
+        if (type === 'file' && files.length > 0) {
+            setLocalMember((prevMember) => ({
+                ...prevMember,
+                photo: files[0],
+            }));
+        } else {
+            setLocalMember((prevMember) => ({
+                ...prevMember,
+                [field]: value,
+            }));
+        }
     };
 
     useEffect(() => {
         setLocalMember({ ...member });
     }, [member]);
 
+    const renderPhoto = () => (
+        <>
+            <h3>Edit Photo</h3>
+            <div className="photo-container">
+                <img 
+                    src={localMember.photo instanceof File ? URL.createObjectURL(localMember.photo) : localMember.photo || "/default-profile.jpg"} 
+                    alt="Member Photo" 
+                    className="preview-photo"
+                />
+            </div>
+            <input type="file" accept="image/*" onChange={handleChange('photo')} />
+        </>
+    );
+
     const renderDetails = () => (
         <>
+            <h3>Edit Details</h3>
             <div className="member-detail">
                 <label>Member ID</label>
                 <input
@@ -104,12 +126,13 @@ const MemberModal = ({ member, onClose, onSave, type }) => {
 
     const renderAuthorization = () => (
         <>
-            <h1>Render Authorization</h1>
+            <h3>Edit Authorization</h3>
         </>
     );
 
     const renderContacts = () => (
         <>
+            <h3>Edit Contacts</h3>
             <div className="member-detail">
                 <label>Emergency Contact</label>
                 <input
@@ -151,14 +174,14 @@ const MemberModal = ({ member, onClose, onSave, type }) => {
 
     const renderAbsences = () => (
         <>
-            <h1>Render Absences</h1>
+            <h3>Edit Absences</h3>
         </>
     );
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <h3>Edit Member</h3>
+                {type === 'photo' && renderPhoto()}
                 {type === 'details' && renderDetails()}
                 {type === 'authorization' && renderAuthorization()}
                 {type === 'contacts' && renderContacts()}

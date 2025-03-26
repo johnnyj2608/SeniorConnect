@@ -5,7 +5,7 @@ class Member(models.Model):
     # Details
     sadc_member_id = models.IntegerField(null=False, blank=False)
     mltc = models.ForeignKey('MLTC', null=True, blank=False, on_delete=models.SET_NULL)
-    photo = models.BinaryField(null=True, blank=True)
+    photo = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
     last_name = models.CharField(max_length=255, null=False, blank=False)
     birth_date = models.DateField(null=False, blank=False)
