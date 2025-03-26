@@ -12,6 +12,7 @@ const MemberPage = () => {
 
   const [member, setMember] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('');
 
   const getMember = async () => {
     if (id === 'new') return
@@ -29,6 +30,7 @@ const MemberPage = () => {
   useEffect(() => {
     if (id === 'new') {
       setModalOpen(true);
+      setModalType('details');
     } else {
       getMember();
     }
@@ -101,6 +103,11 @@ const MemberPage = () => {
     }
   };
 
+  const handleModalOpen = (type) => {
+    setModalType(type);
+    setModalOpen(true);
+  };
+
   return (
     <div className="member">
       <div className="member-header">
@@ -115,7 +122,7 @@ const MemberPage = () => {
         <div className="member-half-card">
           <h2>Details</h2>
           <div className="member-container">
-            <Pencil className="edit-icon" onClick={() => setModalOpen(true)} />
+            <Pencil className="edit-icon" onClick={() => handleModalOpen('details')} />
             <div className="member-detail">
               <label>Member ID:</label>
               <span>{member.sadc_member_id || 'N/A'}</span>
@@ -165,7 +172,7 @@ const MemberPage = () => {
         <div className="member-half-card">
           <h2>Authorization</h2>
           <div className="member-container">
-            <AddButton className="edit-icon" onClick={handleBack} />
+            <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
             <div className="member-detail">
               <label>MLTC:</label>
             </div>
@@ -204,7 +211,7 @@ const MemberPage = () => {
         <div className="member-half-card">
           <h2>Contacts</h2>
           <div className="member-container">
-            <Pencil className="edit-icon" onClick={handleBack} />
+            <Pencil className="edit-icon" onClick={() => handleModalOpen('contacts')} />
             <div className="member-detail">
               <label>Emergency Contact:</label>
             </div>
@@ -222,7 +229,7 @@ const MemberPage = () => {
         <div className="member-half-card">
           <h2>Absences</h2>
           <div className="member-container">
-            <AddButton className="edit-icon" onClick={handleBack} />
+            <AddButton className="edit-icon" onClick={() => handleModalOpen('absences')} />
           </div>
         </div>
       </div>
@@ -230,7 +237,7 @@ const MemberPage = () => {
         <div className="member-full-card">
           <h2>Files</h2>
           <div className="member-container">
-            <AddButton className="edit-icon" onClick={handleBack} />
+            <AddButton className="edit-icon" onClick={() => handleModalOpen('files')} />
             {/* Upload and nickname file */}
             {/* Dispalyed as a gallery of files */}
             {/* Click to open new tab for PDF */}
@@ -245,6 +252,7 @@ const MemberPage = () => {
           member={member}
           onClose={handleCancel}
           onSave={handleSave}
+          type={modalType}
         />
       )}
     </div>
