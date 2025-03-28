@@ -176,7 +176,6 @@ a {
   border-right: 1px solid  var(--color-gray);
 }
 
-.members-list-item h3:last-child,
 .members-list-item p:last-child {
   border-right: none;
 }
@@ -243,28 +242,27 @@ a {
 }
 
 .members-list-photo {
-  width: 150px;
+  min-width: 150px;
   height: 100px;
   padding: 5px;
 }
 
 .members-list-name {
-  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
 }
 
 .members-list-birthdate {
   justify-content: center;
-  width: 150px;
+  min-width: 150px;
 }
 
 .members-list-phone {
   justify-content: center;
-  width: 175px;
+  min-width: 175px;
 }
 
-.members-list-name h3,
-.members-list-birthdate p,
-.members-list-phone p {
+.members-list-item p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
