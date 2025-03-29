@@ -60,7 +60,9 @@ const MembersListPage = () => {
         </p>
       </div>
 
-      {Object.entries(membersByMltc).map(([mltcName, members]) => (
+      {Object.entries(membersByMltc)
+        .sort(([mltcA], [mltcB]) => mltcA.localeCompare(mltcB))
+        .map(([mltcName, members]) => (
         <div key={mltcName}>
           <h3 className="mltc-section">{mltcName}</h3>
           {members.map((member) => (
