@@ -16,6 +16,7 @@ const MltcDropdown = ({ value, onChange, options = [] }) => {
             ) : (
                 <option disabled>No MLTC options available</option>
             )}
+            <option value="Unknown">Unknown</option>
         </select>
     );
 };

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MemberModal from '../components/MemberModal';
 import { formatDate, formatPhone, formatGender } from '../utils/formatUtils';
+import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
 import { ReactComponent as AddButton } from '../assets/add.svg'
@@ -11,6 +12,7 @@ const MemberPage = () => {
   const navigate = useNavigate();
 
   const [member, setMember] = useState({});
+  const [authorizations, setAuthorizations] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
 
@@ -25,7 +27,16 @@ const MemberPage = () => {
     );
 
     setMember(sanitizedData)
+    // getAuthorizations(sanitizedData.id);
   }
+
+  const getAuthorizations = async () => {
+    if (id === 'new') return
+
+    const response = await fetch(`/core/authorizations/${id}`);
+    const data = await response.json();
+    setAuthorizations(data);
+  };
 
   useEffect(() => {
     if (id === 'new') {
@@ -67,7 +78,12 @@ const MemberPage = () => {
 
     const formData = new FormData();
     for (const key in updatedMember) {
-      formData.append(key, updatedMember[key]);
+      if (key === 'photo' && typeof updatedMember.photo === 'string') {
+        const file = await urlToFile(updatedMember.photo, `${id}.jpg`);
+        formData.append('photo', file);
+      } else {
+        formData.append(key, updatedMember[key]);
+      }
     }
 
     let response;
@@ -79,7 +95,8 @@ const MemberPage = () => {
 
       if (response.ok) {
         const savedMember = await response.json();
-        navigate(`/members/${savedMember.id}`);
+        setModalOpen(false); 
+        navigate(`/member/${savedMember.id}`);
       }
     } else {
       response = await fetch(`/core/members/${id}/`, {
@@ -179,10 +196,10 @@ const MemberPage = () => {
           <div className="member-container">
             <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
             <div className="member-detail">
-              <label>MLTC:</label>
+              <label>Member ID:</label>
             </div>
             <div className="member-detail">
-              <label>Member ID:</label>
+              <label>MLTC:</label>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>
@@ -201,12 +218,6 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>Transportation:</label>
-            </div>
-            <div className="member-detail">
-              <label>CM Name:</label>
-            </div>
-            <div className="member-detail">
-              <label>CM Phone:</label>
             </div>
             {/* If updating auth, prefill with previous info except dates */}
           </div>
@@ -254,7 +265,7 @@ const MemberPage = () => {
       </div>
       {modalOpen && (
         <MemberModal
-          member={member}
+          data={member}
           onClose={handleCancel}
           onSave={handleSave}
           type={modalType}

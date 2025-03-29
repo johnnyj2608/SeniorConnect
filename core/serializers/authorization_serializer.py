@@ -6,7 +6,7 @@ class DiagnosisSerializer(ModelSerializer):
         model = Diagnosis
         fields = '__all__'
 
-class AddressSerializer(ModelSerializer):
+class AuthorizationSerializer(ModelSerializer):
     diagnosis = DiagnosisSerializer()
 
     class Meta:

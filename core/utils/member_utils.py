@@ -1,9 +1,11 @@
 from rest_framework.response import Response
 from ..models.member_model import Member
 from ..serializers.member_serializer import MemberSerializer
+import os
+from django.conf import settings
 
 def getMemberList(request):
-    members = Member.objects.all().order_by('mltc', 'sadc_member_id')
+    members = Member.objects.all().order_by('mltc_id', 'sadc_member_id')
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data)
 
@@ -16,20 +18,14 @@ def createMember(request):
     data = request.data
     member = Member.objects.create(
         sadc_member_id=data['sadc_member_id'],
-        mltc_id=data['mltc'],
-        photo=data.get('photo', None),
         first_name=data['first_name'],
         last_name=data['last_name'],
         birth_date=data['birth_date'],
         gender=data['gender'],
-        address_id=data['address'],
+        # address=data['address'],
         phone=data['phone'],
         email=data.get('email', None),
         medicaid=data['medicaid'],
-        care_manager_id=data.get('care_manager', None),
-        primary_care_provider_id=data.get('primary_care_provider', None),
-        pharmacy_id=data.get('pharmacy', None),
-        spouse_id=data.get('spouse', None),
     )
     serializer = MemberSerializer(member)
     return Response(serializer.data)
@@ -40,7 +36,12 @@ def updateMember(request, pk):
     serializer = MemberSerializer(instance=member, data=data)
 
     if serializer.is_valid():
+        if 'photo' in request.FILES and member.photo:
+            old_photo_path = os.path.join(settings.MEDIA_ROOT, str(member.photo))
+            if os.path.exists(old_photo_path):
+                os.remove(old_photo_path)
         serializer.save()
+        
     return Response(serializer.data)
 
 def deleteMember(request, pk):

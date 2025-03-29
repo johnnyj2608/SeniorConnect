@@ -36,8 +36,9 @@ const MembersListPage = () => {
       member.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       member.last_name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesMltc = mltcFilter ? member.mltc === parseInt(mltcFilter) : true;
-
+    const matchesMltc = mltcFilter === 'Unknown'
+      ? (member.mltc_id === null || member.mltc_id === undefined)
+      : (mltcFilter ? member.mltc_id === parseInt(mltcFilter) : true);
     return matchesSearch && matchesMltc;
   });
 
@@ -61,7 +62,11 @@ const MembersListPage = () => {
       </div>
 
       {Object.entries(membersByMltc)
-        .sort(([mltcA], [mltcB]) => mltcA.localeCompare(mltcB))
+        .sort(([mltcA], [mltcB]) => {
+          if (mltcA === 'Unknown') return 1;
+          if (mltcB === 'Unknown') return -1;
+          return mltcA.localeCompare(mltcB);
+        })
         .map(([mltcName, members]) => (
         <div key={mltcName}>
           <h3 className="mltc-section">{mltcName}</h3>

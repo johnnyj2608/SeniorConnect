@@ -222,11 +222,14 @@ a {
   align-items: center;
 }
 
+.filters > * {
+  margin-left: 15px;
+}
+
 .mltc-dropdown, .member-search {
   color: var(--color-gray);
   font-size: 16px;
   padding: 10px;
-  margin-left: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 250px;
@@ -284,14 +287,15 @@ a {
   display: flex;
   align-items: center;
   font-size: 24px;
-  cursor: pointer;
   height: 30px;
+  margin-bottom: 10px;
 }
 
 .member-header h3 svg {
   fill: var(--color-text);
   width: 32px;
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .member h3 button {
@@ -383,6 +387,7 @@ a {
 
 ::-webkit-calendar-picker-indicator{
   margin-left: -25px;
+  margin-right: -8px;
 }
 
 .delete-button {
