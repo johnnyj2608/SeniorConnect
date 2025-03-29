@@ -32,9 +32,9 @@ const MembersListPage = () => {
 
   const filteredMembers = members.filter((member) => {
     const matchesSearch =
-      member.sadc_member_id.toString().includes(searchQuery) ||
-      member.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.last_name.toLowerCase().includes(searchQuery.toLowerCase());
+      member.sadc_member_id.toString().startsWith(searchQuery) ||
+      member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+      member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
 
     const matchesMltc = mltcFilter === 'Unknown'
       ? (member.mltc_id === null || member.mltc_id === undefined)
