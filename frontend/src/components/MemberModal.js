@@ -22,8 +22,8 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     return {
                         ...prevData,
                         schedule: prevData.schedule.includes(value)
-                            ? prevData.schedule.filter((day) => day !== value) // Remove if exists
-                            : [...prevData.schedule, value], // Add if not exists
+                            ? prevData.schedule.filter((day) => day !== value)
+                            : [...prevData.schedule, value],
                     };
                 }
                 return { ...prevData, [field]: checked };

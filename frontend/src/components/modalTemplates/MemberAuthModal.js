@@ -51,6 +51,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
             </div>
             <div className="member-detail">
                 <label>Schedule</label>
+                <div className="schedule-container">
                 {daysOfWeek.map(day => (
                     <label key={day.value}>
                         <input
@@ -63,6 +64,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                         {day.label}
                     </label>
                 ))}
+                </div>
             </div>
             <div className="member-detail">
                 <label>Start Date</label>

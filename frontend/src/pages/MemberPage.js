@@ -35,6 +35,7 @@ const MemberPage = () => {
     const response = await fetch(`/core/auths/member/${id}`);
     const data = await response.json();
     setAuths(data);
+    console.log(data)
   };
 
   useEffect(() => {
@@ -145,7 +146,7 @@ const MemberPage = () => {
       <div className="member-row">
         <img 
             src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
-            alt="Member Photo" 
+            alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="member-photo"
             onClick={() => handleModalOpen('photo')}
             onError={(e) => e.target.src = "/default-profile.jpg"}
@@ -224,11 +225,11 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>Start Date:</label>
-              <span>{auths[0]?.start_date || 'N/A'}</span>
+              <span>{formatDate(auths[0]?.start_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>End Date:</label>
-              <span>{auths[0]?.end_date || 'N/A'}</span>
+              <span>{formatDate(auths[0]?.end_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Diagnosis:</label>

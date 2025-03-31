@@ -8,7 +8,7 @@ const MemberPhotoModal = ({ data, handleChange }) => {
             <div className="photo-container">
                 <img
                     src={data.photo instanceof File ? URL.createObjectURL(data.photo) : data.photo || "/default-profile.jpg"}
-                    alt="Member Photo"
+                    alt={data.first_name ? `${data.first_name} ${data.last_name}` : "Member"} 
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
