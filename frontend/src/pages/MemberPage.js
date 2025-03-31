@@ -35,7 +35,6 @@ const MemberPage = () => {
     const response = await fetch(`/core/auths/member/${id}`);
     const data = await response.json();
     setAuths(data);
-    console.log(data)
   };
 
   useEffect(() => {

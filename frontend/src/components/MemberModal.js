@@ -53,7 +53,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
 
     return (
         <div className="modal">
-            <div className="modal-content">
+            <div className="modal-main">
                 {getModalContent()}
                 <div className="modal-buttons">
                     <button onClick={onClose}>Cancel</button>
