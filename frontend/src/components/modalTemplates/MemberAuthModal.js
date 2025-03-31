@@ -25,6 +25,11 @@ const MemberAuthModal = ({ data, handleChange }) => {
         { label: "Saturday", value: "saturday" }
     ];
 
+    const tabsData = [
+        { id: 'new', label: 'New', data: {} },
+        ...Object.values(data)
+    ];
+
     return (
         <div className="modal-tabs">
             <div className="modal-content">
@@ -34,14 +39,14 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <input
                         type="text"
                         name="mltc_member_id"
-                        value={data[activeTab]?.mltc_member_id || ''}
+                        value={tabsData[activeTab]?.mltc_member_id || ''}
                         onChange={handleChange('mltc_member_id')}
                     />
                 </div>
                 <div className="member-detail">
                     <label>MLTC:</label>
                     <MltcDropdown 
-                        value={data[activeTab]?.mltc_id} 
+                        value={tabsData[activeTab]?.mltc_id} 
                         onChange={handleChange('mltc_id')} 
                         options={mltcOptions} 
                     />
@@ -51,7 +56,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <input
                         type="text"
                         name="mltc_auth_id"
-                        value={data[activeTab]?.mltc_auth_id || ''}
+                        value={tabsData[activeTab]?.mltc_auth_id || ''}
                         onChange={handleChange('mltc_auth_id')}
                     />
                 </div>
@@ -64,7 +69,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                                     type="checkbox"
                                     name="schedule"
                                     value={day.value}
-                                    checked={data[activeTab]?.schedule?.includes(day.value) || false}
+                                    checked={tabsData[activeTab]?.schedule?.includes(day.value) || false}
                                     onChange={handleChange('schedule')}
                                 />
                                 {day.label}
@@ -77,7 +82,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <input
                         type="date"
                         name="start_date"
-                        value={data[activeTab]?.start_date || ''}
+                        value={tabsData[activeTab]?.start_date || ''}
                         onChange={handleChange('start_date')}
                     />
                 </div>
@@ -86,7 +91,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <input
                         type="date"
                         name="end_date"
-                        value={data[activeTab]?.end_date || ''}
+                        value={tabsData[activeTab]?.end_date || ''}
                         onChange={handleChange('end_date')}
                     />
                 </div>
@@ -95,7 +100,7 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <input
                         type="text"
                         name="diagnosis"
-                        value={data[activeTab]?.diagnosis?.dx_code || ''}
+                        value={tabsData[activeTab]?.diagnosis?.dx_code || ''}
                         onChange={handleChange('diagnosis')}
                     />
                 </div>
@@ -103,29 +108,29 @@ const MemberAuthModal = ({ data, handleChange }) => {
                     <label>SDC Code</label>
                     <input
                         type="text"
-                        name="social_day_care_code"
-                        value={data[activeTab]?.social_day_care_code || ''}
-                        onChange={handleChange('social_day_care_code')}
+                        name="sdc_code"
+                        value={tabsData[activeTab]?.sdc_code || ''}
+                        onChange={handleChange('sdc_code')}
                     />
                 </div>
                 <div className="member-detail">
                     <label>Trans Code</label>
                     <input
                         type="text"
-                        name="transportation_code"
-                        value={data[activeTab]?.transportation_code || ''}
-                        onChange={handleChange('transportation_code')}
+                        name="trans_code"
+                        value={tabsData[activeTab]?.trans_code || ''}
+                        onChange={handleChange('trans_code')}
                     />
                 </div>
             </div>
             <div className="modal-tabs-list">
-                {Object.values(data).map((auth, index) => (
+                {tabsData.map((tab, index) => (
                     <button 
                         key={index} 
                         className={`tab-button ${activeTab === index ? 'active' : ''}`} 
                         onClick={() => setActiveTab(index)}
                     >
-                        Auth {index + 1}
+                        {index === 0 ? 'New' : `Auth ${index}`}
                     </button>
                 ))}
             </div>
