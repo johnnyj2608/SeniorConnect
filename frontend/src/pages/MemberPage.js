@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MemberModal from '../components/MemberModal';
-import { formatDate, formatPhone, formatGender } from '../utils/formatUtils';
+import { formatDate, formatPhone, formatGender, formatSchedule } from '../utils/formatUtils';
 import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
@@ -35,8 +35,6 @@ const MemberPage = () => {
     const response = await fetch(`/core/auths/member/${id}`);
     const data = await response.json();
     setAuths(data);
-
-    console.log(data)
   };
 
   useEffect(() => {
@@ -126,6 +124,17 @@ const MemberPage = () => {
     setModalOpen(true);
   };
 
+  const getModalData = () => {
+    switch (modalType) {
+      case 'authorization':
+        return auths;
+      case 'details':
+        return member;
+      default:
+        return {};
+    }
+  };
+
   return (
     <div className="member">
       <div className="member-header">
@@ -211,6 +220,7 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>Schedule:</label>
+              <span>{formatSchedule(auths[0]?.schedule) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Start Date:</label>
@@ -278,7 +288,7 @@ const MemberPage = () => {
       </div>
       {modalOpen && (
         <MemberModal
-          data={member}
+          data={getModalData()}
           onClose={handleCancel}
           onSave={handleSave}
           type={modalType}

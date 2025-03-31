@@ -14,7 +14,6 @@ const MemberPhotoModal = ({ data, handleChange }) => {
                 />
             </div>
             <div className="member-detail">
-                <label>Change Photo</label>
                 <input
                     type="file"
                     accept="image/*"

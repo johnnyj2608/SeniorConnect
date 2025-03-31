@@ -377,10 +377,6 @@ a {
   width: 100%;
 }
 
-.member-detail select {
-  text-indent:-1px;
-}
-
 .member-detail span {
   padding-left: 7px;
 }
