@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from ..models.authorization_model import Authorization, MLTC, Member, Diagnosis
+from ..models.authorization_model import Authorization, Diagnosis
 from ..serializers.authorization_serializer import AuthorizationSerializer
 
 def getAuthorizationList(request):
@@ -18,14 +18,9 @@ def createAuthorization(request):
     authorization = Authorization.objects.create(
         mltc_member_id=data['mltc_member_id'],
         mltc_id=data['mltc'],
-        mltc_member_id=data['mltc_member_id'],
-        monday=data.get('monday', False),
-        tuesday=data.get('tuesday', False),
-        wednesday=data.get('wednesday', False),
-        thursday=data.get('thursday', False),
-        friday=data.get('friday', False),
-        saturday=data.get('saturday', False),
-        sunday=data.get('sunday', False),
+        mltc_auth_id=data['mltc_auth_id'],
+        member_id=data['member_id'],
+        schedule=data.get('schedule', []),
         start_date=data['start_date'],
         end_date=data['end_date'],
         # diagnosis=data['diagnosis'],
@@ -48,3 +43,8 @@ def deleteAuthorization(request, pk):
     authorization = Authorization.objects.get(id=pk)
     authorization.delete()
     return Response('Authorization was deleted')
+
+def getAuthorizationListByMember(request, member_pk):
+    authorizations = Authorization.objects.filter(member_id=member_pk).order_by('start_date', 'end_date')
+    serializer = AuthorizationSerializer(authorizations, many=True)
+    return Response(serializer.data)

@@ -7,15 +7,11 @@ const MltcDropdown = ({ value, onChange, options = [] }) => {
     return (
         <select value={value} onChange={onChange} className="mltc-dropdown">
             <option value="">Select MLTC</option>
-            {sortedOptions.length > 0 ? (
-                sortedOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                        {option.name}
-                    </option>
-                ))
-            ) : (
-                <option disabled>No MLTC options available</option>
-            )}
+            {sortedOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                    {option.name}
+                </option>
+            ))}
             <option value="Unknown">Unknown</option>
         </select>
     );

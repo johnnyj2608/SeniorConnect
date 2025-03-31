@@ -12,7 +12,7 @@ const MemberPage = () => {
   const navigate = useNavigate();
 
   const [member, setMember] = useState({});
-  const [authorizations, setAuthorizations] = useState([])
+  const [auths, setAuths] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
 
@@ -27,15 +27,16 @@ const MemberPage = () => {
     );
 
     setMember(sanitizedData)
-    // getAuthorizations(sanitizedData.id);
   }
 
-  const getAuthorizations = async () => {
+  const getAuthsByMember = async () => {
     if (id === 'new') return
 
-    const response = await fetch(`/core/authorizations/${id}`);
+    const response = await fetch(`/core/auths/member/${id}`);
     const data = await response.json();
-    setAuthorizations(data);
+    setAuths(data);
+
+    console.log(data)
   };
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const MemberPage = () => {
       setModalType('details');
     } else {
       getMember();
+      getAuthsByMember();
     }
     // eslint-disable-next-line
   }, [id])
@@ -197,29 +199,40 @@ const MemberPage = () => {
             <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
             <div className="member-detail">
               <label>Member ID:</label>
+              <span>{auths[0]?.mltc_member_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>MLTC:</label>
+              <span>{auths[0]?.mltc.name || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>
-            </div>
-            <div className="member-detail">
-              <label>Diagnosis:</label>
+              <span>{auths[0]?.mltc_auth_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Schedule:</label>
             </div>
             <div className="member-detail">
               <label>Start Date:</label>
+              <span>{auths[0]?.start_date || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>End Date:</label>
+              <span>{auths[0]?.end_date || 'N/A'}</span>
             </div>
             <div className="member-detail">
-              <label>Transportation:</label>
+              <label>Diagnosis:</label>
+              <span>{auths[0]?.diagnosis.dx_code || 'N/A'}</span>
             </div>
-            {/* If updating auth, prefill with previous info except dates */}
+            <div className="member-detail">
+              <label>SDC Code:</label>
+              <span>{auths[0]?.sdc_code || 'N/A'}</span>
+            </div>
+            <div className="member-detail">
+              <label>Trans Code:</label>
+              <span>{auths[0]?.trans_code || 'N/A'}</span>
+            </div>
+            {/* If updating auths, prefill with previous info except dates */}
           </div>
         </div>
       </div>

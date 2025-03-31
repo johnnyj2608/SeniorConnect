@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from ..models.authorization_model import Authorization, Diagnosis
+from .mltc_serializer import MLTCSerializer
 
 class DiagnosisSerializer(ModelSerializer):
     class Meta:
@@ -8,6 +9,7 @@ class DiagnosisSerializer(ModelSerializer):
 
 class AuthorizationSerializer(ModelSerializer):
     diagnosis = DiagnosisSerializer()
+    mltc = MLTCSerializer(source='mltc_id')
 
     class Meta:
         model = Authorization

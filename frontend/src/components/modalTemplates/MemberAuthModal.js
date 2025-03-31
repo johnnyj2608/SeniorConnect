@@ -14,6 +14,16 @@ const MemberAuthModal = ({ data, handleChange }) => {
         setMltcOptions(data);
     }
 
+    const daysOfWeek = [
+        { label: "Sunday", value: "sunday" },
+        { label: "Monday", value: "monday" },
+        { label: "Tuesday", value: "tuesday" },
+        { label: "Wednesday", value: "wednesday" },
+        { label: "Thursday", value: "thursday" },
+        { label: "Friday", value: "friday" },
+        { label: "Saturday", value: "saturday" }
+    ];
+
     return (
         <>
             <h3>Edit Authorization</h3>
@@ -29,6 +39,75 @@ const MemberAuthModal = ({ data, handleChange }) => {
             <div className="member-detail">
                 <label>MLTC:</label>
                 <MltcDropdown value={data.mltc_id} onChange={handleChange('mltc_id')} options={mltcOptions} />
+            </div>
+            <div className="member-detail">
+                <label>Auth ID</label>
+                <input
+                    type="text"
+                    name="mltc_auth_id"
+                    value={data.mltc_auth_id || ''}
+                    onChange={handleChange('mltc_auth_id')}
+                />
+            </div>
+            <div className="member-detail">
+                <label>Schedule</label>
+                {daysOfWeek.map(day => (
+                    <label key={day.value}>
+                        <input
+                            type="checkbox"
+                            name="schedule"
+                            value={day.value}
+                            checked={data.schedule?.includes(day.value) || false}
+                            onChange={handleChange('schedule')}
+                        />
+                        {day.label}
+                    </label>
+                ))}
+            </div>
+            <div className="member-detail">
+                <label>Start Date</label>
+                <input
+                    type="date"
+                    name="start_date"
+                    value={data.start_date || ''}
+                    onChange={handleChange('start_date')}
+                />
+            </div>
+            <div className="member-detail">
+                <label>End Date</label>
+                <input
+                    type="date"
+                    name="end_date"
+                    value={data.end_date || ''}
+                    onChange={handleChange('end_date')}
+                />
+            </div>
+            <div className="member-detail">
+                <label>Diagnosis</label>
+                <input
+                    type="text"
+                    name="diagnosis"
+                    value={data.diagnosis || ''}
+                    onChange={handleChange('diagnosis')}
+                />
+            </div>
+            <div className="member-detail">
+                <label>SDC Code</label>
+                <input
+                    type="text"
+                    name="social_day_care_code"
+                    value={data.social_day_care_code || ''}
+                    onChange={handleChange('social_day_care_code')}
+                />
+            </div>
+            <div className="member-detail">
+                <label>Trans Code</label>
+                <input
+                    type="text"
+                    name="transportation_code"
+                    value={data.transportation_code || ''}
+                    onChange={handleChange('transportation_code')}
+                />
             </div>
         </>
     );

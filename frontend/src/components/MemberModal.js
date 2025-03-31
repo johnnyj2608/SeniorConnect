@@ -10,18 +10,26 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     const [localData, setLocalData] = useState({ ...data });
 
     const handleChange = (field) => (event) => {
-        const { value, files } = event.target;
-        if (files && files.length > 0) {
-            setLocalData((prevData) => ({
-                ...prevData,
-                [field]: files[0],
-            }));
-        } else {
-            setLocalData((prevData) => ({
-                ...prevData,
-                [field]: value,
-            }));
-        }
+        const { type, value, checked, files } = event.target;
+    
+        setLocalData((prevData) => {
+            if (files && files.length > 0) {
+                return { ...prevData, [field]: files[0] };
+            }
+    
+            if (type === "checkbox") {
+                if (field === "schedule") {
+                    return {
+                        ...prevData,
+                        schedule: prevData.schedule.includes(value)
+                            ? prevData.schedule.filter((day) => day !== value) // Remove if exists
+                            : [...prevData.schedule, value], // Add if not exists
+                    };
+                }
+                return { ...prevData, [field]: checked };
+            }
+            return { ...prevData, [field]: value };
+        });
     };
 
     const getModalContent = () => {

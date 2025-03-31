@@ -5,7 +5,8 @@ from ..utils.authorization_utils import (
     getAuthorizationDetail,
     deleteAuthorization,
     getAuthorizationList,
-    createAuthorization
+    createAuthorization,
+    getAuthorizationListByMember
 )
 
 @api_view(['GET', 'POST'])
@@ -29,3 +30,9 @@ def getAuthorization(request, pk):
 
     if request.method == 'DELETE':
         return deleteAuthorization(request, pk)
+    
+
+@api_view(['GET'])
+def getAuthorizationsByMember(request, pk):
+    if request.method == 'GET':
+        return getAuthorizationListByMember(request, pk)
