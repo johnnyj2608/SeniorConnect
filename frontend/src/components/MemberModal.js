@@ -78,6 +78,11 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     return (
         <div className="modal">
             <div className="modal-main">
+                {type === 'basic' && (
+                    <div className="modal-tabs">
+                        <MemberBasicSideModal data={localData} handleChange={handleChange} />
+                    </div>
+                )}
                 <div className="modal-content">
                     {getModalContent()}
                     <div className="modal-buttons">
@@ -85,27 +90,25 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                         <button onClick={() => onSave(localData)}>Save</button>
                     </div>
                 </div>
+                {type !== 'basic' && (
                 <div className="modal-tabs">
-                    {type !== 'basic' ? (
-                        tabsData.map((tab, index) => {
-                            const { heading, subheading } = getTabLabel(type, tab, index);
-                            return (
-                                <button 
-                                    key={index} 
-                                    className={`tab-button ${activeTab === index ? 'active' : ''}`} 
-                                    onClick={() => setActiveTab(index)}
-                                >
-                                    <div className="tab-label">
-                                        <div className="tab-heading">{heading}</div>
-                                        <div className="tab-subheading">{subheading}</div>
-                                    </div>
-                                </button>
-                            );
-                        })
-                    ) : (
-                        <MemberBasicSideModal data={localData} handleChange={handleChange} />
-                    )}
+                    {tabsData.map((tab, index) => {
+                        const { heading, subheading } = getTabLabel(type, tab, index);
+                        return (
+                            <button 
+                                key={index} 
+                                className={`tab-button ${activeTab === index ? 'active' : ''}`} 
+                                onClick={() => setActiveTab(index)}
+                            >
+                                <div className="tab-label">
+                                    <div className="tab-heading">{heading}</div>
+                                    <div className="tab-subheading">{subheading}</div>
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
+            )}
             </div>
         </div>
     );
