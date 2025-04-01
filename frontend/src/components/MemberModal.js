@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import MemberBasicMainModal from './modalTemplates/MemberBasicMainModal';
-import MemberBasicSideModal from './modalTemplates/MemberBasicSideModal';
+import MemberBasicModal from './modalTemplates/MemberBasicModal';
+import MemberSideBasicModal from './modalTemplates/MemberSideBasicModal';
 import MemberAuthModal from './modalTemplates/MemberAuthModal';
 import MemberContactsModal from './modalTemplates/MemberContactsModal';
 import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';
 import MemberFilesModal from './modalTemplates/MemberFilesModal';
+import ModalTabs from './ModalTabs';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const tabsData = [
@@ -48,7 +49,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     const getModalContent = () => {
         switch (type) {
             case 'basic':
-                return <MemberBasicMainModal data={localData} handleChange={handleChange} />;
+                return <MemberBasicModal data={localData} handleChange={handleChange} />;
             case 'authorization':
                 return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'contacts':
@@ -77,38 +78,38 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
 
     return (
         <div className="modal">
-            <div className="modal-main">
-                {type === 'basic' && (
+            <div className="modal-body">
+                <div className="modal-main">
+                    {type === 'basic' && (
+                        <div className="modal-tabs">
+                            <MemberSideBasicModal data={localData} handleChange={handleChange} />
+                        </div>
+                    )}
+                    <div className="modal-content">
+                        {getModalContent()}
+                    </div>
+                    {type !== 'basic' && (
                     <div className="modal-tabs">
-                        <MemberBasicSideModal data={localData} handleChange={handleChange} />
+                        {tabsData.map((tab, index) => {
+                            const { heading, subheading } = getTabLabel(type, tab, index);
+                            return (
+                                <ModalTabs 
+                                    key={index}
+                                    index={index}
+                                    activeTab={activeTab}
+                                    setActiveTab={setActiveTab}
+                                    heading={heading}
+                                    subheading={subheading}
+                                />
+                            );
+                        })}
                     </div>
                 )}
-                <div className="modal-content">
-                    {getModalContent()}
-                    <div className="modal-buttons">
-                        <button onClick={onClose}>Cancel</button>
-                        <button onClick={() => onSave(localData)}>Save</button>
-                    </div>
                 </div>
-                {type !== 'basic' && (
-                <div className="modal-tabs">
-                    {tabsData.map((tab, index) => {
-                        const { heading, subheading } = getTabLabel(type, tab, index);
-                        return (
-                            <button 
-                                key={index} 
-                                className={`tab-button ${activeTab === index ? 'active' : ''}`} 
-                                onClick={() => setActiveTab(index)}
-                            >
-                                <div className="tab-label">
-                                    <div className="tab-heading">{heading}</div>
-                                    <div className="tab-subheading">{subheading}</div>
-                                </div>
-                            </button>
-                        );
-                    })}
+                <div className="modal-buttons">
+                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={() => onSave(localData)}>Save</button>
                 </div>
-            )}
             </div>
         </div>
     );

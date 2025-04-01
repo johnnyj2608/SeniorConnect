@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MemberPhotoModal = ({ data, handleChange }) => {
+const MemberSideBasicModal = ({ data, handleChange }) => {
 
     return (
         <>
@@ -73,4 +73,4 @@ const MemberPhotoModal = ({ data, handleChange }) => {
     );
 };
 
-export default MemberPhotoModal;
+export default MemberSideBasicModal;
