@@ -1,5 +1,10 @@
 const formatDate = (date) => {
   const d = new Date(date);
+
+  if (isNaN(d.getTime())) {
+    return '';
+  }
+
   return d.toLocaleDateString('en-US', {
       month: '2-digit',
       day: '2-digit',
