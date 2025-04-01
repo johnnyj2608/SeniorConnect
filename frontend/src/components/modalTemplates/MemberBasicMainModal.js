@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MemberDetailsModal = ({ data, handleChange }) => {
+const MemberBasicMainModal = ({ data, handleChange }) => {
     return (
         <>
             <h3>Edit Details</h3>
@@ -35,14 +35,6 @@ const MemberDetailsModal = ({ data, handleChange }) => {
                     value={data.birth_date || ''}
                     onChange={handleChange('birth_date')}
                 />
-            </div>
-            <div className="member-detail">
-                <label>Gender</label>
-                <select value={data.gender} onChange={handleChange('gender')}>
-                    <option value="">Select Gender</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                </select>
             </div>
             <div className="member-detail">
                 <label>Phone</label>
@@ -80,4 +72,4 @@ const MemberDetailsModal = ({ data, handleChange }) => {
     );
 };
 
-export default MemberDetailsModal;
+export default MemberBasicMainModal;

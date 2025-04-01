@@ -128,7 +128,7 @@ const MemberPage = () => {
     switch (modalType) {
       case 'authorization':
         return auths;
-      case 'details':
+      case 'basic':
         return member;
       default:
         return {};
@@ -155,7 +155,7 @@ const MemberPage = () => {
         <div className="member-half-card">
           <h2>Details</h2>
           <div className="member-container">
-            <Pencil className="edit-icon" onClick={() => handleModalOpen('details')} />
+            <Pencil className="edit-icon" onClick={() => handleModalOpen('basic')} />
             <div className="member-detail">
               <label>Member ID:</label>
               <span>{member.sadc_member_id || 'N/A'}</span>

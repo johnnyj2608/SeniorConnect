@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import MemberPhotoModal from './modalTemplates/MemberPhotoModal';
-import MemberDetailsModal from './modalTemplates/MemberDetailsModal';
+import MemberBasicMainModal from './modalTemplates/MemberBasicMainModal';
+import MemberBasicSideModal from './modalTemplates/MemberBasicSideModal';
 import MemberAuthModal from './modalTemplates/MemberAuthModal';
 import MemberContactsModal from './modalTemplates/MemberContactsModal';
 import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';
 import MemberFilesModal from './modalTemplates/MemberFilesModal';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
-    const [localData, setLocalData] = useState({ ...data });
+    const tabsData = [
+        { id: 'new', data: {} },
+        ...Object.values(data)
+    ];
+    
+    const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : tabsData);
     const [activeTab, setActiveTab] = useState(0);
 
     useEffect(() => {
@@ -16,11 +21,6 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
             document.body.classList.remove('modal-open');
         };
     }, []);
-
-    const tabsData = [
-        { id: 'new', data: {} },
-        ...Object.values(data)
-    ];
 
     const handleChange = (field) => (event) => {
         const { type, value, checked, files } = event.target;
@@ -47,18 +47,16 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
 
     const getModalContent = () => {
         switch (type) {
-            case 'photo':
-                return <MemberPhotoModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
-            case 'details':
-                return <MemberDetailsModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
+            case 'basic':
+                return <MemberBasicMainModal data={localData} handleChange={handleChange} />;
             case 'authorization':
-                return <MemberAuthModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'contacts':
-                return <MemberContactsModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberContactsModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'absences':
-                return <MemberAbsencesModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberAbsencesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'files':
-                return <MemberFilesModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             default:
                 return null;
         }
@@ -88,21 +86,25 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     </div>
                 </div>
                 <div className="modal-tabs">
-                    {tabsData.map((tab, index) => {
-                        const { heading, subheading } = getTabLabel(type, tab, index);
-                        return (
-                            <button 
-                                key={index} 
-                                className={`tab-button ${activeTab === index ? 'active' : ''}`} 
-                                onClick={() => setActiveTab(index)}
-                            >
-                                <div className="tab-label">
-                                    <div className="tab-heading">{heading}</div>
-                                    <div className="tab-subheading">{subheading}</div>
-                                </div>
-                            </button>
-                        );
-                    })}
+                    {type !== 'basic' ? (
+                        tabsData.map((tab, index) => {
+                            const { heading, subheading } = getTabLabel(type, tab, index);
+                            return (
+                                <button 
+                                    key={index} 
+                                    className={`tab-button ${activeTab === index ? 'active' : ''}`} 
+                                    onClick={() => setActiveTab(index)}
+                                >
+                                    <div className="tab-label">
+                                        <div className="tab-heading">{heading}</div>
+                                        <div className="tab-subheading">{subheading}</div>
+                                    </div>
+                                </button>
+                            );
+                        })
+                    ) : (
+                        <MemberBasicSideModal data={localData} handleChange={handleChange} />
+                    )}
                 </div>
             </div>
         </div>
