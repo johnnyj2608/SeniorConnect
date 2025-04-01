@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MemberPhotoModal from './modalTemplates/MemberPhotoModal';
 import MemberDetailsModal from './modalTemplates/MemberDetailsModal';
 import MemberAuthModal from './modalTemplates/MemberAuthModal';
@@ -9,6 +9,13 @@ import MemberFilesModal from './modalTemplates/MemberFilesModal';
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const [localData, setLocalData] = useState({ ...data });
     const [activeTab, setActiveTab] = useState(0);
+
+    useEffect(() => {
+        document.body.classList.add('modal-open');
+        return () => {
+            document.body.classList.remove('modal-open');
+        };
+    }, []);
 
     const tabsData = [
         { id: 'new', data: {} },

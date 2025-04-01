@@ -397,6 +397,10 @@ a {
 =>  Modal Styles
 ================================*/
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -415,16 +419,13 @@ a {
   border-radius: 8px;
   width: 100%;
   max-width: 550px;
+  max-height: 69%;
 }
 
 .modal-content {
   width: 70%;
   padding: 10px;
   border-right: 1px solid #ccc;
-}
-
-.modal-tabs {
-  width: 30%;
 }
 
 .modal input, .modal select {
@@ -475,7 +476,14 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .modal-tabs {
   background: var(--color-white);
-  border-radius: 8px;
+  width: 30%;
+  overflow-y: auto;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  scrollbar-width: none;
+}
+.modal-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .modal-tabs button {
