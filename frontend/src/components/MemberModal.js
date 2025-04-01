@@ -64,6 +64,19 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         }
     };
 
+    const getTabLabel = (type, item, index) => {
+        if (index === 0) {
+            return { heading: 'New', subheading: '' };
+        }
+
+        switch (type) {
+            case 'authorization':
+                return { heading: item.mltc?.name || 'Unknown', subheading: item.mltc_auth_id || '' };
+            default:
+                return { heading: 'Unknown', subheading: '' };
+        }
+      };
+
     return (
         <div className="modal">
             <div className="modal-main">
@@ -75,15 +88,21 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     </div>
                 </div>
                 <div className="modal-tabs">
-                    {tabsData.map((tab, index) => (
-                        <button 
-                            key={index} 
-                            className={`tab-button ${activeTab === index ? 'active' : ''}`} 
-                            onClick={() => setActiveTab(index)}
-                        >
-                            {index === 0 ? 'New' : `Auth ${index}`}
-                        </button>
-                    ))}
+                    {tabsData.map((tab, index) => {
+                        const { heading, subheading } = getTabLabel(type, tab, index);
+                        return (
+                            <button 
+                                key={index} 
+                                className={`tab-button ${activeTab === index ? 'active' : ''}`} 
+                                onClick={() => setActiveTab(index)}
+                            >
+                                <div className="tab-label">
+                                    <div className="tab-heading">{heading}</div>
+                                    <div className="tab-subheading">{subheading}</div>
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
         </div>
