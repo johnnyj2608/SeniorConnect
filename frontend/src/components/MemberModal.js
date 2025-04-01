@@ -8,6 +8,12 @@ import MemberFilesModal from './modalTemplates/MemberFilesModal';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const [localData, setLocalData] = useState({ ...data });
+    const [activeTab, setActiveTab] = useState(0);
+
+    const tabsData = [
+        { id: 'new', data: {} },
+        ...Object.values(data)
+    ];
 
     const handleChange = (field) => (event) => {
         const { type, value, checked, files } = event.target;
@@ -35,17 +41,17 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     const getModalContent = () => {
         switch (type) {
             case 'photo':
-                return <MemberPhotoModal data={localData} handleChange={handleChange}/>;
+                return <MemberPhotoModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             case 'details':
-                return <MemberDetailsModal data={localData} handleChange={handleChange} />;
+                return <MemberDetailsModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             case 'authorization':
-                return <MemberAuthModal data={localData} handleChange={handleChange} />;
+                return <MemberAuthModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             case 'contacts':
-                return <MemberContactsModal data={localData} handleChange={handleChange} />;
+                return <MemberContactsModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             case 'absences':
-                return <MemberAbsencesModal data={localData} handleChange={handleChange} />;
+                return <MemberAbsencesModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             case 'files':
-                return <MemberFilesModal data={localData} handleChange={handleChange} />;
+                return <MemberFilesModal data={tabsData} handleChange={handleChange} activeTab={activeTab} />;
             default:
                 return null;
         }
@@ -54,10 +60,23 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     return (
         <div className="modal">
             <div className="modal-main">
-                {getModalContent()}
-                <div className="modal-buttons">
-                    <button onClick={onClose}>Cancel</button>
-                    <button onClick={() => onSave(localData)}>Save</button>
+                <div className="modal-content">
+                    {getModalContent()}
+                    <div className="modal-buttons">
+                        <button onClick={onClose}>Cancel</button>
+                        <button onClick={() => onSave(localData)}>Save</button>
+                    </div>
+                </div>
+                <div className="modal-tabs">
+                    {tabsData.map((tab, index) => (
+                        <button 
+                            key={index} 
+                            className={`tab-button ${activeTab === index ? 'active' : ''}`} 
+                            onClick={() => setActiveTab(index)}
+                        >
+                            {index === 0 ? 'New' : `Auth ${index}`}
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>
