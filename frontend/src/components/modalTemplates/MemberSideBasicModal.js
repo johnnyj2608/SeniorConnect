@@ -11,13 +11,15 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
-                <div className="member-detail ">
+                <label htmlFor="image-upload" className="image-upload">
+                        Choose Photo
+                </label>
                 <input
+                    id="image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleChange('photo')}
                 />
-                </div>
             </div>
             <div className="member-detail">
                 <label>Gender</label>
@@ -45,29 +47,15 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 </div>
             </div>
             <div className="member-detail">
-                <label>Active</label>
-                <div className="radio-group">
-                    <label>
-                        <input
-                            type="radio"
-                            name="active"
-                            value="true"
-                            checked={data.active === 'true'}
-                            onChange={handleChange('active')}
-                        />
-                        True
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="active"
-                            value="false"
-                            checked={data.active === 'false'}
-                            onChange={handleChange('active')}
-                        />
-                        False
-                    </label>
-                </div>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="active"
+                        checked={data.active === true}
+                        onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                    />
+                    Active
+                </label>
             </div>
         </>
     );
