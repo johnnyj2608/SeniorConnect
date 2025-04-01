@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MemberBasicModal from './modalTemplates/MemberBasicModal';
-import MemberSideBasicModal from './modalTemplates/MemberSideBasicModal';
+import { MemberBasicModal, MemberSideBasicModal } from './modalTemplates/MemberBasicModal';
 import MemberAuthModal from './modalTemplates/MemberAuthModal';
 import MemberContactsModal from './modalTemplates/MemberContactsModal';
 import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';

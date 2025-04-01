@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MemberBasicMainModal = ({ data, handleChange }) => {
+const MemberBasicModal = ({ data, handleChange }) => {
     return (
         <>
             <h3>Edit Details</h3>
@@ -72,4 +72,65 @@ const MemberBasicMainModal = ({ data, handleChange }) => {
     );
 };
 
-export default MemberBasicMainModal;
+const MemberSideBasicModal = ({ data, handleChange }) => {
+    return (
+        <>
+            <div className="photo-container">
+                <img
+                    src={data.photo instanceof File ? URL.createObjectURL(data.photo) : data.photo || "/default-profile.jpg"}
+                    alt={data.first_name ? `${data.first_name} ${data.last_name}` : "Member"} 
+                    className="preview-photo"
+                    onError={(e) => e.target.src = "/default-profile.jpg"}
+                />
+                <label htmlFor="image-upload" className="image-upload">
+                    Choose Photo
+                </label>
+                <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleChange('photo')}
+                    style={{ display: 'none' }}
+                />
+            </div>
+            <div className="member-detail">
+                <label>Gender</label>
+                <div className="radio-group">
+                    <label>
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="M"
+                            checked={data.gender === 'M'}
+                            onChange={handleChange('gender')}
+                        />
+                        Male
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="F"
+                            checked={data.gender === 'F'}
+                            onChange={handleChange('gender')}
+                        />
+                        Female
+                    </label>
+                </div>
+            </div>
+            <div className="member-detail">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="active"
+                        checked={data.active === true}
+                        onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                    />
+                    Active
+                </label>
+            </div>
+        </>
+    );
+};
+
+export { MemberBasicModal, MemberSideBasicModal };
