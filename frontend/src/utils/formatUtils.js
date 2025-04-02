@@ -50,4 +50,12 @@ const formatSchedule = (schedule) => {
   return "N/A";
 }
 
-export { formatDate, formatPhone, formatGender, formatSchedule };
+const formatSSN = (ssn) => {
+  if (!ssn || typeof ssn !== "string") {
+    return "";
+  }
+
+  return ssn.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
+};
+
+export { formatDate, formatPhone, formatGender, formatSchedule, formatSSN };

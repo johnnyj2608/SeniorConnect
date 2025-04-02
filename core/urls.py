@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import member_views, mltc_views, authorization_views
+from .views import member_views, mltc_views, authorization_views, language_views
 
 urlpatterns = [
     path('members/', member_views.getMembers, name="members"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
-    path('mltc/', mltc_views.getMLTCs, name="mltcs"),
+    path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
+    path('languages/', language_views.getLanguages, name="languages"),
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),
 ]

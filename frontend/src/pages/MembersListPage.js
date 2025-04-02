@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import ListItem from '../components/ListItem'
 import AddButton from '../components/AddButton'
 import DownloadButton from '../components/DownloadButton'
-import MltcDropdown from '../components/MltcDropdown';
+import MltcDropdown from '../components/Dropdown';
 import SearchInput from '../components/SearchInput';
 import groupMembersByMltc from '../utils/groupMembersByMltc';
 
@@ -20,7 +20,7 @@ const MembersListPage = () => {
   }
 
   const getMltcOptions = async () => {
-    const response = await fetch('/core/mltc/');
+    const response = await fetch('/core/mltcs/');
     const data = await response.json();
     setMltcOptions(data);
   };

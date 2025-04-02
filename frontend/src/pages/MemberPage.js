@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MemberModal from '../components/MemberModal';
-import { formatDate, formatPhone, formatGender, formatSchedule } from '../utils/formatUtils';
+import { formatDate, formatPhone, formatGender, formatSchedule, formatSSN } from '../utils/formatUtils';
 import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
@@ -25,7 +25,6 @@ const MemberPage = () => {
     const sanitizedData = Object.fromEntries(
       Object.entries(data).map(([key, value]) => [key, value ?? ""])
     );
-
     setMember(sanitizedData)
   }
 
@@ -200,6 +199,27 @@ const MemberPage = () => {
               <label>Medicaid:</label>
               <span>{member.medicaid || 'N/A'}</span>
             </div>
+
+            <div className="member-detail">
+              <label>SSN:</label>
+              <span>{formatSSN(member.ssn) || 'N/A'}</span>
+            </div>
+
+            <div className="member-detail">
+              <label>Language:</label>
+              <span>{member.language?.name || 'N/A'}</span>
+            </div>
+
+            <div className="member-detail">
+              <label>Enrollment:</label>
+              <span>{formatDate(member.enrollment_date) || 'N/A'}</span>
+            </div>
+
+            <div className="member-detail">
+              <label>Note:</label>
+              <span>{member.note || 'N/A'}</span>
+            </div>
+
           </div>
         </div>
         <div className="member-half-card">
@@ -212,7 +232,7 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>MLTC:</label>
-              <span>{auths[0]?.mltc.name || 'N/A'}</span>
+              <span>{auths[0]?.mltc?.name || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>

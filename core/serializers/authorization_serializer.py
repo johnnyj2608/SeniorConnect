@@ -9,7 +9,7 @@ class DiagnosisSerializer(ModelSerializer):
 
 class AuthorizationSerializer(ModelSerializer):
     diagnosis = DiagnosisSerializer()
-    mltc = MLTCSerializer(source='mltc_id')
+    mltc = MLTCSerializer()
 
     class Meta:
         model = Authorization

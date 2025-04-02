@@ -8,7 +8,7 @@ const ListItem = ({ member }) => {
       <div className="members-list-item">
         <img 
             src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
-            alt="Member Photo" 
+            alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="members-list-photo"
             onError={(e) => e.target.src = "/default-profile.jpg"}
         />

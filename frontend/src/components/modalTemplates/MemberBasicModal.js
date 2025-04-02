@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import LanguageDropdown from '../Dropdown';
 
 const MemberBasicModal = ({ data, handleChange }) => {
     return (
@@ -12,6 +13,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('sadc_member_id')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Last Name</label>
                 <input
@@ -20,6 +22,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('last_name')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>First Name</label>
                 <input
@@ -28,6 +31,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('first_name')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Birth Date</label>
                 <input
@@ -36,6 +40,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('birth_date')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Phone</label>
                 <input
@@ -44,6 +49,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('phone')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Address</label>
                 <input
@@ -52,6 +58,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('address')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Email</label>
                 <input
@@ -60,6 +67,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('email')}
                 />
             </div>
+
             <div className="member-detail">
                 <label>Medicaid</label>
                 <input
@@ -68,11 +76,41 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     onChange={handleChange('medicaid')}
                 />
             </div>
+            
+            <div className="member-detail">
+                <label>SSN</label>
+                <input
+                    type="text"
+                    value={data.ssn || ''}
+                    onChange={handleChange('ssn')}
+                />
+            </div>
+
+            <div className="member-detail">
+                <label>Note</label>
+                <input
+                    type="text"
+                    value={data.note || ''}
+                    onChange={handleChange('note')}
+                />
+            </div>
         </>
     );
 };
 
 const MemberSideBasicModal = ({ data, handleChange }) => {
+    const [languageOptions, setLanguageOptions] = useState([]);
+
+    useEffect(() => {
+        getLanguageOptions()
+    }, []);
+
+    const getLanguageOptions = async () => {
+        const response = await fetch('/core/languages/');
+        const data = await response.json();
+        setLanguageOptions(data);
+    };
+
     return (
         <>
             <div className="photo-container">
@@ -118,6 +156,16 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                     </label>
                 </div>
             </div>
+
+            <div className="member-detail">
+                <label>Language</label>
+                <LanguageDropdown 
+                    value={data?.language?.id || 0} 
+                    onChange={handleChange('language')}
+                    options={languageOptions} 
+                />
+            </div>
+
             <div className="member-detail">
                 <label>
                     <input

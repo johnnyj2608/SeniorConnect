@@ -23,23 +23,21 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     }, []);
 
     const handleChange = (field) => (event) => {
-        const { type, value, checked, files } = event.target;
-    
+        const { value, files } = event.target;
+        
         setLocalData((prevData) => {
+            if (type !== 'basic') {
+                return {
+                    ...prevData,
+                    [activeTab]: {
+                        ...prevData[activeTab],
+                        [field]: value,
+                    },
+                };
+            }
+
             if (files && files.length > 0) {
                 return { ...prevData, [field]: files[0] };
-            }
-    
-            if (type === "checkbox") {
-                if (field === "schedule") {
-                    return {
-                        ...prevData,
-                        schedule: prevData.schedule.includes(value)
-                            ? prevData.schedule.filter((day) => day !== value)
-                            : [...prevData.schedule, value],
-                    };
-                }
-                return { ...prevData, [field]: checked };
             }
             return { ...prevData, [field]: value };
         });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MltcDropdown from '../MltcDropdown';
+import MltcDropdown from '../Dropdown';
 
 const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
@@ -9,7 +9,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     }, []);
 
     const getMltcOptions = async () => {
-        const response = await fetch('/core/mltc/');
+        const response = await fetch('/core/mltcs/');
         const data = await response.json();
         setMltcOptions(data);
     };
@@ -39,8 +39,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>MLTC:</label>
                 <MltcDropdown 
-                    value={data[activeTab]?.mltc_id || ''} 
-                    onChange={handleChange('mltc_id')}
+                    value={data[activeTab]?.mltc?.id || 0} 
+                    onChange={handleChange('mltc')}
                     options={mltcOptions} 
                 />
             </div>
