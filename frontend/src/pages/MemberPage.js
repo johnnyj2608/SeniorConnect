@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import MemberModal from '../components/MemberModal';
+import ModalMain from '../components/ModalMain';
 import { formatDate, formatPhone, formatGender, formatSchedule, formatSSN } from '../utils/formatUtils';
 import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
@@ -308,7 +308,7 @@ const MemberPage = () => {
         <h3><button className="delete-button" onClick={handleDelete}>Delete</button></h3>
       </div>
       {modalOpen && (
-        <MemberModal
+        <ModalMain
           data={getModalData()}
           onClose={handleCancel}
           onSave={handleSave}

@@ -8,8 +8,8 @@ import ModalTabs from './ModalTabs';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const tabsData = [
-        { id: 'new', data: {} },
-        ...Object.values(data)
+        { id: 'new', data: {}, edited: false },
+        ...Object.values(data).map(tab => ({ ...tab, edited: false }))
     ];
     
     const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : tabsData);
@@ -32,6 +32,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     [activeTab]: {
                         ...prevData[activeTab],
                         [field]: value,
+                        edited: true,
                     },
                 };
             }
@@ -61,17 +62,23 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     };
 
     const getTabLabel = (type, item, index) => {
+        const isEdited = localData[index]?.edited;
+
         if (index === 0) {
-            return { heading: 'New', subheading: '' };
+            return { heading: 'New', subheading: '', isEdited };
         }
 
         switch (type) {
             case 'authorization':
-                return { heading: item.mltc?.name || 'Unknown', subheading: item.mltc_auth_id || '' };
+                return { 
+                    heading: item.mltc?.name || 'Unknown', 
+                    subheading: item.mltc_auth_id || '', 
+                    isEdited 
+                };
             default:
-                return { heading: 'Unknown', subheading: '' };
+                return { heading: 'Unknown', subheading: '', isEdited };
         }
-      };
+    };
 
     return (
         <div className="modal">
@@ -88,7 +95,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     {type !== 'basic' && (
                     <div className="modal-tabs">
                         {tabsData.map((tab, index) => {
-                            const { heading, subheading } = getTabLabel(type, tab, index);
+                            const { heading, subheading, isEdited } = getTabLabel(type, tab, index);
                             return (
                                 <ModalTabs 
                                     key={index}
@@ -97,6 +104,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                                     setActiveTab={setActiveTab}
                                     heading={heading}
                                     subheading={subheading}
+                                    isEdited={isEdited}
                                 />
                             );
                         })}
