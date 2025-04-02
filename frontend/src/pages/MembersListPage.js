@@ -43,6 +43,7 @@ const MembersListPage = () => {
   });
 
   const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
+  console.log(mltcOptions)
 
   return (
     <div className="members">
@@ -54,7 +55,11 @@ const MembersListPage = () => {
       </div>
 
       <div className="filters">
-        <MltcDropdown value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)} options={mltcOptions} />
+        <MltcDropdown 
+          value={mltcFilter} 
+          onChange={(e) => setMltcFilter(e.target.value)} 
+          options={[...mltcOptions, { name: 'Unknown' }]} 
+        />
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
         <p className="members-count">
           {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}

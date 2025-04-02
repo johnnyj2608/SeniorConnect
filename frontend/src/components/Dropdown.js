@@ -12,7 +12,6 @@ const Dropdown = ({ value, onChange, options = [] }) => {
                     {option.name}
                 </option>
             ))}
-            <option value="Unknown">Unknown</option>
         </select>
     );
 };
