@@ -208,7 +208,7 @@ const MemberPage = () => {
 
             <div className="member-detail">
               <label>Language:</label>
-              <span>{member.language?.name || 'N/A'}</span>
+              <span>{member.language || 'N/A'}</span>
             </div>
 
             <div className="member-detail">
@@ -233,7 +233,7 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>MLTC:</label>
-              <span>{auths[0]?.mltc?.name || 'N/A'}</span>
+              <span>{auths[0]?.mltc || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>
@@ -253,7 +253,7 @@ const MemberPage = () => {
             </div>
             <div className="member-detail">
               <label>Diagnosis:</label>
-              <span>{auths[0]?.diagnosis.dx_code || 'N/A'}</span>
+              <span>{auths[0]?.diagnosis || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>SDC Code:</label>

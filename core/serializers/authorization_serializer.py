@@ -12,8 +12,8 @@ class DiagnosisSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AuthorizationSerializer(serializers.ModelSerializer):
-    diagnosis = DiagnosisSerializer()
-    mltc = MLTCSerializer()
+    diagnosis = serializers.SlugRelatedField(queryset=Diagnosis.objects.all(), slug_field='dx_code')
+    mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
 
     class Meta:
         model = Authorization

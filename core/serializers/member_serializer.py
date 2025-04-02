@@ -7,7 +7,7 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MemberSerializer(serializers.ModelSerializer):
-    language = LanguageSerializer()
+    language = serializers.SlugRelatedField(queryset=Language.objects.all(), slug_field='name')
 
     class Meta:
         model = Member

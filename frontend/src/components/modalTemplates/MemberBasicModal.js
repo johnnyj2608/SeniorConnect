@@ -160,7 +160,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
             <div className="member-detail">
                 <label>Language</label>
                 <LanguageDropdown 
-                    value={data?.language?.id || 0} 
+                    value={data?.language || 0} 
                     onChange={handleChange('language')}
                     options={languageOptions} 
                 />

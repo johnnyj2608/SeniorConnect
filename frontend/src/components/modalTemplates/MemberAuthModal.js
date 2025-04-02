@@ -39,7 +39,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>MLTC:</label>
                 <MltcDropdown 
-                    value={data[activeTab]?.mltc?.id || 0} 
+                    value={data[activeTab]?.mltc || 0} 
                     onChange={handleChange('mltc')}
                     options={mltcOptions} 
                 />
@@ -93,7 +93,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="text"
                     name="diagnosis"
-                    value={data[activeTab]?.diagnosis?.dx_code || ''}
+                    value={data[activeTab]?.diagnosis || ''}
                     onChange={handleChange('diagnosis')}
                 />
             </div>
