@@ -68,7 +68,7 @@ const MemberPage = () => {
   };
 
   const handleSave = async (updatedMember) => {
-    const requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender', 'phone', 'medicaid'];
+    const requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
     const missingFields = requiredFields.filter(field => !updatedMember[field]);
     if (missingFields.length > 0) {
       alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
@@ -80,6 +80,8 @@ const MemberPage = () => {
       if (key === 'photo' && typeof updatedMember.photo === 'string') {
         const file = await urlToFile(updatedMember.photo, `${id}.jpg`);
         formData.append('photo', file);
+      } else if (updatedMember[key] && typeof updatedMember[key] === 'object' && updatedMember[key].id) {
+          formData.append(key, updatedMember[key].id);
       } else {
         formData.append(key, updatedMember[key]);
       }
@@ -146,7 +148,6 @@ const MemberPage = () => {
             src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
             alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="member-photo"
-            onClick={() => handleModalOpen('photo')}
             onError={(e) => e.target.src = "/default-profile.jpg"}
         />
       </div>
@@ -197,7 +198,7 @@ const MemberPage = () => {
 
             <div className="member-detail">
               <label>Medicaid:</label>
-              <span>{member.medicaid || 'N/A'}</span>
+              <span>{member.medicaid?.toUpperCase() || 'N/A'}</span>
             </div>
 
             <div className="member-detail">

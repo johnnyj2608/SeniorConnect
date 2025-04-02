@@ -72,7 +72,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                 <label>Medicaid</label>
                 <input
                     type="text"
-                    value={data.medicaid || ''}
+                    value={data.medicaid?.toUpperCase() || ''}
                     onChange={handleChange('medicaid')}
                 />
             </div>

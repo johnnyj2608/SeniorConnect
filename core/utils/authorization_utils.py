@@ -37,6 +37,8 @@ def updateAuthorization(request, pk):
 
     if serializer.is_valid():
         serializer.save()
+    else:
+        print(serializer.errors)
     return Response(serializer.data)
 
 def deleteAuthorization(request, pk):

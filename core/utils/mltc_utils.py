@@ -1,6 +1,6 @@
 from rest_framework.response import Response
-from ..models.mltc_model import MLTC
-from ..serializers.mltc_serializer import MLTCSerializer
+from ..models.authorization_model import MLTC
+from ..serializers.authorization_serializer import MLTCSerializer
 
 def getMLTCList(request):
     mltcs = MLTC.objects.all()
@@ -28,6 +28,8 @@ def updateMLTC(request, pk):
 
     if serializer.is_valid():
         serializer.save()
+    else:
+        print(serializer.errors)
     return Response(serializer.data)
 
 def deleteMLTC(request, pk):

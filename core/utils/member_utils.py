@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from ..models.member_model import Member
+from ..models.member_model import Member, Language
 from ..serializers.member_serializer import MemberSerializer
 import os
 from django.conf import settings
@@ -23,9 +23,12 @@ def createMember(request):
         birth_date=data['birth_date'],
         gender=data['gender'],
         # address=data['address'],
-        phone=data['phone'],
+        phone=data('phone', None),
         email=data.get('email', None),
-        medicaid=data['medicaid'],
+        medicaid=data('medicaid', None),
+        language=data('language', None),
+        ssn=data('ssn', None),
+        note=data('note', None),
     )
     serializer = MemberSerializer(member)
     return Response(serializer.data)
@@ -41,7 +44,8 @@ def updateMember(request, pk):
             if os.path.exists(old_photo_path):
                 os.remove(old_photo_path)
         serializer.save()
-        
+    else:
+        print(serializer.errors)
     return Response(serializer.data)
 
 def deleteMember(request, pk):

@@ -357,7 +357,6 @@ a {
 }
 
 .member-photo {
-  cursor: pointer;
   width: 300px;
   height: 250px;
   border-radius: 8px;

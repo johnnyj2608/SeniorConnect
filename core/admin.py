@@ -4,9 +4,8 @@ from django.contrib import admin
 
 from .models.member_model import Member, Language
 from .models.address_model import Address, City, State, ZipCode
-from .models.mltc_model import MLTC
 from .models.contact_model import CareManager, MemberEmergencyContact, RelationshipType, PrimaryCareProvider, Pharmacy
-from .models.authorization_model import Authorization, Diagnosis
+from .models.authorization_model import Authorization, Diagnosis, MLTC
 from .models.sadc_model import SADC
 
 admin.site.register(Member)

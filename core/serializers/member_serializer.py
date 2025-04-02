@@ -1,12 +1,12 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from ..models.member_model import Member, Language
 
-class LanguageSerializer(ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = '__all__'
 
-class MemberSerializer(ModelSerializer):
+class MemberSerializer(serializers.ModelSerializer):
     language = LanguageSerializer()
 
     class Meta:
