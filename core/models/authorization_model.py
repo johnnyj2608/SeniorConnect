@@ -28,4 +28,4 @@ class Authorization(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=False)
 
     def __str__(self):
-        return f"{self.mltc_id.name} {self.mltc_auth_id}"
+        return f"{self.mltc}: {self.mltc_auth_id}"

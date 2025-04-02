@@ -67,50 +67,136 @@ const MemberPage = () => {
     }
   };
 
-  const handleSave = async (updatedMember) => {
-    const requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
-    const missingFields = requiredFields.filter(field => !updatedMember[field]);
-    if (missingFields.length > 0) {
-      alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
-      return;
-    }
-
-    const formData = new FormData();
-    for (const key in updatedMember) {
-      if (key === 'photo' && typeof updatedMember.photo === 'string') {
-        const file = await urlToFile(updatedMember.photo, `${id}.jpg`);
-        formData.append('photo', file);
-      } else if (updatedMember[key] && typeof updatedMember[key] === 'object' && updatedMember[key].id) {
-          formData.append(key, updatedMember[key].id);
-      } else {
-        formData.append(key, updatedMember[key]);
-      }
-    }
-
-    let response;
-    if (id === 'new') {
-      response = await fetch(`/core/members/`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const savedMember = await response.json();
-        setModalOpen(false); 
-        navigate(`/member/${savedMember.id}`);
-      }
-    } else {
-      response = await fetch(`/core/members/${id}/`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (response.ok) {
-        setMember(updatedMember);
-        setModalOpen(false);
-      }
+  const updateState = (savedData) => {
+    switch (modalType) {
+        case 'basic':
+            setMember(savedData);
+            break;
+        case 'authorization':
+            setAuths((prevAuths) => {
+                const updatedAuths = prevAuths.map(auth =>
+                    auth.id === savedData.id ? savedData : auth
+                );
+                return updatedAuths.length ? updatedAuths : [savedData];
+            });
+            break;
+        default:
+            console.error("Unknown update type:", modalType);
+            return;
     }
   };
+
+  const handleSave = async (updatedData) => {
+    let endpoint = '';
+    let method = id === 'new' ? 'POST' : 'PUT';
+
+    switch (modalType) {
+      case 'basic':
+        endpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
+
+        const formData = new FormData();
+        for (const key in updatedData) {
+            if (key === 'photo' && typeof updatedData.photo === 'string') {
+                const file = await urlToFile(updatedData.photo, `${id}.jpg`);
+                formData.append('photo', file);
+            } else {
+                formData.append(key, updatedData[key]);
+            }
+        }
+
+        const response = await fetch(endpoint, {
+            method,
+            body: formData,
+        });
+
+        if (response.ok) {
+          const savedData = await response.json();
+          updateState(savedData);
+          setModalOpen(false);
+        }
+
+        break;
+
+      case 'authorization':
+        const authArray = Object.values(updatedData);
+        
+        authArray
+          .filter(auth => auth.edited)
+          .map(async (auth) => {
+            const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
+            const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
+            auth.member_id = auth.id === 'new' ? id : auth.member_id;
+
+            const response = await fetch(authEndpoint, {
+                method: authMethod,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(auth),
+            });
+
+            if (response.ok) {
+              const savedData = await response.json();
+              updateState(savedData);
+              setModalOpen(false);
+            } else {
+              Promise.reject(response);
+            }
+          });
+        break;
+
+      default:
+        console.error("Unknown save type:", modalType);
+        return;
+    }
+
+    if (!endpoint) return;
+    // Ensure new members if cancel go back, save stay
+};
+
+
+  // const handleSave = async (updatedData) => {
+  //   const requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
+  //   const missingFields = requiredFields.filter(field => !updatedData[field]);
+  //   if (missingFields.length > 0) {
+  //     alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   for (const key in updatedData) {
+  //     if (key === 'photo' && typeof updatedData.photo === 'string') {
+  //       const file = await urlToFile(updatedData.photo, `${id}.jpg`);
+  //       formData.append('photo', file);
+  //     } else if (updatedData[key] && typeof updatedData[key] === 'object' && updatedData[key].id) {
+  //         formData.append(key, updatedData[key].id);
+  //     } else {
+  //       formData.append(key, updatedData[key]);
+  //     }
+  //   }
+
+  //   let response;
+  //   if (id === 'new') {
+  //     response = await fetch(`/core/members/`, {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
+
+  //     if (response.ok) {
+  //       const savedMember = await response.json();
+  //       setModalOpen(false); 
+  //       navigate(`/member/${savedMember.id}`);
+  //     }
+  //   } else {
+  //     response = await fetch(`/core/members/${id}/`, {
+  //       method: 'PUT',
+  //       body: formData,
+  //     });
+
+  //     if (response.ok) {
+  //       setMember(updatedData);
+  //       setModalOpen(false);
+  //     }
+  //   }
+  // };
 
   const handleCancel = () => {
     if (id === 'new') {

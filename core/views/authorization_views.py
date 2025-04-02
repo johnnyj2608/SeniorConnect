@@ -6,7 +6,7 @@ from ..utils.authorization_utils import (
     deleteAuthorization,
     getAuthorizationList,
     createAuthorization,
-    getAuthorizationListByMember
+    getAuthorizationListByMember,
 )
 
 @api_view(['GET', 'POST'])

@@ -87,7 +87,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         switch (type) {
             case 'authorization':
                 return { 
-                    heading: item.mltc?.name || 'Unknown', 
+                    heading: item.mltc || 'Unknown', 
                     subheading: item.mltc_auth_id || '', 
                     isEdited 
                 };

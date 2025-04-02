@@ -6,5 +6,7 @@ urlpatterns = [
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
     path('languages/', language_views.getLanguages, name="languages"),
+    path('auths/', authorization_views.getAuthorizations, name="auths"),
+    path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),
 ]
