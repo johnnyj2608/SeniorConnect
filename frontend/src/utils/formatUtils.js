@@ -14,6 +14,7 @@ const formatDate = (date) => {
 };
   
 const formatPhone = (phone) => {
+  if (!phone) return phone;
   return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 };
 

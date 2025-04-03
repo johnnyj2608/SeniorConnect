@@ -46,7 +46,7 @@ const MemberPage = () => {
   useEffect(() => {
     if (id === 'new') {
       setModalOpen(true);
-      setModalType('details');
+      setModalType('basic');
     } else {
       getMember();
       getAuthsByMember();
@@ -123,6 +123,11 @@ const MemberPage = () => {
         const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
         const memberMethod = id === 'new' ? 'POST' : 'PUT';
         savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
+        
+        if (id === 'new') {
+          navigate(`/member/${savedData.id}`);
+        }
+
         break;
 
       case 'authorization':
@@ -159,7 +164,6 @@ const MemberPage = () => {
       default:
         console.error("Unknown save type:", modalType);
     }
-    console.log(savedData)
     updateState(savedData);
     setModalOpen(false);
   };

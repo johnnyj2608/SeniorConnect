@@ -301,9 +301,10 @@ a {
 }
 
 .member h3 button {
-  background: none;
-  border: none;
+  color: white;
+  border-radius: 10px;
   cursor: pointer;
+  padding: 15px 30px;
 }
 
 .member-row {

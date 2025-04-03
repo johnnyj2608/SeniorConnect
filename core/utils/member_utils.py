@@ -23,12 +23,12 @@ def createMember(request):
         birth_date=data['birth_date'],
         gender=data['gender'],
         # address=data['address'],
-        phone=data('phone', None),
+        phone=data.get('phone', None),
         email=data.get('email', None),
-        medicaid=data('medicaid', None),
-        language=data('language', None),
-        ssn=data('ssn', None),
-        note=data('note', None),
+        medicaid=data.get('medicaid', None),
+        language=data.get('language', None),
+        ssn=data.get('ssn', None),
+        note=data.get('note', None),
     )
     serializer = MemberSerializer(member)
     return Response(serializer.data)
