@@ -5,7 +5,7 @@ from django.contrib import admin
 from .models.member_model import Member, Language
 from .models.address_model import Address, City, State, ZipCode
 from .models.contact_model import CareManager, MemberEmergencyContact, RelationshipType, PrimaryCareProvider, Pharmacy
-from .models.authorization_model import Authorization, Diagnosis, MLTC
+from .models.authorization_model import Authorization, DX_Code, MLTC
 from .models.sadc_model import SADC
 
 admin.site.register(Member)
@@ -21,5 +21,5 @@ admin.site.register(RelationshipType)
 admin.site.register(PrimaryCareProvider)
 admin.site.register(Pharmacy)
 admin.site.register(Authorization)
-admin.site.register(Diagnosis)
+admin.site.register(DX_Code)
 admin.site.register(SADC)

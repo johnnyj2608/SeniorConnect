@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from ..models.authorization_model import Authorization, Diagnosis, MLTC
+from ..models.authorization_model import Authorization, DX_Code, MLTC
 from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 
@@ -15,10 +15,10 @@ def getAuthorizationDetail(request, pk):
 
 def createAuthorization(request):
     data = request.data
-
+    
     member = Member.objects.get(id=data['member_id'])
     mltc = MLTC.objects.get(name=data['mltc'])
-    diagnosis = MLTC.objects.get(name=data['diagnosis'])
+    dx_code = DX_Code.objects.get(name=data['dx_code']) if data.get('dx_code') else None
 
     authorization = Authorization.objects.create(
         mltc_member_id=data['mltc_member_id'],
@@ -28,9 +28,9 @@ def createAuthorization(request):
         schedule=data.get('schedule', []),
         start_date=data['start_date'],
         end_date=data['end_date'],
-        diagnosis=diagnosis.id,
-        sdc_code=data.get('sdc_code', None),
-        trans_code=data.get('trans_code', None),
+        dx_code=dx_code,
+        sdc_code=data.get('sdc_code', ''),
+        trans_code=data.get('trans_code', ''),
     )
     serializer = AuthorizationSerializer(authorization)
     return Response(serializer.data)

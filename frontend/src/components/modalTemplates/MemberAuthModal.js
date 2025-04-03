@@ -15,13 +15,13 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     };
 
     const daysOfWeek = [
-        { label: "Sunday", value: "sunday" },
         { label: "Monday", value: "monday" },
-        { label: "Tuesday", value: "tuesday" },
-        { label: "Wednesday", value: "wednesday" },
         { label: "Thursday", value: "thursday" },
+        { label: "Tuesday", value: "tuesday" },
         { label: "Friday", value: "friday" },
-        { label: "Saturday", value: "saturday" }
+        { label: "Wednesday", value: "wednesday" },
+        { label: "Saturday", value: "saturday" },
+        { label: "Sunday", value: "sunday" },
     ];
 
     return (
@@ -89,12 +89,12 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 />
             </div>
             <div className="member-detail">
-                <label>Diagnosis</label>
+                <label>DX Code</label>
                 <input
                     type="text"
-                    name="diagnosis"
-                    value={data[activeTab]?.diagnosis || ''}
-                    onChange={handleChange('diagnosis')}
+                    name="dx_code"
+                    value={data[activeTab]?.dx_code || ''}
+                    onChange={handleChange('dx_code')}
                 />
             </div>
             <div className="member-detail">

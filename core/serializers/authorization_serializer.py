@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.authorization_model import Authorization, Diagnosis, MLTC
+from ..models.authorization_model import Authorization, DX_Code, MLTC
 
 class MLTCSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,11 +8,16 @@ class MLTCSerializer(serializers.ModelSerializer):
 
 class DiagnosisSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Diagnosis
+        model = DX_Code
         fields = '__all__'
 
 class AuthorizationSerializer(serializers.ModelSerializer):
-    diagnosis = serializers.SlugRelatedField(queryset=Diagnosis.objects.all(), slug_field='dx_code')
+    dx_code = serializers.SlugRelatedField(
+        queryset=DX_Code.objects.all(), 
+        slug_field='name', 
+        allow_null=True,
+        required=False
+    )
     mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
 
     class Meta:
