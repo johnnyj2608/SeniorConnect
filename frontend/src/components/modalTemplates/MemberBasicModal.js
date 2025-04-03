@@ -6,34 +6,37 @@ const MemberBasicModal = ({ data, handleChange }) => {
         <>
             <h3>Edit Details</h3>
             <div className="member-detail">
-                <label>Member ID</label>
+                <label>Member ID *</label>
                 <input
                     type="number"
                     value={data.sadc_member_id || ''}
                     onChange={handleChange('sadc_member_id')}
+                    placeholder="Required"
                 />
             </div>
 
             <div className="member-detail">
-                <label>Last Name</label>
+                <label>Last Name *</label>
                 <input
                     type="text"
                     value={data.last_name || ''}
                     onChange={handleChange('last_name')}
+                    placeholder="Required"
                 />
             </div>
 
             <div className="member-detail">
-                <label>First Name</label>
+                <label>First Name *</label>
                 <input
                     type="text"
                     value={data.first_name || ''}
                     onChange={handleChange('first_name')}
+                    placeholder="Required"
                 />
             </div>
 
             <div className="member-detail">
-                <label>Birth Date</label>
+                <label>Birth Date *</label>
                 <input
                     type="date"
                     value={data.birth_date || ''}
@@ -132,7 +135,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 />
             </div>
             <div className="member-detail">
-                <label>Gender</label>
+                <label>Gender *</label>
                 <div className="radio-group">
                     <label>
                         <input
@@ -171,7 +174,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                     <input
                         type="checkbox"
                         name="active"
-                        checked={data.active === true}
+                        checked={data.active !== false}
                         onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
                     />
                     Active

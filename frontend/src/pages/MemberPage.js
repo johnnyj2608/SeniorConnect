@@ -94,6 +94,21 @@ const MemberPage = () => {
   };
 
   const handleSave = async (updatedData) => {
+    const requiredFields = {
+      basic: ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'],
+      authorization: ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'],
+    };
+    
+    const missingFields = requiredFields[modalType]?.filter(field => {
+      const value = updatedData[field];
+      return !(typeof value === 'string' ? value.trim() : value);
+    });
+
+    if (missingFields?.length > 0) {
+        alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+        return;
+    }
+
     const sendRequest = async (url, method, data) => {
       const formData = new FormData();
       for (const key in data) {

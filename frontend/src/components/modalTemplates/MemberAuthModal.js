@@ -28,16 +28,17 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
         <>
             <h3>Edit Authorization</h3>
             <div className="member-detail">
-                <label>Member ID</label>
+                <label>Member ID *</label>
                 <input
                     type="text"
                     name="mltc_member_id"
                     value={data[activeTab]?.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
+                    placeholder="Required"
                 />
             </div>
             <div className="member-detail">
-                <label>MLTC:</label>
+                <label>MLTC *</label>
                 <MltcDropdown 
                     value={data[activeTab]?.mltc || 0} 
                     onChange={handleChange('mltc')}
@@ -45,12 +46,13 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 />
             </div>
             <div className="member-detail">
-                <label>Auth ID</label>
+                <label>Auth ID *</label>
                 <input
                     type="text"
                     name="mltc_auth_id"
                     value={data[activeTab]?.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
+                    placeholder="Required"
                 />
             </div>
             <div className="member-detail">
@@ -71,7 +73,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 </div>
             </div>
             <div className="member-detail">
-                <label>Start Date</label>
+                <label>Start Date *</label>
                 <input
                     type="date"
                     name="start_date"
@@ -80,7 +82,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 />
             </div>
             <div className="member-detail">
-                <label>End Date</label>
+                <label>End Date *</label>
                 <input
                     type="date"
                     name="end_date"
