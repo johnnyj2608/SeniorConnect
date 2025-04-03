@@ -77,9 +77,11 @@ const MemberPage = () => {
   const updateState = (savedData) => {
     switch (modalType) {
       case 'basic':
+        let photoURL = ''
+        if (savedData.photo) photoURL = `${savedData.photo}?t=${new Date().getTime()}`;
         setMember({
           ...savedData,
-          photo: `${savedData.photo}?t=${new Date().getTime()}`,
+          photo: photoURL,
         });
         break;
       case 'authorization':
@@ -95,10 +97,9 @@ const MemberPage = () => {
     const sendRequest = async (url, method, data) => {
       const formData = new FormData();
       for (const key in data) {
-        if (key === 'photo' && typeof data.photo === 'string') {
+        if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
           const file = await urlToFile(data.photo, `${id}.jpg`);
           formData.append('photo', file);
-          // Photo not updated
         } else if (key === 'schedule' && data.id !== 'new') {
           formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {

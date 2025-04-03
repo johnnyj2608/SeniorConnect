@@ -18,6 +18,7 @@ def createMember(request):
     data = request.data
     member = Member.objects.create(
         sadc_member_id=data['sadc_member_id'],
+        photo=data['photo'],
         first_name=data['first_name'],
         last_name=data['last_name'],
         birth_date=data['birth_date'],
