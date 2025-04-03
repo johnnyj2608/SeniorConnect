@@ -1,11 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalMain from '../components/ModalMain';
-import { formatDate, formatPhone, formatGender, formatSchedule, formatSSN } from '../utils/formatUtils';
 import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
 import { ReactComponent as AddButton } from '../assets/add.svg'
+import { 
+  formatDate, 
+  formatPhone, 
+  formatGender, 
+  formatSchedule, 
+  formatSSN, 
+  sortSchedule
+} from '../utils/formatUtils';
 
 const MemberPage = () => {
   const { id } = useParams();
@@ -69,72 +76,92 @@ const MemberPage = () => {
 
   const updateState = (savedData) => {
     switch (modalType) {
-        case 'basic':
-            setMember(savedData);
-            break;
-        case 'authorization':
-            setAuths((prevAuths) => {
-                const updatedAuths = prevAuths.map(auth =>
-                    auth.id === savedData.id ? savedData : auth
-                );
-                return updatedAuths.length ? updatedAuths : [savedData];
-            });
-            break;
-        default:
-            console.error("Unknown update type:", modalType);
-            return;
+      case 'basic':
+        setMember({
+          ...savedData,
+          photo: `${savedData.photo}?t=${new Date().getTime()}`,
+        });
+        break;
+      case 'authorization':
+        setAuths(savedData);
+        break;
+      default:
+        console.error("Unknown update type:", modalType);
+        return;
     }
   };
 
   const handleSave = async (updatedData) => {
-
     const sendRequest = async (url, method, data) => {
       const formData = new FormData();
-        for (const key in data) {
-          if (key === 'photo' && typeof data.photo === 'string') {
-            const file = await urlToFile(data.photo, `${id}.jpg`);
-            formData.append('photo', file);
-          } else if (typeof data[key] === 'object' && data[key] !== null) {
-            formData.append(key, JSON.stringify(data[key]));
-          } else if (data[key] === null) {
-            formData.append(key, '');
-          } else {
-            formData.append(key, data[key]);
-          }
+      for (const key in data) {
+        if (key === 'photo' && typeof data.photo === 'string') {
+          const file = await urlToFile(data.photo, `${id}.jpg`);
+          formData.append('photo', file);
+          // Photo not updated
+        } else if (key === 'schedule' && data.id !== 'new') {
+          formData.append(key, JSON.stringify(data[key]));
+        } else if (data[key] === null) {
+          formData.append(key, '');
+        } else {
+          formData.append(key, data[key]);
         }
-        
-        const response = await fetch(url, { method, body: formData });
+      }
+      
+      const response = await fetch(url, { method, body: formData });
 
-        if (!response.ok) return Promise.reject(response);
+      if (!response.ok) return Promise.reject(response);
 
-        const savedData = await response.json();
-        updateState(savedData);
-        setModalOpen(false);
+      return response.json();
     };
 
+    const dataArray = Object.values(updatedData);
+    let savedData = null;
+
     switch (modalType) {
-        case 'basic':
-            const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
-            const memberMethod = id === 'new' ? 'POST' : 'PUT';
-            await sendRequest(memberEndpoint, memberMethod, updatedData);
-            break;
+      case 'basic':
+        const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
+        const memberMethod = id === 'new' ? 'POST' : 'PUT';
+        savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
+        break;
 
-        case 'authorization':
-            await Promise.all(
-                Object.values(updatedData)
-                    .filter(auth => auth.edited)
-                    .map(auth => {
-                        auth.member_id = auth.id === 'new' ? id : auth.member_id;
-                        const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
-                        const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
-                        return sendRequest(authEndpoint, authMethod, auth);
-                    })
-            );
-            break;
+      case 'authorization':
+        const deletions = dataArray.filter(auth => auth.deleted);
+        const updates = dataArray.filter(auth => auth.edited && !auth.deleted);
 
-        default:
-            console.error("Unknown save type:", modalType);
+        const updatedAuths = await Promise.all(
+          updates.map(async (auth) => {
+            auth.schedule = sortSchedule(auth.schedule);
+            auth.member_id = auth.id === 'new' ? id : auth.member_id;
+            const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
+            const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
+        
+            const response = await sendRequest(authEndpoint, authMethod, auth);
+        
+            if (auth.id === 'new' && response.id) {
+              auth.id = response.id;
+            }
+        
+            return auth;
+          })
+        );
+
+        await Promise.all(
+          deletions.map(auth => fetch(`/core/auths/${auth.id}/`, { method: 'DELETE' }))
+        );
+  
+        savedData = dataArray
+          .filter(auth => !auth.deleted && auth.id !== 'new')
+          .map(auth => updatedAuths.find(updated => updated.id === auth.id) || auth)
+          .concat(updatedAuths.filter(updated => !dataArray.some(auth => auth.id === updated.id)));
+        break;
+
+      default:
+        console.error("Unknown save type:", modalType);
     }
+    console.log(savedData)
+    updateState(savedData);
+    setModalOpen(false);
   };
 
   const handleCancel = () => {

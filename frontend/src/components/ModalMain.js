@@ -8,13 +8,24 @@ import ModalTabs from './ModalTabs';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const tabsData = [
-        { id: 'new', data: {}, edited: false },
+        {
+            id: 'new',
+            ...data && data[0]
+              ? {
+                  ...data[0],
+                  id: 'new',
+                  mltc_auth_id: null,
+                  start_date: null,
+                  end_date: null,
+                }
+              : {},
+            edited: false,
+          },
         ...Object.values(data).map(tab => ({ ...tab, edited: false }))
     ];
-    
+
     const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : tabsData);
     const [activeTab, setActiveTab] = useState(0);
-
     useEffect(() => {
         document.body.classList.add('modal-open');
         return () => {
@@ -96,6 +107,15 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         }
     };
 
+    const handleDelete = (tabIndex) => {
+        setLocalData((prevData) =>
+            prevData.map((item, index) =>
+                index === tabIndex ? { ...item, deleted: true } : item
+            )
+        );
+        setActiveTab(0);
+    };
+
     return (
         <div className="modal">
             <div className="modal-body">
@@ -110,7 +130,9 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     </div>
                     {type !== 'basic' && (
                     <div className="modal-tabs">
-                        {tabsData.map((tab, index) => {
+                        { Object.values(localData)
+                            .filter(tab => !tab.deleted)
+                            .map((tab, index) => {
                             const { heading, subheading, isEdited } = getTabLabel(type, tab, index);
                             return (
                                 <ModalTabs 
@@ -129,6 +151,11 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                 </div>
                 <div className="modal-buttons">
                     <button onClick={onClose}>Cancel</button>
+                    {type !== 'basic' && activeTab !== 0 && (
+                        <button className='delete-button' onClick={() => handleDelete(activeTab)}>
+                            Delete
+                        </button>
+                    )}
                     <button onClick={() => onSave(localData)}>Save</button>
                 </div>
             </div>

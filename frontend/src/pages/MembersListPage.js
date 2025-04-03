@@ -43,7 +43,6 @@ const MembersListPage = () => {
   });
 
   const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
-  console.log(mltcOptions)
 
   return (
     <div className="members">

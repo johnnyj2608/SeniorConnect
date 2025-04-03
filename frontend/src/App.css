@@ -404,11 +404,6 @@ a {
   margin-right: -8px;
 }
 
-.delete-button {
-  font-size: 24px;
-  color: red;
-}
-
 /*==============================
 =>  Modal Styles
 ================================*/
@@ -467,7 +462,7 @@ body.modal-open {
   border-top: 1px solid var(--color-gray);
 }
 
-.modal button {
+.modal-buttons button {
   padding: 15px 40px;
   margin: 10px 20px;
   border: none;
@@ -478,7 +473,7 @@ body.modal-open {
   border-radius: 8px;
 }
 
-.modal button:hover {
+.modal-buttons button:hover {
   background-color: var(--color-hover);
 }
 
@@ -539,6 +534,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .modal-tabs button {
+  color: white;
+  background-color: var(--color-main);
   border: 1px solid var(--color-dark);
   border-radius: 0 8px 8px 0;
   cursor: pointer;
@@ -558,6 +555,15 @@ input[type="number"]::-webkit-inner-spin-button {
 .modal-tabs button.active {
   background-color:#2c5d9b
 }
+
+.delete-button {
+  background-color: red !important;
+}
+
+.delete-button:hover {
+  background-color: #b30000 !important;
+}
+
 
 @media (max-width: 835px) {
   .navbar-toggle {

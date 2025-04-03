@@ -19,13 +19,15 @@ def createAuthorization(request):
     member = Member.objects.get(id=data['member_id'])
     mltc = MLTC.objects.get(name=data['mltc'])
     dx_code = DX_Code.objects.get(name=data['dx_code']) if data.get('dx_code') else None
-
+    
+    schedule = data.get('schedule', []).split(',')
+    
     authorization = Authorization.objects.create(
         mltc_member_id=data['mltc_member_id'],
         mltc_id=mltc.id,
         mltc_auth_id=data['mltc_auth_id'],
         member_id=member,
-        schedule=data.get('schedule', []),
+        schedule=schedule,
         start_date=data['start_date'],
         end_date=data['end_date'],
         dx_code=dx_code,

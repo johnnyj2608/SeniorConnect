@@ -50,6 +50,19 @@ const formatSchedule = (schedule) => {
   return "N/A";
 }
 
+const sortSchedule = (schedule) => {
+  const daysOfWeek = [
+    "monday", "tuesday", "wednesday", "thursday", 
+    "friday", "saturday", "sunday"
+  ];
+
+  const sortedSchedule = schedule.sort((a, b) => 
+    daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b)
+  );
+
+  return sortedSchedule;
+};
+
 const formatSSN = (ssn) => {
   if (!ssn || typeof ssn !== "string") {
     return "";
@@ -58,4 +71,11 @@ const formatSSN = (ssn) => {
   return ssn.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
 };
 
-export { formatDate, formatPhone, formatGender, formatSchedule, formatSSN };
+export {
+  formatDate,
+  formatPhone,
+  formatGender,
+  formatSchedule,
+  sortSchedule,
+  formatSSN
+};
