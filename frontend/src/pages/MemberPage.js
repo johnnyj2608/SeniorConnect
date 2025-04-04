@@ -94,20 +94,20 @@ const MemberPage = () => {
   };
 
   const handleSave = async (updatedData) => {
-    const requiredFields = {
-      basic: ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'],
-      authorization: ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'],
-    };
+    // const requiredFields = {
+    //   basic: ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'],
+    //   authorization: ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'],
+    // };
     
-    const missingFields = requiredFields[modalType]?.filter(field => {
-      const value = updatedData[field];
-      return !(typeof value === 'string' ? value.trim() : value);
-    });
+    // const missingFields = requiredFields[modalType]?.filter(field => {
+    //   const value = updatedData[field];
+    //   return !(typeof value === 'string' ? value.trim() : value);
+    // });
 
-    if (missingFields?.length > 0) {
-        alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
-        return;
-    }
+    // if (missingFields?.length > 0) {
+    //     alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+    //     return;
+    // }
 
     const sendRequest = async (url, method, data) => {
       const formData = new FormData();
@@ -133,9 +133,23 @@ const MemberPage = () => {
 
     const dataArray = Object.values(updatedData);
     let savedData = null;
+    let requiredFields = [];
+    let missingFields = [];
 
     switch (modalType) {
       case 'basic':
+        requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
+
+        missingFields = requiredFields.filter(field => {
+          const value = updatedData[field];
+          return !(typeof value === 'string' ? value.trim() : value);
+        });
+
+        if (missingFields?.length > 0) {
+          alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+          return;
+        }
+
         const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
         const memberMethod = id === 'new' ? 'POST' : 'PUT';
         savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
@@ -147,8 +161,28 @@ const MemberPage = () => {
         break;
 
       case 'authorization':
+        requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date']
+
         const deletions = dataArray.filter(auth => auth.deleted);
         const updates = dataArray.filter(auth => auth.edited && !auth.deleted);
+
+        missingFields = updates.reduce((acc, auth) => {
+          const missingFieldsInAuth = requiredFields.filter(field => {
+            const value = auth[field];
+            return !(typeof value === 'string' ? value.trim() : value);
+          });
+        
+          if (missingFieldsInAuth.length > 0) {
+            acc.push(...missingFieldsInAuth);
+          }
+        
+          return acc;
+        }, []);
+    
+        if (missingFields.length > 0) {
+          alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+          return;
+        }
 
         const updatedAuths = await Promise.all(
           updates.map(async (auth) => {
@@ -281,11 +315,6 @@ const MemberPage = () => {
             <div className="member-detail">
               <label>Language:</label>
               <span>{member.language || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Enrollment:</label>
-              <span>{formatDate(member.enrollment_date) || 'N/A'}</span>
             </div>
 
             <div className="member-detail">
