@@ -102,33 +102,6 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         }
     };
 
-    const getTabLabel = (type, item, index) => {
-        if (index === 0) {
-            return { heading: 'New', subheading: '' };
-        }
-
-        switch (type) {
-            case 'authorization':
-                let status = '';
-                const today = new Date();
-
-                if (item.active === true) {
-                    status = 'Active';
-                } else if (item.start_date && new Date(item.start_date) > today) {
-                    status = 'Future';
-                } else {
-                    status = 'Expired';
-                }
-
-                return { 
-                    heading: item.mltc || 'Unknown', 
-                    subheading: status,
-                };
-            default:
-                return { heading: 'Unknown', subheading: '' };
-        }
-    };
-
     const handleDelete = (tabIndex) => {
         setLocalData((prevData) =>
             prevData.map((item, index) =>
@@ -155,16 +128,14 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                         { Object.values(localData)
                             .filter(tab => !tab.deleted)
                             .map((tab, index) => {
-                            const { heading, subheading } = getTabLabel(type, tab, index);
                             return (
                                 <ModalTabs 
                                     key={index}
                                     index={index}
                                     activeTab={activeTab}
                                     setActiveTab={setActiveTab}
-                                    heading={heading}
-                                    subheading={subheading}
-                                    isEdited={localData[index]?.edited}
+                                    type={type}
+                                    tab={tab}
                                 />
                             );
                         })}
