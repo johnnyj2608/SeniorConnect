@@ -27,6 +27,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
 
     const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : tabsData);
     const [activeTab, setActiveTab] = useState(0);
+
     useEffect(() => {
         document.body.classList.add('modal-open');
         return () => {
@@ -41,11 +42,9 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
             if (type !== 'basic' && field === 'active') {
                 const updatedData = prevData.map((item, index) => {
                     if (index === activeTab && item.active === false) {
-                        return { ...item, active: true, edited: true };
-                    } else if (item.active === true) {
-                        return { ...item, active: false, edited: true };
+                        return { ...item, active: true };   // Manage edited field
                     } else {
-                        return { ...item, active: false };
+                        return { ...item, active: false };  // Manage edited field
                     }
                 });
                 return updatedData;
@@ -61,8 +60,8 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ...prevData,
                     [activeTab]: {
                         ...prevData[activeTab],
-                        schedule: newSchedule,
-                        edited: true,
+                        field: newSchedule,
+                        // Manage edited field
                     },
                 };
             }
@@ -73,7 +72,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     [activeTab]: {
                         ...prevData[activeTab],
                         [field]: value,
-                        edited: true,
+                        edited: tabsData[activeTab][field] !== value,
                     },
                 };
             }
