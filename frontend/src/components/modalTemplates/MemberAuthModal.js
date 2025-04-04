@@ -126,7 +126,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={data[activeTab]?.dx_code || 0} 
                     onChange={handleChange('dx_code')}
                     options={dxCodes}
-                    disabled={dxCodes.length === 0}
                 />
             </div>
             <div className="member-detail">

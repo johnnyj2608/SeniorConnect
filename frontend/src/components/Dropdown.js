@@ -1,21 +1,51 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 
-const Dropdown = ({ value, onChange, options = [], disabled = false }) => {
+const Dropdown = ({ value, onChange, options = [] }) => {
+    const [open, setOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
-    // const sortedOptions = [...options].sort((a, b) => a.name.localeCompare(b.name));
-    const formattedOptions = options.map(option =>
-        typeof option === 'object' ? option.name : option
-    );
+    const formattedOptions = options
+        .map(option => (typeof option === 'object' ? option.name : option))
+        .filter(option => option !== '');
+
+    const handleSelect = (option) => {
+        onChange({ target: { value: option } });
+        setOpen(false);
+    };
+
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
-        <select value={value} onChange={onChange} className="dropdown" disabled={disabled || formattedOptions.length === 0}>
-            <option value="">Select Option</option>
-            {formattedOptions.map((option) => (
-                <option key={option} value={option}>
-                    {option}
-                </option>
-            ))}
-        </select>
+        <div className="dropdown" ref={dropdownRef}>
+            <div className="dropdown-header" onClick={() => setOpen(!open)}>
+                {value || "Select Option"}
+                <span className={`dropdown-icon ${open ? "open" : ""}`}><DropdownIcon /></span>
+            </div>
+            {open && (
+                <ul className="dropdown-list">
+                    <li key="select-option" onClick={() => handleSelect("")}>
+                        Select Option
+                    </li>
+                    {formattedOptions.map((option) => (
+                        <li key={option} onClick={() => handleSelect(option)}>
+                            {option}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
     );
 };
 
