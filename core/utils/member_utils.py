@@ -16,9 +16,12 @@ def getMemberDetail(request, pk):
 
 def createMember(request):
     data = request.data
+    
+    active = data.get('active', '').lower() == 'true'
+    
     member = Member.objects.create(
         sadc_member_id=data['sadc_member_id'],
-        photo=data['photo'],
+        photo=data.get('photo', None),
         first_name=data['first_name'],
         last_name=data['last_name'],
         birth_date=data['birth_date'],
@@ -30,6 +33,7 @@ def createMember(request):
         language=data.get('language', None),
         ssn=data.get('ssn', None),
         note=data.get('note', None),
+        active=active,
     )
     serializer = MemberSerializer(member)
     return Response(serializer.data)

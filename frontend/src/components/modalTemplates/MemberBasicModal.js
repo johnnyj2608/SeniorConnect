@@ -137,26 +137,22 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
             <div className="member-detail">
                 <label>Gender *</label>
                 <div className="radio-group">
-                    <label>
-                        <input
-                            type="radio"
-                            name="gender"
-                            value="M"
-                            checked={data.gender === 'M'}
-                            onChange={handleChange('gender')}
-                        />
-                        Male
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="gender"
-                            value="F"
-                            checked={data.gender === 'F'}
-                            onChange={handleChange('gender')}
-                        />
-                        Female
-                    </label>
+                    <label>Male</label>
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="M"
+                        checked={data.gender === 'M'}
+                        onChange={handleChange('gender')}
+                    />
+                    <label>Female</label>
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="F"
+                        checked={data.gender === 'F'}
+                        onChange={handleChange('gender')}
+                    />
                 </div>
             </div>
 
@@ -170,15 +166,13 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>
-                    <input
-                        type="checkbox"
-                        name="active"
-                        checked={data.active !== false}
-                        onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
-                    />
-                    Active
-                </label>
+                <label>Active</label>
+                <input
+                    type="checkbox"
+                    name="active"
+                    checked={data.active !== false}
+                    onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                />
             </div>
         </>
     );

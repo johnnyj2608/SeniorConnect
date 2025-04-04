@@ -42,7 +42,18 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
 
     return (
         <>
+            <div className="member-detail modal-auth-heading">
             <h3>Edit Authorization</h3>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="active"
+                        checked={data[activeTab]?.active === true}
+                        onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                    />
+                Active
+                </label>
+            </div>
             <div className="member-detail">
                 <label>Member ID *</label>
                 <input

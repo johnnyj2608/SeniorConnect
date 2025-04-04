@@ -16,12 +16,12 @@ def getAuthorizationDetail(request, pk):
 
 def createAuthorization(request):
     data = request.data
-
     try:
         member = Member.objects.get(id=data['member_id'])
         mltc = MLTC.objects.get(name=data['mltc'])
         
         schedule = data.get('schedule', '').split(',')
+        active = data.get('active', '').lower() == 'true'
 
         with transaction.atomic():
             authorization = Authorization.objects.create(
@@ -35,6 +35,7 @@ def createAuthorization(request):
                 dx_code=data.get('dx_code', ''),
                 sdc_code=data.get('sdc_code', ''),
                 trans_code=data.get('trans_code', ''),
+                active=active,
             )
 
             if Authorization.objects.filter(member_id=member.id).count() == 1:  

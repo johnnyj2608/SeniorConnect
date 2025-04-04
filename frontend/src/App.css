@@ -557,6 +557,10 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color:#2c5d9b
 }
 
+.modal-auth-heading {
+  justify-content: space-between;
+}
+
 .delete-button {
   background-color: red !important;
 }

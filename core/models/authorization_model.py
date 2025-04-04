@@ -19,6 +19,7 @@ class Authorization(models.Model):
     trans_code = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
+    active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
 

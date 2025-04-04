@@ -43,6 +43,12 @@ const MemberPage = () => {
     setAuths(data);
   };
 
+  const getActiveAuth = () => {
+    return auths.find(auth => auth.active === true);
+  };
+
+  const activeAuth = getActiveAuth();
+
   useEffect(() => {
     if (id === 'new') {
       setModalOpen(true);
@@ -94,21 +100,6 @@ const MemberPage = () => {
   };
 
   const handleSave = async (updatedData) => {
-    // const requiredFields = {
-    //   basic: ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'],
-    //   authorization: ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'],
-    // };
-    
-    // const missingFields = requiredFields[modalType]?.filter(field => {
-    //   const value = updatedData[field];
-    //   return !(typeof value === 'string' ? value.trim() : value);
-    // });
-
-    // if (missingFields?.length > 0) {
-    //     alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
-    //     return;
-    // }
-
     const sendRequest = async (url, method, data) => {
       const formData = new FormData();
       for (const key in data) {
@@ -123,7 +114,7 @@ const MemberPage = () => {
           formData.append(key, data[key]);
         }
       }
-      
+
       const response = await fetch(url, { method, body: formData });
 
       if (!response.ok) return Promise.reject(response);
@@ -192,11 +183,11 @@ const MemberPage = () => {
             const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
         
             const response = await sendRequest(authEndpoint, authMethod, auth);
-        
+
             if (auth.id === 'new' && response.id) {
               auth.id = response.id;
             }
-        
+
             return auth;
           })
         );
@@ -330,39 +321,39 @@ const MemberPage = () => {
             <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
             <div className="member-detail">
               <label>Member ID:</label>
-              <span>{auths[0]?.mltc_member_id || 'N/A'}</span>
+              <span>{activeAuth?.mltc_member_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>MLTC:</label>
-              <span>{auths[0]?.mltc || 'N/A'}</span>
+              <span>{activeAuth?.mltc || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>
-              <span>{auths[0]?.mltc_auth_id || 'N/A'}</span>
+              <span>{activeAuth?.mltc_auth_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Schedule:</label>
-              <span>{formatSchedule(auths[0]?.schedule) || 'N/A'}</span>
+              <span>{formatSchedule(activeAuth?.schedule) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Start Date:</label>
-              <span>{formatDate(auths[0]?.start_date) || 'N/A'}</span>
+              <span>{formatDate(activeAuth?.start_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>End Date:</label>
-              <span>{formatDate(auths[0]?.end_date) || 'N/A'}</span>
+              <span>{formatDate(activeAuth?.end_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>DX Code:</label>
-              <span>{auths[0]?.dx_code || 'N/A'}</span>
+              <span>{activeAuth?.dx_code || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>SDC Code:</label>
-              <span>{auths[0]?.sdc_code || 'N/A'}</span>
+              <span>{activeAuth?.sdc_code || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Trans Code:</label>
-              <span>{auths[0]?.trans_code || 'N/A'}</span>
+              <span>{activeAuth?.trans_code || 'N/A'}</span>
             </div>
             {/* If updating auths, prefill with previous info except dates */}
           </div>

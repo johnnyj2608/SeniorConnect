@@ -17,6 +17,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                   mltc_auth_id: null,
                   start_date: null,
                   end_date: null,
+                  active: false,
                 }
               : {},
             edited: false,
@@ -37,6 +38,19 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         const { value, files, checked } = event.target;
         
         setLocalData((prevData) => {
+            if (type !== 'basic' && field === 'active') {
+                const updatedData = prevData.map((item, index) => {
+                    if (index === activeTab && item.active === false) {
+                        return { ...item, active: true, edited: true };
+                    } else if (item.active === true) {
+                        return { ...item, active: false, edited: true };
+                    } else {
+                        return { ...item, active: false };
+                    }
+                });
+                return updatedData;
+            }
+
             if (field === 'schedule') {
                 const currentSchedule = prevData[activeTab]?.schedule || [];
                 const newSchedule = checked
@@ -89,21 +103,29 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
     };
 
     const getTabLabel = (type, item, index) => {
-        const isEdited = localData[index]?.edited;
-
         if (index === 0) {
-            return { heading: 'New', subheading: '', isEdited };
+            return { heading: 'New', subheading: '' };
         }
 
         switch (type) {
             case 'authorization':
+                let status = '';
+                const today = new Date();
+
+                if (item.active === true) {
+                    status = 'Active';
+                } else if (item.start_date && new Date(item.start_date) > today) {
+                    status = 'Future';
+                } else {
+                    status = 'Expired';
+                }
+
                 return { 
                     heading: item.mltc || 'Unknown', 
-                    subheading: item.mltc_auth_id || '', 
-                    isEdited 
+                    subheading: status,
                 };
             default:
-                return { heading: 'Unknown', subheading: '', isEdited };
+                return { heading: 'Unknown', subheading: '' };
         }
     };
 
@@ -133,7 +155,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                         { Object.values(localData)
                             .filter(tab => !tab.deleted)
                             .map((tab, index) => {
-                            const { heading, subheading, isEdited } = getTabLabel(type, tab, index);
+                            const { heading, subheading } = getTabLabel(type, tab, index);
                             return (
                                 <ModalTabs 
                                     key={index}
@@ -142,7 +164,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                                     setActiveTab={setActiveTab}
                                     heading={heading}
                                     subheading={subheading}
-                                    isEdited={isEdited}
+                                    isEdited={localData[index]?.edited}
                                 />
                             );
                         })}
