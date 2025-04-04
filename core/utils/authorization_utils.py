@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from ..models.authorization_model import Authorization, DX_Code, MLTC
+from ..models.authorization_model import Authorization, MLTC
 from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 
@@ -18,7 +18,6 @@ def createAuthorization(request):
     
     member = Member.objects.get(id=data['member_id'])
     mltc = MLTC.objects.get(name=data['mltc'])
-    dx_code = DX_Code.objects.get(name=data['dx_code']) if data.get('dx_code') else None
     
     schedule = data.get('schedule', []).split(',')
     
@@ -30,7 +29,7 @@ def createAuthorization(request):
         schedule=schedule,
         start_date=data['start_date'],
         end_date=data['end_date'],
-        dx_code=dx_code,
+        dx_code=data.get('dx_code', ''),
         sdc_code=data.get('sdc_code', ''),
         trans_code=data.get('trans_code', ''),
     )

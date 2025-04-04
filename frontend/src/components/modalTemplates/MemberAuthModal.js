@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import MltcDropdown from '../Dropdown';
+import Dropdown from '../Dropdown';
 
 const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
+    const [dxCodes, setDxCodes] = useState([]);
 
     useEffect(() => {
         getMltcOptions()
@@ -13,6 +14,21 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
         const data = await response.json();
         setMltcOptions(data);
     };
+
+    const handleMltcChange = async (mltcName) => {
+        const selectedMltc = mltcOptions.find(mltc => mltc.name === mltcName);
+        if (selectedMltc) {
+            setDxCodes(selectedMltc.dx_codes);
+        } else {
+            setDxCodes([]);
+        }
+    };
+
+    useEffect(() => {
+        if (data[activeTab]?.mltc) {
+            handleMltcChange(data[activeTab].mltc);
+        }
+    }, [mltcOptions]);
 
     const daysOfWeek = [
         { label: "Monday", value: "monday" },
@@ -39,9 +55,12 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             </div>
             <div className="member-detail">
                 <label>MLTC *</label>
-                <MltcDropdown 
+                <Dropdown 
                     value={data[activeTab]?.mltc || 0} 
-                    onChange={handleChange('mltc')}
+                    onChange={(e) => {
+                        handleChange('mltc')(e);
+                        handleMltcChange(e.target.value);
+                    }}
                     options={mltcOptions} 
                 />
             </div>
@@ -92,11 +111,11 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             </div>
             <div className="member-detail">
                 <label>DX Code</label>
-                <input
-                    type="text"
-                    name="dx_code"
-                    value={data[activeTab]?.dx_code || ''}
+                <Dropdown 
+                    value={data[activeTab]?.dx_code || 0} 
                     onChange={handleChange('dx_code')}
+                    options={dxCodes}
+                    disabled={dxCodes.length === 0}
                 />
             </div>
             <div className="member-detail">
