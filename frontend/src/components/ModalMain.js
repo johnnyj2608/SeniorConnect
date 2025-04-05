@@ -42,9 +42,9 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
             if (type !== 'basic' && field === 'active') {
                 const updatedData = prevData.map((item, index) => {
                     if (index === activeTab && item.active === false) {
-                        return { ...item, active: true };   // Manage edited field
+                        return { ...item, active: true, edited: tabsData[index][field] !== true };
                     } else {
-                        return { ...item, active: false };  // Manage edited field
+                        return { ...item, active: false, edited: tabsData[index][field] !== false };
                     }
                 });
                 return updatedData;
@@ -56,12 +56,15 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ? [...currentSchedule, value]
                     : currentSchedule.filter((day) => day !== value);
 
+                const originalSet = new Set(tabsData[activeTab][field]);
+                const isEdited = !(newSchedule.length === originalSet.size && newSchedule.every(val => originalSet.has(val)));
+
                 return {
                     ...prevData,
                     [activeTab]: {
                         ...prevData[activeTab],
-                        field: newSchedule,
-                        // Manage edited field
+                        [field]: newSchedule,
+                        edited: isEdited,
                     },
                 };
             }
