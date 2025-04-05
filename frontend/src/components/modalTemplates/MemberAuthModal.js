@@ -22,6 +22,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
         } else {
             setDxCodes([]);
         }
+        handleChange('dx_code')({ target: { value: '' } });
     };
 
     useEffect(() => {

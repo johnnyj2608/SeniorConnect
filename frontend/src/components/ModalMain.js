@@ -5,6 +5,7 @@ import MemberContactsModal from './modalTemplates/MemberContactsModal';
 import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';
 import MemberFilesModal from './modalTemplates/MemberFilesModal';
 import ModalTabs from './ModalTabs';
+import { sortSchedule } from '../utils/formatUtils';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
     const tabsData = [
@@ -35,18 +36,30 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         };
     }, []);
 
+    const compareTabs = (updatedTab, originalTab) => {
+        const stripEdited = ({ edited, ...rest }) => rest;
+        return JSON.stringify(stripEdited(updatedTab)) !== JSON.stringify(stripEdited(originalTab));
+    };
+
     const handleChange = (field) => (event) => {
         const { value, files, checked } = event.target;
-        
         setLocalData((prevData) => {
             if (type !== 'basic' && field === 'active') {
-                const updatedData = prevData.map((item, index) => {
-                    if (index === activeTab && item.active === false) {
-                        return { ...item, active: true, edited: tabsData[index][field] !== true };
+                const updatedData = { ...prevData };
+
+                Object.keys(updatedData).forEach((key, index) => {
+                    let updatedItem = updatedData[key];
+
+                    if (index === activeTab && updatedItem.active === false) {
+                        updatedItem = { ...updatedItem, active: true };
                     } else {
-                        return { ...item, active: false, edited: tabsData[index][field] !== false };
+                        updatedItem = { ...updatedItem, active: false };
                     }
+                    
+                    const isEdited = compareTabs(updatedItem, tabsData[key]);
+                    updatedData[key] = { ...updatedItem, edited: isEdited };
                 });
+
                 return updatedData;
             }
 
@@ -55,31 +68,42 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                 const newSchedule = checked
                     ? [...currentSchedule, value]
                     : currentSchedule.filter((day) => day !== value);
+                const sortedSchedule = sortSchedule(newSchedule);
 
-                const originalSet = new Set(tabsData[activeTab][field]);
-                const isEdited = !(newSchedule.length === originalSet.size && newSchedule.every(val => originalSet.has(val)));
+                const updatedTab = {
+                    ...prevData[activeTab],
+                    [field]: sortedSchedule,
+                };
+                const isEdited = compareTabs(updatedTab, tabsData[activeTab])
 
                 return {
                     ...prevData,
                     [activeTab]: {
                         ...prevData[activeTab],
-                        [field]: newSchedule,
+                        [field]: sortedSchedule,
                         edited: isEdited,
                     },
                 };
             }
 
             if (type !== 'basic') {
+                const updatedTab = {
+                    ...prevData[activeTab],
+                    [field]: value,
+                };
+
+                const isEdited = compareTabs(updatedTab, tabsData[activeTab])
+                
                 return {
                     ...prevData,
                     [activeTab]: {
-                        ...prevData[activeTab],
-                        [field]: value,
-                        edited: tabsData[activeTab][field] !== value,
+                        ...updatedTab,
+                        edited: isEdited,
                     },
                 };
             }
 
+            // Basic modal changes
             if (files && files.length > 0) {
                 return { ...prevData, [field]: files[0] };
             }

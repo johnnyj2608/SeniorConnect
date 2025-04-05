@@ -54,18 +54,14 @@ const formatSchedule = (schedule) => {
 const sortSchedule = (schedule) => {
   if (!schedule) return [];
 
-  const filteredSchedule = schedule.filter(day => day !== '');
+  const daySet = new Set(schedule.filter(day => day !== ''));
 
   const daysOfWeek = [
     "monday", "tuesday", "wednesday", "thursday", 
     "friday", "saturday", "sunday"
   ];
 
-  const sortedSchedule = filteredSchedule.sort((a, b) => 
-    daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b)
-  );
-
-  return sortedSchedule;
+  return daysOfWeek.filter(day => daySet.has(day));
 };
 
 const formatSSN = (ssn) => {
