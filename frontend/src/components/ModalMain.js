@@ -9,7 +9,9 @@ import { sortSchedule } from '../utils/formatUtils';
 import getActiveAuth from '../utils/getActiveAuth';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
-    const activeAuth = getActiveAuth(data);
+
+    let activeAuth;
+    if (type === 'authorization') activeAuth = getActiveAuth(data);
 
     const tabsData = [
         {

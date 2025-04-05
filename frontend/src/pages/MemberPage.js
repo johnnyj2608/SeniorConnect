@@ -236,12 +236,17 @@ const MemberPage = () => {
         </h3>
       </div>
       <div className="member-row">
-        <img 
-            src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
-            alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
-            className="member-photo"
-            onError={(e) => e.target.src = "/default-profile.jpg"}
-        />
+        <div className="photo-container">
+          <img 
+              src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
+              alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
+              className="member-photo"
+              onError={(e) => e.target.src = "/default-profile.jpg"}
+          />
+          {member.enrollment_date && (
+            <p>Enrolled since {formatDate(member.enrollment_date)}</p>
+          )}
+        </div>
       </div>
       <div className="member-row">
         <div className="member-half-card">

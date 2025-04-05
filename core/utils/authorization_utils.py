@@ -44,6 +44,10 @@ def createAuthorization(request):
             else:
                 start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
                 member.enrollment_date = min(member.enrollment_date, start_date)
+
+            if active == True:
+                member.mltc_id = mltc
+
             member.save()
         serializer = AuthorizationSerializer(authorization)
         return Response(serializer.data)
