@@ -43,4 +43,4 @@ class Member(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"
+        return f"{self.sadc_member_id}. {self.first_name} {self.last_name} {self.birth_date}"

@@ -235,6 +235,7 @@ a {
   border-radius: 4px;
   background-color: #f9f9f9;
   font-size: 14px;
+  min-width: 150px;
   max-width: 300px;
   border: none;
 }

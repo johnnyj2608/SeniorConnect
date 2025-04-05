@@ -5,13 +5,13 @@ import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
 import { ReactComponent as AddButton } from '../assets/add.svg'
+import getActiveAuth from '../utils/getActiveAuth';
 import { 
   formatDate, 
   formatPhone, 
   formatGender, 
   formatSchedule, 
   formatSSN, 
-  sortSchedule
 } from '../utils/formatUtils';
 
 const MemberPage = () => {
@@ -43,11 +43,7 @@ const MemberPage = () => {
     setAuths(data);
   };
 
-  const getActiveAuth = () => {
-    return auths.find(auth => auth.active === true);
-  };
-
-  const activeAuth = getActiveAuth();
+  const activeAuth = getActiveAuth(auths);
 
   useEffect(() => {
     if (id === 'new') {
@@ -177,7 +173,6 @@ const MemberPage = () => {
 
         const updatedAuths = await Promise.all(
           updates.map(async (auth) => {
-            auth.schedule = sortSchedule(auth.schedule);
             auth.member_id = auth.id === 'new' ? id : auth.member_id;
             const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
             const authMethod = auth.id === 'new' ? 'POST' : 'PUT';

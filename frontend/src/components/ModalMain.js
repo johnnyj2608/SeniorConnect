@@ -6,21 +6,25 @@ import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';
 import MemberFilesModal from './modalTemplates/MemberFilesModal';
 import ModalTabs from './ModalTabs';
 import { sortSchedule } from '../utils/formatUtils';
+import getActiveAuth from '../utils/getActiveAuth';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
+    const activeAuth = getActiveAuth(data);
+
     const tabsData = [
         {
+            ...data?.[0],
             id: 'new',
-            ...data && data[0]
-              ? {
-                  ...data[0],
-                  id: 'new',
-                  mltc_auth_id: null,
-                  start_date: null,
-                  end_date: null,
-                  active: false,
-                }
-              : {},
+            active: activeAuth ? false : true,
+            mltc_member_id: activeAuth?.mltc_member_id || "",
+            mltc: activeAuth?.mltc || "",
+            mltc_auth_id: "",
+            schedule: activeAuth?.schedule || [],
+            start_date: "",
+            end_date: "",
+            dx_code: activeAuth?.dx_code || "",
+            sdc_code: activeAuth?.sdc_code || "",
+            trans_code: activeAuth?.trans_code || "",
             edited: false,
           },
         ...Object.values(data).map(tab => ({ ...tab, edited: false }))
@@ -45,21 +49,19 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         const { value, files, checked } = event.target;
         setLocalData((prevData) => {
             if (type !== 'basic' && field === 'active') {
-                const updatedData = { ...prevData };
+                const updatedData = [...prevData];
 
-                Object.keys(updatedData).forEach((key, index) => {
-                    let updatedItem = updatedData[key];
-
-                    if (index === activeTab && updatedItem.active === false) {
-                        updatedItem = { ...updatedItem, active: true };
+                updatedData.forEach((item, index) => {
+                    if (index === activeTab && item.active === false) {
+                        updatedData[index] = { ...item, active: true };
                     } else {
-                        updatedItem = { ...updatedItem, active: false };
+                        updatedData[index] = { ...item, active: false };
                     }
-                    
-                    const isEdited = compareTabs(updatedItem, tabsData[key]);
-                    updatedData[key] = { ...updatedItem, edited: isEdited };
+    
+                    const isEdited = compareTabs(updatedData[index], tabsData[index]);
+                    updatedData[index] = { ...updatedData[index], edited: isEdited };
                 });
-
+    
                 return updatedData;
             }
 
@@ -74,16 +76,14 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ...prevData[activeTab],
                     [field]: sortedSchedule,
                 };
-                const isEdited = compareTabs(updatedTab, tabsData[activeTab])
+                const isEdited = compareTabs(updatedTab, tabsData[activeTab]);
 
-                return {
-                    ...prevData,
-                    [activeTab]: {
-                        ...prevData[activeTab],
-                        [field]: sortedSchedule,
-                        edited: isEdited,
-                    },
+                const updatedData = [...prevData];
+                updatedData[activeTab] = {
+                    ...updatedTab,
+                    edited: isEdited,
                 };
+                return updatedData;
             }
 
             if (type !== 'basic') {
@@ -91,16 +91,16 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ...prevData[activeTab],
                     [field]: value,
                 };
-
-                const isEdited = compareTabs(updatedTab, tabsData[activeTab])
-                
-                return {
-                    ...prevData,
-                    [activeTab]: {
-                        ...updatedTab,
-                        edited: isEdited,
-                    },
+    
+                const isEdited = compareTabs(updatedTab, tabsData[activeTab]);
+    
+                const updatedData = [...prevData];
+                updatedData[activeTab] = {
+                    ...updatedTab,
+                    edited: isEdited,
                 };
+    
+                return updatedData;
             }
 
             // Basic modal changes
@@ -128,10 +128,10 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         }
     };
 
-    const handleDelete = (tabIndex) => {
+    const handleDelete = (tab) => {
         setLocalData((prevData) =>
-            prevData.map((item, index) =>
-                index === tabIndex ? { ...item, deleted: true } : item
+            prevData.map((item) =>
+                item === tab ? { ...item, deleted: true } : item
             )
         );
         setActiveTab(0);
@@ -151,8 +151,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     </div>
                     {type !== 'basic' && (
                     <div className="modal-tabs">
-                        { Object.values(localData)
-                            .filter(tab => !tab.deleted)
+                        { localData
                             .map((tab, index) => {
                             return (
                                 <ModalTabs 
@@ -171,7 +170,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                 <div className="modal-buttons">
                     <button onClick={onClose}>Cancel</button>
                     {type !== 'basic' && activeTab !== 0 && (
-                        <button className='delete-button' onClick={() => handleDelete(activeTab)}>
+                        <button className='delete-button' onClick={() => handleDelete(localData[activeTab])}>
                             Delete
                         </button>
                     )}

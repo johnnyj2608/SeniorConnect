@@ -1,6 +1,9 @@
 import React from 'react';
 
 const ModalTabs = ({ index, activeTab, setActiveTab, type, tab }) => {
+    if (tab.deleted) {
+        return;
+    }
 
     const getTabLabel = (type, item, index) => {
         if (index === 0) {

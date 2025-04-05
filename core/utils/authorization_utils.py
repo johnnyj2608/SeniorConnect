@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import transaction
 from rest_framework.response import Response
 from ..models.authorization_model import Authorization, MLTC
@@ -40,8 +41,10 @@ def createAuthorization(request):
 
             if Authorization.objects.filter(member_id=member.id).count() == 1:  
                 member.enrollment_date = data['start_date']
-                member.save()
-
+            else:
+                start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+                member.enrollment_date = min(member.enrollment_date, start_date)
+            member.save()
         serializer = AuthorizationSerializer(authorization)
         return Response(serializer.data)
     except Member.DoesNotExist:
