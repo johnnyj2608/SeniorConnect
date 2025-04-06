@@ -76,5 +76,6 @@ def deleteAuthorization(request, pk):
 
 def getAuthorizationListByMember(request, member_pk):
     authorizations = Authorization.objects.filter(member_id=member_pk).order_by('-start_date')
+    authorizations = authorizations.order_by('-id')
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)

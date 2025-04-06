@@ -1,59 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ModalMain from '../components/ModalMain';
-import urlToFile from '../utils/urlToFile';
+import ModalPage from './ModalPage';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
-import { ReactComponent as Pencil } from '../assets/pencil.svg'
-import { ReactComponent as AddButton } from '../assets/add.svg'
-import getActiveAuthIndex from '../utils/getActiveAuthIndex';
-import { 
-  formatDate, 
-  formatPhone, 
-  formatGender, 
-  formatSchedule, 
-  formatSSN, 
-} from '../utils/formatUtils';
+import MemberDetailsCard from '../components/memberCardTemplates/MemberDetailsCard';
+import MemberAuthCard from '../components/memberCardTemplates/MemberAuthCard';
+import MemberContactsCard from '../components/memberCardTemplates/MemberContactsCard';
+import MemberAbsencesCard from '../components/memberCardTemplates/MemberAbsencesCard';
+import MemberFilesCard from '../components/memberCardTemplates/MemberFilesCard';
+import MemberPhotoCard from '../components/memberCardTemplates/MemberPhotoCard';
+
 
 const MemberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [member, setMember] = useState({});
-  const [auths, setAuths] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState('');
-
-  const getMember = async () => {
-    if (id === 'new') return
-
-    const response = await fetch(`/core/members/${id}/`)
-    const data = await response.json()
-
-    const sanitizedData = Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [key, value ?? ""])
-    );
-    setMember(sanitizedData)
-  }
-
-  const getAuthsByMember = async () => {
-    if (id === 'new') return
-
-    const response = await fetch(`/core/auths/member/${id}`);
-    const data = await response.json();
-    setAuths(data);
-  };
-
-  const activeAuthIndex = getActiveAuthIndex(auths);
+  const [modalData, setModalData] = useState(null);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     if (id === 'new') {
       setModalOpen(true);
-      setModalType('basic');
-    } else {
-      getMember();
-      getAuthsByMember();
     }
-    // eslint-disable-next-line
   }, [id])
 
   const handleBack = () => {
@@ -76,134 +44,6 @@ const MemberPage = () => {
     }
   };
 
-  const updateState = (savedData) => {
-    switch (modalType) {
-      case 'basic':
-        let photoURL = ''
-        if (savedData.photo) photoURL = `${savedData.photo}?t=${new Date().getTime()}`;
-        setMember({
-          ...savedData,
-          photo: photoURL,
-        });
-        break;
-      case 'authorization':
-        setAuths(savedData);
-        break;
-      default:
-        console.error("Unknown update type:", modalType);
-        return;
-    }
-  };
-
-  const handleSave = async (updatedData) => {
-    const sendRequest = async (url, method, data) => {
-      const formData = new FormData();
-      for (const key in data) {
-        if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
-          const file = await urlToFile(data.photo, `${id}.jpg`);
-          formData.append('photo', file);
-        } else if (key === 'schedule' && data.id !== 'new') {
-          formData.append(key, JSON.stringify(data[key]));
-        } else if (data[key] === null) {
-          formData.append(key, '');
-        } else {
-          formData.append(key, data[key]);
-        }
-      }
-
-      const response = await fetch(url, { method, body: formData });
-
-      if (!response.ok) return Promise.reject(response);
-
-      return response.json();
-    };
-
-    const dataArray = Object.values(updatedData);
-    let savedData = null;
-    let requiredFields = [];
-    let missingFields = [];
-
-    switch (modalType) {
-      case 'basic':
-        requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
-
-        missingFields = requiredFields.filter(field => {
-          const value = updatedData[field];
-          return !(typeof value === 'string' ? value.trim() : value);
-        });
-
-        if (missingFields?.length > 0) {
-          alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
-          return;
-        }
-
-        const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
-        const memberMethod = id === 'new' ? 'POST' : 'PUT';
-        savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
-        
-        if (id === 'new') {
-          navigate(`/member/${savedData.id}`);
-        }
-
-        break;
-
-      case 'authorization':
-        requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date']
-
-        const deletions = dataArray.filter(auth => auth.id !== 'new' && auth.deleted);
-        const updates = dataArray.filter(auth => auth.edited && !auth.deleted);
-
-        missingFields = updates.reduce((acc, auth) => {
-          const missingFieldsInAuth = requiredFields.filter(field => {
-            const value = auth[field];
-            return !(typeof value === 'string' ? value.trim() : value);
-          });
-        
-          if (missingFieldsInAuth.length > 0) {
-            acc.push(...missingFieldsInAuth);
-          }
-        
-          return acc;
-        }, []);
-    
-        if (missingFields.length > 0) {
-          alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
-          return;
-        }
-
-        const updatedAuths = await Promise.all(
-          updates.map(async (auth) => {
-            auth.member_id = auth.id === 'new' ? id : auth.member_id;
-            const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
-            const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
-        
-            const response = await sendRequest(authEndpoint, authMethod, auth);
-
-            if (auth.id === 'new' && response.id) {
-              auth.id = response.id;
-            }
-
-            return auth;
-          })
-        );
-
-        await Promise.all(
-          deletions.map(auth => fetch(`/core/auths/${auth.id}/`, { method: 'DELETE' }))
-        );
-  
-        savedData = dataArray
-          .filter(auth => !auth.deleted && auth.id !== 'new')
-          .map(auth => updatedAuths.find(updated => updated.id === auth.id) || auth)
-          .concat(updatedAuths.filter(updated => !dataArray.some(auth => auth.id === updated.id)));
-        break;
-
-      default:
-        console.error("Unknown save type:", modalType);
-    }
-    updateState(savedData);
-    setModalOpen(false);
-  };
-
   const handleCancel = () => {
     if (id === 'new') {
       navigate('/members');
@@ -212,20 +52,13 @@ const MemberPage = () => {
     }
   };
 
-  const handleModalOpen = (type) => {
-    setModalType(type);
-    setModalOpen(true);
+  const handlePhotoUpdate = (newPhoto) => {
+    setPhoto(newPhoto);
   };
 
-  const getModalData = () => {
-    switch (modalType) {
-      case 'authorization':
-        return auths;
-      case 'basic':
-        return member;
-      default:
-        return {};
-    }
+  const handleModalOpen = (type, data, setData) => {
+    setModalData({ id, type, data, setData });
+    setModalOpen(true);
   };
 
   return (
@@ -236,175 +69,44 @@ const MemberPage = () => {
         </h3>
       </div>
       <div className="member-row">
-        <div className="photo-container">
-          <img 
-              src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
-              alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
-              className="member-photo"
-              onError={(e) => e.target.src = "/default-profile.jpg"}
-          />
-          {member.enrollment_date && (
-            <p>Enrolled since {formatDate(member.enrollment_date)}</p>
-          )}
-        </div>
+        <MemberPhotoCard
+          photo={photo}
+        /> 
       </div>
       <div className="member-row">
-        <div className="member-half-card">
-          <h2>Details</h2>
-          <div className="member-container">
-            <Pencil className="edit-icon" onClick={() => handleModalOpen('basic')} />
-            <div className="member-detail">
-              <label>Member ID:</label>
-              <span>{member.sadc_member_id || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Last Name:</label>
-              <span>{member.last_name || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>First Name:</label>
-              <span>{member.first_name || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Birth Date:</label>
-              <span>{formatDate(member.birth_date) || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Gender: </label>
-              <span>{formatGender(member.gender) || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Phone:</label>
-              <span>{member.phone ? formatPhone(member.phone) : 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Address:</label>
-              <span>{member.address || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Email:</label>
-              <span>{member.email || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Medicaid:</label>
-              <span>{member.medicaid?.toUpperCase() || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>SSN:</label>
-              <span>{formatSSN(member.ssn) || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Language:</label>
-              <span>{member.language || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-              <label>Note:</label>
-              <span>{member.note || 'N/A'}</span>
-            </div>
-
-          </div>
-        </div>
-        <div className="member-half-card">
-          <h2>Authorization</h2>
-          <div className="member-container">
-            <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
-            <div className="member-detail">
-              <label>Member ID:</label>
-              <span>{auths[activeAuthIndex]?.mltc_member_id || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>MLTC:</label>
-              <span>{auths[activeAuthIndex]?.mltc || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>Auth ID:</label>
-              <span>{auths[activeAuthIndex]?.mltc_auth_id || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>Schedule:</label>
-              <span>{formatSchedule(auths[activeAuthIndex]?.schedule) || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>Start Date:</label>
-              <span>{formatDate(auths[activeAuthIndex]?.start_date) || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>End Date:</label>
-              <span>{formatDate(auths[activeAuthIndex]?.end_date) || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>DX Code:</label>
-              <span>{auths[activeAuthIndex]?.dx_code || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>SDC Code:</label>
-              <span>{auths[activeAuthIndex]?.sdc_code || 'N/A'}</span>
-            </div>
-            <div className="member-detail">
-              <label>Trans Code:</label>
-              <span>{auths[activeAuthIndex]?.trans_code || 'N/A'}</span>
-            </div>
-            {/* If updating auths, prefill with previous info except dates */}
-          </div>
-        </div>
+        <MemberDetailsCard
+          id={id}
+          onEdit={handleModalOpen}
+          onPhotoUpdate={handlePhotoUpdate}
+        />
+        <MemberAuthCard
+          id={id}
+          onEdit={handleModalOpen}
+        />
       </div>
       <div className="member-row">
-        <div className="member-half-card">
-          <h2>Contacts</h2>
-          <div className="member-container">
-            <Pencil className="edit-icon" onClick={() => handleModalOpen('contacts')} />
-            <div className="member-detail">
-              <label>Emergency Contact:</label>
-            </div>
-            <div className="member-detail">
-              <label>Primary Care Provider:</label>
-            </div>
-            <div className="member-detail">
-              <label>Pharmacy:</label>
-            </div>
-            <div className="member-detail">
-              <label>Spouse:</label>
-            </div>
-          </div>
-        </div>
-        <div className="member-half-card">
-          <h2>Absences</h2>
-          <div className="member-container">
-            <AddButton className="edit-icon" onClick={() => handleModalOpen('absences')} />
-          </div>
-        </div>
+        <MemberContactsCard 
+          contacts={{}}
+          onEdit={() => handleModalOpen('contacts')}
+        />
+        <MemberAbsencesCard 
+          absences={{}}
+          onEdit={() => handleModalOpen('absences')}
+        />
       </div>
       <div className="member-row">
-        <div className="member-full-card">
-          <h2>Files</h2>
-          <div className="member-container">
-            <AddButton className="edit-icon" onClick={() => handleModalOpen('files')} />
-            {/* Upload and nickname file */}
-            {/* Dispalyed as a gallery of files */}
-            {/* Click to open new tab for PDF */}
-          </div>
-        </div>
+        <MemberFilesCard 
+          files={{}}
+          onEdit={() => handleModalOpen('files')}
+        />
       </div>
       <div className="member-row">
         <h3><button className="delete-button" onClick={handleDelete}>Delete</button></h3>
       </div>
       {modalOpen && (
-        <ModalMain
-          data={getModalData()}
+        <ModalPage
+          data={modalData}
           onClose={handleCancel}
-          onSave={handleSave}
-          type={modalType}
         />
       )}
     </div>
