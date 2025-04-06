@@ -6,34 +6,38 @@ import MemberAbsencesModal from './modalTemplates/MemberAbsencesModal';
 import MemberFilesModal from './modalTemplates/MemberFilesModal';
 import ModalTabs from './ModalTabs';
 import { sortSchedule } from '../utils/formatUtils';
-import getActiveAuth from '../utils/getActiveAuth';
+import getActiveAuthIndex from '../utils/getActiveAuthIndex';
 
 const MemberModal = ({ data, onClose, onSave, type }) => {
 
-    let activeAuth;
-    if (type === 'authorization') activeAuth = getActiveAuth(data);
-
-    const tabsData = [
-        {
-            ...data?.[0],
-            id: 'new',
-            active: activeAuth ? false : true,
-            mltc_member_id: activeAuth?.mltc_member_id || "",
-            mltc: activeAuth?.mltc || "",
-            mltc_auth_id: "",
-            schedule: activeAuth?.schedule || [],
-            start_date: "",
-            end_date: "",
-            dx_code: activeAuth?.dx_code || "",
-            sdc_code: activeAuth?.sdc_code || "",
-            trans_code: activeAuth?.trans_code || "",
-            edited: false,
-          },
+    const originalData = [
         ...Object.values(data).map(tab => ({ ...tab, edited: false }))
     ];
 
-    const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : tabsData);
+    const [localData, setLocalData] = useState(type === 'basic' ? { ...data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
+    const [newTabsCount, setNewTabsCount] = useState(0);
+
+    const [newTab, setNewTab] = useState(() => {
+        if (type === 'authorization') {
+            const activeAuthIndex = getActiveAuthIndex(localData);
+            return {
+                id: 'new',
+                mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || "",
+                mltc: localData[activeAuthIndex]?.mltc || "",
+                mltc_auth_id: "",
+                schedule: localData[activeAuthIndex]?.schedule || [],
+                start_date: "",
+                end_date: "",
+                dx_code: localData[activeAuthIndex]?.dx_code || "",
+                sdc_code: localData[activeAuthIndex]?.sdc_code || "",
+                trans_code: localData[activeAuthIndex]?.trans_code || "",
+                active: true,
+                edited: false
+            };
+        }
+        return null;
+    });
 
     useEffect(() => {
         document.body.classList.add('modal-open');
@@ -59,8 +63,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     } else {
                         updatedData[index] = { ...item, active: false };
                     }
-    
-                    const isEdited = compareTabs(updatedData[index], tabsData[index]);
+                    const isEdited = compareTabs(updatedData[index], updatedData[index].id === 'new' ? newTab : originalData[index-newTabsCount]);
                     updatedData[index] = { ...updatedData[index], edited: isEdited };
                 });
     
@@ -78,7 +81,7 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ...prevData[activeTab],
                     [field]: sortedSchedule,
                 };
-                const isEdited = compareTabs(updatedTab, tabsData[activeTab]);
+                const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab-newTabsCount]);
 
                 const updatedData = [...prevData];
                 updatedData[activeTab] = {
@@ -93,9 +96,8 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     ...prevData[activeTab],
                     [field]: value,
                 };
-    
-                const isEdited = compareTabs(updatedTab, tabsData[activeTab]);
-    
+                const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab-newTabsCount]);
+
                 const updatedData = [...prevData];
                 updatedData[activeTab] = {
                     ...updatedTab,
@@ -130,13 +132,45 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
         }
     };
 
-    const handleDelete = (tab) => {
-        setLocalData((prevData) =>
-            prevData.map((item) =>
-                item === tab ? { ...item, deleted: true } : item
-            )
-        );
+    const handleAdd = () => {
+        setLocalData((prevData) => {
+            const updatedData = [...prevData];
+
+            const activeAuthIndex = getActiveAuthIndex(localData);
+            const activeAuth = updatedData[activeAuthIndex]
+            if (activeAuth) {
+                const updatedTab = {
+                    ...activeAuth,
+                    active: false,
+                };
+
+                const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeAuthIndex-newTabsCount]);
+
+                updatedData[activeAuthIndex] = {
+                    ...updatedTab,
+                    edited: isEdited,
+                };
+            }
+            
+            updatedData.unshift(newTab);
+            return updatedData;
+        });
+        setNewTabsCount((prevCount) => prevCount + 1);
         setActiveTab(0);
+    };
+
+    const handleDelete = (tab) => {
+        setLocalData((prevData) => {
+            const updatedData = prevData.map((item) =>
+                item === tab ? { ...item, active: false, deleted: true } : item
+            );
+    
+            const firstNonDeletedIndex = updatedData.findIndex(tab => !tab.deleted);
+            const newActiveTab = firstNonDeletedIndex === -1 ? 0 : firstNonDeletedIndex;
+            setActiveTab(newActiveTab);
+            
+            return updatedData;
+        });
     };
 
     return (
@@ -153,25 +187,28 @@ const MemberModal = ({ data, onClose, onSave, type }) => {
                     </div>
                     {type !== 'basic' && (
                     <div className="modal-tabs">
-                        { localData
-                            .map((tab, index) => {
-                            return (
-                                <ModalTabs 
-                                    key={index}
-                                    index={index}
-                                    activeTab={activeTab}
-                                    setActiveTab={setActiveTab}
-                                    type={type}
-                                    tab={tab}
-                                />
-                            );
-                        })}
+                        <ModalTabs
+                            key="new-tab"
+                            index={localData.length}
+                            handleTabClick={handleAdd}
+                            tab={{ add: true }}
+                        />
+                        {localData.map((tab, index) => (
+                            <ModalTabs
+                                key={index}
+                                index={index}
+                                activeTab={activeTab}
+                                handleTabClick={setActiveTab}
+                                type={type}
+                                tab={tab}
+                            />
+                        ))}
                     </div>
                 )}
                 </div>
                 <div className="modal-buttons">
                     <button onClick={onClose}>Cancel</button>
-                    {type !== 'basic' && activeTab !== 0 && (
+                    {type !== 'basic' && localData.filter(tab => !tab.deleted).length > 0 && (
                         <button className='delete-button' onClick={() => handleDelete(localData[activeTab])}>
                             Delete
                         </button>

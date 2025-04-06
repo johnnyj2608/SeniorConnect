@@ -5,7 +5,7 @@ import urlToFile from '../utils/urlToFile';
 import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import { ReactComponent as Pencil } from '../assets/pencil.svg'
 import { ReactComponent as AddButton } from '../assets/add.svg'
-import getActiveAuth from '../utils/getActiveAuth';
+import getActiveAuthIndex from '../utils/getActiveAuthIndex';
 import { 
   formatDate, 
   formatPhone, 
@@ -43,7 +43,7 @@ const MemberPage = () => {
     setAuths(data);
   };
 
-  const activeAuth = getActiveAuth(auths);
+  const activeAuthIndex = getActiveAuthIndex(auths);
 
   useEffect(() => {
     if (id === 'new') {
@@ -150,7 +150,7 @@ const MemberPage = () => {
       case 'authorization':
         requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date']
 
-        const deletions = dataArray.filter(auth => auth.deleted);
+        const deletions = dataArray.filter(auth => auth.id !== 'new' && auth.deleted);
         const updates = dataArray.filter(auth => auth.edited && !auth.deleted);
 
         missingFields = updates.reduce((acc, auth) => {
@@ -321,39 +321,39 @@ const MemberPage = () => {
             <AddButton className="edit-icon" onClick={() => handleModalOpen('authorization')} />
             <div className="member-detail">
               <label>Member ID:</label>
-              <span>{activeAuth?.mltc_member_id || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.mltc_member_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>MLTC:</label>
-              <span>{activeAuth?.mltc || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.mltc || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Auth ID:</label>
-              <span>{activeAuth?.mltc_auth_id || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.mltc_auth_id || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Schedule:</label>
-              <span>{formatSchedule(activeAuth?.schedule) || 'N/A'}</span>
+              <span>{formatSchedule(auths[activeAuthIndex]?.schedule) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Start Date:</label>
-              <span>{formatDate(activeAuth?.start_date) || 'N/A'}</span>
+              <span>{formatDate(auths[activeAuthIndex]?.start_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>End Date:</label>
-              <span>{formatDate(activeAuth?.end_date) || 'N/A'}</span>
+              <span>{formatDate(auths[activeAuthIndex]?.end_date) || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>DX Code:</label>
-              <span>{activeAuth?.dx_code || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.dx_code || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>SDC Code:</label>
-              <span>{activeAuth?.sdc_code || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.sdc_code || 'N/A'}</span>
             </div>
             <div className="member-detail">
               <label>Trans Code:</label>
-              <span>{activeAuth?.trans_code || 'N/A'}</span>
+              <span>{auths[activeAuthIndex]?.trans_code || 'N/A'}</span>
             </div>
             {/* If updating auths, prefill with previous info except dates */}
           </div>

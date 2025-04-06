@@ -1,15 +1,12 @@
 import React from 'react';
+import { ReactComponent as AddIcon } from '../assets/add.svg'
 
-const ModalTabs = ({ index, activeTab, setActiveTab, type, tab }) => {
+const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
         return;
     }
-
-    const getTabLabel = (type, item, index) => {
-        if (index === 0) {
-            return { heading: 'New', subheading: '' };
-        }
-
+    
+    const getTabLabel = (type, item) => {
         switch (type) {
             case 'authorization':
                 let status = '';
@@ -38,15 +35,25 @@ const ModalTabs = ({ index, activeTab, setActiveTab, type, tab }) => {
     const isEdited = tab.edited === true;
 
     return (
-        <button
-            className={`tab-button ${isActive ? 'active' : ''} ${isEdited ? 'edited' : ''} ${isExpired ? 'expired' : ''}`} 
-            onClick={() => setActiveTab(index)}
-        >
-            <div className="tab-label">
-                <div className="tab-heading">{heading}</div>
-                <div className="tab-subheading">{subheading}</div>
-            </div>
-        </button>
+        tab.add ? (
+            <button className="tab-button add-tab" onClick={handleTabClick}>
+                <div className="tab-label">
+                    <div className="tab-heading">
+                        <AddIcon />
+                    </div>
+                </div>
+            </button>
+        ) : (
+            <button
+                className={`tab-button ${isActive ? 'active' : ''} ${isEdited ? 'edited' : ''} ${isExpired ? 'expired' : ''}`} 
+                onClick={() => handleTabClick(index)}
+            >
+                <div className="tab-label">
+                    <div className="tab-heading">{heading}</div>
+                    <div className="tab-subheading">{subheading}</div>
+                </div>
+            </button>
+        )
     );
 };
 

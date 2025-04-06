@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 
-const Dropdown = ({ value, onChange, options = [] }) => {
+const Dropdown = ({ value, onChange, options = [], disabled }) => {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    const isDisabled = disabled || options.length === 0;
 
     const formattedOptions = options
         .map(option => (typeof option === 'object' ? option.name : option))
@@ -28,7 +30,7 @@ const Dropdown = ({ value, onChange, options = [] }) => {
     }, []);
 
     return (
-        <div className="dropdown" ref={dropdownRef}>
+        <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
             <div className="dropdown-header" onClick={() => setOpen(!open)}>
                 {value || "Select Option"}
                 <span className={`dropdown-icon ${open ? "open" : ""}`}><DropdownIcon /></span>

@@ -41,6 +41,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
         { label: "Sunday", value: "sunday" },
     ];
 
+    const disabled = data.filter(tab => !tab.deleted).length <= 0
+
     return (
         <>
             <div className="member-detail modal-auth-heading">
@@ -51,6 +53,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                         name="active"
                         checked={data[activeTab]?.active === true}
                         onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                        disabled={disabled}
                     />
                 Active
                 </label>
@@ -63,6 +66,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={data[activeTab]?.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
                     placeholder="Required"
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -73,7 +77,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                         handleChange('mltc')(e);
                         handleMltcChange(e.target.value);
                     }}
-                    options={mltcOptions} 
+                    options={mltcOptions}
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -84,6 +89,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={data[activeTab]?.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
                     placeholder="Required"
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -97,6 +103,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                                 value={day.value}
                                 checked={data[activeTab]?.schedule?.includes(day.value) || false}
                                 onChange={handleChange('schedule')}
+                                disabled={disabled}
                             />
                             {day.label}
                         </label>
@@ -110,6 +117,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="start_date"
                     value={data[activeTab]?.start_date || ''}
                     onChange={handleChange('start_date')}
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -119,6 +127,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="end_date"
                     value={data[activeTab]?.end_date || ''}
                     onChange={handleChange('end_date')}
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -127,6 +136,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={data[activeTab]?.dx_code || 0} 
                     onChange={handleChange('dx_code')}
                     options={dxCodes}
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -136,6 +146,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="sdc_code"
                     value={data[activeTab]?.sdc_code || ''}
                     onChange={handleChange('sdc_code')}
+                    disabled={disabled}
                 />
             </div>
             <div className="member-detail">
@@ -145,6 +156,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="trans_code"
                     value={data[activeTab]?.trans_code || ''}
                     onChange={handleChange('trans_code')}
+                    disabled={disabled}
                 />
             </div>
         </>
