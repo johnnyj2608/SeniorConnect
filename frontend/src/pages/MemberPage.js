@@ -20,6 +20,7 @@ const MemberPage = () => {
 
   useEffect(() => {
     if (id === 'new') {
+      setModalData({ id, type: 'basic', data: {} });
       setModalOpen(true);
     }
   }, [id])

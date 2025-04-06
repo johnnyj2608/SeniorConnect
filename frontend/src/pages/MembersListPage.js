@@ -30,17 +30,26 @@ const MembersListPage = () => {
     getMltcOptions();
   }, []);
 
+  const mltcIdToName = Object.fromEntries(
+    mltcOptions
+      .filter(opt => opt.id)
+      .map(opt => [opt.id, opt.name])
+  );
+
   const filteredMembers = members.filter((member) => {
     const matchesSearch =
       member.sadc_member_id.toString().startsWith(searchQuery) ||
       member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
       member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
 
-    const matchesMltc = mltcFilter === 'Unknown'
-      ? (member.mltc_id === null || member.mltc_id === undefined)
-      : (mltcFilter ? member.mltc_id === parseInt(mltcFilter) : true);
-    return matchesSearch && matchesMltc;
-  });
+      const mltcName = member.mltc_id ? mltcIdToName[member.mltc_id] || 'Unknown' : 'Unknown';
+
+      const matchesMltc = mltcFilter
+        ? mltcFilter === mltcName
+        : true;
+
+      return matchesSearch && matchesMltc;
+    });
 
   const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
 

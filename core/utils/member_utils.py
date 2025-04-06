@@ -17,7 +17,19 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data
     
-    active = data.get('active', '').lower() == 'true'
+    language_name = data.get('language')
+    language = None
+    if language_name:
+        try:
+            language = Language.objects.get(name=language_name)
+        except Language.DoesNotExist:
+            language = None
+    
+    active = data.get('active')
+    if active is None:
+        active = True
+    else:
+        active = active.lower() == 'true'
     
     member = Member.objects.create(
         sadc_member_id=data['sadc_member_id'],
@@ -30,7 +42,7 @@ def createMember(request):
         phone=data.get('phone', None),
         email=data.get('email', None),
         medicaid=data.get('medicaid', None),
-        language=data.get('language', None),
+        language=language ,
         ssn=data.get('ssn', None),
         note=data.get('note', None),
         active=active,

@@ -69,6 +69,7 @@ const MemberModal = ({ data, onClose }) => {
     };
 
     const handleChange = (field) => (event) => {
+
         const { value, files, checked } = event.target;
         setLocalData((prevData) => {
             if (type !== 'basic' && field === 'active') {   // Updates all tabs
@@ -160,6 +161,8 @@ const MemberModal = ({ data, onClose }) => {
     };
 
     const updateState = (savedData) => {
+        if (!data?.setData) return;
+        
         switch (type) {
             case 'basic':
                 let photoURL = ''
