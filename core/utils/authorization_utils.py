@@ -39,12 +39,6 @@ def createAuthorization(request):
                 active=active,
             )
 
-            if Authorization.objects.filter(member_id=member.id).count() == 1:  
-                member.enrollment_date = data['start_date']
-            else:
-                start_date = datetime.strptime(data['start_date'], "%Y-%m-%d").date()
-                member.enrollment_date = min(member.enrollment_date, start_date)
-
             if active == True:
                 member.mltc_id = mltc
 
@@ -62,8 +56,13 @@ def updateAuthorization(request, pk):
     data = request.data
     authorization = Authorization.objects.get(id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
-
     if serializer.is_valid():
+        if data['active'].lower() == 'true':
+            member = Member.objects.get(id=data['member_id'])
+            mltc = MLTC.objects.get(name=data['mltc'])
+            member.mltc_id = mltc
+            member.save()
+
         serializer.save()
     else:
         print(serializer.errors)

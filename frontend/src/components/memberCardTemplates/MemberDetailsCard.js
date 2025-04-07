@@ -90,6 +90,11 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
         </div>
 
         <div className="member-detail">
+          <label>Enrollment:</label>
+          <span>{formatDate(member?.enrollment_date) || 'N/A'}</span>
+        </div>
+
+        <div className="member-detail">
           <label>Note:</label>
           <span>{member?.note || 'N/A'}</span>
         </div>

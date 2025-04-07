@@ -90,6 +90,15 @@ const MemberBasicModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
+                <label>Enrollment</label>
+                <input
+                    type="date"
+                    value={data.enrollment_date || ''}
+                    onChange={handleChange('enrollment_date')}
+                />
+            </div>
+
+            <div className="member-detail">
                 <label>Note</label>
                 <input
                     type="text"
