@@ -28,15 +28,15 @@ const formatGender = (gender) => {
   }
 };
 
-const formatSchedule = (schedule) => {
+const formatSchedule = (schedule, digits = false) => {
   const dayMap = {
-    "monday": "Mon",
-    "tuesday": "Tue",
-    "wednesday": "Wed",
-    "thursday": "Thu",
-    "friday": "Fri",
-    "saturday": "Sat",
-    "sunday": "Sun"
+    "monday": digits ? "1" : "Mon",
+    "tuesday": digits ? "2" : "Tue",
+    "wednesday": digits ? "3" : "Wed",
+    "thursday": digits ? "4" : "Thu",
+    "friday": digits ? "5" : "Fri",
+    "saturday": digits ? "6" : "Sat",
+    "sunday": digits ? "7" : "Sun"
   };
 
   if (typeof schedule === "string") {
@@ -46,7 +46,7 @@ const formatSchedule = (schedule) => {
   if (Array.isArray(schedule)) {
     const formattedDays = [...new Set(schedule.map(day => day.toLowerCase().trim()))]
       .map(day => dayMap[day] || day);
-    return formattedDays.join(", ");
+    return digits ? formattedDays.join(".") : formattedDays.join(", ");
   }
   return "N/A";
 }

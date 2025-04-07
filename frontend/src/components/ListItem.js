@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatPhone } from '../utils/formatUtils';
+import { formatDate, formatPhone, formatSchedule } from '../utils/formatUtils';
 
 const ListItem = ({ member }) => {
   return (
@@ -19,10 +19,11 @@ const ListItem = ({ member }) => {
           <p>{formatDate(member.birth_date)}</p>
         </div>
         <div className="members-list-phone">
-          <p>{formatPhone(member.phone)}</p>
+          {member.phone ? <p>{formatPhone(member.phone)}</p> : null}
         </div>
-        <p>{member.address}</p>
-        {/* Display SADC schedule when authorization table set up */}
+        <div className="members-list-birthdate">
+          {member.schedule ? <p>{formatSchedule(member.schedule, true)}</p> : null}
+        </div>
       </div>
     </Link>
   )
