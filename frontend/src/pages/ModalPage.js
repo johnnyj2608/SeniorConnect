@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import urlToFile from '../utils/urlToFile';
 import { MemberBasicModal, MemberSideBasicModal } from '../components/memberModalTemplates/MemberBasicModal';
 import MemberAuthModal from '../components/memberModalTemplates/MemberAuthModal';
@@ -12,7 +11,6 @@ import compareTabs from '../utils/compareTabs';
 import getActiveAuthIndex from '../utils/getActiveAuthIndex';
 
 const MemberModal = ({ data, onClose }) => {
-    const navigate = useNavigate();
     const id = data.id;
     const type = data.type;
     const originalData = [
@@ -226,10 +224,6 @@ const MemberModal = ({ data, onClose }) => {
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
                 savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
-                
-                // if (id === 'new') {
-                //     navigate(`/member/${savedData.id}`);
-                // }
 
                 break;
 
@@ -295,7 +289,7 @@ const MemberModal = ({ data, onClose }) => {
             <div className="modal-body">
                 <div className="modal-main">
                     {type === 'basic' && (
-                        <div className="modal-tabs">
+                        <div className="modal-tabs modal-tabs-basic">
                             <MemberSideBasicModal data={localData} handleChange={handleChange} />
                         </div>
                     )}
