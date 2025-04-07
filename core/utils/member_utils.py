@@ -1,12 +1,12 @@
 from rest_framework.response import Response
 from ..models.member_model import Member, Language
-from ..serializers.member_serializer import MemberSerializer
+from ..serializers.member_serializer import MemberSerializer, MemberListSerializer
 import os
 from django.conf import settings
 
 def getMemberList(request):
     members = Member.objects.all().order_by('mltc_id', 'sadc_member_id')
-    serializer = MemberSerializer(members, many=True)
+    serializer = MemberListSerializer(members, many=True)
     return Response(serializer.data)
 
 def getMemberDetail(request, pk):

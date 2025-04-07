@@ -30,22 +30,14 @@ const MembersListPage = () => {
     getMltcOptions();
   }, []);
 
-  const mltcIdToName = Object.fromEntries(
-    mltcOptions
-      .filter(opt => opt.id)
-      .map(opt => [opt.id, opt.name])
-  );
-
   const filteredMembers = members.filter((member) => {
     const matchesSearch =
       member.sadc_member_id.toString().startsWith(searchQuery) ||
       member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
       member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
 
-      const mltcName = member.mltc_id ? mltcIdToName[member.mltc_id] || 'Unknown' : 'Unknown';
-
       const matchesMltc = mltcFilter
-        ? mltcFilter === mltcName
+        ? mltcFilter === member.mltc
         : true;
 
       return matchesSearch && matchesMltc;
@@ -80,9 +72,9 @@ const MembersListPage = () => {
           if (mltcB === 'Unknown') return -1;
           return mltcA.localeCompare(mltcB);
         })
-        .map(([mltcName, members]) => (
-        <div key={mltcName}>
-          <h3 className="mltc-section">{mltcName}</h3>
+        .map(([mltc, members]) => (
+        <div key={mltc}>
+          <h3 className="mltc-section">{mltc}</h3>
           {members.map((member) => (
             <ListItem key={member.id} member={member} />
           ))}

@@ -78,3 +78,6 @@ def getAuthorizationListByMember(request, member_pk):
     authorizations = authorizations.order_by('-id')
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
+
+def getActiveAuthorizationByMember(member_pk):
+    return Authorization.objects.filter(member_id=member_pk, active=True).order_by('start_date').first()

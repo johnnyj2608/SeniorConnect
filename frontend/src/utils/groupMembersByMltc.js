@@ -1,11 +1,7 @@
-const groupMembersByMltc = (members, mltcOptions) => {
-  const mltcMap = mltcOptions.reduce((acc, mltc) => {
-    acc[mltc.id] = mltc.name;
-    return acc;
-  }, {});
-
+const groupMembersByMltc = (members) => {
   return members.reduce((acc, member) => {
-    const mltcName = mltcMap[member.mltc_id] || "Unknown";
+    const mltcName = member.mltc || "Unknown";
+
     if (!acc[mltcName]) {
       acc[mltcName] = [];
     }
@@ -13,5 +9,5 @@ const groupMembersByMltc = (members, mltcOptions) => {
     return acc;
   }, {});
 };
-  
+
 export default groupMembersByMltc;
