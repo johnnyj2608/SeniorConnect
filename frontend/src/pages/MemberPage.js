@@ -45,14 +45,17 @@ const MemberPage = () => {
     }
   };
 
-  const handleCancel = () => {
-    if (id === 'new') {
-      navigate('/members');
-    } else {
+  const handleCancel = (newId) => {
+    if (newId || id !== 'new') {
+      if (newId) {
+        navigate(`/member/${newId}`);
+      }
       setModalOpen(false);
+    } else {
+      navigate('/members');
     }
   };
-
+  
   const handlePhotoUpdate = (newPhoto) => {
     setPhoto(newPhoto);
   };

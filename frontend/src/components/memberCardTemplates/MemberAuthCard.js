@@ -27,9 +27,7 @@ const MemberAuthCard = ({ id, onEdit }) => {
     }, [auths]);
 
     const handleEdit = () => {
-        if (activeAuth) {
-          onEdit('authorization', auths, setAuths);
-        }
+        onEdit('authorization', auths, setAuths);
     };
 
     return (

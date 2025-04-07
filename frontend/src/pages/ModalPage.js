@@ -227,9 +227,9 @@ const MemberModal = ({ data, onClose }) => {
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
                 savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
                 
-                if (id === 'new') {
-                    navigate(`/member/${savedData.id}`);
-                }
+                // if (id === 'new') {
+                //     navigate(`/member/${savedData.id}`);
+                // }
 
                 break;
 
@@ -287,7 +287,7 @@ const MemberModal = ({ data, onClose }) => {
                 console.error("Unknown save type:", type);
         }
         updateState(savedData);
-        onClose();
+        onClose(savedData?.id);
         };
 
     return (
@@ -324,7 +324,7 @@ const MemberModal = ({ data, onClose }) => {
                 )}
                 </div>
                 <div className="modal-buttons">
-                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={() => onClose()}>Cancel</button>
                     {type !== 'basic' && localData.filter(tab => !tab.deleted).length > 0 && (
                         <button className='delete-button' onClick={() => handleDelete(localData[activeTab])}>
                             Delete
