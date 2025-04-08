@@ -75,9 +75,12 @@ const MembersListPage = () => {
         .map(([mltc, members]) => (
         <div key={mltc}>
           <h3 className="mltc-section">{mltc}</h3>
-          {members.map((member) => (
-            <ListItem key={member.id} member={member} />
-          ))}
+          <div className="members-list">
+            {members.map((member) => (
+              <ListItem key={member.id} member={member} />
+            ))}
+          </div>
+          
         </div>
       ))}
 

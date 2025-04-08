@@ -150,47 +150,6 @@ a {
   border-bottom: 1px solid var(--color-gray);
 }
 
-.members-list {
-  padding: 0;
-  margin: 16px 0;
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-}
-
-.members-list::-webkit-scrollbar {
-  display: none;
-}
-
-.members-list-item {
-  display: flex;
-  font-size: 20px;
-  align-items: center;
-  border-bottom: 1px solid  var(--color-gray);
-  transition: all 0.2s ease-in-out;
-}
-
-.members-list-item:hover {
-  background-color: var(--color-bg);
-  cursor: pointer;
-}
-
-.members-list-name,
-.members-list-birthdate,
-.members-list-phone {
-  display: flex;
-  padding: 20px 10px;
-  font-weight: 600;
-  border-right: 1px solid  var(--color-gray);
-}
-
-.members-list-item p:last-child {
-  border-right: none;
-}
-
-.members-list-item p {
-  color: var(--color-light);
-}
-
 .floating-button {
   font-size: 48px;
   position: fixed;
@@ -227,10 +186,11 @@ a {
 .filters {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filters > * {
-  margin-left: 15px;
+  margin: 4px 10px;
 }
 
 .dropdown {
@@ -313,31 +273,39 @@ a {
   color: var(--color-white);
 }
 
-.members-list-photo {
-  min-width: 150px;
-  height: 100px;
-  padding: 5px;
+.members-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  gap: 10px;
 }
 
-.members-list-name {
-  min-width: 250px;
-  max-width: 250px;
-}
-
-.members-list-birthdate {
-  justify-content: center;
-  min-width: 150px;
-}
-
-.members-list-phone {
-  justify-content: center;
-  min-width: 175px;
-}
-
-.members-list-item p {
-  white-space: nowrap;
+.members-list-item {
+  display: flex;
+  border: 1px solid  var(--color-gray);
+  width: 250px;
+  height: 350px;
+  transition: all 0.2s ease-in-out;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.members-list-item:hover {
+  background-color: var(--color-bg);
+  cursor: pointer;
+}
+
+.members-list-photo {
+  width: 100%;
+  height: 200px;
+}
+
+.members-list-details {
+  padding: 5px 10px;
+}
+
+.members-list-details * {
+  justify-self: center;
+  font-size: 20px;
 }
 
 /*==============================

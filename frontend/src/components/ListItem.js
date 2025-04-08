@@ -4,28 +4,26 @@ import { formatDate, formatPhone, formatSchedule } from '../utils/formatUtils';
 
 const ListItem = ({ member }) => {
   return (
-    <Link to={`/member/${member.id}`}>
-      <div className="members-list-item">
+    <div className="members-list-item">
+      <Link to={`/member/${member.id}`}>
         <img 
             src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
             alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="members-list-photo"
             onError={(e) => e.target.src = "/default-profile.jpg"}
         />
-        <div className="members-list-name">
-          <p>{member.sadc_member_id}. {member.last_name}, {member.first_name}</p>
-        </div>
-        <div className="members-list-birthdate">
+        <div className="members-list-details">
+          <h3>{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>
           <p>{formatDate(member.birth_date)}</p>
+          {member.phone && (
+              <p>{formatPhone(member.phone)}</p>
+          )}
+          {member.schedule && (
+              <p>{formatSchedule(member.schedule, true)}</p>
+          )}
         </div>
-        <div className="members-list-phone">
-          {member.phone ? <p>{formatPhone(member.phone)}</p> : null}
-        </div>
-        <div className="members-list-birthdate">
-          {member.schedule ? <p>{formatSchedule(member.schedule, true)}</p> : null}
-        </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   )
 }
 
