@@ -48,42 +48,41 @@ const MembersListPage = () => {
   return (
     <div className="members">
       <div className="members-header">
-        <h2 className="members-title">&#9782; Members</h2>
-        <h3>
-        <DownloadButton membersByMltc={membersByMltc} />
-        </h3>
-      </div>
-
-      <div className="filters">
-        <MltcDropdown 
-          value={mltcFilter} 
-          onChange={(e) => setMltcFilter(e.target.value)} 
-          options={[...mltcOptions, { name: 'Unknown' }]} 
-        />
-        <SearchInput value={searchQuery} onChange={setSearchQuery} />
-        <p className="members-count">
-          {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
-        </p>
-      </div>
-
-      {Object.entries(membersByMltc)
-        .sort(([mltcA], [mltcB]) => {
-          if (mltcA === 'Unknown') return 1;
-          if (mltcB === 'Unknown') return -1;
-          return mltcA.localeCompare(mltcB);
-        })
-        .map(([mltc, members]) => (
-        <div key={mltc}>
-          <h3 className="mltc-section">{mltc}</h3>
-          <div className="members-list">
-            {members.map((member) => (
-              <ListItem key={member.id} member={member} />
-            ))}
-          </div>
-          
+        <div className="members-title-row">
+          <h2 className="members-title">&#9782; Members</h2>
+          <h2><DownloadButton membersByMltc={membersByMltc} /></h2>
         </div>
-      ))}
+        <div className="filters">
+          <MltcDropdown 
+            value={mltcFilter} 
+            onChange={(e) => setMltcFilter(e.target.value)} 
+            options={[...mltcOptions, { name: 'Unknown' }]} 
+          />
+          <SearchInput value={searchQuery} onChange={setSearchQuery} />
+          <p className="members-count">
+            {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
+          </p>
+        </div>
+      </div>
 
+      <div className="members-list-content">
+        {Object.entries(membersByMltc)
+          .sort(([mltcA], [mltcB]) => {
+            if (mltcA === 'Unknown') return 1;
+            if (mltcB === 'Unknown') return -1;
+            return mltcA.localeCompare(mltcB);
+          })
+          .map(([mltc, members]) => (
+          <div key={mltc}>
+            <h3 className="mltc-section">{mltc}</h3>
+            <div className="members-list">
+              {members.map((member) => (
+                <ListItem key={member.id} member={member} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
       <AddButton />
     </div>
   )
