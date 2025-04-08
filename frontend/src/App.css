@@ -50,7 +50,6 @@ a {
 .container {
   color: var(--color-text);
   background-color: var(--color-bg);
-  width: 100%;
 }
 
 .app {
@@ -63,6 +62,8 @@ a {
   justify-content: space-between;
   background-color: var(--color-lighter);
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
 }
 
 .app-header h1 {
@@ -78,6 +79,8 @@ a {
   cursor: pointer;
   padding: 15px;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: var(--color-lighter);
+  z-index: 1000;
 }
 
 .app-header button .button-text {
@@ -113,13 +116,17 @@ a {
   cursor: pointer;
 }
 
+.app-content {
+  padding-top: 55px;
+}
+
 /* MEMBERS STYLES */
 
 .members-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 0 16px;
 }
 
 .members-title,
@@ -140,14 +147,12 @@ a {
   padding-top: 20px;
   padding-left: 10px;
   padding-bottom: 5px;
-  position: relative;
   border-bottom: 1px solid var(--color-gray);
 }
 
 .members-list {
   padding: 0;
   margin: 16px 0;
-  height: 70vh;
   overflow-y: auto;
   scrollbar-width: none; /* Firefox */
 }
@@ -188,7 +193,7 @@ a {
 
 .floating-button {
   font-size: 48px;
-  position: absolute;
+  position: fixed;
   bottom: 24px;
   right: 16px;
   background: var(--color-main);

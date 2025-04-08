@@ -16,11 +16,13 @@ function App() {
       <div className="container dark">
         <div className="app">
           <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/members" element={<MembersListPage />} />
-            <Route path="/member/:id" element={<MemberPage />} />
-          </Routes>
+          <div className="app-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/members" element={<MembersListPage />} />
+              <Route path="/member/:id" element={<MemberPage />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </Router>
