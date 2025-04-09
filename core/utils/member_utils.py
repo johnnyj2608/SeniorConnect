@@ -16,6 +16,8 @@ def getMemberDetail(request, pk):
 
 def createMember(request):
     data = request.data
+
+    print(data)
     
     language = Language.objects.filter(name=data.get('language')).first()
     active = data.get('active', 'true').lower() == 'true'
@@ -33,7 +35,7 @@ def createMember(request):
         medicaid=data.get('medicaid', None),
         language=language ,
         ssn=data.get('ssn', None),
-        enrollment=data.get('enrollment_date', None),
+        enrollment_date=data.get('enrollment_date', None),
         note=data.get('note', None),
         active=active,
     )
