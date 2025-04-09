@@ -57,5 +57,11 @@ def updateMember(request, pk):
 
 def deleteMember(request, pk):
     member = Member.objects.get(id=pk)
+
+    if member.photo:
+        photo_path = member.photo.path
+        if os.path.isfile(photo_path):
+            os.remove(photo_path)
+            
     member.delete()
     return Response('Member was deleted')
