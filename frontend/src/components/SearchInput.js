@@ -4,7 +4,7 @@ const SearchInput = ({ value, onChange }) => {
   return (
     <input className="member-search"
       type="text"
-      placeholder={'Search by ID or Name'}
+      placeholder={'Search ID or Name'}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />

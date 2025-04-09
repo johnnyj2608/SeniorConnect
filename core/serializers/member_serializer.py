@@ -33,7 +33,6 @@ class MemberListSerializer(serializers.ModelSerializer):
             'last_name', 
             'birth_date', 
             'phone',
-            'enrollment_date',
             'mltc',
             'schedule',
             )

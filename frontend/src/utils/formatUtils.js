@@ -1,9 +1,9 @@
 const formatDate = (date) => {
-  const d = new Date(date);
-
-  if (isNaN(d.getTime())) {
-    return '';
+  if (!date) {
+    return null;
   }
+  
+  const d = new Date(date);
 
   return d.toLocaleDateString('en-US', {
       month: '2-digit',
