@@ -128,7 +128,8 @@ a {
  * -------------- */
 
 .members-header {
-  position: fixed;
+  position: sticky;
+  top: 55px;
   background-color: var(--color-lighter);
   width: 100%;
   padding: 10px 15px;
@@ -326,10 +327,6 @@ a {
 /* -------------- *
  * Members List
  * -------------- */
-.members-list-content {
-  padding-top: 105px;
-}
-
 .members-list {
   display: flex;
   flex-wrap: wrap;
