@@ -32,13 +32,13 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     }, [mltcOptions]);
 
     const daysOfWeek = [
-        { label: "Monday", value: "monday" },
-        { label: "Thursday", value: "thursday" },
-        { label: "Tuesday", value: "tuesday" },
-        { label: "Friday", value: "friday" },
-        { label: "Wednesday", value: "wednesday" },
-        { label: "Saturday", value: "saturday" },
-        { label: "Sunday", value: "sunday" },
+        { label: "Monday", value: "Monday" },
+        { label: "Thursday", value: "Thursday" },
+        { label: "Tuesday", value: "Tuesday" },
+        { label: "Friday", value: "Friday" },
+        { label: "Wednesday", value: "Wednesday" },
+        { label: "Saturday", value: "Saturday" },
+        { label: "Sunday", value: "Sunday" },
     ];
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0

@@ -2,7 +2,7 @@ const formatDate = (date) => {
   if (!date) {
     return null;
   }
-  
+
   const d = new Date(date);
 
   return d.toLocaleDateString('en-US', {
@@ -30,21 +30,21 @@ const formatGender = (gender) => {
 
 const formatSchedule = (schedule, digits = false) => {
   const dayMap = {
-    "monday": digits ? "1" : "Mon",
-    "tuesday": digits ? "2" : "Tue",
-    "wednesday": digits ? "3" : "Wed",
-    "thursday": digits ? "4" : "Thu",
-    "friday": digits ? "5" : "Fri",
-    "saturday": digits ? "6" : "Sat",
-    "sunday": digits ? "7" : "Sun"
+    "Monday": digits ? "1" : "Mon",
+    "Tuesday": digits ? "2" : "Tue",
+    "Wednesday": digits ? "3" : "Wed",
+    "Thursday": digits ? "4" : "Thu",
+    "Friday": digits ? "5" : "Fri",
+    "Saturday": digits ? "6" : "Sat",
+    "Sunday": digits ? "7" : "Sun"
   };
 
   if (typeof schedule === "string") {
-    return dayMap[schedule.toLowerCase().trim()] || schedule;
+    return dayMap[schedule.trim()] || schedule;
   }
 
   if (Array.isArray(schedule)) {
-    const formattedDays = [...new Set(schedule.map(day => day.toLowerCase().trim()))]
+    const formattedDays = [...new Set(schedule.map(day => day.trim()))]
       .map(day => dayMap[day] || day);
     return digits ? formattedDays.join(".") : formattedDays.join(", ");
   }
@@ -57,8 +57,8 @@ const sortSchedule = (schedule) => {
   const daySet = new Set(schedule.filter(day => day !== ''));
 
   const daysOfWeek = [
-    "monday", "tuesday", "wednesday", "thursday", 
-    "friday", "saturday", "sunday"
+    "Monday", "Tuesday", "Wednesday", "Thursday", 
+    "Friday", "Saturday", "Sunday"
   ];
 
   return daysOfWeek.filter(day => daySet.has(day));

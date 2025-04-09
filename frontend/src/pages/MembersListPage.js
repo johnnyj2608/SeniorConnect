@@ -13,8 +13,10 @@ const MembersListPage = () => {
   const [mltcFilter, setMltcFilter] = useState('')
   const [mltcOptions, setMltcOptions] = useState([])
   const [sortOption, setSortOption] = useState('')
-  const [showDisenrolled, setShowDisenrolled] = useState(false);
-
+  const [scheduleFilter, setScheduleFilter] = useState([
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+  ]); 
+  const [showInactive, setShowInactive] = useState(false);
 
   const getMembers = async () => {
     const response = await fetch('/core/members')
@@ -38,12 +40,13 @@ const MembersListPage = () => {
       member.sadc_member_id.toString().startsWith(searchQuery) ||
       member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
       member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
-  
     const matchesMltc = mltcFilter ? mltcFilter === member.mltc : true;
-  
-    const matchesDisenrolled = showDisenrolled ? true : member.active;
-  
-    return matchesSearch && matchesMltc && matchesDisenrolled;
+    const matchesSchedule = scheduleFilter.length === 7 
+      ? true
+      : member.schedule?.some(day => scheduleFilter.includes(day));
+    const matchesDisenrolled = showInactive ? true : member.active;
+
+    return matchesSearch && matchesMltc && matchesSchedule && matchesDisenrolled
   });
 
   const sortMembers = (members) => {
@@ -79,15 +82,6 @@ const MembersListPage = () => {
         </div>
         <div className="filter-row">
           <div className="filter-content">
-            <div className="filter-option">
-              <label htmlFor="mltcFilter">MLTC Filter</label>
-              <Dropdown
-                id="mltcFilter"
-                value={mltcFilter}
-                onChange={(e) => setMltcFilter(e.target.value)}
-                options={[...mltcOptions, { name: 'Unknown' }]}
-              />
-            </div>
 
             <div className="filter-option">
               <label htmlFor="searchQuery">Search Members</label>
@@ -95,6 +89,16 @@ const MembersListPage = () => {
                 id="searchQuery"
                 value={searchQuery}
                 onChange={setSearchQuery}
+              />
+            </div>
+
+            <div className="filter-option">
+              <label htmlFor="mltcFilter">MLTC Filter</label>
+              <Dropdown
+                id="mltcFilter"
+                value={mltcFilter}
+                onChange={(e) => setMltcFilter(e.target.value)}
+                options={[...mltcOptions, { name: 'Unknown' }]}
               />
             </div>
 
@@ -116,11 +120,22 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label>Disenrolled</label>
+              <label htmlFor="sortOption">Schedule Filter</label>
+              <Dropdown
+                id="scheduleFilter"
+                value={(scheduleFilter)}
+                onChange={(e) => setScheduleFilter(e.target.value)}
+                options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
+                multiSelect={true}
+              />
+            </div>
+
+            <div className="filter-option">
+              <label>Inactive</label>
               <div className="switch-container">
                 <Switch
-                  checked={showDisenrolled}
-                  onChange={() => setShowDisenrolled(!showDisenrolled)}
+                  checked={showInactive}
+                  onChange={() => setShowInactive(!showInactive)}
                   onColor="#76A9FA"
                 />
               </div>

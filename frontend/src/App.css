@@ -190,6 +190,11 @@ a {
   margin-bottom: 0.1rem;
 }
 
+.filter-content > *:not(:last-child) {
+  max-width: 175px;
+  width: 175px;
+}
+
 .switch-container {
   display: flex;
   justify-content: center;
@@ -200,7 +205,7 @@ a {
   font-size: 20px;
   color: var(--color-gray);
   white-space: nowrap;
-  margin-top: 1.5rem;
+  margin-top: 1.6rem;
 }
 
 /* -------------- *
@@ -214,7 +219,6 @@ a {
   background-color: #f9f9f9;
   font-size: 14px;
   min-width: 150px;
-  max-width: 200px;
   border: none;
 }
 
@@ -274,12 +278,17 @@ a {
   background: #f0f0f0;
 }
 
+.dropdown-multi {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
 /* -------------- *
  * Search
  * -------------- */
 .member-search {
   min-width: 150px;
-  max-width: 200px;
   padding: 8px;
   border-radius: 4px;
   color: var(--color-white);
