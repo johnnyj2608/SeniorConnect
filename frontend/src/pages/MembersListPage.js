@@ -5,6 +5,7 @@ import DownloadButton from '../components/DownloadButton'
 import Dropdown from '../components/Dropdown'
 import SearchInput from '../components/SearchInput'
 import groupMembersByMltc from '../utils/groupMembersByMltc'
+import Switch from 'react-switch';
 
 const MembersListPage = () => {
   const [members, setMembers] = useState([])
@@ -12,6 +13,8 @@ const MembersListPage = () => {
   const [mltcFilter, setMltcFilter] = useState('')
   const [mltcOptions, setMltcOptions] = useState([])
   const [sortOption, setSortOption] = useState('')
+  const [showDisenrolled, setShowDisenrolled] = useState(false);
+
 
   const getMembers = async () => {
     const response = await fetch('/core/members')
@@ -34,12 +37,14 @@ const MembersListPage = () => {
     const matchesSearch =
       member.sadc_member_id.toString().startsWith(searchQuery) ||
       member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-      member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase())
-
-    const matchesMltc = mltcFilter ? mltcFilter === member.mltc : true
-
-    return matchesSearch && matchesMltc
-  })
+      member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
+  
+    const matchesMltc = mltcFilter ? mltcFilter === member.mltc : true;
+  
+    const matchesDisenrolled = showDisenrolled ? true : member.active;
+  
+    return matchesSearch && matchesMltc && matchesDisenrolled;
+  });
 
   const sortMembers = (members) => {
     switch (sortOption) {
@@ -75,7 +80,7 @@ const MembersListPage = () => {
         <div className="filter-row">
           <div className="filter-content">
             <div className="filter-option">
-              <label htmlFor="mltcFilter">MLTC Filter:</label>
+              <label htmlFor="mltcFilter">MLTC Filter</label>
               <Dropdown
                 id="mltcFilter"
                 value={mltcFilter}
@@ -85,7 +90,7 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label htmlFor="searchQuery">Search Members:</label>
+              <label htmlFor="searchQuery">Search Members</label>
               <SearchInput
                 id="searchQuery"
                 value={searchQuery}
@@ -94,7 +99,7 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label htmlFor="sortOption">Sort By:</label>
+              <label htmlFor="sortOption">Sort By</label>
               <Dropdown
                 id="sortOption"
                 value={sortOption}
@@ -108,6 +113,17 @@ const MembersListPage = () => {
                   'First Name (Z-A)',
                 ]}
               />
+            </div>
+
+            <div className="filter-option">
+              <label>Disenrolled</label>
+              <div className="switch-container">
+                <Switch
+                  checked={showDisenrolled}
+                  onChange={() => setShowDisenrolled(!showDisenrolled)}
+                  onColor="#76A9FA"
+                />
+              </div>
             </div>
           </div>
           <p className="members-count">
