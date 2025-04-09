@@ -21,7 +21,7 @@ const MemberModal = ({ data, onClose }) => {
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
 
-    const [newTab, setNewTab] = useState(() => {
+    const [newTab] = useState(() => {
         if (type === 'authorization') {
             const activeAuthIndex = getActiveAuthIndex(localData);
             return {
@@ -89,7 +89,7 @@ const MemberModal = ({ data, onClose }) => {
             if (type !== 'basic') { // Updates single tab
                 const currentTab = prevData[activeTab];
                 let newValue = value;
-                
+
                 if (field === 'schedule') {
                     const currentSchedule = currentTab?.schedule || [];
                     const newSchedule = checked

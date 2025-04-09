@@ -40,10 +40,15 @@ const MembersListPage = () => {
       member.sadc_member_id.toString().startsWith(searchQuery) ||
       member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
       member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
-    const matchesMltc = mltcFilter ? mltcFilter === member.mltc : true;
+
+    const matchesMltc = mltcFilter 
+      ? mltcFilter === member.mltc || (mltcFilter === 'Unknown' && member.mltc === null)
+      : true;
+
     const matchesSchedule = scheduleFilter.length === 7 
       ? true
       : member.schedule?.some(day => scheduleFilter.includes(day));
+
     const matchesDisenrolled = showInactive ? true : member.active;
 
     return matchesSearch && matchesMltc && matchesSchedule && matchesDisenrolled

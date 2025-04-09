@@ -7,16 +7,19 @@ const MemberAuthCard = ({ id, onEdit }) => {
     const [auths, setAuths] = useState([]);
     const [activeAuth, setActiveAuth] = useState(null);
 
-    const getAuthsByMember = async () => {
-        if (id === 'new') return
     
-        const response = await fetch(`/core/auths/member/${id}`);
-        const data = await response.json();
-        setAuths(data);
-    };
 
     useEffect(() => {
-        getAuthsByMember();
+        const getAuthsByMember = async () => {
+            const response = await fetch(`/core/auths/member/${id}`);
+            const data = await response.json();
+            setAuths(data);
+        };
+
+        if (id !== 'new') {
+            getAuthsByMember();
+        }
+        
     }, [id]);
 
     useEffect(() => {

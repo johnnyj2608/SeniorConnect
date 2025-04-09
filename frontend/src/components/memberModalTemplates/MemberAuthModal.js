@@ -6,14 +6,14 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     const [dxCodes, setDxCodes] = useState([]);
 
     useEffect(() => {
+        const getMltcOptions = async () => {
+            const response = await fetch('/core/mltcs/');
+            const data = await response.json();
+            setMltcOptions(data);
+        };
+        
         getMltcOptions()
     }, []);
-
-    const getMltcOptions = async () => {
-        const response = await fetch('/core/mltcs/');
-        const data = await response.json();
-        setMltcOptions(data);
-    };
 
     const handleMltcChange = async (mltcName) => {
         const selectedMltc = mltcOptions.find(mltc => mltc.name === mltcName);
@@ -77,6 +77,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                         handleChange('mltc')(e);
                         handleMltcChange(e.target.value);
                     }}
+                    // onChange={handleChange('mltc')}
                     options={mltcOptions}
                     disabled={disabled}
                 />

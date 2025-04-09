@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { formatSchedule, sortSchedule } from '../utils/formatUtils';
 
-const Dropdown = ({ value, onChange, options = [], disabled, multiSelect }) => {
+const Dropdown = ({ value, onChange, options = [], disabled, multiSelect = false }) => {
     const [open, setOpen] = useState(false);
-    const [selectedValues, setSelectedValues] = useState(multiSelect ? value : value ? [value] : []);
+    const [selectedValues, setSelectedValues] = useState(value);
     const dropdownRef = useRef(null);
 
     const isDisabled = disabled || options.length === 0;
@@ -44,12 +44,22 @@ const Dropdown = ({ value, onChange, options = [], disabled, multiSelect }) => {
         };
     }, []);
 
+    useEffect(() => {
+        setSelectedValues(value);
+    }, [value]);
+
     return (
         <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
             <div className="dropdown-header" onClick={() => setOpen(!open)}>
-                {selectedValues.length > 0
-                    ? (multiSelect ? formatSchedule(selectedValues, true) : selectedValues)
-                    : "Select Option"}
+            {multiSelect
+                ? (selectedValues.length > 0
+                    ? formatSchedule(selectedValues, true)
+                    : "Select Option"
+                )
+                : (selectedValues 
+                    ? selectedValues 
+                    : 'Select Option'
+                )}
                 <span className={`dropdown-icon ${open ? "open" : ""}`}><DropdownIcon /></span>
             </div>
             {open && (

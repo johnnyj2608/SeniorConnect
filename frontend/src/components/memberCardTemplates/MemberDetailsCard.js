@@ -5,22 +5,22 @@ import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/fo
 const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
   const [member, setMember] = useState(null);
 
-  const getMember = async () => {
-    const response = await fetch(`/core/members/${id}/`);
-    const data = await response.json();
-    setMember(data);
-    onPhotoUpdate(data.photo);
-  };
-
   useEffect(() => {
+    const getMember = async () => {
+      const response = await fetch(`/core/members/${id}/`);
+      const data = await response.json();
+      setMember(data);
+      onPhotoUpdate(data.photo);
+    };
+
     if (id !== 'new') {
       getMember();
     }
-  }, [id]);
+  }, [id, onPhotoUpdate]);
 
   useEffect(() => {
     onPhotoUpdate(member?.photo);
-  }, [member]);
+  }, [member, onPhotoUpdate]);
 
   const handleEdit = () => {
     if (member) {
