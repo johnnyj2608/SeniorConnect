@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { formatDate } from '../../utils/formatUtils';
+import React from 'react';
 
 const MemberPhotoCard = ({ photo }) => {
 
@@ -8,7 +7,7 @@ const MemberPhotoCard = ({ photo }) => {
             <div className="photo-container">
                 <img
                 src={photo instanceof File ? URL.createObjectURL(photo) : photo || "/default-profile.jpg"}
-                alt="Member Photo"
+                alt=""
                 className="member-photo"
                 onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
