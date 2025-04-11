@@ -7,8 +7,6 @@ const MemberAuthCard = ({ id, onEdit }) => {
     const [auths, setAuths] = useState([]);
     const [activeAuth, setActiveAuth] = useState(null);
 
-    
-
     useEffect(() => {
         const getAuthsByMember = async () => {
             const response = await fetch(`/core/auths/member/${id}`);
@@ -26,6 +24,8 @@ const MemberAuthCard = ({ id, onEdit }) => {
         if (auths.length > 0) {
           const activeAuthIndex = getActiveAuthIndex(auths);
           setActiveAuth(auths[activeAuthIndex]);
+        } else {
+            setActiveAuth(null);
         }
     }, [auths]);
 
