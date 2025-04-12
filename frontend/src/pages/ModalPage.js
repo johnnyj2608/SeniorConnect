@@ -14,7 +14,7 @@ const MemberModal = ({ data, onClose }) => {
     const id = data.id;
     const type = data.type;
     const originalData = [
-        ...Object.values(data.data).map(tab => ({ ...tab, edited: false }))
+        ...Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
     ];
 
     const [localData, setLocalData] = useState(type === 'basic' ? { ...data.data } : originalData);

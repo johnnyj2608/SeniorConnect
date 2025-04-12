@@ -90,8 +90,8 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
         <MemberContactsCard 
-          contacts={{}}
-          onEdit={() => handleModalOpen('contacts')}
+          id={id}
+          onEdit={handleModalOpen}
         />
         <MemberAbsencesCard 
           absences={{}}

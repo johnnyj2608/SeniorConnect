@@ -1,33 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 
-const MemberContactsCard = ({ contacts, onEdit }) => {
+const MemberContactsCard = ({ id, onEdit }) => {
+    const [contacts, setContacts] = useState([]);
+
+    useEffect(() => {
+        const getContactsByMember = async () => {
+            const response = await fetch(`/core/contacts/member/${id}`);
+            const data = await response.json();
+            setContacts(data);
+        };
+
+        if (id !== 'new') {
+            getContactsByMember();
+        }
+        
+    }, [id]);
+
     return (
         <div className="member-half-card">
-        <h2>Contacts</h2>
-        <div className="member-container">
-            <Pencil className="edit-icon" onClick={onEdit} />
-            
-            <div className="member-detail">
-            <label>Emergency Contact:</label>
-            <span>{contacts?.emergency_contact || 'N/A'}</span>
+            <h2>Contacts</h2>
+            <div className="member-container">
+                <Pencil className="edit-icon" onClick={onEdit} />
             </div>
-
-            <div className="member-detail">
-            <label>Primary Care Provider:</label>
-            <span>{contacts?.primary_care_provider || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-            <label>Pharmacy:</label>
-            <span>{contacts?.pharmacy || 'N/A'}</span>
-            </div>
-
-            <div className="member-detail">
-            <label>Spouse:</label>
-            <span>{contacts?.spouse || 'N/A'}</span>
-            </div>
-        </div>
         </div>
     );
 };
