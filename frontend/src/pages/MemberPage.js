@@ -84,8 +84,6 @@ const MemberPage = () => {
           id={id}
           onEdit={handleModalOpen}
         />
-      </div>
-      <div className="member-row">
         <MemberContactsCard 
           id={id}
           onEdit={handleModalOpen}

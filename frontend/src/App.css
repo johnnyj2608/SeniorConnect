@@ -404,6 +404,7 @@ a {
 .member-row {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   padding: 10px 20px;
 }
 
@@ -414,7 +415,7 @@ a {
 }
 
 .member-half-card {
-  width: 49%;
+  width: 350px;
 }
 
 .member-full-card {
