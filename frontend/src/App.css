@@ -480,8 +480,7 @@ a {
 }
 
 .member-detail label {
-  white-space: nowrap;
-  width: 110px;
+  width: 115px;
   padding: 5px;
 }
 
@@ -494,6 +493,11 @@ a {
 
 .member-detail span {
   padding-left: 7px;
+}
+
+.member-detail-contacts {
+  display: flex;
+  flex-direction: column;
 }
 
 ::-webkit-calendar-picker-indicator{

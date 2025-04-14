@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
+import DetailRow from '../MemberDetail';
 
 const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
   const [member, setMember] = useState(null);
@@ -33,71 +34,19 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
       <h2>Details</h2>
       <div className="member-container">
         <Pencil className="edit-icon" onClick={handleEdit} />
-        
-        <div className="member-detail">
-          <label>Member ID:</label>
-          <span>{member?.sadc_member_id || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Last Name:</label>
-          <span>{member?.last_name || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>First Name:</label>
-          <span>{member?.first_name || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Birth Date:</label>
-          <span>{formatDate(member?.birth_date) || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Gender: </label>
-          <span>{formatGender(member?.gender) || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Phone:</label>
-          <span>{formatPhone(member?.phone) || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Address:</label>
-          <span>{member?.address || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Email:</label>
-          <span>{member?.email || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Medicaid:</label>
-          <span>{member?.medicaid?.toUpperCase() || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>SSN:</label>
-          <span>{formatSSN(member?.ssn) || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Language:</label>
-          <span>{member?.language || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Enrollment:</label>
-          <span>{formatDate(member?.enrollment_date) || 'N/A'}</span>
-        </div>
-
-        <div className="member-detail">
-          <label>Note:</label>
-          <span>{member?.note || 'N/A'}</span>
-        </div>
+        <DetailRow label="Member ID" value={member?.sadc_member_id} />
+        <DetailRow label="Last Name" value={member?.last_name} />
+        <DetailRow label="First Name" value={member?.first_name} />
+        <DetailRow label="Birth Date" value={formatDate(member?.birth_date)} />
+        <DetailRow label="Gender" value={formatGender(member?.gender)} />
+        <DetailRow label="Phone" value={formatPhone(member?.phone)} />
+        <DetailRow label="Address" value={member?.address} />
+        <DetailRow label="Email" value={member?.email} />
+        <DetailRow label="Medicaid" value={member?.medicaid?.toUpperCase()} />
+        <DetailRow label="SSN" value={formatSSN(member?.ssn)} />
+        <DetailRow label="Language" value={member?.language} />
+        <DetailRow label="Enrollment" value={formatDate(member?.enrollment_date)} />
+        <DetailRow label="Note" value={member?.note} />
       </div>
     </div>
   );

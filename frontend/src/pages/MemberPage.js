@@ -73,13 +73,10 @@ const MemberPage = () => {
         </h3>
       </div>
       <div className="member-row">
-        <MemberPhotoCard
-          photo={photo}
-        /> 
+        <MemberPhotoCard photo={photo} /> 
       </div>
       <div className="member-row">
-        <MemberDetailsCard
-          id={id}
+        <MemberDetailsCard id={id}
           onEdit={handleModalOpen}
           onPhotoUpdate={handlePhotoUpdate}
         />
