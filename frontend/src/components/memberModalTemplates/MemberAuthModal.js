@@ -3,6 +3,7 @@ import Dropdown from '../Dropdown';
 
 const MemberAuthModal = ({ data, handleChange, activeTab }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
+    const current = data[activeTab] || {};
 
     useEffect(() => {
         const getMltcOptions = async () => {
@@ -14,7 +15,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
         getMltcOptions()
     }, []);
 
-    const selectedMltc = mltcOptions.find(mltc => mltc.name === data[activeTab]?.mltc);
+    const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes
 
     const daysOfWeek = [
@@ -37,7 +38,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     <input
                         type="checkbox"
                         name="active"
-                        checked={data[activeTab]?.active === true}
+                        checked={current.active === true}
                         onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
                         disabled={disabled}
                     />
@@ -49,7 +50,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="text"
                     name="mltc_member_id"
-                    value={data[activeTab]?.mltc_member_id || ''}
+                    value={current.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
                     placeholder="Required"
                     disabled={disabled}
@@ -58,7 +59,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>MLTC *</label>
                 <Dropdown 
-                    value={data[activeTab]?.mltc || 0} 
+                    value={current.mltc || 0} 
                     onChange={handleChange('mltc')}
                     options={mltcOptions}
                     disabled={disabled}
@@ -69,7 +70,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="text"
                     name="mltc_auth_id"
-                    value={data[activeTab]?.mltc_auth_id || ''}
+                    value={current.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
                     placeholder="Required"
                     disabled={disabled}
@@ -84,7 +85,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                                 type="checkbox"
                                 name="schedule"
                                 value={day.value}
-                                checked={data[activeTab]?.schedule?.includes(day.value) || false}
+                                checked={current.schedule?.includes(day.value) || false}
                                 onChange={handleChange('schedule')}
                                 disabled={disabled}
                             />
@@ -98,7 +99,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     name="start_date"
-                    value={data[activeTab]?.start_date || ''}
+                    value={current.start_date || ''}
                     onChange={handleChange('start_date')}
                     disabled={disabled}
                 />
@@ -108,7 +109,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     name="end_date"
-                    value={data[activeTab]?.end_date || ''}
+                    value={current.end_date || ''}
                     onChange={handleChange('end_date')}
                     disabled={disabled}
                 />
@@ -116,8 +117,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>DX Code</label>
                 <Dropdown 
-                    value={dx_codes?.includes(data[activeTab]?.dx_code) 
-                        ? data[activeTab]?.dx_code 
+                    value={dx_codes?.includes(current.dx_code) 
+                        ? current.dx_code 
                         : 0}
                     onChange={handleChange('dx_code')}
                     options={dx_codes}
@@ -129,7 +130,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="text"
                     name="sdc_code"
-                    value={data[activeTab]?.sdc_code || ''}
+                    value={current.sdc_code || ''}
                     onChange={handleChange('sdc_code')}
                     disabled={disabled}
                 />
@@ -139,7 +140,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="text"
                     name="trans_code"
-                    value={data[activeTab]?.trans_code || ''}
+                    value={current.trans_code || ''}
                     onChange={handleChange('trans_code')}
                     disabled={disabled}
                 />

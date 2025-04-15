@@ -24,6 +24,11 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     heading: item.mltc || 'Unknown', 
                     subheading: status,
                 };
+            case 'contacts':
+                return { 
+                    heading: item.name || 'Unknown', 
+                    subheading: item.contact_type,
+                };
             default:
                 return { heading: 'Unknown', subheading: '' };
         }

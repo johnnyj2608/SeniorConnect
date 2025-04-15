@@ -51,22 +51,20 @@ const Dropdown = ({ value, onChange, options = [], disabled, multiSelect = false
     return (
         <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
             <div className="dropdown-header" onClick={() => setOpen(!open)}>
-            {multiSelect
-                ? (selectedValues.length > 0
-                    ? formatSchedule(selectedValues, true)
-                    : "Select Option"
-                )
-                : (selectedValues 
-                    ? selectedValues 
-                    : 'Select Option'
-                )}
+                {selectedValues.length > 0
+                    ? (multiSelect
+                        ? formatSchedule(selectedValues, true)
+                        : selectedValues
+                    ) :
+                    "Select Option"
+                }
                 <span className={`dropdown-icon ${open ? "open" : ""}`}><DropdownIcon /></span>
             </div>
             {open && (
                 <ul className="dropdown-list">
                     {!multiSelect && (
                         <li key="select-option" onClick={() => handleSelect("")}>
-                            Select Option
+                            <span>Select Option</span>
                         </li>
                     )}
                     {formattedOptions.map((option) => (

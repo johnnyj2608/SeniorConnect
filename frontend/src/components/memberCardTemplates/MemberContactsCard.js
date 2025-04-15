@@ -24,11 +24,15 @@ const MemberContactsCard = ({ id, onEdit }) => {
         return acc;
     }, {});
 
+    const handleEdit = () => {
+        onEdit('contacts', contacts, setContacts);
+    };
+
     return (
         <div className="member-half-card">
             <h2>Contacts</h2>
             <div className="member-container">
-                <Pencil className="edit-icon" onClick={onEdit} />
+                <Pencil className="edit-icon" onClick={handleEdit} />
                 <ContactDetail label="Emergency Contact" contact={uniqueContacts.emergency} />
                 <ContactDetail label="Primary Care Provider" contact={uniqueContacts.primary_provider} />
                 <ContactDetail label="Pharmacy" contact={uniqueContacts.pharmacy} />
