@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import urlToFile from '../utils/urlToFile';
 import { MemberBasicModal, MemberSideBasicModal } from '../components/memberModalTemplates/MemberBasicModal';
 import MemberAuthModal from '../components/memberModalTemplates/MemberAuthModal';
 import MemberContactsModal from '../components/memberModalTemplates/MemberContactsModal';
@@ -9,6 +8,7 @@ import ModalTabs from '../components/ModalTabs';
 import { sortSchedule } from '../utils/formatUtils';
 import compareTabs from '../utils/compareTabs';
 import getActiveAuthIndex from '../utils/getActiveAuthIndex';
+import { sendRequest, checkMissingFields, saveDataTabs } from '../utils/saveData';
 
 const MemberModal = ({ data, onClose }) => {
     const id = data.id;
@@ -29,6 +29,7 @@ const MemberModal = ({ data, onClose }) => {
                 mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || "",
                 mltc: localData[activeAuthIndex]?.mltc || "",
                 mltc_auth_id: "",
+                member_id: id,
                 schedule: localData[activeAuthIndex]?.schedule || [],
                 start_date: "",
                 end_date: "",
@@ -36,7 +37,7 @@ const MemberModal = ({ data, onClose }) => {
                 sdc_code: localData[activeAuthIndex]?.sdc_code || "",
                 trans_code: localData[activeAuthIndex]?.trans_code || "",
                 active: true,
-                edited: false
+                edited: true
             };
         }
         return null;
@@ -180,101 +181,35 @@ const MemberModal = ({ data, onClose }) => {
     };
 
     const handleSave = async (updatedData) => {
-        const sendRequest = async (url, method, data) => {
-            const formData = new FormData();
-            for (const key in data) {
-            if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
-                const file = await urlToFile(data.photo, `${id}.jpg`);
-                formData.append('photo', file);
-            } else if (key === 'schedule' && data.id !== 'new') {
-                formData.append(key, JSON.stringify(data[key]));
-            } else if (data[key] === null) {
-                formData.append(key, '');
-            } else {
-                formData.append(key, data[key]);
-            }
-            }
-
-            const response = await fetch(url, { method, body: formData });
-
-            if (!response.ok) return Promise.reject(response);
-
-            return response.json();
-        };
-
-        const dataArray = Object.values(updatedData);
+        
         let savedData = null;
         let requiredFields = [];
-        let missingFields = [];
+        let missingFields = new Set();
 
         switch (type) {
             case 'basic':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
 
-                missingFields = requiredFields.filter(field => {
-                    const value = updatedData[field];
-                    return !(typeof value === 'string' ? value.trim() : value);
-                });
-
-                if (missingFields?.length > 0) {
-                    alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+                missingFields = checkMissingFields(updatedData, requiredFields, []);
+                if (missingFields.size > 0) {
+                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
                     return;
                 }
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
                 savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
-
                 break;
 
             case 'authorization':
-                requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date']
+                requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
 
-                const deletions = dataArray.filter(auth => auth.id !== 'new' && auth.deleted);
-                const updates = dataArray.filter(auth => auth.edited && !auth.deleted);
-
-                missingFields = updates.reduce((acc, auth) => {
-                    const missingFieldsInAuth = requiredFields.filter(field => {
-                    const value = auth[field];
-                    return !(typeof value === 'string' ? value.trim() : value);
-                    });
-                
-                    if (missingFieldsInAuth.length > 0) {
-                    acc.push(...missingFieldsInAuth);
-                    }
-                
-                    return acc;
-                }, []);
-            
-                if (missingFields.length > 0) {
-                    alert(`Please fill in the required fields: ${missingFields.join(', ')}`);
+                missingFields = checkMissingFields(updatedData, requiredFields, []);
+                if (missingFields.size > 0) {
+                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
                     return;
                 }
-
-                const updatedAuths = await Promise.all(
-                    updates.map(async (auth) => {
-                    auth.member_id = auth.id === 'new' ? id : auth.member_id;
-                    const authEndpoint = `/core/auths/${auth.id === 'new' ? '' : auth.id + '/'}`;
-                    const authMethod = auth.id === 'new' ? 'POST' : 'PUT';
-                
-                    const response = await sendRequest(authEndpoint, authMethod, auth);
-
-                    if (auth.id === 'new' && response.id) {
-                        auth.id = response.id;
-                    }
-
-                    return auth;
-                    })
-                );
-
-                await Promise.all(
-                    deletions.map(auth => fetch(`/core/auths/${auth.id}/`, { method: 'DELETE' }))
-                );
-            
-                savedData = dataArray
-                    .filter(auth => !auth.deleted && auth.id !== 'new')
-                    .map(auth => updatedAuths.find(updated => updated.id === auth.id) || auth)
-                    .concat(updatedAuths.filter(updated => !dataArray.some(auth => auth.id === updated.id)));
+                savedData = await saveDataTabs(updatedData, 'auths');
                 break;
 
             default:

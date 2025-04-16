@@ -23,7 +23,7 @@ class Contact(models.Model):
         ('other', 'Other'),
     ]
 
-    member = models.ForeignKey('Member', on_delete=models.CASCADE)
+    member_id = models.ForeignKey('Member', on_delete=models.CASCADE)
     contact_type = models.CharField(max_length=20, choices=CONTACT_TYPE_CHOICES)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
