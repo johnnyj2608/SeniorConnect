@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from '../Dropdown';
-import { CONTACT_TYPES, RELATIONSHIP_TYPES } from '../../utils/mapUtils';
+import { contact_types, relationship_types } from '../../utils/mapUtils';
 
 const MemberContactsModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
@@ -13,9 +13,12 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <Dropdown 
-                    display={CONTACT_TYPES[current.contact_type]|| 0} 
-                    onChange={handleChange('contact_type')}
-                    options={CONTACT_TYPES}
+                    display={contact_types[current.contact_type]|| 0} 
+                    onChange={(e) => {
+                        handleChange('contact_type')(e);
+                        handleChange('relationship_type')({target: { value: '' }});
+                    }}
+                    options={contact_types}
                     disabled={disabled}
                 />
             </div>
@@ -24,9 +27,9 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                 <div className="member-detail">
                     <label>Relationship *</label>
                     <Dropdown 
-                        display={RELATIONSHIP_TYPES[current.relationship_type] || ''}
+                        display={relationship_types[current.relationship_type] || ''}
                         onChange={handleChange('relationship_type')}
-                        options={RELATIONSHIP_TYPES}
+                        options={relationship_types}
                         disabled={disabled}
                     />
                 </div>

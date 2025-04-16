@@ -596,10 +596,6 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-right: 2px;
 }
 
-.schedule-container label {
-  width: 115px;
-}
-
 .modal-tabs {
   background: var(--color-white);
   width: 30%;

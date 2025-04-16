@@ -1,4 +1,4 @@
-const CONTACT_TYPES = {
+const contact_types = {
     emergency: 'Emergency Contact',
     home_aid: 'Home Aid',
     primary_provider: 'Primary Care Provider',
@@ -6,7 +6,7 @@ const CONTACT_TYPES = {
     other: 'Other',
 };
 
-const RELATIONSHIP_TYPES = {
+const relationship_types = {
     husband: 'Husband',
     wife: 'Wife',
     son: 'Son',
@@ -20,6 +20,6 @@ const RELATIONSHIP_TYPES = {
 };
 
 export {
-    CONTACT_TYPES,
-    RELATIONSHIP_TYPES,
+    contact_types,
+    relationship_types,
 };

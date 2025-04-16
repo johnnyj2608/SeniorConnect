@@ -60,7 +60,10 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>MLTC *</label>
                 <Dropdown 
                     display={current.mltc || 0} 
-                    onChange={handleChange('mltc')}
+                    onChange={(e) => {
+                        handleChange('mltc')(e);
+                        handleChange('dx_code')({target: { value: '' }});
+                    }}
                     options={mltcOptions}
                     disabled={disabled}
                 />
