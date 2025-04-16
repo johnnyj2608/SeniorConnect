@@ -7,6 +7,7 @@ class Contact(models.Model):
         ('home_aid', 'Home Aid'),
         ('primary_provider', 'Primary Care Provider'),
         ('pharmacy', 'Pharmacy'),
+        ('other', 'Other'),
     ]
 
     RELATIONSHIP_TYPE_CHOICES = [

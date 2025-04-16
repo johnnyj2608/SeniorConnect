@@ -1,33 +1,11 @@
 import React from 'react';
 import Dropdown from '../Dropdown';
+import { CONTACT_TYPES, RELATIONSHIP_TYPES } from '../../utils/mapUtils';
 
 const MemberContactsModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
-
-    const CONTACT_TYPE_OPTIONS = [
-        'Emergency Contact',
-        'Home Aid',
-        'Primary Care Provider',
-        'Pharmacy',
-        'Other',
-    ];    
-    
-    const RELATIONSHIP_TYPE_OPTIONS = [
-        'Husband',
-        'Wife',
-        'Son',
-        'Daughter',
-        'Brother',
-        'Sister',
-        'Friend',
-        'Father',
-        'Mother',
-        'Other',
-    ];    
  
     const disabled = data.filter(tab => !tab.deleted).length <= 0
-
-    // Fix value not equal to label
 
     return (
         <>
@@ -35,20 +13,20 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <Dropdown 
-                    value={current.contact_type|| 0} 
+                    display={CONTACT_TYPES[current.contact_type]|| 0} 
                     onChange={handleChange('contact_type')}
-                    options={CONTACT_TYPE_OPTIONS}
+                    options={CONTACT_TYPES}
                     disabled={disabled}
                 />
             </div>
 
-            {current.contact_type === 'Emergency Contact' && (
+            {current.contact_type === 'emergency' && (
                 <div className="member-detail">
                     <label>Relationship *</label>
                     <Dropdown 
-                        value={current.relationship_type || ''}
+                        display={RELATIONSHIP_TYPES[current.relationship_type] || ''}
                         onChange={handleChange('relationship_type')}
-                        options={RELATIONSHIP_TYPE_OPTIONS}
+                        options={RELATIONSHIP_TYPES}
                         disabled={disabled}
                     />
                 </div>

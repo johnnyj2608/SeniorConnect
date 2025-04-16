@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReactComponent as AddIcon } from '../assets/add.svg'
+import { CONTACT_TYPES } from '../utils/mapUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
@@ -27,7 +28,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'contacts':
                 return { 
                     heading: item.name || 'Unknown', 
-                    subheading: item.contact_type,
+                    subheading: CONTACT_TYPES[item.contact_type],
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };

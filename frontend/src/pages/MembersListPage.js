@@ -89,29 +89,26 @@ const MembersListPage = () => {
           <div className="filter-content">
 
             <div className="filter-option">
-              <label htmlFor="searchQuery">Search Members</label>
+              <label>Search Members</label>
               <SearchInput
-                id="searchQuery"
                 value={searchQuery}
                 onChange={setSearchQuery}
               />
             </div>
 
             <div className="filter-option">
-              <label htmlFor="mltcFilter">MLTC Filter</label>
+              <label>MLTC Filter</label>
               <Dropdown
-                id="mltcFilter"
-                value={mltcFilter}
+                display={mltcFilter}
                 onChange={(e) => setMltcFilter(e.target.value)}
                 options={[...mltcOptions, { name: 'Unknown' }]}
               />
             </div>
 
             <div className="filter-option">
-              <label htmlFor="sortOption">Sort By</label>
+              <label>Sort By</label>
               <Dropdown
-                id="sortOption"
-                value={sortOption}
+                display={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
                 options={[
                   'Member ID (0-9)',
@@ -125,10 +122,9 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label htmlFor="sortOption">Schedule Filter</label>
+              <label>Schedule Filter</label>
               <Dropdown
-                id="scheduleFilter"
-                value={(scheduleFilter)}
+                display={(scheduleFilter)}
                 onChange={(e) => setScheduleFilter(e.target.value)}
                 options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
                 multiSelect={true}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import LanguageDropdown from '../Dropdown';
+import Dropdown from '../Dropdown';
 
 const MemberBasicModal = ({ data, handleChange }) => {
     return (
@@ -167,8 +167,8 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
 
             <div className="member-detail">
                 <label>Language</label>
-                <LanguageDropdown 
-                    value={data?.language || 0} 
+                <Dropdown 
+                    display={data?.language || 0} 
                     onChange={handleChange('language')}
                     options={languageOptions} 
                 />

@@ -59,7 +59,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>MLTC *</label>
                 <Dropdown 
-                    value={current.mltc || 0} 
+                    display={current.mltc || 0} 
                     onChange={handleChange('mltc')}
                     options={mltcOptions}
                     disabled={disabled}
@@ -117,7 +117,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>DX Code</label>
                 <Dropdown 
-                    value={dx_codes?.includes(current.dx_code) 
+                    display={dx_codes?.includes(current.dx_code) 
                         ? current.dx_code 
                         : 0}
                     onChange={handleChange('dx_code')}
