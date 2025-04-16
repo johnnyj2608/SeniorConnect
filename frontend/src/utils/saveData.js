@@ -22,8 +22,7 @@ const sendRequest = async (id, url, method, data) => {
     return response.json();
 };
 
-const checkMissingFields = (data, requiredFields, dependentFields) => {
-    console.log(data)
+const checkMissingFields = (data, requiredFields) => {
     const items = Array.isArray(data)
         ? data.filter(item => item.edited && !item.deleted)
         : [data];

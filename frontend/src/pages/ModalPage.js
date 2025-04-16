@@ -172,6 +172,7 @@ const MemberModal = ({ data, onClose }) => {
                 });
                 break;
             case 'authorization':
+            case 'contacts':
                 data.setData(savedData);
                 break;
             default:
@@ -190,7 +191,7 @@ const MemberModal = ({ data, onClose }) => {
             case 'basic':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
 
-                missingFields = checkMissingFields(updatedData, requiredFields, []);
+                missingFields = checkMissingFields(updatedData, requiredFields);
                 if (missingFields.size > 0) {
                     alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
                     return;
@@ -198,18 +199,34 @@ const MemberModal = ({ data, onClose }) => {
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
-                savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
+                savedData = await sendRequest(id, memberEndpoint, memberMethod, updatedData);
                 break;
 
             case 'authorization':
                 requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
 
-                missingFields = checkMissingFields(updatedData, requiredFields, []);
+                missingFields = checkMissingFields(updatedData, requiredFields);
                 if (missingFields.size > 0) {
                     alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
                     return;
                 }
+
                 savedData = await saveDataTabs(updatedData, 'auths');
+                break;
+
+            case 'contacts':
+                requiredFields = ['contact_type', 'name', 'phone'];
+                if (updatedData.some(item => item.contact_type === 'emergency')) {
+                    requiredFields.push('relationship_type');
+                }
+
+                missingFields = checkMissingFields(updatedData, requiredFields);
+                if (missingFields.size > 0) {
+                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+                    return;
+                }
+
+                savedData = await saveDataTabs(updatedData, 'contacts');
                 break;
 
             default:
