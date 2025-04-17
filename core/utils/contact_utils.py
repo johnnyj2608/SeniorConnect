@@ -48,3 +48,18 @@ def getContactListByMember(request, member_pk):
     contacts = Contact.objects.filter(member_id=member_pk)
     serializer = ContactSerializer(contacts, many=True)
     return Response(serializer.data)
+
+def searchContactList(request):
+    contact_type = request.query_params.get('contact_type', '')
+    name_query = request.query_params.get('name', '')
+    
+    contacts = Contact.objects.all()
+
+    if name_query:
+        contacts = contacts.filter(name__icontains=name_query)
+
+    if contact_type:
+        contacts = contacts.filter(contact_type=contact_type)
+
+    serializer = ContactSerializer(contacts, many=True)
+    return Response(serializer.data)

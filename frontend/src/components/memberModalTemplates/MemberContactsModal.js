@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropdown from '../Dropdown';
+import useDebounce from '../../hooks/useDebounce';
 import { contact_types, relationship_types } from '../../utils/mapUtils';
 
 const MemberContactsModal = ({ data, handleChange, activeTab }) => {
@@ -8,18 +9,48 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disableFields = disabled || !current.contact_type;
 
+    const searchName = useDebounce(current.name, 500);
+    const [searchResults, setSearchResults] = useState([]);
+
+    const searchNames = async (searchName, contactType) => {
+        try {
+            const params = new URLSearchParams({
+                name: searchName,
+                contact_type: contactType,
+            });
+            
+            const response = await fetch(`/core/contacts/search/?${params.toString()}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching names:', error);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        if (searchName && current.contact_type) {
+            searchNames(searchName, current.contact_type)
+                .then((results) => setSearchResults(results));
+        } else {
+            setSearchResults([]);
+        }
+    }, [searchName, current.contact_type]);
+
+    console.log(searchResults);
+
     return (
         <>
             <h3>Edit Contacts</h3>
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <Dropdown 
-                    display={contact_types[current.contact_type]|| 0} 
+                    display={contact_types[current.contact_type] || 0} 
                     onChange={(e) => {
                         handleChange('contact_type')(e);
-                        handleChange('relationship_type')({target: { value: '' }});
-                        handleChange('name')({target: { value: '' }});
-                        handleChange('phone')({target: { value: '' }});
+                        handleChange('relationship_type')({ target: { value: '' } });
+                        handleChange('name')({ target: { value: '' } });
+                        handleChange('phone')({ target: { value: '' } });
                     }}
                     options={contact_types}
                     disabled={disabled}

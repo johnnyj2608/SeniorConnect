@@ -7,11 +7,11 @@ from ..utils.contact_utils import (
     getContactList,
     createContact,
     getContactListByMember,
+    searchContactList,
 )
 
 @api_view(['GET', 'POST'])
 def getContacts(request):
-
     if request.method == 'GET':
         return getContactList(request)
 
@@ -21,7 +21,6 @@ def getContacts(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def getContact(request, pk):
-
     if request.method == 'GET':
         return getContactDetail(request, pk)
 
@@ -36,3 +35,8 @@ def getContact(request, pk):
 def getContactsByMember(request, pk):
     if request.method == 'GET':
         return getContactListByMember(request, pk)
+    
+@api_view(['GET'])
+def searchContacts(request):
+    if request.method == 'GET':
+        return searchContactList(request)
