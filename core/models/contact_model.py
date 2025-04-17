@@ -34,14 +34,6 @@ class Contact(models.Model):
         blank=True,
         help_text="Only used if this if contact type is emergency"
     )
-    related_member = models.ForeignKey(
-        'Member',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='related_contacts',
-        help_text="Only used if this contact is also a member (e.g. spouse)"
-    )
 
     def clean(self):
         if self.contact_type == 'emergency' and not self.relationship_type:
@@ -49,9 +41,6 @@ class Contact(models.Model):
         
         if self.contact_type != 'emergency' and self.relationship_type:
             raise ValidationError("relationship_type can only be set for emergency contacts.")
-        
-        if self.related_member and self.relationship_type not in ['husband', 'wife']:
-            raise ValidationError("related_member can only be set if the relationship_type is 'husband' or 'wife'.")
 
     def __str__(self):
         return f"{self.name} ({self.contact_type})"

@@ -29,21 +29,22 @@ const Dropdown = ({ display, onChange, options = [], disabled, multiSelect = fal
         .filter(option => option && option.name !== '');
 
     const handleSelect = (option) => {
-        let updatedSelectedValues;
-
         if (multiSelect) {
-            if (selectedValues.includes(option)) {
-                updatedSelectedValues = selectedValues.filter(value => value !== option);
+            let multiSelectValues;
+            if (selectedValues.includes(option.value)) {
+                multiSelectValues = selectedValues.filter(value => value !== option.value);
             } else {
-                updatedSelectedValues = [...selectedValues, option];
+                multiSelectValues = [...selectedValues, option.value];
             }
-            updatedSelectedValues = sortSchedule(updatedSelectedValues);
+            multiSelectValues = sortSchedule(multiSelectValues);
+
+            setSelectedValues(multiSelectValues);
+            onChange({ target: { value: multiSelectValues } });
         } else {
-            updatedSelectedValues = option;
+            setSelectedValues(option.name);
+            onChange({ target: { value: option.value } });
             setOpen(false);
         }
-        setSelectedValues(updatedSelectedValues);
-        onChange({ target: { value: updatedSelectedValues } });
     };
 
     const handleClickOutside = (event) => {
@@ -66,7 +67,7 @@ const Dropdown = ({ display, onChange, options = [], disabled, multiSelect = fal
     return (
         <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
             <div className="dropdown-header" onClick={() => setOpen(!open)}>
-                {selectedValues.length > 0
+                {selectedValues
                     ? (multiSelect
                         ? formatSchedule(selectedValues, true)
                         : selectedValues
@@ -83,7 +84,7 @@ const Dropdown = ({ display, onChange, options = [], disabled, multiSelect = fal
                         </li>
                     )}
                     {formattedOptions.map((option) => (
-                        <li key={option.value} onClick={() => handleSelect(option.value)}>
+                        <li key={option.value} onClick={() => handleSelect(option)}>
                             {multiSelect ? (
                                 <div className="dropdown-multi">
                                     <input

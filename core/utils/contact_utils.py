@@ -23,8 +23,7 @@ def createContact(request):
         contact_type=data['contact_type'],
         name=data['name'],
         phone=data['phone'],
-        relationship_type=data.get('relationship_type'), 
-        related_member=data.get('related_member'),
+        relationship_type=data.get('relationship_type', None), 
     )
     serializer = ContactSerializer(contact)
     return Response(serializer.data)

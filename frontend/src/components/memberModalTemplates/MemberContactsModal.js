@@ -5,7 +5,8 @@ import { contact_types, relationship_types } from '../../utils/mapUtils';
 const MemberContactsModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
  
-    const disabled = data.filter(tab => !tab.deleted).length <= 0
+    const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const disableFields = disabled || !current.contact_type;
 
     return (
         <>
@@ -17,6 +18,8 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                     onChange={(e) => {
                         handleChange('contact_type')(e);
                         handleChange('relationship_type')({target: { value: '' }});
+                        handleChange('name')({target: { value: '' }});
+                        handleChange('phone')({target: { value: '' }});
                     }}
                     options={contact_types}
                     disabled={disabled}
@@ -30,7 +33,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                         display={relationship_types[current.relationship_type] || ''}
                         onChange={handleChange('relationship_type')}
                         options={relationship_types}
-                        disabled={disabled}
+                        disabled={disableFields}
                     />
                 </div>
             )}
@@ -43,7 +46,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                     value={current.name || ''}
                     onChange={handleChange('name')}
                     placeholder="Required"
-                    disabled={disabled}
+                    disabled={disableFields}
                 />
             </div>
 
@@ -55,11 +58,9 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                     value={current.phone || ''}
                     onChange={handleChange('phone')}
                     placeholder="Required"
-                    disabled={disabled}
+                    disabled={disableFields}
                 />
             </div>
-
-            {/* Spouse */}
         </>
     );
 };
