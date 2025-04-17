@@ -1,0 +1,39 @@
+import getActiveAuthIndex from '../utils/getActiveAuthIndex';
+
+const getNewTab = (type, localData, id) => {
+    switch (type) {
+        case 'authorization': {
+            const activeAuthIndex = getActiveAuthIndex(localData);
+            return {
+                id: 'new',
+                member_id: id,
+                mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || "",
+                mltc: localData[activeAuthIndex]?.mltc || "",
+                mltc_auth_id: "",
+                schedule: localData[activeAuthIndex]?.schedule || [],
+                start_date: "",
+                end_date: "",
+                dx_code: localData[activeAuthIndex]?.dx_code || "",
+                sdc_code: localData[activeAuthIndex]?.sdc_code || "",
+                trans_code: localData[activeAuthIndex]?.trans_code || "",
+                active: true,
+                edited: true,
+            };
+        }
+        case 'contacts': {
+            return {
+                id: 'new',
+                member_id: id,
+                contact_type: '',
+                name: '',
+                phone: '',
+                relationship_type: '',
+                edited: true,
+            };
+        }
+        default:
+            return null;
+    }
+};
+
+export default getNewTab;

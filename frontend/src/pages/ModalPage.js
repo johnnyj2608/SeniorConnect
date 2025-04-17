@@ -9,6 +9,7 @@ import { sortSchedule } from '../utils/formatUtils';
 import compareTabs from '../utils/compareTabs';
 import getActiveAuthIndex from '../utils/getActiveAuthIndex';
 import { sendRequest, checkMissingFields, saveDataTabs } from '../utils/saveData';
+import getNewTab from '../utils/getNewTab';
 
 const MemberModal = ({ data, onClose }) => {
     const id = data.id;
@@ -22,25 +23,7 @@ const MemberModal = ({ data, onClose }) => {
     const [newTabsCount, setNewTabsCount] = useState(0);
 
     const [newTab] = useState(() => {
-        if (type === 'authorization') {
-            const activeAuthIndex = getActiveAuthIndex(localData);
-            return {
-                id: 'new',
-                mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || "",
-                mltc: localData[activeAuthIndex]?.mltc || "",
-                mltc_auth_id: "",
-                member_id: id,
-                schedule: localData[activeAuthIndex]?.schedule || [],
-                start_date: "",
-                end_date: "",
-                dx_code: localData[activeAuthIndex]?.dx_code || "",
-                sdc_code: localData[activeAuthIndex]?.sdc_code || "",
-                trans_code: localData[activeAuthIndex]?.trans_code || "",
-                active: true,
-                edited: true
-            };
-        }
-        return null;
+        return getNewTab(type, localData, id);
     });
 
     useEffect(() => {
@@ -234,7 +217,7 @@ const MemberModal = ({ data, onClose }) => {
         }
         updateState(savedData);
         onClose(savedData?.id);
-        };
+    };
 
     return (
         <div className="modal">

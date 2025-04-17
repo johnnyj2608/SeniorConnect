@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from ..models.contact_model import Contact
+from ..models.member_model import Member
 from ..serializers.contact_serializer import ContactSerializer
 
 def getContactList(request):
@@ -14,8 +15,16 @@ def getContactDetail(request, pk):
 
 def createContact(request):
     data = request.data
+
+    member = Member.objects.get(id=data['member_id'])
+
     contact = Contact.objects.create(
-        contact=data['contact'],
+        member_id=member,
+        contact_type=data['contact_type'],
+        name=data['name'],
+        phone=data['phone'],
+        relationship_type=data.get('relationship_type'), 
+        related_member=data.get('related_member'),
     )
     serializer = ContactSerializer(contact)
     return Response(serializer.data)
