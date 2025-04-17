@@ -168,6 +168,7 @@ const MemberModal = ({ data, onClose }) => {
         
         let savedData = null;
         let requiredFields = [];
+        let dependentFields = [];
         let missingFields = new Set();
 
         switch (type) {
@@ -199,11 +200,15 @@ const MemberModal = ({ data, onClose }) => {
 
             case 'contacts':
                 requiredFields = ['contact_type', 'name', 'phone'];
-                if (updatedData.some(item => item.contact_type === 'emergency')) {
-                    requiredFields.push('relationship_type');
-                }
+                dependentFields = [
+                    {
+                        field: 'relationship_type',
+                        dependsOn: 'contact_type',
+                        value: 'emergency',
+                    }
+                ];
 
-                missingFields = checkMissingFields(updatedData, requiredFields);
+                missingFields = checkMissingFields(updatedData, requiredFields, dependentFields);
                 if (missingFields.size > 0) {
                     alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
                     return;

@@ -22,7 +22,7 @@ const sendRequest = async (id, url, method, data) => {
     return response.json();
 };
 
-const checkMissingFields = (data, requiredFields) => {
+const checkMissingFields = (data, requiredFields, dependentFields = []) => {
     const items = Array.isArray(data)
         ? data.filter(item => item.edited && !item.deleted)
         : [data];
@@ -34,6 +34,16 @@ const checkMissingFields = (data, requiredFields) => {
                 acc.add(field);
             }
         });
+
+        dependentFields.forEach(({ field, dependsOn, value }) => {
+            if (item[dependsOn] === value) {
+                const depValue = item[field];
+                if (!(typeof depValue === 'string' ? depValue.trim() : depValue)) {
+                    acc.add(field);
+                }
+            }
+        });
+
         return acc;
     }, new Set());
 };
