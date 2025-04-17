@@ -1,43 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Dropdown from '../Dropdown';
-import useDebounce from '../../hooks/useDebounce';
 import { contact_types, relationship_types } from '../../utils/mapUtils';
+import AutoCompleteInput from '../AutoCompleteInput';
 
 const MemberContactsModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
  
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disableFields = disabled || !current.contact_type;
-
-    const searchName = useDebounce(current.name, 500);
-    const [searchResults, setSearchResults] = useState([]);
-
-    const searchNames = async (searchName, contactType) => {
-        try {
-            const params = new URLSearchParams({
-                name: searchName,
-                contact_type: contactType,
-            });
-            
-            const response = await fetch(`/core/contacts/search/?${params.toString()}`);
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error fetching names:', error);
-            return [];
-        }
-    };
-
-    useEffect(() => {
-        if (searchName && current.contact_type) {
-            searchNames(searchName, current.contact_type)
-                .then((results) => setSearchResults(results));
-        } else {
-            setSearchResults([]);
-        }
-    }, [searchName, current.contact_type]);
-
-    console.log(searchResults);
 
     return (
         <>
@@ -71,13 +41,14 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
 
             <div className="member-detail">
                 <label>Name *</label>
-                <input
-                    type="text"
-                    name="name"
+                <AutoCompleteInput
                     value={current.name || ''}
+                    contactType={current.contact_type}
                     onChange={handleChange('name')}
-                    placeholder="Required"
-                    autoComplete="off"
+                    onSelect={(result) => {
+                        handleChange('name')({ target: { value: result.name } });
+                        handleChange('phone')({ target: { value: result.phone } });
+                    }}
                     disabled={disableFields}
                 />
             </div>
