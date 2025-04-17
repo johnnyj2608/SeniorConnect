@@ -12,6 +12,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     value={data.sadc_member_id || ''}
                     onChange={handleChange('sadc_member_id')}
                     placeholder="Required"
+                    autoComplete="off"
                 />
             </div>
 
@@ -22,6 +23,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     value={data.last_name || ''}
                     onChange={handleChange('last_name')}
                     placeholder="Required"
+                    autoComplete="off"
                 />
             </div>
 
@@ -32,6 +34,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     value={data.first_name || ''}
                     onChange={handleChange('first_name')}
                     placeholder="Required"
+                    autoComplete="off"
                 />
             </div>
 
@@ -50,6 +53,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="number"
                     value={data.phone || ''}
                     onChange={handleChange('phone')}
+                    autoComplete="off"
                 />
             </div>
 
@@ -59,6 +63,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="text"
                     value={data.address || ''}
                     onChange={handleChange('address')}
+                    autoComplete="off"
                 />
             </div>
 
@@ -68,6 +73,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="text"
                     value={data.email || ''}
                     onChange={handleChange('email')}
+                    autoComplete="off"
                 />
             </div>
 
@@ -77,6 +83,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="text"
                     value={data.medicaid?.toUpperCase() || ''}
                     onChange={handleChange('medicaid')}
+                    autoComplete="off"
                 />
             </div>
             
@@ -86,6 +93,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="text"
                     value={data.ssn || ''}
                     onChange={handleChange('ssn')}
+                    autoComplete="off"
                 />
             </div>
 
@@ -104,6 +112,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
                     type="text"
                     value={data.note || ''}
                     onChange={handleChange('note')}
+                    autoComplete="off"
                 />
             </div>
         </>

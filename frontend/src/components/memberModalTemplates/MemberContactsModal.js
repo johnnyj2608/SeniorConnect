@@ -77,6 +77,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                     value={current.name || ''}
                     onChange={handleChange('name')}
                     placeholder="Required"
+                    autoComplete="off"
                     disabled={disableFields}
                 />
             </div>
@@ -89,6 +90,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                     value={current.phone || ''}
                     onChange={handleChange('phone')}
                     placeholder="Required"
+                    autoComplete="off"
                     disabled={disableFields}
                 />
             </div>

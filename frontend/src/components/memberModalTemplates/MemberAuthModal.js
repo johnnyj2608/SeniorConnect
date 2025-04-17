@@ -53,6 +53,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={current.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
                     placeholder="Required"
+                    autoComplete="off"
                     disabled={disabled}
                 />
             </div>
@@ -76,6 +77,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     value={current.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
                     placeholder="Required"
+                    autoComplete="off"
                     disabled={disabled}
                 />
             </div>
@@ -135,6 +137,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="sdc_code"
                     value={current.sdc_code || ''}
                     onChange={handleChange('sdc_code')}
+                    autoComplete="off"
                     disabled={disabled}
                 />
             </div>
@@ -145,6 +148,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     name="trans_code"
                     value={current.trans_code || ''}
                     onChange={handleChange('trans_code')}
+                    autoComplete="off"
                     disabled={disabled}
                 />
             </div>
