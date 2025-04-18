@@ -56,7 +56,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>Phone *</label>
                 <input
-                    type="text"
+                    type="tel"
                     name="phone"
                     value={current.phone || ''}
                     onChange={handleChange('phone')}

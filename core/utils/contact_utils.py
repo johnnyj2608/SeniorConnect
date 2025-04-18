@@ -19,12 +19,12 @@ def createContact(request):
     member = Member.objects.get(id=data['member_id'])
 
     contact = Contact.objects.create(
-        member_id=member,
         contact_type=data['contact_type'],
         name=data['name'],
         phone=data['phone'],
         relationship_type=data.get('relationship_type', None), 
     )
+    contact.members.add(member)
     serializer = ContactSerializer(contact)
     return Response(serializer.data)
 
@@ -45,7 +45,7 @@ def deleteContact(request, pk):
     return Response('Contact was deleted')
 
 def getContactListByMember(request, member_pk):
-    contacts = Contact.objects.filter(member_id=member_pk)
+    contacts = Contact.objects.filter(members__id=member_pk)
     serializer = ContactSerializer(contacts, many=True)
     return Response(serializer.data)
 

@@ -23,7 +23,7 @@ class Contact(models.Model):
         ('other', 'Other'),
     ]
 
-    member_id = models.ForeignKey('Member', on_delete=models.CASCADE)
+    members = models.ManyToManyField('Member', related_name='contacts')
     contact_type = models.CharField(max_length=20, choices=CONTACT_TYPE_CHOICES)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
@@ -34,6 +34,8 @@ class Contact(models.Model):
         blank=True,
         help_text="Only used if this if contact type is emergency"
     )
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False)
 
     def clean(self):
         if self.contact_type == 'emergency' and not self.relationship_type:

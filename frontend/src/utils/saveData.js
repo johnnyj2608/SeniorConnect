@@ -10,6 +10,8 @@ const sendRequest = async (id, url, method, data) => {
             formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {
             formData.append(key, '');
+        } else if (key === 'members') {
+            data[key].forEach(value => formData.append(key, value));
         } else {
             formData.append(key, data[key]);
         }
