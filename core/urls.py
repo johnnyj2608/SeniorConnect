@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('contacts/search/', contact_views.searchContacts, name="contact_search"),
     path('contacts/member/<str:pk>/', contact_views.getContactsByMember, name="contact_by_member"),
+    path('contacts/<str:pk>/delete/<str:member_id>/', contact_views.deleteMemberFromContact, name="delete_member_from_contact"),
     path('contacts/<str:pk>/', contact_views.getContact, name="contact"),
     path('contacts/', contact_views.getContacts, name="contacts"),
 ]

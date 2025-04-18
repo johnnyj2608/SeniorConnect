@@ -50,7 +50,7 @@ const checkMissingFields = (data, requiredFields, dependentFields = []) => {
     }, new Set());
 };
 
-const saveDataTabs = async (data, endpoint) => {
+const saveDataTabs = async (data, endpoint, id=null) => {
     const dataArray = Object.values(data);
 
     const updatedData = dataArray.filter(data => data.edited && !data.deleted);
@@ -69,8 +69,15 @@ const saveDataTabs = async (data, endpoint) => {
     
             return data;
         }),
-        ...deletedData.map(data => fetch(`/core/${endpoint}/${data.id}/`, { method: 'DELETE' })),
-    ])).filter(item => !(item instanceof Response));
+        ...deletedData.map(async (data) => {
+            if (id === null) {
+                await fetch(`/core/${endpoint}/${data.id}/`, { method: 'DELETE' });
+            } else {
+                await fetch(`/core/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
+            }
+            return data;
+        })
+    ]));
 
     const savedData = dataArray
         .filter(data => !data.deleted && data.id !== 'new')

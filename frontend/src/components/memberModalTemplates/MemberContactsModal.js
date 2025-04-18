@@ -15,7 +15,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <Dropdown 
-                    display={contact_types[current.contact_type] || 0} 
+                    display={disabled ? '' : contact_types[current.contact_type]} 
                     onChange={(e) => {
                         handleChange('contact_type')(e);
                         handleChange('relationship_type')({ target: { value: '' } });
@@ -31,7 +31,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                 <div className="member-detail">
                     <label>Relationship *</label>
                     <Dropdown 
-                        display={relationship_types[current.relationship_type] || ''}
+                        display={disableFields ? '' : relationship_types[current.relationship_type]}
                         onChange={handleChange('relationship_type')}
                         options={relationship_types}
                         disabled={disableFields}
@@ -42,8 +42,8 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             <div className="member-detail">
                 <label>Name *</label>
                 <AutoCompleteInput
-                    value={current.name || ''}
-                    contactType={current.contact_type}
+                    value={disableFields ? '' : current.name}
+                    contactType={disableFields ? '' : current.contact_type}
                     memberId={memberID}
                     onChange={handleChange('name')}
                     onSelect={(result) => {
@@ -57,9 +57,9 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             <div className="member-detail">
                 <label>Phone *</label>
                 <input
-                    type="tel"
+                    type="text"
                     name="phone"
-                    value={current.phone || ''}
+                    value={disableFields ? '' : current.phone}
                     onChange={handleChange('phone')}
                     placeholder="Required"
                     autoComplete="off"

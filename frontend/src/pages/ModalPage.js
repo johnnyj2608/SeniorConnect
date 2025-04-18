@@ -229,7 +229,7 @@ const MemberModal = ({ data, onClose }) => {
                     return;
                 }
 
-                savedData = await saveDataTabs(updatedData, 'contacts');
+                savedData = await saveDataTabs(updatedData, 'contacts', id);
                 break;
 
             default:

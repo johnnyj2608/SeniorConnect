@@ -39,9 +39,18 @@ def updateContact(request, pk):
         print(serializer.errors)
     return Response(serializer.data)
 
-def deleteContact(request, pk):
+def deleteContact(request, pk, member_id):
     contact = Contact.objects.get(id=pk)
-    contact.delete()
+    members = contact.members.all()
+
+    deletedMember = members.filter(id=member_id).first()
+
+    if deletedMember:
+        contact.members.remove(deletedMember)
+
+    if len(contact.members.all()) == 0:
+        contact.delete()
+
     return Response('Contact was deleted')
 
 def getContactListByMember(request, member_pk):
