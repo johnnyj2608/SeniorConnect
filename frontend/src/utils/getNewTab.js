@@ -23,7 +23,7 @@ const getNewTab = (type, localData, id) => {
         case 'contacts': {
             return {
                 id: 'new',
-                member_id: id,
+                members: [id],
                 contact_type: '',
                 name: '',
                 phone: '',

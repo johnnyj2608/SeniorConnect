@@ -47,6 +47,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                     memberId={memberID}
                     onChange={handleChange('name')}
                     onSelect={(result) => {
+                        handleChange('members')({ target: { value: [...result.members, memberID] } });
                         handleChange('name')({ target: { value: result.name } });
                         handleChange('phone')({ target: { value: result.phone } });
                     }}
