@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import { formatPhone } from '../utils/formatUtils';
 
-const AutoCompleteInput = ({ value, onChange, contactType, onSelect, disabled }) => {
+const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [selectedSuggestion, setSelectedSuggestion] = useState(true);
     const debouncedValue = useDebounce(value, 500);
@@ -12,6 +12,7 @@ const AutoCompleteInput = ({ value, onChange, contactType, onSelect, disabled })
             const params = new URLSearchParams({
                 name: searchName,
                 contact_type: contactType,
+                member_id: memberId,
             });
             const response = await fetch(`/core/contacts/search/?${params.toString()}`);
             return await response.json();

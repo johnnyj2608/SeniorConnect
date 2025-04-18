@@ -3,7 +3,7 @@ import Dropdown from '../Dropdown';
 import { contact_types, relationship_types } from '../../utils/mapUtils';
 import AutoCompleteInput from '../AutoCompleteInput';
 
-const MemberContactsModal = ({ data, handleChange, activeTab }) => {
+const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
     const current = data[activeTab] || {};
  
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
@@ -44,6 +44,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab }) => {
                 <AutoCompleteInput
                     value={current.name || ''}
                     contactType={current.contact_type}
+                    memberId={memberID}
                     onChange={handleChange('name')}
                     onSelect={(result) => {
                         handleChange('name')({ target: { value: result.name } });

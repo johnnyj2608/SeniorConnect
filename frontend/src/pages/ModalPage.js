@@ -36,15 +36,30 @@ const MemberModal = ({ data, onClose }) => {
     const getModalContent = () => {
         switch (type) {
             case 'basic':
-                return <MemberBasicModal data={localData} handleChange={handleChange} />;
+                return <MemberBasicModal 
+                    data={localData} 
+                    handleChange={handleChange} />;
             case 'authorization':
-                return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberAuthModal 
+                    data={localData} 
+                    handleChange={handleChange} 
+                    activeTab={activeTab} />;
             case 'contacts':
-                return <MemberContactsModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberContactsModal 
+                    data={localData} 
+                    handleChange={handleChange} 
+                    activeTab={activeTab}
+                    memberID={id} />;
             case 'absences':
-                return <MemberAbsencesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberAbsencesModal 
+                    data={localData} 
+                    handleChange={handleChange} 
+                    activeTab={activeTab} />;
             case 'files':
-                return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberFilesModal 
+                    data={localData} 
+                    handleChange={handleChange} 
+                    activeTab={activeTab} />;
             default:
                 return null;
         }
