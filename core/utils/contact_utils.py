@@ -17,14 +17,24 @@ def createContact(request):
     data = request.data
 
     member = Member.objects.get(id=data['member_id'])
-
-    contact = Contact.objects.create(
-        contact_type=data['contact_type'],
+    existingContact = Contact.objects.filter(
         name=data['name'],
         phone=data['phone'],
-        relationship_type=data.get('relationship_type', None), 
-    )
-    contact.members.add(member)
+        contact_type=data['contact_type'],
+    ).first()
+    
+    if existingContact:
+        existingContact.members.add(member)
+        contact = existingContact
+    else:
+        contact = Contact.objects.create(
+            contact_type=data['contact_type'],
+            name=data['name'],
+            phone=data['phone'],
+            relationship_type=data.get('relationship_type', None),
+        )
+        contact.members.add(member)
+
     serializer = ContactSerializer(contact)
     return Response(serializer.data)
 
