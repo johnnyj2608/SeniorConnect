@@ -7,28 +7,28 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
     const [selectedSuggestion, setSelectedSuggestion] = useState(true);
     const debouncedValue = useDebounce(value, 500);
 
-    const fetchSuggestions = async (searchName, contactType) => {
-        try {
-            const params = new URLSearchParams({
-                name: searchName,
-                contact_type: contactType,
-                member_id: memberId,
-            });
-            const response = await fetch(`/core/contacts/search/?${params.toString()}`);
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching names:', error);
-            return [];
-        }
-    };
-
     useEffect(() => {
+        const fetchSuggestions = async (searchName, contactType) => {
+            try {
+                const params = new URLSearchParams({
+                    name: searchName,
+                    contact_type: contactType,
+                    member_id: memberId,
+                });
+                const response = await fetch(`/core/contacts/search/?${params.toString()}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching names:', error);
+                return [];
+            }
+        };
+
         if (debouncedValue && contactType && !selectedSuggestion) {
             fetchSuggestions(debouncedValue, contactType).then(setSearchResults);
         } else {
             setSearchResults([]);
         }
-    }, [debouncedValue, contactType, selectedSuggestion]);
+    }, [debouncedValue, contactType, selectedSuggestion, memberId]);
 
     return (
         <div className="search-dropdown-container">

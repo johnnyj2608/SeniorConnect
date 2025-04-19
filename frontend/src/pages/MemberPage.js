@@ -89,8 +89,8 @@ const MemberPage = () => {
           onEdit={handleModalOpen}
         />
         <MemberAbsencesCard 
-          absences={{}}
-          onEdit={() => handleModalOpen('absences')}
+          id={id}
+          onEdit={handleModalOpen}
         />
       </div>
       <div className="member-row">

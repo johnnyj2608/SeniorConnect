@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
-from ..utils.authorization_utils import getActiveAuthorizationByMember
+from ..utils.authorization_utils import getAuthorizationListByMember
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,7 +44,9 @@ class MemberListSerializer(serializers.ModelSerializer):
             self._active_auth_cache = {}
         
         if obj.id not in self._active_auth_cache:
-            self._active_auth_cache[obj.id] = getActiveAuthorizationByMember(obj.id)
+            authList = getAuthorizationListByMember(obj.id)
+            activeAuth = next((auth for auth in authList if auth.get("active")), None)
+            self._active_auth_cache[obj.id] = activeAuth
         
         return self._active_auth_cache[obj.id]
 

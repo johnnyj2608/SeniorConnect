@@ -19,7 +19,15 @@ const relationship_types = {
     other: 'Other',
 };
 
+const absence_types = {
+    vacation: 'Vacation',
+    hospital: 'Hospital',
+    personal: 'Personal',
+    other: 'Other',
+};
+
 export {
     contact_types,
     relationship_types,
+    absence_types,
 };

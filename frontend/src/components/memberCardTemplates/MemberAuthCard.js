@@ -31,7 +31,7 @@ const MemberAuthCard = ({ id, onEdit }) => {
     }, [auths]);
 
     const handleEdit = () => {
-        onEdit('authorization', auths, setAuths);
+        onEdit('authorizations', auths, setAuths);
     };
 
     return (

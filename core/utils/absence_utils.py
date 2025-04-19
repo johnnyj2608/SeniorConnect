@@ -43,3 +43,8 @@ def deleteAbsence(request, pk):
     absence = Absence.objects.get(id=pk)
     absence.delete()
     return Response('Absence was deleted')
+
+def getAbsenceListByMember(request, member_pk):
+    absences = Absence.objects.filter(member=member_pk).order_by('start_date')
+    serializer = AbsenceSerializer(absences, many=True)
+    return Response(serializer.data)

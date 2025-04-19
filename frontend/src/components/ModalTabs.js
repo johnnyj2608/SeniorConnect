@@ -1,6 +1,7 @@
 import React from 'react';
 import { ReactComponent as AddIcon } from '../assets/add.svg'
-import { contact_types } from '../utils/mapUtils';
+import { contact_types, absence_types } from '../utils/mapUtils';
+import { formatDate } from '../utils/formatUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
@@ -9,7 +10,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     
     const getTabLabel = (type, item) => {
         switch (type) {
-            case 'authorization':
+            case 'authorizations':
                 let status = '';
                 const today = new Date();
 
@@ -29,6 +30,11 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return { 
                     heading: item.name || 'Unknown', 
                     subheading: contact_types[item.contact_type],
+                };
+            case 'absences':
+                return { 
+                    heading: absence_types[item.absence_type] || 'Unknown', 
+                    subheading: `${formatDate(item.start_date, true)} - ${formatDate(item.end_date, true)}`
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };

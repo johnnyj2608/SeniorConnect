@@ -1,15 +1,23 @@
-const formatDate = (date) => {
+const formatDate = (date, shortForm = false) => {
   if (!date) {
     return null;
   }
 
   const d = new Date(date);
 
-  return d.toLocaleDateString('en-US', {
+  if (shortForm) {
+    return d.toLocaleDateString('en-US', {
       month: '2-digit',
       day: '2-digit',
-      year: 'numeric',
       timeZone: 'UTC',
+    });
+  }
+
+  return d.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
   });
 };
   

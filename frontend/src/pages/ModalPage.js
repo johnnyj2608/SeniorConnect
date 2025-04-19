@@ -39,7 +39,7 @@ const MemberModal = ({ data, onClose }) => {
                 return <MemberBasicModal 
                     data={localData} 
                     handleChange={handleChange} />;
-            case 'authorization':
+            case 'authorizations':
                 return <MemberAuthModal 
                     data={localData} 
                     handleChange={handleChange} 
@@ -169,8 +169,9 @@ const MemberModal = ({ data, onClose }) => {
                     photo: photoURL,
                 });
                 break;
-            case 'authorization':
+            case 'authorizations':
             case 'contacts':
+            case 'absences':
                 data.setData(savedData);
                 break;
             default:
@@ -201,7 +202,7 @@ const MemberModal = ({ data, onClose }) => {
                 savedData = await sendRequest(id, memberEndpoint, memberMethod, updatedData);
                 break;
 
-            case 'authorization':
+            case 'authorizations':
                 requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
 
                 missingFields = checkMissingFields(updatedData, requiredFields);

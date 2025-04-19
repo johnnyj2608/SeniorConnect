@@ -5,7 +5,8 @@ from ..utils.absence_utils import (
     getAbsenceDetail,
     deleteAbsence,
     getAbsenceList,
-    createAbsence
+    createAbsence,
+    getAbsenceListByMember,
 )
 
 @api_view(['GET', 'POST'])
@@ -29,3 +30,8 @@ def getAbsence(request, pk):
 
     if request.method == 'DELETE':
         return deleteAbsence(request, pk)
+    
+@api_view(['GET'])
+def getAbsencesByMember(request, pk):
+    if request.method == 'GET':
+        return getAbsenceListByMember(request, pk)

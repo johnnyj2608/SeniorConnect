@@ -25,4 +25,5 @@ urlpatterns = [
     path('contacts/', contact_views.getContacts, name="contacts"),
 
     path('absences/', absence_views.getAbsences, name="absences"),
+    path('absences/member/<str:pk>/', absence_views.getAbsencesByMember, name="absence_by_member"),
 ]
