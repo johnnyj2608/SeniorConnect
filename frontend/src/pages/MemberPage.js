@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
-import { ReactComponent as Arrowleft } from '../assets/arrow-left.svg'
 import MemberDetailsCard from '../components/memberCardTemplates/MemberDetailsCard';
 import MemberAuthCard from '../components/memberCardTemplates/MemberAuthCard';
 import MemberContactsCard from '../components/memberCardTemplates/MemberContactsCard';
@@ -25,10 +24,6 @@ const MemberPage = () => {
     }
   }, [id])
 
-  const handleBack = () => {
-    navigate('/members')
-  };
-
   const handleDelete = async () => {
     const isConfirmed = window.confirm('Are you sure you want to delete this member?');
     if (isConfirmed) {
@@ -40,7 +35,7 @@ const MemberPage = () => {
       });
 
       if (response.ok) {
-        handleBack();
+        navigate('/members');
       }
     }
   };
@@ -67,11 +62,6 @@ const MemberPage = () => {
 
   return (
     <div className="member">
-      <div className="member-header">
-        <h3>
-          <Arrowleft onClick={handleBack} />
-        </h3>
-      </div>
       <div className="member-row">
         <MemberPhotoCard photo={photo} /> 
       </div>
