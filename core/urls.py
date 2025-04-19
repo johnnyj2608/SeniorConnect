@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import member_views, mltc_views, authorization_views, language_views, contact_views
+from .views import (
+    member_views,
+    mltc_views,
+    authorization_views,
+    language_views,
+    contact_views,
+    absence_views,
+)
 
 urlpatterns = [
     path('members/', member_views.getMembers, name="members"),
@@ -16,4 +23,6 @@ urlpatterns = [
     path('contacts/<str:pk>/delete/<str:member_id>/', contact_views.deleteMemberFromContact, name="delete_member_from_contact"),
     path('contacts/<str:pk>/', contact_views.getContact, name="contact"),
     path('contacts/', contact_views.getContacts, name="contacts"),
+
+    path('absences/', absence_views.getAbsences, name="absences"),
 ]

@@ -61,7 +61,7 @@ const saveDataTabs = async (data, endpoint, id=null) => {
         ...updatedData.map(async (data) => {
             const dataEndpoint = `/core/${endpoint}/${data.id === 'new' ? '' : data.id + '/'}`;
             const dataMethod = data.id === 'new' ? 'POST' : 'PUT';
-            const response = await sendRequest(data.member_id, dataEndpoint, dataMethod, data);
+            const response = await sendRequest(data.member, dataEndpoint, dataMethod, data);
     
             if (data.id === 'new' && response.id) {
                 data.id = response.id;

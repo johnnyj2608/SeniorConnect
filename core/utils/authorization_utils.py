@@ -18,7 +18,7 @@ def getAuthorizationDetail(request, pk):
 def createAuthorization(request):
     data = request.data
     try:
-        member = Member.objects.get(id=data['member_id'])
+        member = Member.objects.get(id=data['member'])
         mltc = MLTC.objects.get(name=data['mltc'])
         
         schedule = data.get('schedule', '').split(',')
@@ -29,7 +29,7 @@ def createAuthorization(request):
                 mltc_member_id=data['mltc_member_id'],
                 mltc_id=mltc.id,
                 mltc_auth_id=data['mltc_auth_id'],
-                member_id=member,
+                member=member,
                 schedule=schedule,
                 start_date=data['start_date'],
                 end_date=data['end_date'],
@@ -58,7 +58,7 @@ def updateAuthorization(request, pk):
     serializer = AuthorizationSerializer(instance=authorization, data=data)
     if serializer.is_valid():
         if data['active'].lower() == 'true':
-            member = Member.objects.get(id=data['member_id'])
+            member = Member.objects.get(id=data['member'])
             mltc = MLTC.objects.get(name=data['mltc'])
             member.mltc_id = mltc
             member.save()
@@ -74,10 +74,10 @@ def deleteAuthorization(request, pk):
     return Response('Authorization was deleted')
 
 def getAuthorizationListByMember(request, member_pk):
-    authorizations = Authorization.objects.filter(member_id=member_pk).order_by('-start_date')
+    authorizations = Authorization.objects.filter(member=member_pk).order_by('-start_date')
     authorizations = authorizations.order_by('-id')
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
 
 def getActiveAuthorizationByMember(member_pk):
-    return Authorization.objects.filter(member_id=member_pk, active=True).order_by('start_date').first()
+    return Authorization.objects.filter(member=member_pk, active=True).order_by('start_date').first()

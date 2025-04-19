@@ -12,7 +12,7 @@ class Authorization(models.Model):
     mltc_auth_id = models.CharField(max_length=255, null=False, blank=False)
     mltc_member_id = models.CharField(max_length=255, null=False, blank=False)
     mltc = models.ForeignKey('MLTC', null=True, blank=False, on_delete=models.SET_NULL)
-    member_id = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
+    member = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
     schedule = models.JSONField(default=list)
     dx_code = models.CharField(max_length=255, choices=[], null=True, blank=True)
     sdc_code = models.CharField(max_length=255, null=True, blank=True)

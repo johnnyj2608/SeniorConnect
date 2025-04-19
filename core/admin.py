@@ -7,6 +7,7 @@ from .models.address_model import Address, City, State, ZipCode
 from .models.contact_model import Contact
 from .models.authorization_model import Authorization, MLTC
 from .models.sadc_model import SADC
+from .models.absence_model import Absence
 
 admin.site.register(Member)
 admin.site.register(Language)
@@ -18,3 +19,4 @@ admin.site.register(MLTC)
 admin.site.register(Contact)
 admin.site.register(Authorization)
 admin.site.register(SADC)
+admin.site.register(Absence)

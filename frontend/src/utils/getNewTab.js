@@ -6,7 +6,7 @@ const getNewTab = (type, localData, id) => {
             const activeAuthIndex = getActiveAuthIndex(localData);
             return {
                 id: 'new',
-                member_id: id,
+                member: id,
                 mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || "",
                 mltc: localData[activeAuthIndex]?.mltc || "",
                 mltc_auth_id: "",
