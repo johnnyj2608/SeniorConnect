@@ -16,7 +16,7 @@ def getContactDetail(request, pk):
 def createContact(request):
     data = request.data
 
-    member = Member.objects.get(id=data['members'][0])
+    member = Member.objects.get(id=data.getlist('members')[-1])
     existingContact = Contact.objects.filter(
         name=data['name'],
         phone=data['phone'],
