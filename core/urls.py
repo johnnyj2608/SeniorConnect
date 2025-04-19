@@ -24,6 +24,8 @@ urlpatterns = [
     path('contacts/<str:pk>/', contact_views.getContact, name="contact"),
     path('contacts/', contact_views.getContacts, name="contacts"),
 
-    path('absences/', absence_views.getAbsences, name="absences"),
+    
     path('absences/member/<str:pk>/', absence_views.getAbsencesByMember, name="absence_by_member"),
+    path('absences/<str:pk>/', absence_views.getAbsence, name="absence"),
+    path('absences/', absence_views.getAbsences, name="absences"),
 ]

@@ -233,6 +233,18 @@ const MemberModal = ({ data, onClose }) => {
                 savedData = await saveDataTabs(updatedData, 'contacts', id);
                 break;
 
+            case 'absences':
+                requiredFields = ['absence_type', 'start_date'];
+
+                missingFields = checkMissingFields(updatedData, requiredFields);
+                if (missingFields.size > 0) {
+                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+                    return;
+                }
+
+                savedData = await saveDataTabs(updatedData, 'absences');
+                break;
+
             default:
                 console.error("Unknown save type:", type);
         }

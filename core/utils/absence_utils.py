@@ -23,7 +23,7 @@ def createAbsence(request):
         absence_type=data.get('absence_type', ''),
         start_date=data.get('start_date'),
         end_date=data.get('end_date'),
-        notes=data.get('notes', '')
+        note=data.get('note', '')
     )
     serializer = AbsenceSerializer(absence)
     return Response(serializer.data)

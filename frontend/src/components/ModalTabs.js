@@ -34,7 +34,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'absences':
                 return { 
                     heading: absence_types[item.absence_type] || 'Unknown', 
-                    subheading: `${formatDate(item.start_date, true)} - ${formatDate(item.end_date, true)}`
+                    subheading: `${formatDate(item.start_date, true) || ''} - ${formatDate(item.end_date, true) || ''}`
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };
