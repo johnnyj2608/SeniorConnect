@@ -2,7 +2,7 @@ import getActiveAuthIndex from '../utils/getActiveAuthIndex';
 
 const getNewTab = (type, localData, id) => {
     switch (type) {
-        case 'authorization': {
+        case 'authorizations': {
             const activeAuthIndex = getActiveAuthIndex(localData);
             return {
                 id: 'new',

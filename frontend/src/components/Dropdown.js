@@ -1,10 +1,74 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { formatSchedule, sortSchedule } from '../utils/formatUtils';
+import { ReactComponent as Pencil } from '../assets/pencil.svg';
 
-const Dropdown = ({ display, onChange, options = [], disabled, multiSelect = false }) => {
+const DropdownHeader = ({ 
+    selectedValues, 
+    setOpen, 
+    open, 
+    multiSelect }) => {
+        
+    return (
+        <div className="dropdown-header" onClick={() => setOpen(!open)}>
+            {selectedValues
+                ? (multiSelect
+                    ? formatSchedule(selectedValues, true)
+                    : selectedValues
+                )
+                : "Select Option"
+            }
+            <span className={`dropdown-icon ${open ? "open" : ""}`}>
+                <DropdownIcon />
+            </span>
+        </div>
+    );
+};
+
+const DropdownList = ({
+    formattedOptions,
+    multiSelect,
+    selectedValues,
+    handleSelect }) => {
+
+    return (
+        <ul className="dropdown-list">
+            {!multiSelect && (
+                <li key="select-option" onClick={() => handleSelect("")}>
+                    <span>Select Option</span>
+                </li>
+            )}
+            {formattedOptions.map((option) => (
+                <li key={option.value} onClick={() => handleSelect(option)}>
+                    {multiSelect ? (
+                        <div className="dropdown-multi">
+                            <input
+                                type="checkbox"
+                                checked={selectedValues.includes(option.value)}
+                                onChange={() => handleSelect(option)}
+                            />
+                            <span>{option.name}</span>
+                        </div>
+                    ) : (
+                        <span>{option.name}</span>
+                    )}
+                </li>
+            ))}
+        </ul>
+    );
+};
+
+const Dropdown = ({
+    display,
+    onChange,
+    options = [],
+    disabled,
+    multiSelect = false,
+    addOption = false,
+}) => {
     const [open, setOpen] = useState(false);
     const [selectedValues, setSelectedValues] = useState(display);
+    const [addMode, setAddMode] = useState(false);
     const dropdownRef = useRef(null);
 
     const isDisabled = disabled || options.length === 0;
@@ -65,43 +129,39 @@ const Dropdown = ({ display, onChange, options = [], disabled, multiSelect = fal
     }, [display]);
 
     return (
-        <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
-            <div className="dropdown-header" onClick={() => setOpen(!open)}>
-                {selectedValues
-                    ? (multiSelect
-                        ? formatSchedule(selectedValues, true)
-                        : selectedValues
-                    ) :
-                    "Select Option"
-                }
-                <span className={`dropdown-icon ${open ? "open" : ""}`}><DropdownIcon /></span>
+        <>
+            <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
+                <DropdownHeader
+                    selectedValues={selectedValues}
+                    setOpen={setOpen}
+                    open={open}
+                    multiSelect={multiSelect}
+                />
+                {open && (
+                    <DropdownList
+                        formattedOptions={formattedOptions}
+                        multiSelect={multiSelect}
+                        selectedValues={selectedValues}
+                        handleSelect={handleSelect}
+                    />
+                )}
             </div>
-            {open && (
-                <ul className="dropdown-list">
-                    {!multiSelect && (
-                        <li key="select-option" onClick={() => handleSelect("")}>
-                            <span>Select Option</span>
-                        </li>
-                    )}
-                    {formattedOptions.map((option) => (
-                        <li key={option.value} onClick={() => handleSelect(option)}>
-                            {multiSelect ? (
-                                <div className="dropdown-multi">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedValues.includes(option.value)}
-                                        onChange={() => handleSelect(option.value)}
-                                    />
-                                    <span>{option.name}</span>
-                                </div>
-                                ) : (
-                                <span>{option.name}</span>
-                                )}
-                        </li>
-                    ))}
-                </ul>
+            {addOption && (
+                <button
+                    type="button"
+                    className="dropdown-toggle-mode"
+                    // onClick={() => setAddMode(!addMode)}
+                    onClick={() => {
+                        setAddMode(!addMode);
+                        console.log("Add Mode Toggled:", !addMode);
+                    }}
+                    disabled={disabled}
+                >
+                    <Pencil />
+                </button>
             )}
-        </div>
+        </>
+        
     );
 };
 
