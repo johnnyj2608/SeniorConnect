@@ -238,6 +238,10 @@ input {
   padding: 8px;
 }
 
+.dropdown-label {
+  width: 100%;
+}
+
 .dropdown-icon {
   transition: transform 0.2s ease-in-out;
   display: flex;
@@ -301,7 +305,7 @@ input {
   line-height: 1;
   cursor: pointer;
   border: none;
-  margin-left: 1px;
+  margin-right: 2px;
 }
 
 .dropdown-toggle-mode > * {

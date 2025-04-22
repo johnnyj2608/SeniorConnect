@@ -11,13 +11,15 @@ const DropdownHeader = ({
         
     return (
         <div className="dropdown-header" onClick={() => setOpen(!open)}>
-            {selectedValues
-                ? (multiSelect
-                    ? formatSchedule(selectedValues, true)
-                    : selectedValues
-                )
-                : "Select Option"
-            }
+            <div className="dropdown-label">
+                {selectedValues
+                    ? (multiSelect
+                        ? formatSchedule(selectedValues, true)
+                        : selectedValues
+                    )
+                    : "Select Option"
+                }
+            </div>
             <span className={`dropdown-icon ${open ? "open" : ""}`}>
                 <DropdownIcon />
             </span>
@@ -130,6 +132,20 @@ const Dropdown = ({
 
     return (
         <>
+            {addOption && (
+                <button
+                    type="button"
+                    className="dropdown-toggle-mode"
+                    // onClick={() => setAddMode(!addMode)}
+                    onClick={() => {
+                        setAddMode(!addMode);
+                        console.log("Add Mode Toggled:", !addMode);
+                    }}
+                    disabled={disabled}
+                >
+                    <Pencil />
+                </button>
+            )}
             <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
                 <DropdownHeader
                     selectedValues={selectedValues}
@@ -146,20 +162,6 @@ const Dropdown = ({
                     />
                 )}
             </div>
-            {addOption && (
-                <button
-                    type="button"
-                    className="dropdown-toggle-mode"
-                    // onClick={() => setAddMode(!addMode)}
-                    onClick={() => {
-                        setAddMode(!addMode);
-                        console.log("Add Mode Toggled:", !addMode);
-                    }}
-                    disabled={disabled}
-                >
-                    <Pencil />
-                </button>
-            )}
         </>
         
     );
