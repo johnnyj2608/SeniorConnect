@@ -6,7 +6,7 @@ from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 
 def getAuthorizationList(request):
-    authorizations = Authorization.objects.all().order_by('mltc', 'sadc_member_id')
+    authorizations = Authorization.objects.all()
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
 
@@ -74,6 +74,6 @@ def deleteAuthorization(request, pk):
     return Response('Authorization was deleted')
 
 def getAuthorizationListByMember(request, member_pk):
-    authorizations = Authorization.objects.filter(member=member_pk).order_by('-start_date', '-id')
+    authorizations = Authorization.objects.filter(member=member_pk)
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)

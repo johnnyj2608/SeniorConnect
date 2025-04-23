@@ -5,7 +5,7 @@ def member_photo_path(instance, filename):
     """Generate file path for new member photo, overwriting existing one."""
     ext = filename.split('.')[-1]
     filename = f"{instance.id}.{ext}"
-    return os.path.join('profile_pics/', filename)
+    return os.path.join(f"{instance.id}/", filename)
 
 class Language(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)
@@ -41,6 +41,7 @@ class Member(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['sadc_member_id', 'mltc_id'], name='unique_member')
         ]
+        ordering = ['mltc_id', 'sadc_member_id']
 
     def __str__(self):
         return f"{self.id} | {self.sadc_member_id}. {self.first_name} {self.last_name}"

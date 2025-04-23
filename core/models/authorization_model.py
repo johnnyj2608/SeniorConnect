@@ -22,5 +22,8 @@ class Authorization(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
 
+    class Meta:
+        ordering = ['-start_date']
+
     def __str__(self):
         return f"{self.mltc}: {self.mltc_auth_id}"

@@ -5,7 +5,7 @@ import os
 from django.conf import settings
 
 def getMemberList(request):
-    members = Member.objects.all().order_by('mltc_id', 'sadc_member_id')
+    members = Member.objects.all()
     serializer = MemberListSerializer(members, many=True)
     return Response(serializer.data)
 

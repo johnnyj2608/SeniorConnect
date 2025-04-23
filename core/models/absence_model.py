@@ -17,5 +17,8 @@ class Absence(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-start_date']
+
     def __str__(self):
         return f"{self.member} | {self.absence_type} {self.start_date} to {self.end_date}"

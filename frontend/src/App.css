@@ -457,7 +457,6 @@ input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 .image-upload {
@@ -479,7 +478,7 @@ input {
   width: 400px;
   height: 350px;
   border-radius: 8px;
-  margin-bottom: 5px;
+  margin: 20px;
 }
 
 .preview-photo {

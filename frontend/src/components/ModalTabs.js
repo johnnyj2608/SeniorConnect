@@ -13,9 +13,17 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
 
         switch (type) {
             case 'authorizations':
+                if (item.active === true) {
+                    status = 'Active';
+                } else if (item.start_date && new Date(item.start_date) > today) {
+                    status = 'Future';
+                } else {
+                    status = 'Expired';
+                }
+
                 return { 
                     heading: item.mltc || 'Unknown', 
-                    subheading: item.status,
+                    subheading: status,
                 };
             case 'contacts':
                 return { 
