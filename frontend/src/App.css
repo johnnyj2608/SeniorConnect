@@ -422,7 +422,8 @@ input {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 10px 20px;
+  padding: 0 20px;
+  margin-bottom: 10px;
 }
 
 .member-half-card, .member-full-card {
@@ -478,7 +479,7 @@ input {
   width: 400px;
   height: 350px;
   border-radius: 8px;
-  margin: 10px;
+  margin-top: 20px;
 }
 
 .preview-photo {

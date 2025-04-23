@@ -82,8 +82,6 @@ const MemberPage = () => {
           id={id}
           onEdit={handleModalOpen}
         />
-      </div>
-      <div className="member-row">
         <MemberFilesCard 
           files={{}}
           onEdit={() => handleModalOpen('files')}
