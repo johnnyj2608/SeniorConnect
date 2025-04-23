@@ -211,6 +211,15 @@ const MemberModal = ({ data, onClose }) => {
                     return;
                 }
 
+                const invalidAuthDates = Array.isArray(updatedData)
+                    ? updatedData.some(item => !item.deleted && new Date(item.end_date) < new Date(item.start_date))
+                    : false;
+
+                if (invalidAuthDates) {
+                    alert('End date cannot be before start date.');
+                    return;
+                }
+
                 savedData = await saveDataTabs(updatedData, 'auths');
                 break;
 
@@ -239,6 +248,15 @@ const MemberModal = ({ data, onClose }) => {
                 missingFields = checkMissingFields(updatedData, requiredFields);
                 if (missingFields.size > 0) {
                     alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+                    return;
+                }
+
+                const invalidAbsenceDates = Array.isArray(updatedData)
+                    ? updatedData.some(item => !item.deleted && item.end_date && new Date(item.end_date) < new Date(item.start_date))
+                    : false;
+
+                if (invalidAbsenceDates) {
+                    alert('End date cannot be before start date.');
                     return;
                 }
 

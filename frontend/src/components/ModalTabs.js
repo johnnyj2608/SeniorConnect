@@ -34,14 +34,16 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 const start = item.start_date ? new Date(item.start_date) : null;
                 const end = item.end_date ? new Date(item.end_date) : null;
 
-                if (start > today) {
+                if (start === null) {
+                    status = '';
+                } else if (start > today) {
                     status = 'Upcoming';
                 } else if (end && end < today) {
                     status = 'Expired';
-                } else if (start <= today && end && end >= today) {
+                } else if (start <= today && (end === null || end >= today)) {
                     status = 'Ongoing';
                 } else {
-                    status = ''
+                    status = '';
                 }
 
                 return { 

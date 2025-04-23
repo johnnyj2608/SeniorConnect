@@ -24,7 +24,10 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
     };
 
     const today = new Date();
-    const activeAbsences = absences.filter(abs => new Date(abs.end_date) >= today);
+    const activeAbsences = absences.filter(abs => {
+        const endDate = abs.end_date ? new Date(abs.end_date) : null;
+        return !endDate || endDate <= today;
+    });
 
     return (
         <div className="member-half-card">

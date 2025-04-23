@@ -15,17 +15,12 @@ def getAbsenceDetail(request, pk):
 
 def createAbsence(request):
     data = request.data
+    serializer = AbsenceSerializer(data=data)
 
-    member = Member.objects.get(id=data['member'])
-
-    absence = Absence.objects.create(
-        member=member,
-        absence_type=data.get('absence_type', ''),
-        start_date=data.get('start_date'),
-        end_date=data.get('end_date'),
-        note=data.get('note', '')
-    )
-    serializer = AbsenceSerializer(absence)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        print(serializer.errors)
     return Response(serializer.data)
 
 def updateAbsence(request, pk):

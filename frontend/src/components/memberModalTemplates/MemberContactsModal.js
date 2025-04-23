@@ -60,7 +60,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                 <input
                     type="text"
                     name="phone"
-                    value={disableFields ? '' : current.phone}
+                    value={disableFields ? '' : current.phone || ''}
                     onChange={handleChange('phone')}
                     placeholder="Required"
                     autoComplete="off"

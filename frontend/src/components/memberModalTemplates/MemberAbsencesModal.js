@@ -25,7 +25,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     name="start_date"
-                    value={disabled ? '' : current.start_date}
+                    value={disabled ? '' : current.start_date || ''}
                     onChange={handleChange('start_date')}
                     disabled={disabled}
                 />
@@ -36,7 +36,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     name="end_date"
-                    value={disabled ? '' : current.end_date}
+                    value={disabled ? '' : current.end_date || ''}
                     onChange={handleChange('end_date')}
                     disabled={disabled}
                 />
@@ -46,7 +46,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 <label>Note</label>
                 <input
                     type="text"
-                    value={disabled ? '' : current.note}
+                    value={disabled ? '' : current.note || ''}
                     onChange={handleChange('note')}
                     autoComplete="off"
                     disabled={disabled}
