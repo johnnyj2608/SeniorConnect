@@ -13,17 +13,9 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
 
         switch (type) {
             case 'authorizations':
-                if (item.active === true) {
-                    status = 'Active';
-                } else if (item.start_date && new Date(item.start_date) > today) {
-                    status = 'Future';
-                } else {
-                    status = 'Expired';
-                }
-
                 return { 
                     heading: item.mltc || 'Unknown', 
-                    subheading: status,
+                    subheading: item.status,
                 };
             case 'contacts':
                 return { 
@@ -31,8 +23,6 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: contact_types[item.contact_type],
                 };
             case 'absences':
-
-
                 const start = item.start_date ? new Date(item.start_date) : null;
                 const end = item.end_date ? new Date(item.end_date) : null;
 
@@ -40,8 +30,10 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     status = 'Upcoming';
                 } else if (end && end < today) {
                     status = 'Expired';
-                } else {
+                } else if (start <= today && end && end >= today) {
                     status = 'Ongoing';
+                } else {
+                    status = ''
                 }
 
                 return { 
