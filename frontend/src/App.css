@@ -747,6 +747,11 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #f1f1f1;
 }
 
+
+/* -------------- *
+ * Absences
+ * -------------- */
+
 .absence-list {
   list-style: none;
   padding: 0;
@@ -757,6 +762,38 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
   border-bottom: 1px solid #ddd;
+}
+
+/* -------------- *
+ * Files
+ * -------------- */
+
+.file-list {
+  display: flex;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: top;
+  text-align: center;
+  width: 100px;
+}
+
+.file-icon {
+  height: 70px;
+  margin-bottom: 5px;
+}
+
+.file-name {
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 100%;
 }
 
 @media (max-width: 835px) {
