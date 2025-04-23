@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { formatSchedule, sortSchedule } from '../utils/formatUtils';
-import { ReactComponent as Pencil } from '../assets/pencil.svg';
 
 const DropdownHeader = ({ 
     selectedValues, 
@@ -66,11 +65,9 @@ const Dropdown = ({
     options = [],
     disabled,
     multiSelect = false,
-    addOption = false,
 }) => {
     const [open, setOpen] = useState(false);
     const [selectedValues, setSelectedValues] = useState(display);
-    const [addMode, setAddMode] = useState(false);
     const dropdownRef = useRef(null);
 
     const isDisabled = disabled || options.length === 0;
@@ -131,39 +128,22 @@ const Dropdown = ({
     }, [display]);
 
     return (
-        <>
-            {addOption && (
-                <button
-                    type="button"
-                    className="dropdown-toggle-mode"
-                    // onClick={() => setAddMode(!addMode)}
-                    onClick={() => {
-                        setAddMode(!addMode);
-                        console.log("Add Mode Toggled:", !addMode);
-                    }}
-                    disabled={disabled}
-                >
-                    <Pencil />
-                </button>
-            )}
-            <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
-                <DropdownHeader
-                    selectedValues={selectedValues}
-                    setOpen={setOpen}
-                    open={open}
+        <div className={`dropdown ${isDisabled ? "disabled" : ""}`} ref={dropdownRef}>
+            <DropdownHeader
+                selectedValues={selectedValues}
+                setOpen={setOpen}
+                open={open}
+                multiSelect={multiSelect}
+            />
+            {open && (
+                <DropdownList
+                    formattedOptions={formattedOptions}
                     multiSelect={multiSelect}
+                    selectedValues={selectedValues}
+                    handleSelect={handleSelect}
                 />
-                {open && (
-                    <DropdownList
-                        formattedOptions={formattedOptions}
-                        multiSelect={multiSelect}
-                        selectedValues={selectedValues}
-                        handleSelect={handleSelect}
-                    />
-                )}
-            </div>
-        </>
-        
+            )}
+        </div>
     );
 };
 

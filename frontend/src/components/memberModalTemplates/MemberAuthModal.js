@@ -67,7 +67,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     }}
                     options={mltcOptions}
                     disabled={disabled}
-                    addOption={true}
                 />
             </div>
             <div className="member-detail">
