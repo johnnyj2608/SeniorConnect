@@ -15,26 +15,19 @@ def getContactDetail(request, pk):
 
 def createContact(request):
     data = request.data
+    member_ids = data.getlist('members')
+    member = Member.objects.get(id=member_ids[-1])
 
-    member = Member.objects.get(id=data.getlist('members')[-1])
-    existingContact = Contact.objects.filter(
+    contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
         contact_type=data['contact_type'],
-    ).first()
-    
-    if existingContact:
-        existingContact.members.add(member)
-        contact = existingContact
-    else:
-        contact = Contact.objects.create(
-            contact_type=data['contact_type'],
-            name=data['name'],
-            phone=data['phone'],
-            relationship_type=data.get('relationship_type', None),
-        )
-        contact.members.add(member)
+        defaults={
+            'relationship_type': data.get('relationship_type', None),
+        }
+    )
 
+    contact.members.add(member)
     serializer = ContactSerializer(contact)
     return Response(serializer.data)
 

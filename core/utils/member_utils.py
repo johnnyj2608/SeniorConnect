@@ -15,32 +15,14 @@ def getMemberDetail(request, pk):
     return Response(serializer.data)
 
 def createMember(request):
-    data = request.data
+    serializer = MemberSerializer(data=request.data)
 
-    print(data)
-    
-    language = Language.objects.filter(name=data.get('language')).first()
-    active = data.get('active', 'true').lower() == 'true'
-    
-    member = Member.objects.create(
-        sadc_member_id=data['sadc_member_id'],
-        photo=data.get('photo', None),
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        birth_date=data['birth_date'],
-        gender=data['gender'],
-        # address=data['address'],
-        phone=data.get('phone', None),
-        email=data.get('email', None),
-        medicaid=data.get('medicaid', None),
-        language=language ,
-        ssn=data.get('ssn', None),
-        enrollment_date=data.get('enrollment_date', None),
-        note=data.get('note', None),
-        active=active,
-    )
-    serializer = MemberSerializer(member)
-    return Response(serializer.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 def updateMember(request, pk):
     data = request.data

@@ -13,12 +13,14 @@ def getLanguageDetail(request, pk):
     return Response(serializer.data)
 
 def createLanguage(request):
-    data = request.data
-    language = Language.objects.create(
-        language=data['language'],
-    )
-    serializer = LanguageSerializer(language)
-    return Response(serializer.data)
+    serializer = LanguageSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 def updateLanguage(request, pk):
     data = request.data

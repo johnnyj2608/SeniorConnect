@@ -13,13 +13,14 @@ def getMLTCDetail(request, pk):
     return Response(serializer.data)
 
 def createMLTC(request):
-    data = request.data
-    mltc = MLTC.objects.create(
-        name=data['name'],
-        phone=data['phone'],
-    )
-    serializer = MLTCSerializer(mltc)
-    return Response(serializer.data)
+    serializer = MLTCSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 def updateMLTC(request, pk):
     data = request.data

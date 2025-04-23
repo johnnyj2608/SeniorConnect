@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
-from ..models.authorization_model import Authorization
+from ..models.authorization_model import Authorization, MLTC
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +13,11 @@ class MemberSerializer(serializers.ModelSerializer):
         slug_field='name', 
         allow_null=True,
         required=False
+    )
+    mltc = serializers.PrimaryKeyRelatedField(
+        queryset=MLTC.objects.all(),
+        required=False,
+        allow_null=True
     )
 
     class Meta:
