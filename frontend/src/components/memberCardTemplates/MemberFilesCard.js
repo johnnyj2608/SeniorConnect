@@ -7,7 +7,7 @@ const MemberFilesCard = ({ id, onEdit }) => {
 
     useEffect(() => {
         const getFileTabsByMember = async () => {
-            const response = await fetch(`/core/file-tabs/member/${id}`);
+            const response = await fetch(`/core/file-tabs/latest/${id}`);
             const data = await response.json();
             setFiles(data);
         };
@@ -21,22 +21,26 @@ const MemberFilesCard = ({ id, onEdit }) => {
         onEdit('files', files, setFiles);
     };
 
+    const openFileInNewTab = (fileUrl) => {
+        window.open(fileUrl, '_blank');
+    };
+
     return (
         <div className="member-full-card">
             <h2>Files</h2>
             <div className="member-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
-                {files.length > 0 ? (
+                {Object.keys(files).length > 0 ? (
                     <div className="file-list">
-                    {files.map((file, index) => (
-                        <div key={index} className="file-item">
+                        {Object.entries(files).map(([name, version], index) => (
+                            <div key={index} className="file-item" onClick={() => openFileInNewTab(version.file)}>
                             <FileIcon className="file-icon" />
-                            <p className="file-name">{file.name}</p>
+                            <p className="file-name">{name}</p>
                         </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
                 ) : (
-                    <p>No file tabs</p>
+                    <p>No files uploaded</p>
                 )}
             </div>
         </div>

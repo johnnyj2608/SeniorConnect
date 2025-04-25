@@ -13,6 +13,7 @@ from ..utils.file_utils import (
     updateFileVersion,
     deleteFileVersion,
     getFileVersionsListByTab,
+    getFileTabsWithVersion,
 )
 
 # FileTab Views
@@ -58,3 +59,7 @@ def getFileVersion(request, pk):
 def getFileVersionsByTab(request, pk):
     if request.method == 'GET':
         return getFileVersionsListByTab(request, pk)
+    
+@api_view(['GET'])
+def getFileTabsLatestVersion(request, pk):
+    return getFileTabsWithVersion(request, pk)

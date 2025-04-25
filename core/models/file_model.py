@@ -37,7 +37,7 @@ class FileVersion(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['completion_date', 'uploaded_at']
+        ordering = ['-completion_date', '-uploaded_at']
 
     def __str__(self):
         return f"{self.tab.name} - {self.uploaded_at.strftime('%Y-%m-%d')}"

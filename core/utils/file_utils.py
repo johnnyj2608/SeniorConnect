@@ -48,6 +48,17 @@ def getFileTabsListByMember(request, member_id):
     serializer = FileTabSerializer(file_tabs, many=True)
     return Response(serializer.data)
 
+def getFileTabsWithVersion(request, member_id):
+    file_tabs = FileTab.objects.filter(member_id=member_id)
+    file_tabs_with_versions = {}
+
+    for file_tab in file_tabs:
+        latest_version = FileVersion.objects.filter(tab=file_tab).first()
+        if latest_version:
+            latest_version_data = FileVersionSerializer(latest_version).data
+            file_tabs_with_versions[file_tab.name] = latest_version_data
+    return Response(file_tabs_with_versions)
+
 # FileVersion Utils
 def getFileVersionList(request):
     file_versions = FileVersion.objects.all()

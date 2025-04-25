@@ -38,6 +38,7 @@ urlpatterns = [
     path('absences/', absence_views.getAbsences, name="absences"),
 
     # FileTab related paths
+    path('file-tabs/latest/<str:pk>/', file_views.getFileTabsLatestVersion, name="latest_versions_by_tab"),
     path('file-tabs/member/<str:pk>/', file_views.getFileTabsByMember, name="file_tabs_by_member"),
     path('file-tabs/<str:pk>/', file_views.getFileTab, name="file_tab"),
     path('file-tabs/', file_views.getFileTabs, name="file_tabs"),
