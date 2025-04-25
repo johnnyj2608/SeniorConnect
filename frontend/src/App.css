@@ -137,6 +137,7 @@ input {
   background-color: var(--color-lighter);
   width: 100%;
   padding: 10px 15px;
+  z-index: 99;
 }
 
 .members-title-row {
@@ -379,6 +380,8 @@ input {
 .members-list-item:hover {
   background-color: var(--color-bg);
   cursor: pointer;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
 }
 
 .members-list-photo {
@@ -494,6 +497,12 @@ input {
   cursor: pointer;
   width: 24px;
   height: 24px;
+}
+
+.edit-icon:hover {
+  fill: #0078d4;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
 }
 
 .member-detail {
@@ -770,6 +779,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .file-list {
   display: flex;
+  gap: 5px;
 }
 
 .file-item {
@@ -779,10 +789,19 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: top;
   text-align: center;
   width: 100px;
+  cursor: pointer;
+  padding-top: 5px;
+}
+
+.file-item:hover {
+  background-color: rgba(0, 120, 215, 0.15);
+  border-radius: 4px;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
 }
 
 .file-icon {
-  height: 70px;
+  height: 60px;
   margin-bottom: 5px;
 }
 
