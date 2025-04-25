@@ -37,7 +37,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>
                     <input
                         type="checkbox"
-                        name="active"
                         checked={disabled ? false : current.active === true }
                         onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
                         disabled={disabled}
@@ -49,7 +48,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>Member ID *</label>
                 <input
                     type="text"
-                    name="mltc_member_id"
                     value={disabled ? '' : current.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
                     placeholder="Required"
@@ -73,7 +71,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>Auth ID *</label>
                 <input
                     type="text"
-                    name="mltc_auth_id"
                     value={disabled ? '' : current.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
                     placeholder="Required"
@@ -88,7 +85,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                         <label key={day.value}>
                             <input
                                 type="checkbox"
-                                name="schedule"
                                 value={day.value}
                                 checked={disabled ? false : current.schedule?.includes(day.value) || false}
                                 onChange={handleChange('schedule')}
@@ -103,7 +99,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>Start Date *</label>
                 <input
                     type="date"
-                    name="start_date"
                     value={disabled ? '' : current.start_date || ''}
                     onChange={handleChange('start_date')}
                     disabled={disabled}
@@ -113,7 +108,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>End Date *</label>
                 <input
                     type="date"
-                    name="end_date"
                     value={disabled ? '' : current.end_date || ''}
                     onChange={handleChange('end_date')}
                     disabled={disabled}
@@ -132,7 +126,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>SDC Code</label>
                 <input
                     type="text"
-                    name="sdc_code"
                     value={disabled ? '' : current.sdc_code || ''}
                     onChange={handleChange('sdc_code')}
                     autoComplete="off"
@@ -143,7 +136,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                 <label>Trans Code</label>
                 <input
                     type="text"
-                    name="trans_code"
                     value={disabled ? '' : current.trans_code || ''}
                     onChange={handleChange('trans_code')}
                     autoComplete="off"
