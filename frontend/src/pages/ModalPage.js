@@ -170,6 +170,9 @@ const MemberModal = ({ data, onClose }) => {
                 });
                 break;
             case 'authorizations':
+                const activeAuthIndex = getActiveAuthIndex(savedData);
+                data.setData(savedData[activeAuthIndex]);
+                break
             case 'contacts':
             case 'absences':
                 data.setData(savedData);

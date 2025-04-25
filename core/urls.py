@@ -21,6 +21,7 @@ urlpatterns = [
     path('languages/', language_views.getLanguages, name="languages"),
 
     # Authorization related paths
+    path('auths/active/<str:pk>/', authorization_views.getActiveAuthorizationsByMember, name="active_auth_by_member"),
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),
     path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/', authorization_views.getAuthorizations, name="auths"),

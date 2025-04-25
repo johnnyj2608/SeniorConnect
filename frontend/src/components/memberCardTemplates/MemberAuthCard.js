@@ -1,37 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
-import getActiveAuthIndex from '../../utils/getActiveAuthIndex';
 import DetailRow from '../MemberDetail';
 
 const MemberAuthCard = ({ id, onEdit }) => {
-    const [auths, setAuths] = useState([]);
-    const [activeAuth, setActiveAuth] = useState(null);
+    const [auth, setAuth] = useState(null);
 
     useEffect(() => {
-        const getAuthsByMember = async () => {
-            const response = await fetch(`/core/auths/member/${id}`);
+        const getActiveAuthByMember = async () => {
+            const response = await fetch(`/core/auths/active/${id}`);
             const data = await response.json();
-            setAuths(data);
+            setAuth(data);
         };
 
         if (id !== 'new') {
-            getAuthsByMember();
+            getActiveAuthByMember();
         }
         
     }, [id]);
 
-    useEffect(() => {
-        if (auths.length > 0) {
-          const activeAuthIndex = getActiveAuthIndex(auths);
-          setActiveAuth(auths[activeAuthIndex]);
-        } else {
-            setActiveAuth(null);
-        }
-    }, [auths]);
-
     const handleEdit = () => {
-        onEdit('authorizations', auths, setAuths);
+        const getAuthsByMember = async () => {
+            const response = await fetch(`/core/auths/member/${id}`);
+            const data = await response.json();
+            onEdit('authorizations', data, setAuth);
+        };
+        getAuthsByMember();
     };
 
     return (
@@ -39,15 +33,15 @@ const MemberAuthCard = ({ id, onEdit }) => {
             <h2>Authorization</h2>
             <div className="member-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
-                <DetailRow label="Member ID" value={activeAuth?.mltc_member_id} />
-                <DetailRow label="MLTC" value={activeAuth?.mltc} />
-                <DetailRow label="Auth ID" value={activeAuth?.mltc_auth_id} />
-                <DetailRow label="Schedule" value={formatSchedule(activeAuth?.schedule)} />
-                <DetailRow label="Start Date" value={formatDate(activeAuth?.start_date)} />
-                <DetailRow label="End Date" value={formatDate(activeAuth?.end_date)} />
-                <DetailRow label="DX Code" value={activeAuth?.dx_code} />
-                <DetailRow label="SDC Code" value={activeAuth?.sdc_code} />
-                <DetailRow label="Trans Code" value={activeAuth?.trans_code} />
+                <DetailRow label="Member ID" value={auth?.mltc_member_id} />
+                <DetailRow label="MLTC" value={auth?.mltc} />
+                <DetailRow label="Auth ID" value={auth?.mltc_auth_id} />
+                <DetailRow label="Schedule" value={formatSchedule(auth?.schedule)} />
+                <DetailRow label="Start Date" value={formatDate(auth?.start_date)} />
+                <DetailRow label="End Date" value={formatDate(auth?.end_date)} />
+                <DetailRow label="DX Code" value={auth?.dx_code} />
+                <DetailRow label="SDC Code" value={auth?.sdc_code} />
+                <DetailRow label="Trans Code" value={auth?.trans_code} />
             </div>
         </div>
     );
