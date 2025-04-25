@@ -516,7 +516,7 @@ input {
   padding: 5px;
 }
 
-.member-detail input, 
+.member-detail input,
 .member-detail select,
 .schedule-container {
   flex: 1;
@@ -813,6 +813,25 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   width: 100%;
+}
+
+.file-name-expired {
+  color: #b30000;
+}
+
+.file-input input[type="file"] {
+  color: var(--color-dark);
+  padding: 0;
+}
+
+.file-input input[type="file"]::file-selector-button {
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-input input[type="file"]::file-selector-button:hover {
+  background-color: #d6d6d6;
 }
 
 @media (max-width: 835px) {
