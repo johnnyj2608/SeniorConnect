@@ -48,7 +48,7 @@ def getFileTabsListByMember(request, member_id):
     serializer = FileTabSerializer(file_tabs, many=True)
     return Response(serializer.data)
 
-def getFileTabsWithVersion(request, member_id):
+def getFileTabsWithLatestVersionByMember(request, member_id):
     file_tabs = FileTab.objects.filter(member_id=member_id)
     file_tabs_with_versions = {}
 

@@ -40,4 +40,4 @@ class FileVersion(models.Model):
         ordering = ['-completion_date', '-uploaded_at']
 
     def __str__(self):
-        return f"{self.tab.name} - {self.uploaded_at.strftime('%Y-%m-%d')}"
+        return f"{self.tab.name} - {self.file}"

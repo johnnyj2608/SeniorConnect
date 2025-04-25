@@ -45,7 +45,7 @@ urlpatterns = [
     path('file-tabs/', file_views.getFileTabs, name="file_tabs"),
     
     # FileVersion related paths
-    path('file-versions/tab/<str:pk>/', file_views.getFileVersionsByTab, name="file_versions_by_tab"),
+    path('file-versions/tab/<str:pk>/', file_views.getFileVersionsByTab, name="file_version_by_tab"),
     path('file-versions/<str:pk>/', file_views.getFileVersion, name="file_version"),
     path('file-versions/', file_views.getFileVersions, name="file_versions"),
 ]

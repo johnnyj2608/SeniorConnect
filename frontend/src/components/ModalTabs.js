@@ -1,7 +1,6 @@
 import React from 'react';
 import { ReactComponent as AddIcon } from '../assets/add.svg'
 import { contact_types, absence_types } from '../utils/mapUtils';
-import { formatDate } from '../utils/formatUtils'
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
@@ -53,8 +52,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 };
             case 'files':
                 return { 
-                    heading: item.tab || 'Unknown', 
-                    subheading: formatDate(item.completion_date || item.uploaded_at || ''),
+                    heading: item.name || 'Unknown', 
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };

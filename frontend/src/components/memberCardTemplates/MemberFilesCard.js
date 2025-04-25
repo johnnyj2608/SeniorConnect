@@ -18,7 +18,12 @@ const MemberFilesCard = ({ id, onEdit }) => {
     }, [id]);
 
     const handleEdit = () => {
-        onEdit('files', files, setFiles);
+        const getFileVersionsByTab = async () => {
+            const response = await fetch(`/core/file-tabs/member/${id}`);
+            const data = await response.json();
+            onEdit('files', data, setFiles);
+        };
+        getFileVersionsByTab();
     };
 
     const openFileInNewTab = (fileUrl) => {

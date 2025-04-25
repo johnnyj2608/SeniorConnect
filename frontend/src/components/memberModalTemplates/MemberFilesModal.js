@@ -1,12 +1,35 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { formatDate } from '../../utils/formatUtils'
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg'
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
+    const [versions, setVersions] = useState([]);
+    const [versionIndex, setVersionIndex] = useState(0);
+
+    useEffect(() => {
+        const getFileVersionsByTab = async () => {
+            const response = await fetch(`/core/file-versions/tab/${current.id}`);
+            const data = await response.json();
+            setVersions(data);
+            setVersionIndex(0);
+        };
+
+        getFileVersionsByTab();
+    }, [current.id]);
+
+    const currentVersion = versions[versionIndex] || {};
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0
+
+    const handlePrev = () => {
+        setVersionIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    };
+
+    const handleNext = () => {
+        setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
+    };
 
     return (
         <>
@@ -15,8 +38,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 <label>Name *</label>
                 <input
                     type="text"
-                    value={disabled ? '' : current.tab || ''}
-                    onChange={handleChange('tab')}
+                    value={disabled ? '' : current.name || ''}
+                    onChange={handleChange('name')}
                     autoComplete="off"
                     disabled={disabled}
                 />
@@ -34,7 +57,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 <label>Completed</label>
                 <input
                     type="date"
-                    value={disabled ? '' : current.completion_date || ''}
+                    value={disabled ? '' : currentVersion.completion_date || ''}
                     onChange={handleChange('completion_date')}
                     disabled={disabled}
                 />
@@ -43,15 +66,27 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 <label>Expiration</label>
                 <input
                     type="date"
-                    value={disabled ? '' : current.expiration_date || ''}
+                    value={disabled ? '' : currentVersion.expiration_date || ''}
                     onChange={handleChange('expiration_date')}
                     disabled={disabled}
                 />
             </div>
             <div className="file-nav">
-                <ArrowLeft className="arrow-btn" />
-                <h4>{(!disabled && current.uploaded_at) ? `Uploaded: ${formatDate(current.uploaded_at)}` : ''}</h4>
-                <ArrowRight className="arrow-btn" />
+                <button
+                    className="arrow-btn"
+                    onClick={handlePrev}
+                    disabled={versionIndex === 0}
+                >
+                    <ArrowLeft />
+                </button>
+                <h4>{(!disabled && currentVersion.uploaded_at) ? `Uploaded: ${formatDate(currentVersion.uploaded_at)}` : ''}</h4>
+                <button
+                    className="arrow-btn"
+                    onClick={handleNext}
+                    disabled={versionIndex >= versions.length - 1}
+                >
+                    <ArrowRight />
+                </button>
             </div>
         </>
     )
