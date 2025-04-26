@@ -56,6 +56,16 @@ const getNewTab = (type, localData, id) => {
                 edited: true,
             };
         }
+        case 'files': {
+            return {
+                id: 'new',
+                member: id,
+                name: '',
+                completion_date: '',
+                expiration_date: '',
+                edited: true,
+            };
+        }
         default:
             return null;
     }

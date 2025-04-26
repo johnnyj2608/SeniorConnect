@@ -16,7 +16,9 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             setVersionIndex(0);
         };
 
-        getFileVersionsByTab();
+        if (current.id !== 'new') {
+            getFileVersionsByTab();
+        }
     }, [current.id]);
 
     const currentVersion = versions[versionIndex] || {};
@@ -31,6 +33,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
     };
 
+    console.log(current)
     console.log(currentVersion)
 
     return (

@@ -119,6 +119,10 @@ function useModal(data, onClose) {
             case 'absences':
                 data.setData(savedData);
                 break;
+            case 'files':
+                console.log(savedData)
+                // Convert to tab : version pairs
+                break;
             default:
                 console.error("Unknown update type:", type);
                 return;
@@ -187,6 +191,16 @@ function useModal(data, onClose) {
                     return;
                 }
                 savedData = await saveDataTabs(updatedData, 'absences');
+                break;
+
+            case 'files':
+                requiredFields = ['name'];
+                missingFields = checkMissingFields(updatedData, requiredFields);
+                if (missingFields.size > 0) {
+                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+                    return;
+                }
+                savedData = await saveDataTabs(updatedData, 'file-tabs');
                 break;
 
             default:
