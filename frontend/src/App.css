@@ -861,6 +861,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .arrow-btn {
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
@@ -870,7 +872,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .arrow-btn:hover {
-  fill: #0078d4;
   transform: scale(1.1);
   transition: all 0.2s ease;
 }
@@ -880,9 +881,12 @@ input[type="number"]::-webkit-inner-spin-button {
   pointer-events: none;
 }
 
-.arrow-btn:disabled:hover {
-  transform: none; 
-  fill: var(--color-dark);
+.file-buttons {
+  display: flex;
+  height: 35px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
 @media (max-width: 835px) {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { formatDate } from '../../utils/formatUtils'
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg'
+import { ReactComponent as Eye } from '../../assets/eye.svg'
+import { ReactComponent as Trash } from '../../assets/trash.svg'
+import viewFile from '../../utils/viewFile';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
@@ -97,7 +99,22 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 >
                     <ArrowLeft />
                 </button>
-                <h4>{(!disabled && currentVersion.uploaded_at) ? `Uploaded: ${formatDate(currentVersion.uploaded_at)}` : ''}</h4>
+                <div className="file-buttons">
+                    <button 
+                        className="arrow-btn"
+                        onClick={() => viewFile(currentVersion.file)}
+                        disabled={!currentVersion.file}
+                    >
+                        <Eye />
+                    </button>
+                    <button 
+                        className="arrow-btn"
+                        onClick={() => console.log('delete version')}
+                        disabled={!currentVersion.file}
+                    >
+                        <Trash />
+                    </button>
+                </div>
                 <button
                     className="arrow-btn"
                     onClick={handleNext}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { ReactComponent as FileIcon } from '../../assets/file.svg';
+import viewFile from '../../utils/viewFile';
 
 const MemberFilesCard = ({ id, onEdit }) => {
     const [files, setFiles] = useState([]);
@@ -26,10 +27,6 @@ const MemberFilesCard = ({ id, onEdit }) => {
         getFileVersionsByTab();
     };
 
-    const openFileInNewTab = (fileUrl) => {
-        window.open(fileUrl, '_blank');
-    };
-
     return (
         <div className="member-full-card">
         <h2>Files</h2>
@@ -44,7 +41,7 @@ const MemberFilesCard = ({ id, onEdit }) => {
                             <div
                                 key={index}
                                 className="file-item"
-                                onClick={() => openFileInNewTab(version.file)}
+                                onClick={() => viewFile(version.file)}
                                 title={tooltipText}
                             >
                                 <FileIcon className="file-icon" />
