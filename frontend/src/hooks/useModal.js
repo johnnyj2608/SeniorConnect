@@ -153,16 +153,12 @@ function useModal(data, onClose) {
         let savedData = null;
         let requiredFields = [];
         let dependentFields = [];
-        let missingFields = new Set();
 
         switch (type) {
             case 'basic':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
-                missingFields = checkMissingFields(updatedData, requiredFields);
-                if (missingFields.size > 0) {
-                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-                    return;
-                }
+                if (checkMissingFields(updatedData, requiredFields)) return;
+
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
                 savedData = await sendRequest(id, memberEndpoint, memberMethod, updatedData);
@@ -170,11 +166,8 @@ function useModal(data, onClose) {
 
             case 'authorizations':
                 requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
-                missingFields = checkMissingFields(updatedData, requiredFields);
-                if (missingFields.size > 0) {
-                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-                    return;
-                }
+                if (checkMissingFields(updatedData, requiredFields)) return;
+
                 const invalidAuthDates = Array.isArray(updatedData)
                     ? updatedData.some(item => !item.deleted && new Date(item.end_date) < new Date(item.start_date))
                     : false;
@@ -188,21 +181,15 @@ function useModal(data, onClose) {
             case 'contacts':
                 requiredFields = ['contact_type', 'name', 'phone'];
                 dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency' }];
-                missingFields = checkMissingFields(updatedData, requiredFields, dependentFields);
-                if (missingFields.size > 0) {
-                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-                    return;
-                }
+                if (checkMissingFields(updatedData, requiredFields, dependentFields)) return;
+
                 savedData = await saveDataTabs(updatedData, 'contacts', id);
                 break;
 
             case 'absences':
                 requiredFields = ['absence_type', 'start_date'];
-                missingFields = checkMissingFields(updatedData, requiredFields);
-                if (missingFields.size > 0) {
-                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-                    return;
-                }
+                if (checkMissingFields(updatedData, requiredFields)) return;
+
                 const invalidAbsenceDates = Array.isArray(updatedData)
                     ? updatedData.some(item => !item.deleted && item.end_date && new Date(item.end_date) < new Date(item.start_date))
                     : false;
@@ -215,11 +202,8 @@ function useModal(data, onClose) {
 
             case 'files':
                 requiredFields = ['name'];
-                missingFields = checkMissingFields(updatedData, requiredFields);
-                if (missingFields.size > 0) {
-                    alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-                    return;
-                }
+                if (checkMissingFields(updatedData, requiredFields)) return;
+
                 savedData = await saveDataTabs(updatedData, 'file-tabs');
                 break;
 

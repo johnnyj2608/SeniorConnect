@@ -99,7 +99,7 @@ const checkMissingFields = (data, requiredFields, dependentFields = []) => {
         ? data.filter(item => item.edited && !item.deleted)
         : [data];
 
-    return items.reduce((acc, item) => {
+    const missingFields = items.reduce((acc, item) => {
         requiredFields.forEach(field => {
             const value = item[field];
             if (!(typeof value === 'string' ? value.trim() : value)) {
@@ -118,6 +118,13 @@ const checkMissingFields = (data, requiredFields, dependentFields = []) => {
 
         return acc;
     }, new Set());
+
+    if (missingFields.size > 0) {
+        alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+        return true
+    }
+
+    return false;
 };
 
 const saveDataTabs = async (data, endpoint, id=null) => {
