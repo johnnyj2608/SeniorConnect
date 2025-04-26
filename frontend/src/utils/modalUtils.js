@@ -127,6 +127,26 @@ const checkMissingFields = (data, requiredFields, dependentFields = []) => {
     return false;
 };
 
+const checkInvalidDates = (data) => {
+    const invalidDates = data.reduce((acc, item) => {
+        const startDate = new Date(item.start_date);
+        const endDate = item.end_date ? new Date(item.end_date) : null;
+
+        if (item.deleted !== true && endDate && endDate < startDate) {
+            acc.add('start_date - end_date');
+        }
+
+        return acc;
+    }, new Set());
+
+    if (invalidDates.size > 0) {
+        alert('Invalid dates: End date cannot be before start date.');
+        return true;
+    }
+
+    return false;
+};
+
 const saveDataTabs = async (data, endpoint, id=null) => {
     const dataArray = Object.values(data);
 
@@ -169,5 +189,6 @@ export {
     getNewTab,
     sendRequest,
     checkMissingFields,
+    checkInvalidDates,
     saveDataTabs,
 };

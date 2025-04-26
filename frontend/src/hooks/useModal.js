@@ -6,7 +6,8 @@ import {
     getNewTab,
     sendRequest,
     checkMissingFields,
-    saveDataTabs
+    checkInvalidDates,
+    saveDataTabs,
 } from '../utils/modalUtils';
 
 function useModal(data, onClose) {
@@ -167,14 +168,8 @@ function useModal(data, onClose) {
             case 'authorizations':
                 requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
+                if (checkInvalidDates(updatedData)) return;
 
-                const invalidAuthDates = Array.isArray(updatedData)
-                    ? updatedData.some(item => !item.deleted && new Date(item.end_date) < new Date(item.start_date))
-                    : false;
-                if (invalidAuthDates) {
-                    alert('End date cannot be before start date.');
-                    return;
-                }
                 savedData = await saveDataTabs(updatedData, 'auths');
                 break;
 
@@ -189,19 +184,13 @@ function useModal(data, onClose) {
             case 'absences':
                 requiredFields = ['absence_type', 'start_date'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
+                if (checkInvalidDates(updatedData)) return;
 
-                const invalidAbsenceDates = Array.isArray(updatedData)
-                    ? updatedData.some(item => !item.deleted && item.end_date && new Date(item.end_date) < new Date(item.start_date))
-                    : false;
-                if (invalidAbsenceDates) {
-                    alert('End date cannot be before start date.');
-                    return;
-                }
                 savedData = await saveDataTabs(updatedData, 'absences');
                 break;
 
             case 'files':
-                requiredFields = ['name'];
+                requiredFields = ['name'];  // files is required as well
                 if (checkMissingFields(updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'file-tabs');
