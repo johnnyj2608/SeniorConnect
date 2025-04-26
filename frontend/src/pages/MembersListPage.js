@@ -1,80 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import ListItem from '../components/ListItem'
-import AddButton from '../components/AddButton'
-import DownloadButton from '../components/DownloadButton'
-import Dropdown from '../components/Dropdown'
-import SearchInput from '../components/SearchInput'
-import groupMembersByMltc from '../utils/groupMembersByMltc'
+import React, { useState, useEffect } from 'react';
+import ListItem from '../components/ListItem';
+import AddButton from '../components/AddButton';
+import DownloadButton from '../components/DownloadButton';
+import Dropdown from '../components/Dropdown';
+import SearchInput from '../components/SearchInput';
 import Switch from 'react-switch';
+import useFilters from '../hooks/useFilters';
 
 const MembersListPage = () => {
-  const [members, setMembers] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [mltcFilter, setMltcFilter] = useState('')
-  const [mltcOptions, setMltcOptions] = useState([])
-  const [sortOption, setSortOption] = useState('')
-  const [scheduleFilter, setScheduleFilter] = useState([
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-  ]); 
-  const [showInactive, setShowInactive] = useState(false);
+  const [members, setMembers] = useState([]);
+  const [mltcOptions, setMltcOptions] = useState([]);
 
   const getMembers = async () => {
-    const response = await fetch('/core/members')
-    const data = await response.json()
-    setMembers(data)
-  }
+    const response = await fetch('/core/members');
+    const data = await response.json();
+    setMembers(data);
+  };
 
   const getMltcOptions = async () => {
-    const response = await fetch('/core/mltcs/')
-    const data = await response.json()
-    setMltcOptions(data)
-  }
+    const response = await fetch('/core/mltcs/');
+    const data = await response.json();
+    setMltcOptions(data);
+  };
 
   useEffect(() => {
-    getMembers()
-    getMltcOptions()
-  }, [])
+    getMembers();
+    getMltcOptions();
+  }, []);
 
-  const filteredMembers = members.filter((member) => {
-    const matchesSearch =
-      member.sadc_member_id.toString().startsWith(searchQuery) ||
-      member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-      member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
-
-    const matchesMltc = mltcFilter 
-      ? mltcFilter === member.mltc || (mltcFilter === 'Unknown' && member.mltc === null)
-      : true;
-
-    const matchesSchedule = scheduleFilter.length === 7 
-      ? true
-      : member.schedule?.some(day => scheduleFilter.includes(day));
-
-    const matchesDisenrolled = showInactive ? true : member.active;
-
-    return matchesSearch && matchesMltc && matchesSchedule && matchesDisenrolled
-  });
-
-  const sortMembers = (members) => {
-    switch (sortOption) {
-      case 'Member ID (0-9)':
-        return [...members].sort((a, b) => a.sadc_member_id - b.sadc_member_id)
-      case 'Member ID (9-0)':
-        return [...members].sort((a, b) => b.sadc_member_id - a.sadc_member_id)
-      case 'Last Name (A-Z)':
-        return [...members].sort((a, b) => a.last_name.localeCompare(b.last_name))
-      case 'Last Name (Z-A)':
-        return [...members].sort((a, b) => b.last_name.localeCompare(a.last_name))
-      case 'First Name (A-Z)':
-        return [...members].sort((a, b) => a.first_name.localeCompare(b.first_name))
-      case 'First Name (Z-A)':
-        return [...members].sort((a, b) => b.first_name.localeCompare(a.first_name))
-      default:
-        return members
-    }
-  }
-
-  const sortedMembers = sortMembers(filteredMembers);
-  const membersByMltc = groupMembersByMltc(sortedMembers, mltcOptions);
+  const {
+    searchQuery,
+    setSearchQuery,
+    mltcFilter,
+    setMltcFilter,
+    sortOption,
+    setSortOption,
+    scheduleFilter,
+    setScheduleFilter,
+    showInactive,
+    setShowInactive,
+    sortedMembers,
+    membersByMltc,
+  } = useFilters(members, mltcOptions);
 
   return (
     <div className="members">
@@ -87,13 +54,9 @@ const MembersListPage = () => {
         </div>
         <div className="filter-row">
           <div className="filter-content">
-
             <div className="filter-option">
               <label>Search Members</label>
-              <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
-              />
+              <SearchInput value={searchQuery} onChange={setSearchQuery} />
             </div>
 
             <div className="filter-option">
@@ -124,7 +87,7 @@ const MembersListPage = () => {
             <div className="filter-option">
               <label>Schedule Filter</label>
               <Dropdown
-                display={(scheduleFilter)}
+                display={scheduleFilter}
                 onChange={(e) => setScheduleFilter(e.target.value)}
                 options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
                 multiSelect={true}
@@ -151,9 +114,9 @@ const MembersListPage = () => {
       <div className="members-list-content">
         {Object.entries(membersByMltc)
           .sort(([mltcA], [mltcB]) => {
-            if (mltcA === 'Unknown') return 1
-            if (mltcB === 'Unknown') return -1
-            return mltcA.localeCompare(mltcB)
+            if (mltcA === 'Unknown') return 1;
+            if (mltcB === 'Unknown') return -1;
+            return mltcA.localeCompare(mltcB);
           })
           .map(([mltc, members]) => (
             <div key={mltc}>
@@ -168,7 +131,7 @@ const MembersListPage = () => {
       </div>
       <AddButton />
     </div>
-  )
-}
+  );
+};
 
-export default MembersListPage
+export default MembersListPage;
