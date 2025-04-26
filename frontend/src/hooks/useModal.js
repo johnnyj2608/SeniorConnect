@@ -28,8 +28,10 @@ function useModal(data, onClose) {
         };
     }, []);
 
-    const handleChange = (field) => (event) => {
+    const handleChange = (field, isVersion=false, versionIndex=0) => (event) => {
         const { value, files, checked } = event.target;
+        const normalizedValue = field.includes('date') && value === '' ? null : value;
+
         setLocalData((prevData) => {
             if (type !== 'basic' && field === 'active') {
                 const updatedData = [...prevData];
@@ -47,7 +49,7 @@ function useModal(data, onClose) {
 
             if (type !== 'basic') {
                 const currentTab = prevData[activeTab];
-                let newValue = value;
+                let newValue = normalizedValue;
                 if (field === 'schedule') {
                     const currentSchedule = currentTab?.schedule || [];
                     const newSchedule = checked
@@ -55,10 +57,28 @@ function useModal(data, onClose) {
                         : currentSchedule.filter((day) => day !== value);
                     newValue = sortSchedule(newSchedule);
                 }
-                const updatedTab = {
-                    ...currentTab,
-                    [field]: newValue,
-                };
+
+                let updatedTab = { ...currentTab };
+
+                if (isVersion) {
+                    const updatedVersions = [...(currentTab.versions || [])];
+                    const updatedVersion = {
+                        ...updatedVersions[versionIndex],
+                        [field]: newValue,
+                    };
+                    updatedVersions[versionIndex] = updatedVersion;
+
+                    updatedTab = {
+                        ...updatedTab,
+                        versions: updatedVersions,
+                    };
+                } else {
+                    updatedTab = {
+                        ...updatedTab,
+                        [field]: newValue,
+                    };
+                }
+
                 const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab - newTabsCount]);
 
                 const updatedData = [...prevData];

@@ -7,52 +7,56 @@ const MemberFilesCard = ({ id, onEdit }) => {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        const getFileTabsByMember = async () => {
-            const response = await fetch(`/core/file-tabs/latest/${id}`);
+        const getFilesByMember = async () => {
+            const response = await fetch(`/core/file/latest/${id}`);
             const data = await response.json();
             setFiles(data);
         };
 
         if (id !== 'new') {
-            getFileTabsByMember();
+            getFilesByMember();
         }
     }, [id]);
 
     const handleEdit = () => {
-        const getFileVersionsByTab = async () => {
-            const response = await fetch(`/core/file-tabs/member/${id}`);
+        const getFileTabVersionsByMember = async () => {
+            const response = await fetch(`/core/file/member/${id}`);
             const data = await response.json();
             onEdit('files', data, setFiles);
         };
-        getFileVersionsByTab();
+        getFileTabVersionsByMember();
     };
 
     return (
         <div className="member-full-card">
-        <h2>Files</h2>
-        <div className="member-container">
-            <Pencil className="edit-icon" onClick={handleEdit} />
-            {Object.keys(files).length > 0 ? (
-                <div className="file-list">
-                    {Object.entries(files).map(([name, version], index) => {
-                        const isExpired = version.expiration_date && new Date(version.expiration_date) < new Date();
-                        const tooltipText = `Completed: ${version.completion_date || 'N/A'}\nExpires: ${version.expiration_date || 'N/A'}`;
-                        return (
-                            <div
-                                key={index}
-                                className="file-item"
-                                onClick={() => viewFile(version.file)}
-                                title={tooltipText}
-                            >
-                                <FileIcon className="file-icon" />
-                                <p className={`file-name ${isExpired ? 'file-name-expired' : ''}`}>{name}</p>
-                            </div>
-                        );
-                    })}
-                </div>
-            ) : (
-                <p>No files uploaded</p>
-            )}
+            <h2>Files</h2>
+            <div className="member-container">
+                <Pencil className="edit-icon" onClick={handleEdit} />
+                {files.length > 0 ? (
+                    <div className="file-list">
+                        {files.map((file, index) => {
+                            const content = file.content;
+                            const isExpired = content?.expiration_date && new Date(content.expiration_date) < new Date();
+                            const tooltipText = `Completed: ${content?.completion_date || 'N/A'}\nExpires: ${content?.expiration_date || 'N/A'}`;
+                            
+                            return (
+                                <div
+                                    key={index}
+                                    className="file-item"
+                                    onClick={() => content?.file && viewFile(content.file)}
+                                    title={tooltipText}
+                                >
+                                    <FileIcon className="file-icon" />
+                                    <p className={`file-name ${isExpired ? 'file-name-expired' : ''}`}>
+                                        {file.name}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <p>No files uploaded</p>
+                )}
         </div>
     </div>
     );

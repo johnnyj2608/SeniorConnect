@@ -7,22 +7,9 @@ import viewFile from '../../utils/viewFile';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
-    const [versions, setVersions] = useState([]);
+    const versions = current.versions || [];
+
     const [versionIndex, setVersionIndex] = useState(0);
-
-    useEffect(() => {
-        const getFileVersionsByTab = async () => {
-            const response = await fetch(`/core/file-versions/tab/${current.id}`);
-            const data = await response.json();
-            setVersions(data);
-            setVersionIndex(0);
-        };
-
-        if (current.id !== 'new') {
-            getFileVersionsByTab();
-        }
-    }, [current.id]);
-
     const currentVersion = versions[versionIndex] || {};
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0
@@ -35,8 +22,9 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
     };
 
-    console.log(current)
-    console.log(currentVersion)
+    useEffect(() => {
+        setVersionIndex(0);
+    }, [activeTab]);
 
     return (
         <>
@@ -68,7 +56,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         id="hiddenFileInput"
                         type="file"
                         accept="application/pdf"
-                        onChange={handleChange('file')}
+                        onChange={handleChange('file', true, versionIndex)}
                         style={{ display: 'none' }}
                     />
                 </div>
@@ -78,7 +66,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     value={disabled ? '' : currentVersion.completion_date || ''}
-                    onChange={handleChange('completion_date')}
+                    onChange={handleChange('completion_date', true, versionIndex)}
                     disabled={disabled}
                 />
             </div>
@@ -87,7 +75,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 <input
                     type="date"
                     value={disabled ? '' : currentVersion.expiration_date || ''}
-                    onChange={handleChange('expiration_date')}
+                    onChange={handleChange('expiration_date', true, versionIndex)}
                     disabled={disabled}
                 />
             </div>

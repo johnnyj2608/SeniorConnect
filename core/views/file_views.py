@@ -11,10 +11,20 @@ from ..utils.file_utils import (
     createFileVersion,
     updateFileVersion,
     deleteFileVersion,
-    getFileTabsListByMember,
-    getFileTabsWithLatestVersionByMember,
-    getFileVersionsListByTab,
+    getFileTabVersionsByMember,
+    getFileTabLatestVersionsByMember,
 )
+
+# File Views
+@api_view(['GET'])
+def getFilesByMember(request, pk):
+    if request.method == 'GET':
+        return getFileTabVersionsByMember(request, pk)
+
+@api_view(['GET'])
+def getFilesLatestByMember(request, pk):
+    if request.method == 'GET':
+        return getFileTabLatestVersionsByMember(request, pk)
 
 # FileTab Views
 @api_view(['GET', 'POST'])
@@ -32,14 +42,6 @@ def getFileTab(request, pk):
         return updateFileTab(request, pk)
     if request.method == 'DELETE':
         return deleteFileTab(request, pk)
-    
-@api_view(['GET'])
-def getFileTabsByMember(request, pk):
-    return getFileTabsListByMember(request, pk)
-    
-@api_view(['GET'])
-def getFileTabsLatestVersion(request, pk):
-    return getFileTabsWithLatestVersionByMember(request, pk)
 
 # FileVersion Views
 @api_view(['GET', 'POST'])
@@ -57,8 +59,3 @@ def getFileVersion(request, pk):
         return updateFileVersion(request, pk)
     if request.method == 'DELETE':
         return deleteFileVersion(request, pk)
-    
-@api_view(['GET'])
-def getFileVersionsByTab(request, pk):
-    if request.method == 'GET':
-        return getFileVersionsListByTab(request, pk)

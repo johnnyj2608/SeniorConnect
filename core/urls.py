@@ -38,14 +38,11 @@ urlpatterns = [
     path('absences/<str:pk>/', absence_views.getAbsence, name="absence"),
     path('absences/', absence_views.getAbsences, name="absences"),
 
-    # FileTab related paths
-    path('file-tabs/latest/<str:pk>/', file_views.getFileTabsLatestVersion, name="latest_versions_by_tab"),
-    path('file-tabs/member/<str:pk>/', file_views.getFileTabsByMember, name="file_tabs_by_member"),
+    # File related paths
+    path('file/latest/<str:pk>/', file_views.getFilesLatestByMember, name="files_latest_by_member"),
+    path('file/member/<str:pk>/', file_views.getFilesByMember, name="files_by_member"),
     path('file-tabs/<str:pk>/', file_views.getFileTab, name="file_tab"),
     path('file-tabs/', file_views.getFileTabs, name="file_tabs"),
-    
-    # FileVersion related paths
-    path('file-versions/tab/<str:pk>/', file_views.getFileVersionsByTab, name="file_version_by_tab"),
     path('file-versions/<str:pk>/', file_views.getFileVersion, name="file_version"),
     path('file-versions/', file_views.getFileVersions, name="file_versions"),
 ]

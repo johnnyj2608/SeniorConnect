@@ -61,8 +61,7 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 member: id,
                 name: '',
-                completion_date: '',
-                expiration_date: '',
+                versions: [],
                 edited: true,
             };
         }
