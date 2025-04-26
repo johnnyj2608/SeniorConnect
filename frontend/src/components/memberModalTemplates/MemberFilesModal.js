@@ -31,6 +31,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
     };
 
+    console.log(currentVersion)
+
     return (
         <>
             <h3>Edit Files</h3>
@@ -44,14 +46,27 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     disabled={disabled}
                 />
             </div>
-            <div className="member-detail file-input">
+            <div className="member-detail">
                 <label>Upload File *</label>
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handleChange('file')}
-                    disabled={disabled}
-                />
+                <div className="file-container">
+                    <button
+                        className="custom-file-button"
+                        onClick={() => document.getElementById('hiddenFileInput').click()}
+                        disabled={disabled}
+                    >
+                        Choose File
+                    </button>
+                    <span className="uploaded-file-name">
+                        {currentVersion.file?.split('/').pop() || 'No file chosen'}
+                    </span>
+                    <input
+                        id="hiddenFileInput"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleChange('file')}
+                        style={{ display: 'none' }}
+                    />
+                </div>
             </div>
             <div className="member-detail">
                 <label>Completed</label>
