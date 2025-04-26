@@ -18,33 +18,22 @@ def getAuthorizationDetail(request, pk):
 def createAuthorization(request):
     data = request.data.copy()
     
-    try:
-        schedule = data.get('schedule', '').split(',')
-        data['schedule'] = json.dumps(schedule)
+    schedule = data.get('schedule', '').split(',')
+    data['schedule'] = json.dumps(schedule)
+  
+    serializer = AuthorizationSerializer(data=data)
 
-        with transaction.atomic():
-            serializer = AuthorizationSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
 
-            if serializer.is_valid():
-                serializer.save()
-
-                if data.get('active', '').lower() == 'true':
-                    member = Member.objects.get(id=data['member'])
-                    mltc = MLTC.objects.get(name=data['mltc'])
-                    member.mltc_id = mltc
-                    member.save()
-
-                return Response(serializer.data)
-            else:
-                print(f"Serializer errors: {serializer.errors}")
-                return Response(serializer.errors, status=400)
-    
-    except Member.DoesNotExist:
-        return Response({'error': 'Member not found'}, status=404)
-    except MLTC.DoesNotExist:
-        return Response({'error': 'MLTC not found'}, status=404)
-    except Exception as e:
-        return Response({'error': str(e)}, status=400)
+        if data.get('active', '').lower() == 'true':
+            member = Member.objects.get(id=data['member'])
+            mltc = MLTC.objects.get(name=data['mltc'])
+            member.mltc_id = mltc
+            member.save()
+    else:
+        print(serializer.errors)
+    return Response(serializer.data)
 
 def updateAuthorization(request, pk):
     data = request.data
