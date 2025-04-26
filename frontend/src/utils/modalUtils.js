@@ -1,4 +1,65 @@
-import urlToFile from '../utils/urlToFile';
+const urlToFile = async (url, filename) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+};
+
+const compareTabs = (updatedTab, originalTab) => {
+    const stripEdited = ({ edited, ...rest }) => rest;
+    return JSON.stringify(stripEdited(updatedTab)) !== JSON.stringify(stripEdited(originalTab));
+};
+
+const getActiveAuthIndex = (data) => {
+    const activeIndex = data.findIndex(tab => tab.active === true);
+    return activeIndex;
+};
+
+const getNewTab = (type, localData, id) => {
+    switch (type) {
+        case 'authorizations': {
+            const activeAuthIndex = getActiveAuthIndex(localData);
+            return {
+                id: 'new',
+                member: id,
+                mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || '',
+                mltc: localData[activeAuthIndex]?.mltc || '',
+                mltc_auth_id: '',
+                schedule: localData[activeAuthIndex]?.schedule || [],
+                start_date: '',
+                end_date: '',
+                dx_code: localData[activeAuthIndex]?.dx_code || '',
+                sdc_code: localData[activeAuthIndex]?.sdc_code || '',
+                trans_code: localData[activeAuthIndex]?.trans_code || '',
+                active: true,
+                edited: true,
+            };
+        }
+        case 'contacts': {
+            return {
+                id: 'new',
+                members: [id],
+                contact_type: '',
+                name: '',
+                phone: '',
+                relationship_type: '',
+                edited: true,
+            };
+        }
+        case 'absences': {
+            return {
+                id: 'new',
+                member: id,
+                absence_type: '',
+                start_date: '',
+                end_date: '',
+                note: '',
+                edited: true,
+            };
+        }
+        default:
+            return null;
+    }
+};
 
 const sendRequest = async (id, url, method, data) => {
     const formData = new FormData();
@@ -87,6 +148,9 @@ const saveDataTabs = async (data, endpoint, id=null) => {
 };
 
 export {
+    compareTabs,
+    getActiveAuthIndex,
+    getNewTab,
     sendRequest,
     checkMissingFields,
     saveDataTabs,

@@ -11,13 +11,12 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
       const response = await fetch(`/core/members/${id}/`);
       const data = await response.json();
       setMember(data);
-      onPhotoUpdate(data.photo);
     };
 
     if (id !== 'new') {
       getMember();
     }
-  }, [id, onPhotoUpdate]);
+  }, [id]);
 
   useEffect(() => {
     onPhotoUpdate(member?.photo);
