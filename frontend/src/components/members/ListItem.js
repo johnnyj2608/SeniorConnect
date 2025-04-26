@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatPhone, formatSchedule } from '../utils/formatUtils';
+import { formatDate, formatPhone, formatSchedule } from '../../utils/formatUtils';
 
 const ListItem = ({ member }) => {
   return (

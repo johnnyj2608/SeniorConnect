@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ListItem from '../components/ListItem';
-import AddButton from '../components/AddButton';
-import DownloadButton from '../components/DownloadButton';
-import Dropdown from '../components/Dropdown';
-import SearchInput from '../components/SearchInput';
+import ListItem from '../components/members/ListItem';
+import AddButton from '../components/buttons/AddButton';
+import DownloadButton from '../components/buttons/DownloadButton';
+import Dropdown from '../components/inputs/Dropdown';
+import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import useFilters from '../hooks/useFilters';
 

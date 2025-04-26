@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
-import MemberDetailsCard from '../components/memberCardTemplates/MemberDetailsCard';
-import MemberAuthCard from '../components/memberCardTemplates/MemberAuthCard';
-import MemberContactsCard from '../components/memberCardTemplates/MemberContactsCard';
-import MemberAbsencesCard from '../components/memberCardTemplates/MemberAbsencesCard';
-import MemberFilesCard from '../components/memberCardTemplates/MemberFilesCard';
-import MemberPhotoCard from '../components/memberCardTemplates/MemberPhotoCard';
+import MemberDetailsCard from '../components/cards/MemberDetailsCard';
+import MemberAuthCard from '../components/cards/MemberAuthCard';
+import MemberContactsCard from '../components/cards/MemberContactsCard';
+import MemberAbsencesCard from '../components/cards/MemberAbsencesCard';
+import MemberFilesCard from '../components/cards/MemberFilesCard';
+import MemberPhotoCard from '../components/cards/MemberPhotoCard';
 
 
 const MemberPage = () => {

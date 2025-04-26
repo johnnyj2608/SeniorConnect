@@ -1,6 +1,6 @@
 import React from 'react';
 import { absence_types } from '../../utils/mapUtils';
-import Dropdown from '../Dropdown';
+import Dropdown from '../inputs/Dropdown';
 
 const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};

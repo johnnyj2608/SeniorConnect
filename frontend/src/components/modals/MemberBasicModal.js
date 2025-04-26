@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Dropdown from '../Dropdown';
+import Dropdown from '../inputs/Dropdown';
 
 const MemberBasicModal = ({ data, handleChange }) => {
     return (

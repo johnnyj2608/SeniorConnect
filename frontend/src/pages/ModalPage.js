@@ -1,10 +1,10 @@
 import React from 'react';
-import { MemberBasicModal, MemberSideBasicModal } from '../components/memberModalTemplates/MemberBasicModal';
-import MemberAuthModal from '../components/memberModalTemplates/MemberAuthModal';
-import MemberContactsModal from '../components/memberModalTemplates/MemberContactsModal';
-import MemberAbsencesModal from '../components/memberModalTemplates/MemberAbsencesModal';
-import MemberFilesModal from '../components/memberModalTemplates/MemberFilesModal';
-import ModalTabs from '../components/ModalTabs';
+import { MemberBasicModal, MemberSideBasicModal } from '../components/modals/MemberBasicModal';
+import MemberAuthModal from '../components/modals/MemberAuthModal';
+import MemberContactsModal from '../components/modals/MemberContactsModal';
+import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
+import MemberFilesModal from '../components/modals/MemberFilesModal';
+import ModalTabs from '../components/modals/ModalTabs';
 import useModal from '../hooks/useModal';
 
 const MemberModal = ({ data, onClose }) => {

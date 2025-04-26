@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
-import ContactDetail from '../ContactDetail';
+import ContactDetail from '../members/ContactDetail';
 
 const MemberContactsCard = ({ id, onEdit }) => {
     const [contacts, setContacts] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as MenuIcon } from '../assets/menu.svg'
+import { ReactComponent as MenuIcon } from '../../assets/menu.svg'
 
 const Navbar = () => {
   const navigate = useNavigate()

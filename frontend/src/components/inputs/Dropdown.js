@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
-import { formatSchedule, sortSchedule } from '../utils/formatUtils';
+import { ReactComponent as DropdownIcon } from '../../assets/dropdown.svg';
+import { formatSchedule, sortSchedule } from '../../utils/formatUtils';
 
 const DropdownHeader = ({ 
     selectedValues, 

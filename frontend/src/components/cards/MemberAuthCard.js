@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
-import DetailRow from '../MemberDetail';
+import DetailRow from '../members/MemberDetail';
 
 const MemberAuthCard = ({ id, onEdit }) => {
     const [auth, setAuth] = useState(null);

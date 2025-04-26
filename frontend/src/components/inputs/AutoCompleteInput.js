@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import useDebounce from '../hooks/useDebounce';
-import { formatPhone } from '../utils/formatUtils';
+import useDebounce from '../../hooks/useDebounce';
+import { formatPhone } from '../../utils/formatUtils';
 
 const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
     const [searchResults, setSearchResults] = useState([]);

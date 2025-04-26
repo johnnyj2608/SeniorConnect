@@ -1,7 +1,7 @@
 import React from 'react';
-import Dropdown from '../Dropdown';
+import Dropdown from '../inputs/Dropdown';
 import { contact_types, relationship_types } from '../../utils/mapUtils';
-import AutoCompleteInput from '../AutoCompleteInput';
+import AutoCompleteInput from '../inputs/AutoCompleteInput';
 
 const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
     const current = data[activeTab] || {};

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ReactComponent as AddIcon } from '../assets/add.svg'
-import { contact_types, absence_types } from '../utils/mapUtils';
+import { ReactComponent as AddIcon } from '../../assets/add.svg'
+import { contact_types, absence_types } from '../../utils/mapUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatPhone } from '../utils/formatUtils';
+import { formatPhone } from '../../utils/formatUtils';
 
 const ContactDetail = ({ label, contact }) => (
     <div className="member-detail">

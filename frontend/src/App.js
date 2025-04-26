@@ -5,7 +5,7 @@ import {
 } from "react-router-dom"
 
 import './App.css';
-import Navbar from './components/Navbar'
+import Navbar from './components/layout/Navbar'
 import HomePage from './pages/HomePage'
 import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
