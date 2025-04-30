@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as AddIcon } from '../../assets/add.svg'
+import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { contact_types, absence_types } from '../../utils/mapUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
@@ -68,9 +68,9 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
         tab.add ? (
             <button className="tab-button add-tab" onClick={handleTabClick}>
                 <div className="tab-label">
-                    <div className="tab-heading">
+                    <span className="add-icon">
                         <AddIcon />
-                    </div>
+                    </span>
                 </div>
             </button>
         ) : (

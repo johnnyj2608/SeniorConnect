@@ -3,6 +3,7 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg'
 import { ReactComponent as Eye } from '../../assets/eye.svg'
 import { ReactComponent as Trash } from '../../assets/trash.svg'
+import { ReactComponent as Add } from '../../assets/add.svg'
 import viewFile from '../../utils/viewFile';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
@@ -12,7 +13,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const [versionIndex, setVersionIndex] = useState(0);
     const currentVersion = versions[versionIndex] || {};
 
-    const disabled = data.filter(tab => !tab.deleted).length <= 0
+    const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const disabledVersions = disabled || versions.length == 0;
 
     const handlePrev = () => {
         setVersionIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -21,6 +23,27 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const handleNext = () => {
         setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
     };
+
+    const handleAdd = () => {
+        const newVersion = {
+            file: '',
+            completion_date: '',
+            expiration_date: '',
+            edited: true,
+        };
+        const updatedVersions = [...versions, newVersion];
+
+        const fakeEvent = {
+            target: { value: updatedVersions }
+        };
+    
+        handleChange('versions')(fakeEvent);
+        setVersionIndex(0);
+    };
+
+    const handleDelete = () => {
+        console.log('delete version')
+    }
 
     useEffect(() => {
         setVersionIndex(0);
@@ -45,7 +68,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     <button
                         className="custom-file-button"
                         onClick={() => document.getElementById('hiddenFileInput').click()}
-                        disabled={disabled}
+                        disabled={disabledVersions}
                     >
                         Choose File
                     </button>
@@ -67,7 +90,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     type="date"
                     value={disabled ? '' : currentVersion.completion_date || ''}
                     onChange={handleChange('completion_date', true, versionIndex)}
-                    disabled={disabled}
+                    disabled={disabledVersions}
                 />
             </div>
             <div className="member-detail">
@@ -76,17 +99,19 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     type="date"
                     value={disabled ? '' : currentVersion.expiration_date || ''}
                     onChange={handleChange('expiration_date', true, versionIndex)}
-                    disabled={disabled}
+                    disabled={disabledVersions}
                 />
             </div>
             <div className="file-nav">
-                <button
-                    className="arrow-btn"
-                    onClick={handlePrev}
-                    disabled={versionIndex === 0}
-                >
-                    <ArrowLeft />
-                </button>
+                {versionIndex === 0 ? (
+                    <button className="arrow-btn add-btn" onClick={handleAdd}>
+                        <Add />
+                    </button>
+                ) : (
+                    <button className="arrow-btn" onClick={handlePrev}>
+                        <ArrowLeft />
+                    </button>
+                )}
                 <div className="file-buttons">
                     <button 
                         className="arrow-btn"
@@ -97,7 +122,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     </button>
                     <button 
                         className="arrow-btn"
-                        onClick={() => console.log('delete version')}
+                        onClick={handleDelete}
                         disabled={!currentVersion.file}
                     >
                         <Trash />
