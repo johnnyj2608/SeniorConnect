@@ -26,6 +26,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
 
     const handleAdd = () => {
         const newVersion = {
+            id: 'new',
+            tab: current.name,
             file: '',
             completion_date: '',
             expiration_date: '',
@@ -47,10 +49,14 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         );
 
         const updatedVersions = [...current.versions];
-        updatedVersions[realIndex] = {
-            ...updatedVersions[realIndex],
-            deleted: true,
-        };
+        if (updatedVersions[realIndex].id === 'new') {
+            updatedVersions.splice(realIndex, 1);
+        } else {
+            updatedVersions[realIndex] = {
+                ...updatedVersions[realIndex],
+                deleted: true,
+            };
+        }
     
         const fakeEvent = {
             target: { value: updatedVersions }
