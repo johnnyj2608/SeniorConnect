@@ -866,8 +866,8 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 .arrow-btn {
@@ -896,6 +896,34 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+}
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-main);
+  color: var(--color-dark);
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 9999;
+}
+
+.tooltip[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 1s;
 }
 
 @media (max-width: 835px) {

@@ -104,34 +104,45 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             </div>
             <div className="file-nav">
                 {versionIndex === 0 ? (
-                    <button className="arrow-btn add-btn" onClick={handleAdd}>
+                    <button 
+                        className="arrow-btn add-btn tooltip" 
+                        onClick={handleAdd}
+                        data-tooltip="Add new version"
+                    >
                         <Add />
                     </button>
                 ) : (
-                    <button className="arrow-btn" onClick={handlePrev}>
+                    <button 
+                        className="arrow-btn tooltip" 
+                        onClick={handlePrev}
+                        data-tooltip="Previous version"
+                    >
                         <ArrowLeft />
                     </button>
                 )}
                 <div className="file-buttons">
                     <button 
-                        className="arrow-btn"
+                        className="arrow-btn tooltip"
                         onClick={() => viewFile(currentVersion.file)}
                         disabled={!currentVersion.file}
+                        data-tooltip="View version"
                     >
                         <Eye />
                     </button>
                     <button 
-                        className="arrow-btn"
+                        className="arrow-btn tooltip"
                         onClick={handleDelete}
                         disabled={!currentVersion.file}
+                        data-tooltip="Delete version"
                     >
                         <Trash />
                     </button>
                 </div>
                 <button
-                    className="arrow-btn"
+                    className="arrow-btn tooltip"
                     onClick={handleNext}
                     disabled={versionIndex >= versions.length - 1}
+                    data-tooltip="Next version"
                 >
                     <ArrowRight />
                 </button>
