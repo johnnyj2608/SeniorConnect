@@ -94,7 +94,9 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         Choose File
                     </button>
                     <span className="uploaded-file-name">
-                        {currentVersion.file?.split('/').pop() || 'No file chosen'}
+                        {typeof currentVersion.file === 'string'
+                            ? currentVersion.file.split('/').pop()
+                            : currentVersion.file?.name || 'No file chosen'}
                     </span>
                     <input
                         id="hiddenFileInput"

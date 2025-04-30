@@ -84,8 +84,15 @@ const sendRequest = async (id, url, method, data) => {
     for (const key in data) {
         if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
             const file = await urlToFile(data.photo, `${id}.jpg`);
-            formData.append('photo', file);
-        } else if (key === 'schedule' && data.id !== 'new') {
+            formData.append(key, file);
+        } else if (key === 'versions') {
+            const versions = data[key].filter(v => v.edited && !v.deleted);
+            formData.append(key, JSON.stringify(versions));
+
+            versions.forEach((v, i) => {
+                formData.append('files', v.file);
+            });
+        } else if (key === 'schedule' && data.id !== 'new'){
             formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {
             formData.append(key, '');

@@ -65,7 +65,7 @@ function useModal(data, onClose) {
                     const updatedVersions = [...(currentTab.versions || [])];
                     const updatedVersion = {
                         ...updatedVersions[versionIndex],
-                        [field]: newValue,
+                        [field]: files?.[0] || newValue,
                     };
                     updatedVersions[versionIndex] = updatedVersion;
 
@@ -89,7 +89,6 @@ function useModal(data, onClose) {
                 };
                 return updatedData;
             }
-
             return { ...prevData, [field]: files?.[0] || value };
         });
     };

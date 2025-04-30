@@ -15,7 +15,8 @@ def getMemberDetail(request, pk):
     return Response(serializer.data)
 
 def createMember(request):
-    serializer = MemberSerializer(data=request.data)
+    data = request.data
+    serializer = MemberSerializer(data=data)
 
     if serializer.is_valid():
         serializer.save()

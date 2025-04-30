@@ -7,8 +7,6 @@ class FileTabSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FileVersionSerializer(serializers.ModelSerializer):
-    tab = serializers.SlugRelatedField(queryset=FileTab.objects.all(), slug_field='name')
-
     class Meta:
         model = FileVersion
         fields = '__all__'
