@@ -8,13 +8,13 @@ import viewFile from '../../utils/viewFile';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
-    const versions = current.versions || [];
+    const versions = current.versions.filter(v => !v.deleted) || [];
 
     const [versionIndex, setVersionIndex] = useState(0);
     const currentVersion = versions[versionIndex] || {};
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
-    const disabledVersions = disabled || versions.length == 0;
+    const disabledVersions = disabled || versions.length <= 0;
 
     const handlePrev = () => {
         setVersionIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -31,7 +31,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             expiration_date: '',
             edited: true,
         };
-        const updatedVersions = [...versions, newVersion];
+        const updatedVersions = [...current.versions, newVersion];
 
         const fakeEvent = {
             target: { value: updatedVersions }
@@ -42,8 +42,23 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     };
 
     const handleDelete = () => {
-        console.log('delete version')
-    }
+        const realIndex = current.versions.findIndex(
+            (v) => v === versions[versionIndex]
+        );
+
+        const updatedVersions = [...current.versions];
+        updatedVersions[realIndex] = {
+            ...updatedVersions[realIndex],
+            deleted: true,
+        };
+    
+        const fakeEvent = {
+            target: { value: updatedVersions }
+        };
+    
+        handleChange('versions')(fakeEvent);
+        setVersionIndex(0);
+    };
 
     useEffect(() => {
         setVersionIndex(0);
@@ -105,7 +120,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             <div className="file-nav">
                 {versionIndex === 0 ? (
                     <button 
-                        className="arrow-btn add-btn tooltip" 
+                        className={`arrow-btn add-btn tooltip ${versions.length === 0 ? 'pulse' : ''}`} 
                         onClick={handleAdd}
                         data-tooltip="Add new version"
                     >
@@ -132,7 +147,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     <button 
                         className="arrow-btn tooltip"
                         onClick={handleDelete}
-                        disabled={!currentVersion.file}
+                        disabled={disabledVersions}
                         data-tooltip="Delete version"
                     >
                         <Trash />
@@ -146,6 +161,15 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 >
                     <ArrowRight />
                 </button>
+            </div>
+            <div className="file-footer">
+                {versions.length === 0 ? (
+                    <p>No files available. Please add a file.</p>
+                ) : (
+                    <p>
+                        File {versionIndex + 1} of {versions.length}
+                    </p>
+                )}
             </div>
         </>
     )

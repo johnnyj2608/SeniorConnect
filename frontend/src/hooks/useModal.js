@@ -111,11 +111,12 @@ function useModal(data, onClose) {
         setActiveTab(0);
     };
 
-    const handleDelete = (tab) => {
+    const handleDelete = (index) => {
         setLocalData((prevData) => {
-            const updatedData = prevData.map((item) =>
-                item === tab ? { ...item, active: false, deleted: true } : item
-            );
+            const updatedData = [...prevData];
+            const tabToDelete = updatedData[index];
+            updatedData[index] = { ...tabToDelete, active: false, deleted: true };
+    
             const firstNonDeletedIndex = updatedData.findIndex(tab => !tab.deleted);
             const newActiveTab = firstNonDeletedIndex === -1 ? 0 : firstNonDeletedIndex;
             setActiveTab(newActiveTab);
