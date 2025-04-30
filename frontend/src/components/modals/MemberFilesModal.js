@@ -27,7 +27,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const handleAdd = () => {
         const newVersion = {
             id: 'new',
-            tab: current.name,
+            tab: current.id,
             file: '',
             completion_date: '',
             expiration_date: '',
