@@ -1,6 +1,8 @@
 from rest_framework.response import Response
 from ..models.file_model import FileTab, FileVersion
 from ..serializers.file_serializer import FileTabSerializer, FileVersionSerializer
+import json
+from datetime import datetime
 
 # File Utils
 def getFileTabVersionsByMember(request, member_id):
@@ -50,14 +52,14 @@ def getFileTabDetail(request, pk):
     return Response(serializer.data)
 
 def createFileTab(request):
-    data = request.data
+    serializer = FileTabSerializer(data=request.data)
 
-
-    file_tab = FileTab.objects.create(
-        name=data['name']
-    )
-    serializer = FileTabSerializer(file_tab)
-    return Response(serializer.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 def updateFileTab(request, pk):
     data = request.data
@@ -88,18 +90,14 @@ def getFileVersionDetail(request, pk):
     return Response(serializer.data)
 
 def createFileVersion(request):
-    data = request.data
-    
-    tab = FileTab.objects.get(id=data['tab'])
+    serializer = FileVersionSerializer(data=request.data)
 
-    file_version = FileVersion.objects.create(
-        tab=tab,
-        file=data['file'],
-        completion_date=data.get('completion_date'),
-        expiration_date=data.get('expiration_date')
-    )
-    serializer = FileVersionSerializer(file_version)
-    return Response(serializer.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 def updateFileVersion(request, pk):
     data = request.data
