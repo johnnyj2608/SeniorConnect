@@ -46,6 +46,9 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
                                     <DetailRow label="Start Date" value={formatDate(abs.start_date)} />
                                     <DetailRow label="End Date" value={formatDate(abs.end_date)} />
                                     <DetailRow label="Status" value={status} />
+                                    {abs.note && (
+                                        <DetailRow label="Note" value={abs.note} />
+                                    )}
                                 </li>
                             );
                         })}

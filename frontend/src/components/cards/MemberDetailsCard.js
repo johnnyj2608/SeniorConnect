@@ -45,7 +45,9 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
         <DetailRow label="SSN" value={formatSSN(member?.ssn)} />
         <DetailRow label="Language" value={member?.language} />
         <DetailRow label="Enrollment" value={formatDate(member?.enrollment_date)} />
-        <DetailRow label="Note" value={member?.note} />
+        {member?.note && (
+            <DetailRow label="Note" value={member?.note} />
+        )}
       </div>
     </div>
   );
