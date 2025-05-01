@@ -13,10 +13,11 @@ class FileTab(models.Model):
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='file_tabs')
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('member', 'name')
-        ordering = ['name'] 
+        ordering = ['-updated_at'] 
         
     def __str__(self):
         return f"{self.name} ({self.member})"
@@ -27,9 +28,10 @@ class FileVersion(models.Model):
     completion_date = models.DateField(null=True, blank=True)
     expiration_date = models.DateField(null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-completion_date', '-uploaded_at']
+        ordering = ['-updated_at']
 
     def __str__(self):
         return f"{self.tab.name} - {self.file}"

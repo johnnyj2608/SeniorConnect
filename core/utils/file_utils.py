@@ -62,6 +62,8 @@ def createFileTab(request):
             file_tab = serializer.save()
 
             version_instances = []
+            latest_updated_at = file_tab.updated_at
+
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
@@ -73,11 +75,19 @@ def createFileTab(request):
 
                 version_serializer = FileVersionSerializer(data=version)
                 if version_serializer.is_valid():
-                    version_instances.append(version_serializer.save())
+                    version_instance = version_serializer.save()
+                    version_instances.append(version_instance)
+
+                    if version_instance.updated_at > latest_updated_at:
+                        latest_updated_at = version_instance.updated_at
                 else:
                     transaction.set_rollback(True)
                     print("Version serializer error:", version_serializer.errors)
                     return Response(version_serializer.errors, status=400)
+                
+            file_tab.updated_at = latest_updated_at
+            file_tab.save()
+
             return Response({
                 "file_tab": FileTabSerializer(file_tab).data,
                 "versions": FileVersionSerializer(version_instances, many=True).data
@@ -91,10 +101,6 @@ def updateFileTab(request, pk):
     files = request.FILES.getlist('files')
     versions = data.pop('versions', '[]')
 
-    print(data)
-    print(files)
-    print(versions)
-
     with transaction.atomic():
         file_tab = FileTab.objects.get(id=pk)
         serializer = FileTabSerializer(instance=file_tab, data=data)
@@ -103,6 +109,8 @@ def updateFileTab(request, pk):
             file_tab = serializer.save()
 
             version_instances = []
+            latest_updated_at = file_tab.updated_at
+
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
@@ -119,11 +127,18 @@ def updateFileTab(request, pk):
                     version_serializer = FileVersionSerializer(instance=file_version, data=version)
 
                 if version_serializer.is_valid():
-                    version_instances.append(version_serializer.save())
+                    version_instance = version_serializer.save()
+                    version_instances.append(version_instance)
+
+                    if version_instance.updated_at > latest_updated_at:
+                        latest_updated_at = version_instance.updated_at
                 else:
                     transaction.set_rollback(True)
                     print("Version serializer error:", version_serializer.errors)
                     return Response(version_serializer.errors, status=400)
+            
+            file_tab.updated_at = latest_updated_at
+            file_tab.save()
                 
             return Response({
                 "file_tab": FileTabSerializer(file_tab).data,
