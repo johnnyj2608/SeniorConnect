@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import date
 import os
 from django.utils.text import slugify
 
@@ -7,14 +6,7 @@ def member_file_path(instance, filename):
     """Generate file path using tab name and upload date in M_D_Y format."""
     ext = filename.split('.')[-1]
     tab_name = slugify(instance.tab.name)
-
-    today = date.today()
-    month = today.month
-    day = today.day
-    year = today.strftime('%y')
-    date_str = f"{month}_{day}_{year}"
-
-    filename = f"{tab_name}_{date_str}.{ext}"
+    filename = f"{tab_name}.{ext}"
     return os.path.join(f"{instance.tab.member.id}/", filename)
 
 class FileTab(models.Model):

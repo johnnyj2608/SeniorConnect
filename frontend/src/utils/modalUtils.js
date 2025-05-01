@@ -83,15 +83,19 @@ const sendRequest = async (id, url, method, data) => {
     const formData = new FormData();
     for (const key in data) {
         if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
-            const file = await urlToFile(data.photo, `${id}.jpg`);
-            formData.append(key, file);
+            const photo = await urlToFile(data.photo, `${id}.jpg`);
+            formData.append(key, photo);
         } else if (key === 'versions') {
-            const versions = data[key].filter(v => v.edited && !v.deleted);
-            formData.append(key, JSON.stringify(versions));
+            const versions = data[key].filter(v => !v.deleted);
 
-            versions.forEach((v, i) => {
-                formData.append('files', v.file);
-            });
+            for (const v of versions) {
+                formData.append('versions', JSON.stringify(v));
+                let file = v.file;
+                if (typeof file === 'string') {
+                    file = await urlToFile(file, `${data.name}.pdf`);
+                }
+                formData.append('files', file);
+            };
         } else if (key === 'schedule' && data.id !== 'new'){
             formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {

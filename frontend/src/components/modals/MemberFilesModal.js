@@ -33,7 +33,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             expiration_date: '',
             edited: true,
         };
-        const updatedVersions = [...current.versions, newVersion];
+        const updatedVersions = [newVersion, ...current.versions];
 
         const fakeEvent = {
             target: { value: updatedVersions }
@@ -93,10 +93,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     >
                         Choose File
                     </button>
-                    <span className="uploaded-file-name">
-                        {typeof currentVersion.file === 'string'
-                            ? currentVersion.file.split('/').pop()
-                            : currentVersion.file?.name || 'No file chosen'}
+                    <span className={`uploaded-file-name ${!currentVersion.file && !disabledVersions ? 'no-file-chosen' : ''}`}>
+                        {currentVersion.file ? 'File chosen' : 'No file chosen'}
                     </span>
                     <input
                         id="hiddenFileInput"
@@ -153,7 +151,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         <Eye />
                     </button>
                     <button 
-                        className="arrow-btn tooltip"
+                        className="arrow-btn tooltip trash-can"
                         onClick={handleDelete}
                         disabled={disabledVersions}
                         data-tooltip="Delete version"
