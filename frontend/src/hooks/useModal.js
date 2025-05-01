@@ -190,8 +190,15 @@ function useModal(data, onClose) {
                 break;
 
             case 'files':
-                requiredFields = ['name'];  // files is required as well
+                requiredFields = ['name'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
+                for (const tab of updatedData) {
+                    for (const version of tab.versions) {
+                        if (checkMissingFields(version, ['file'])) {
+                            return;
+                        }
+                    }
+                }
 
                 savedData = await saveDataTabs(updatedData, 'file-tabs');
                 break;
