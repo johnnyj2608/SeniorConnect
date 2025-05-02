@@ -193,9 +193,9 @@ const saveDataTabs = async (data, endpoint, id=null) => {
             return data;
         })
     ]));
-
+    
     const savedData = dataArray
-        .filter(data => !data.deleted && data.id !== 'new')
+        .filter(data => !(data.id === 'new' && data.deleted))
         .map(data => processedData.find(updated => updated.id === data.id) || data)
         .concat(processedData.filter(updated => !dataArray.some(data => data.id === updated.id)));
     return savedData

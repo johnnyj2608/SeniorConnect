@@ -141,8 +141,18 @@ function useModal(data, onClose) {
                 data.setData(savedData);
                 break;
             case 'files':
-                console.log(savedData)
-                // Convert to tab : version pairs
+                const transformedData = savedData
+                    .filter(item => !item.deleted)
+                    .map(item => {
+                        const validVersion = item.versions?.find(version => !version.deleted);
+                        if (!validVersion) return null;
+                        return {
+                            name: item.name,
+                            content: validVersion
+                        };
+                    })
+                    .filter(Boolean); // Remove nulls
+                data.setData(transformedData);
                 break;
             default:
                 console.error("Unknown update type:", type);
