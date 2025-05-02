@@ -193,6 +193,7 @@ function useModal(data, onClose) {
                 requiredFields = ['name'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
                 for (const tab of updatedData) {
+                    if (tab.deleted) continue;
                     for (const version of tab.versions) {
                         if (checkMissingFields(version, ['file'])) {
                             return;

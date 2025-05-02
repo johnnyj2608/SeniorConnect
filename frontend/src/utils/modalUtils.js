@@ -86,9 +86,7 @@ const sendRequest = async (id, url, method, data) => {
             const photo = await urlToFile(data.photo, `${id}.jpg`);
             formData.append(key, photo);
         } else if (key === 'versions') {
-            const versions = data[key].filter(v => !v.deleted);
-
-            for (const v of versions) {
+            for (const v of data[key]) {
                 formData.append('versions', JSON.stringify(v));
                 let file = v.file;
                 if (typeof file === 'string') {

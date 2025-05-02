@@ -67,6 +67,10 @@ def createFileTab(request):
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
+
+                if version.get('deleted'):
+                    continue
+
                 version['file'] = files[i]
                 if version.get('completion_date') == '':
                     version['completion_date'] = None
@@ -114,6 +118,11 @@ def updateFileTab(request, pk):
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
+
+                if version.get('deleted') and version['id'] != 'new':
+                    FileVersion.objects.get(id=version['id']).delete()
+                    continue
+
                 version['file'] = files[i]
                 if version.get('completion_date') == '':
                     version['completion_date'] = None
