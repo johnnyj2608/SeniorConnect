@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { sortSchedule } from '../utils/formatUtils';
+import { sortSchedule, formatPhoto } from '../utils/formatUtils';
 import { 
     compareTabs,
     getActiveAuthIndex,
@@ -129,7 +129,7 @@ function useModal(data, onClose) {
         switch (type) {
             case 'basic':
                 let photoURL = '';
-                if (savedData.photo) photoURL = `${savedData.photo}?t=${new Date().getTime()}`;
+                if (savedData.photo) photoURL = formatPhoto(savedData.photo);
                 data.setData({ ...savedData, photo: photoURL });
                 break;
             case 'authorizations':

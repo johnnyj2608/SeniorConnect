@@ -1,17 +1,19 @@
 import React from 'react';
+import { formatPhoto } from '../../utils/formatUtils';
 
 const MemberPhotoCard = ({ photo }) => {
 
     return (
         <div className="photo-container">
             <img
-            src={photo instanceof File ? URL.createObjectURL(photo) : photo || "/default-profile.jpg"}
-            alt=""
-            className="member-photo"
-            onError={(e) => e.target.src = "/default-profile.jpg"}
+                src={formatPhoto(photo)}
+                alt=""
+                className="member-photo"
+                onError={(e) => (e.target.src = "/default-profile.jpg")}
             />
         </div>
     );
 };
+
 
 export default MemberPhotoCard;

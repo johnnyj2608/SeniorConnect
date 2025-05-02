@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Dropdown from '../inputs/Dropdown';
+import { formatPhoto } from '../../utils/formatUtils';
 
 const MemberBasicModal = ({ data, handleChange }) => {
     return (
@@ -136,7 +137,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
         <>
             <div className="photo-container">
                 <img
-                    src={data.photo instanceof File ? URL.createObjectURL(data.photo) : data.photo || "/default-profile.jpg"}
+                    src={formatPhoto(data.photo)}
                     alt={data.first_name ? `${data.first_name} ${data.last_name}` : "Member"} 
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}

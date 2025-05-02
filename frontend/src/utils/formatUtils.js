@@ -72,11 +72,22 @@ const formatSSN = (ssn) => {
   return ssn.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
 };
 
+const formatPhoto = (photo) => {
+  if (photo instanceof File) {
+      return URL.createObjectURL(photo);
+  }
+  if (photo) {
+      return `${photo}?t=${new Date().getTime()}`;
+  }
+  return "/default-profile.jpg";
+};
+
 export {
   formatDate,
   formatPhone,
   formatGender,
   formatSchedule,
   sortSchedule,
-  formatSSN
+  formatSSN,
+  formatPhoto,
 };

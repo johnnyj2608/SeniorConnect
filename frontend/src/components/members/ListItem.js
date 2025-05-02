@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatPhone, formatSchedule } from '../../utils/formatUtils';
+import { formatDate, formatPhone, formatSchedule, formatPhoto } from '../../utils/formatUtils';
 
 const ListItem = ({ member }) => {
   return (
     <div className="members-list-item">
       <Link to={`/member/${member.id}`}>
         <img 
-            src={member.photo instanceof File ? URL.createObjectURL(member.photo) : member.photo || "/default-profile.jpg"} 
+            src={formatPhoto(member.photo)} 
             alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="members-list-photo"
             onError={(e) => e.target.src = "/default-profile.jpg"}
