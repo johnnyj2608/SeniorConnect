@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { ReactComponent as FileIcon } from '../../assets/file.svg';
 import viewFile from '../../utils/viewFile';
+import { formatDate } from '../../utils/formatUtils';
 
 const MemberFilesCard = ({ id, onEdit }) => {
     const [files, setFiles] = useState([]);
@@ -37,14 +38,14 @@ const MemberFilesCard = ({ id, onEdit }) => {
                         {files.map((file, index) => {
                             const content = file.content;
                             const isExpired = content?.expiration_date && new Date(content.expiration_date) < new Date();
-                            const tooltipText = `Completed: ${content?.completion_date || 'N/A'}\nExpires: ${content?.expiration_date || 'N/A'}`;
-                            
+                            const tooltipText = `Completed: ${formatDate(content?.completion_date) || 'N/A'}`;
+
                             return (
                                 <div
                                     key={index}
-                                    className="file-item"
+                                    className="file-item tooltip"
                                     onClick={() => content?.file && viewFile(content.file)}
-                                    title={tooltipText}
+                                    data-tooltip={tooltipText}
                                 >
                                     <FileIcon className="file-icon" />
                                     <p className={`file-name ${isExpired ? 'file-name-expired' : ''}`}>
