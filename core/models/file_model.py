@@ -17,7 +17,7 @@ class FileTab(models.Model):
 
     class Meta:
         unique_together = ('member', 'name')
-        ordering = ['-updated_at'] 
+        ordering = ['name'] 
         
     def __str__(self):
         return f"{self.name} ({self.member})"
