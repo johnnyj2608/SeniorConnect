@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from ..models.member_model import Member, Language
+from ..models.member_model import Member
 from ..serializers.member_serializer import MemberSerializer, MemberListSerializer
 import os
 from django.conf import settings

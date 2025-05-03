@@ -3,6 +3,8 @@ from django.db import transaction
 from ..models.file_model import FileTab, FileVersion
 from ..serializers.file_serializer import FileTabSerializer, FileVersionSerializer
 import json
+import os
+from django.conf import settings
 
 # File Utils
 def getFileTabVersionsByMember(request, member_id):
@@ -62,8 +64,6 @@ def createFileTab(request):
             file_tab = serializer.save()
 
             version_instances = []
-            latest_updated_at = file_tab.updated_at
-
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
@@ -81,16 +81,10 @@ def createFileTab(request):
                 if version_serializer.is_valid():
                     version_instance = version_serializer.save()
                     version_instances.append(version_instance)
-
-                    if version_instance.updated_at > latest_updated_at:
-                        latest_updated_at = version_instance.updated_at
                 else:
                     transaction.set_rollback(True)
                     print("Version serializer error:", version_serializer.errors)
                     return Response(version_serializer.errors, status=400)
-                
-            file_tab.updated_at = latest_updated_at
-            file_tab.save()
 
             return Response({
                 "file_tab": FileTabSerializer(file_tab).data,
@@ -113,8 +107,6 @@ def updateFileTab(request, pk):
             file_tab = serializer.save()
 
             version_instances = []
-            latest_updated_at = file_tab.updated_at
-
             for i, version in enumerate(versions):
                 version = json.loads(version)
                 version['tab'] = file_tab.id
@@ -134,20 +126,16 @@ def updateFileTab(request, pk):
                 else:
                     file_version = FileVersion.objects.get(id=version['id'])
                     version_serializer = FileVersionSerializer(instance=file_version, data=version)
-
                 if version_serializer.is_valid():
+                    old_file_path = os.path.join(settings.MEDIA_ROOT, str(data['member']), str(version['file']))
+                    if os.path.exists(old_file_path):
+                        os.remove(old_file_path)
                     version_instance = version_serializer.save()
                     version_instances.append(version_instance)
-
-                    if version_instance.updated_at > latest_updated_at:
-                        latest_updated_at = version_instance.updated_at
                 else:
                     transaction.set_rollback(True)
                     print("Version serializer error:", version_serializer.errors)
                     return Response(version_serializer.errors, status=400)
-            
-            file_tab.updated_at = latest_updated_at
-            file_tab.save()
                 
             return Response({
                 "file_tab": FileTabSerializer(file_tab).data,
