@@ -21,19 +21,27 @@ def createAuthorization(request):
     schedule = data.get('schedule', '').split(',')
     data['schedule'] = json.dumps(schedule)
   
-    serializer = AuthorizationSerializer(data=data)
+    with transaction.atomic():
+        serializer = AuthorizationSerializer(data=data)
 
-    if serializer.is_valid():
-        serializer.save()
+        if serializer.is_valid():
+            auth = serializer.save()
 
-        if data.get('active', '').lower() == 'true':
             member = Member.objects.get(id=data['member'])
-            mltc = MLTC.objects.get(name=data['mltc'])
-            member.mltc_id = mltc
+
+            if data.get('active', '').lower() == 'true':
+                mltc = MLTC.objects.get(name=data['mltc'])
+                member.mltc_id = mltc
+                
+            if member.enrollment_date is None and not Authorization.objects.filter(member_id=member.id).exclude(id=auth.id).exists():
+                member.enrollment_date = auth.start_date
+
             member.save()
-    else:
-        print(serializer.errors)
-    return Response(serializer.data)
+        else:
+            transaction.set_rollback(True)
+            print("Serializer error:", serializer.errors)
+            return Response(serializer.errors, status=400)
+        return Response(serializer.data)
 
 def updateAuthorization(request, pk):
     data = request.data
