@@ -5,9 +5,13 @@ from django.utils.text import slugify
 def member_file_path(instance, filename):
     """Generate file path using tab name."""
     ext = filename.split('.')[-1]
+    tab = instance.tab
+    member_id = tab.member.id
+    tab_id = tab.id
     tab_name = slugify(instance.tab.name)
     filename = f"{tab_name}.{ext}"
-    return os.path.join(f"{instance.tab.member.id}/", filename)
+
+    return os.path.join(str(member_id), str(tab_id), filename)
 
 class FileTab(models.Model):
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='file_tabs')

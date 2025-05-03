@@ -5,6 +5,7 @@ from ..serializers.file_serializer import FileTabSerializer, FileVersionSerializ
 import json
 import os
 from django.conf import settings
+import shutil
 
 # File Utils
 def getFileTabVersionsByMember(request, member_id):
@@ -112,7 +113,12 @@ def updateFileTab(request, pk):
                 version['tab'] = file_tab.id
 
                 if version.get('deleted') and version['id'] != 'new':
-                    FileVersion.objects.get(id=version['id']).delete()
+                    file_version = FileVersion.objects.get(id=version['id'])
+    
+                    if file_version.file and os.path.isfile(file_version.file.path):
+                        os.remove(file_version.file.path)
+                    
+                    file_version.delete()
                     continue
 
                 version['file'] = files[i]
@@ -127,16 +133,15 @@ def updateFileTab(request, pk):
                     file_version = FileVersion.objects.get(id=version['id'])
                     version_serializer = FileVersionSerializer(instance=file_version, data=version)
                 if version_serializer.is_valid():
-                    old_file_path = os.path.join(settings.MEDIA_ROOT, str(data['member']), str(version['file']))
-                    if os.path.exists(old_file_path):
-                        os.remove(old_file_path)
                     version_instance = version_serializer.save()
                     version_instances.append(version_instance)
                 else:
                     transaction.set_rollback(True)
                     print("Version serializer error:", version_serializer.errors)
                     return Response(version_serializer.errors, status=400)
-                
+
+            cleanUnusedFiles(file_tab.id)    
+            
             return Response({
                 "file_tab": FileTabSerializer(file_tab).data,
                 "versions": FileVersionSerializer(version_instances, many=True).data
@@ -147,6 +152,11 @@ def updateFileTab(request, pk):
 
 def deleteFileTab(request, pk):
     file_tab = FileTab.objects.get(id=pk)
+
+    tab_folder_path = os.path.join(settings.MEDIA_ROOT, str(file_tab.member.id), str(file_tab.id))
+    if os.path.exists(tab_folder_path) and os.path.isdir(tab_folder_path):
+        shutil.rmtree(tab_folder_path)
+
     file_tab.delete()
     return Response('FileTab was deleted')
 
@@ -187,3 +197,35 @@ def deleteFileVersion(request, pk):
     file_version = FileVersion.objects.get(id=pk)
     file_version.delete()
     return Response('FileVersion was deleted')
+
+# Maitenance Utils
+def cleanUnusedFiles(tab_id):
+    used_files = set()
+    file_versions = FileVersion.objects.filter(tab_id=tab_id)
+
+    for version in file_versions:
+        if version.file:
+            try:
+                used_files.add(os.path.abspath(version.file.path))
+            except ValueError:
+                continue
+
+    tab = FileTab.objects.get(id=tab_id)
+    tab_folder_path = os.path.join(settings.MEDIA_ROOT, str(tab.member.id), str(tab.id))
+
+    removed_files = []
+
+    for root, dirs, files in os.walk(tab_folder_path):
+        for filename in files:
+            file_path = os.path.abspath(os.path.join(root, filename))
+            if file_path not in used_files:
+                try:
+                    os.remove(file_path)
+                    removed_files.append(file_path)
+                except Exception as e:
+                    print(f"Error deleting {file_path}: {e}")
+
+    return Response({
+        "removed_files": removed_files,
+        "message": f"{len(removed_files)} unused file(s) deleted from tab {tab_id}."
+    })
