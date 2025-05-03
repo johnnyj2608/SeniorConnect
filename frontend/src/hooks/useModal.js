@@ -202,8 +202,17 @@ function useModal(data, onClose) {
             case 'files':
                 requiredFields = ['name'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
+
+                const visitedNames = new Set();
                 for (const tab of updatedData) {
                     if (tab.deleted) continue;
+
+                    if (visitedNames.has(tab.name.trim().toLowerCase())) {
+                        alert(`Duplicate tab name detected: "${tab.name}"`);
+                        return;
+                    }
+                    visitedNames.add(tab.name.trim().toLowerCase());
+
                     for (const version of tab.versions) {
                         if (checkMissingFields(version, ['file'])) {
                             return;
