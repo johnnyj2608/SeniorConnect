@@ -30,11 +30,12 @@ const DropdownList = ({
     formattedOptions,
     multiSelect,
     selectedValues,
-    handleSelect }) => {
+    handleSelect,
+    placeholder }) => {
 
     return (
         <ul className="dropdown-list">
-            {!multiSelect && (
+            {!multiSelect && placeholder && (
                 <li key="select-option" onClick={() => handleSelect("")}>
                     <span>Select Option</span>
                 </li>
@@ -59,12 +60,14 @@ const DropdownList = ({
     );
 };
 
+
 const Dropdown = ({
     display,
     onChange,
     options = [],
     disabled,
     multiSelect = false,
+    placeholder = true,
 }) => {
     const [open, setOpen] = useState(false);
     const [selectedValues, setSelectedValues] = useState(display);
@@ -141,6 +144,7 @@ const Dropdown = ({
                     multiSelect={multiSelect}
                     selectedValues={selectedValues}
                     handleSelect={handleSelect}
+                    placeholder={placeholder}
                 />
             )}
         </div>

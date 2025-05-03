@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg'
-import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg'
 import { ReactComponent as Eye } from '../../assets/eye.svg'
 import { ReactComponent as Trash } from '../../assets/trash.svg'
 import { ReactComponent as Add } from '../../assets/add.svg'
 import viewFile from '../../utils/viewFile';
+import { formatDate } from '../../utils/formatUtils';
+import Dropdown from '../inputs/Dropdown';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
@@ -15,14 +15,6 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disabledVersions = disabled || versions.length <= 0;
-
-    const handlePrev = () => {
-        setVersionIndex((prev) => (prev > 0 ? prev - 1 : prev));
-    };
-
-    const handleNext = () => {
-        setVersionIndex((prev) => (prev < versions.length - 1 ? prev + 1 : prev));
-    };
 
     const handleAdd = () => {
         const newVersion = {
@@ -69,6 +61,11 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     useEffect(() => {
         setVersionIndex(0);
     }, [activeTab]);
+
+    const versionOptions = versions.map((version, index) => ({
+        name: `Version ${versions.length - index} - Uploaded ${formatDate(version.uploaded_at) || 'N/A'}`,
+        value: index
+    }));
 
     return (
         <>
@@ -123,49 +120,41 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     disabled={disabledVersions}
                 />
             </div>
-            <div className="file-nav">
-                {versionIndex === 0 ? (
-                    <button 
-                        className={`arrow-btn add-btn tooltip ${versions.length === 0 ? 'pulse' : ''}`} 
-                        onClick={handleAdd}
-                        data-tooltip="Add new version"
-                    >
-                        <Add />
-                    </button>
-                ) : (
-                    <button 
-                        className="arrow-btn tooltip" 
-                        onClick={handlePrev}
-                        data-tooltip="Previous version"
-                    >
-                        <ArrowLeft />
-                    </button>
-                )}
-                <div className="file-buttons">
-                    <button 
-                        className="arrow-btn tooltip"
-                        onClick={() => viewFile(currentVersion.file)}
-                        disabled={!currentVersion.file}
-                        data-tooltip="View version"
-                    >
-                        <Eye />
-                    </button>
-                    <button 
-                        className="arrow-btn tooltip trash-can"
-                        onClick={handleDelete}
-                        disabled={disabledVersions}
-                        data-tooltip="Delete version"
-                    >
-                        <Trash />
-                    </button>
-                </div>
-                <button
-                    className="arrow-btn tooltip"
-                    onClick={handleNext}
-                    disabled={versionIndex >= versions.length - 1}
-                    data-tooltip="Next version"
+
+            <div className="member-detail">
+                <label>Versions</label>
+                <Dropdown
+                    display={versionOptions[versionIndex]?.name || ''}
+                    onChange={(e) => setVersionIndex(Number(e.target.value))}
+                    options={versionOptions}
+                    disabled={disabledVersions}
+                    placeholder={false}
+                />
+            </div>
+
+            <div className="file-buttons">
+                <button 
+                    className={`arrow-btn add-btn tooltip ${versions.length === 0 ? 'pulse' : ''}`} 
+                    onClick={handleAdd}
+                    data-tooltip="Add new version"
                 >
-                    <ArrowRight />
+                    <Add />
+                </button>
+                <button 
+                    className="arrow-btn tooltip"
+                    onClick={() => viewFile(currentVersion.file)}
+                    disabled={!currentVersion.file}
+                    data-tooltip="View version"
+                >
+                    <Eye />
+                </button>
+                <button 
+                    className="arrow-btn tooltip trash-can"
+                    onClick={handleDelete}
+                    disabled={disabledVersions}
+                    data-tooltip="Delete version"
+                >
+                    <Trash />
                 </button>
             </div>
             <div className="file-footer">
