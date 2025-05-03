@@ -1,11 +1,13 @@
 from django.db import models
 import os
+from django.utils.text import slugify
 
 def member_photo_path(instance, filename):
     """Generate file path for new member photo, overwriting existing one."""
     ext = filename.split('.')[-1]
-    filename = f"{instance.id}.{ext}"
-    return os.path.join(f"{instance.id}/", filename)
+    filename = f"{instance.first_name}_{instance.last_name}_profile.{ext}"
+    name = f"{slugify(instance.first_name)}_{slugify(instance.last_name)}_profile.{ext}"
+    return os.path.join(str(instance.id), name)
 
 class Language(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)

@@ -172,7 +172,7 @@ function useModal(data, onClose) {
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
-                savedData = await sendRequest(id, memberEndpoint, memberMethod, updatedData);
+                savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
                 break;
 
             case 'authorizations':

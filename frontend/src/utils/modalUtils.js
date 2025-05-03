@@ -79,18 +79,18 @@ const getNewTab = (type, localData, id) => {
     }
 };
 
-const sendRequest = async (id, url, method, data) => {
+const sendRequest = async (url, method, data) => {
     const formData = new FormData();
     for (const key in data) {
         if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
-            const photo = await urlToFile(data.photo, `${id}.jpg`);
+            const photo = await urlToFile(data.photo, 'photo.jpg');
             formData.append(key, photo);
         } else if (key === 'versions') {
             for (const v of data[key]) {
                 formData.append('versions', JSON.stringify(v));
                 let file = v.file;
                 if (typeof file === 'string') {
-                    file = await urlToFile(file, `${data.name}.pdf`);
+                    file = await urlToFile(file, 'file.pdf');
                 }
                 formData.append('files', file);
             };
@@ -176,7 +176,7 @@ const saveDataTabs = async (data, endpoint, id=null) => {
         ...updatedData.map(async (data) => {
             const dataEndpoint = `/core/${endpoint}/${data.id === 'new' ? '' : data.id + '/'}`;
             const dataMethod = data.id === 'new' ? 'POST' : 'PUT';
-            const response = await sendRequest(data.member, dataEndpoint, dataMethod, data);
+            const response = await sendRequest(dataEndpoint, dataMethod, data);
     
             if (data.id === 'new' && response.id) {
                 data.id = response.id;
