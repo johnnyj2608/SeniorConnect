@@ -17,13 +17,6 @@ const MemberContactsCard = ({ id, onEdit }) => {
         }
     }, [id]);
 
-    const uniqueContacts = contacts.reduce((acc, contact) => {
-        if (!acc[contact.contact_type]) {
-            acc[contact.contact_type] = contact;
-        }
-        return acc;
-    }, {});
-
     const handleEdit = () => {
         onEdit('contacts', contacts, setContacts);
     };
@@ -33,10 +26,17 @@ const MemberContactsCard = ({ id, onEdit }) => {
             <h2>Contacts</h2>
             <div className="member-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
-                <ContactDetail label="Emergency Contact" contact={uniqueContacts.emergency} />
-                <ContactDetail label="Primary Care Provider" contact={uniqueContacts.primary_provider} />
-                <ContactDetail label="Pharmacy" contact={uniqueContacts.pharmacy} />
-                <ContactDetail label="Home Aid" contact={uniqueContacts.home_aid} />
+                {contacts.length === 0 ? (
+                    <p>No contacts available.</p>
+                ) : (
+                    contacts.map((contact) => (
+                        <ContactDetail
+                            key={contact.id}
+                            label={contact.contact_type}
+                            contact={contact}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );

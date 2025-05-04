@@ -4,9 +4,10 @@ from django.core.exceptions import ValidationError
 class Contact(models.Model):
     CONTACT_TYPE_CHOICES = [
         ('emergency', 'Emergency Contact'),
-        ('home_aid', 'Home Aid'),
         ('primary_provider', 'Primary Care Provider'),
         ('pharmacy', 'Pharmacy'),
+        ('home_aid', 'Home Aid'),
+        ('home_care', 'Home Care'),
         ('other', 'Other'),
     ]
 
@@ -36,6 +37,9 @@ class Contact(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
+
+    class Meta:
+        ordering = ['contact_type']
 
     def clean(self):
         if self.contact_type == 'emergency' and not self.relationship_type:

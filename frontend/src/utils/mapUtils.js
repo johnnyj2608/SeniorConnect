@@ -1,8 +1,9 @@
 const contact_types = {
     emergency: 'Emergency Contact',
-    home_aid: 'Home Aid',
     primary_provider: 'Primary Care Provider',
     pharmacy: 'Pharmacy',
+    home_aid: 'Home Aid',
+    home_care: 'Home Care',
     other: 'Other',
 };
 
