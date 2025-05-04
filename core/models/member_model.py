@@ -40,10 +40,7 @@ class Member(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['sadc_member_id', 'mltc_id'], name='unique_member')
-        ]
         ordering = ['mltc_id', 'sadc_member_id']
 
     def __str__(self):
-        return f"{self.id} | {self.sadc_member_id}. {self.first_name} {self.last_name}"
+        return f"({self.id}) {self.sadc_member_id}. {self.first_name} {self.last_name}"
