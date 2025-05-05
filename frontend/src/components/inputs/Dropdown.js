@@ -83,7 +83,7 @@ const Dropdown = ({
             if (typeof option === 'object') {
                 return {
                     name: option.name || '',
-                    value: option.value || option.name || '',
+                    value: option.value != null ? option.value : option.name || '',
                 };
             }
             return null;
