@@ -33,8 +33,6 @@ const MembersListPage = () => {
     setSearchQuery,
     mltcFilter,
     setMltcFilter,
-    scheduleFilter,
-    setScheduleFilter,
     showInactive,
     setShowInactive,
     filteredMembers,
@@ -67,16 +65,6 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label>Schedule Filter</label>
-              <Dropdown
-                display={scheduleFilter}
-                onChange={(e) => setScheduleFilter(e.target.value)}
-                options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
-                multiSelect={true}
-              />
-            </div>
-
-            <div className="filter-option">
               <label>Inactive</label>
               <div className="switch-container">
                 <Switch
@@ -86,20 +74,6 @@ const MembersListPage = () => {
                 />
               </div>
             </div>
-
-            <button
-              className="reset-button"
-              onClick={() => {
-                setSearchQuery('');
-                setMltcFilter('');
-                setScheduleFilter([
-                  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-                ]);
-                setShowInactive(false);
-              }}
-            >
-              Reset Filters
-            </button>
 
           </div>
           <p className="members-count">

@@ -15,9 +15,6 @@ const groupMembersByMltc = (members) => {
 const useFilters = (members, mltcOptions) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [mltcFilter, setMltcFilter] = useState('');
-    const [scheduleFilter, setScheduleFilter] = useState([
-        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-    ]);
     const [showInactive, setShowInactive] = useState(false);
 
     // Filter logic
@@ -31,14 +28,9 @@ const useFilters = (members, mltcOptions) => {
         ? mltcFilter === member.mltc || (mltcFilter === 'Unknown' && member.mltc === null)
         : true;
 
-        const matchesSchedule =
-        scheduleFilter.length === 7
-            ? true
-            : member.schedule?.some((day) => scheduleFilter.includes(day));
-
         const matchesDisenrolled = showInactive ? true : member.active;
 
-        return matchesSearch && matchesMltc && matchesSchedule && matchesDisenrolled;
+        return matchesSearch && matchesMltc && matchesDisenrolled;
     });
 
     const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
@@ -48,8 +40,6 @@ const useFilters = (members, mltcOptions) => {
         setSearchQuery,
         mltcFilter,
         setMltcFilter,
-        scheduleFilter,
-        setScheduleFilter,
         showInactive,
         setShowInactive,
         filteredMembers,
