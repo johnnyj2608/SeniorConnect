@@ -15,7 +15,6 @@ const groupMembersByMltc = (members) => {
 const useFilters = (members, mltcOptions) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [mltcFilter, setMltcFilter] = useState('');
-    const [sortOption, setSortOption] = useState('');
     const [scheduleFilter, setScheduleFilter] = useState([
         'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
     ]);
@@ -42,41 +41,18 @@ const useFilters = (members, mltcOptions) => {
         return matchesSearch && matchesMltc && matchesSchedule && matchesDisenrolled;
     });
 
-    // Sorting logic
-    const sortMembers = (members) => {
-        switch (sortOption) {
-        case 'Member ID (0-9)':
-            return [...members].sort((a, b) => a.sadc_member_id - b.sadc_member_id);
-        case 'Member ID (9-0)':
-            return [...members].sort((a, b) => b.sadc_member_id - a.sadc_member_id);
-        case 'Last Name (A-Z)':
-            return [...members].sort((a, b) => a.last_name.localeCompare(b.last_name));
-        case 'Last Name (Z-A)':
-            return [...members].sort((a, b) => b.last_name.localeCompare(a.last_name));
-        case 'First Name (A-Z)':
-            return [...members].sort((a, b) => a.first_name.localeCompare(b.first_name));
-        case 'First Name (Z-A)':
-            return [...members].sort((a, b) => b.first_name.localeCompare(a.first_name));
-        default:
-            return members;
-        }
-    };
-
-    const sortedMembers = sortMembers(filteredMembers);
-    const membersByMltc = groupMembersByMltc(sortedMembers, mltcOptions);
+    const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
 
     return {
         searchQuery,
         setSearchQuery,
         mltcFilter,
         setMltcFilter,
-        sortOption,
-        setSortOption,
         scheduleFilter,
         setScheduleFilter,
         showInactive,
         setShowInactive,
-        sortedMembers,
+        filteredMembers,
         membersByMltc,
     };
 };

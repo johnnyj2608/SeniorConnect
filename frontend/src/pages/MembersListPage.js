@@ -33,13 +33,11 @@ const MembersListPage = () => {
     setSearchQuery,
     mltcFilter,
     setMltcFilter,
-    sortOption,
-    setSortOption,
     scheduleFilter,
     setScheduleFilter,
     showInactive,
     setShowInactive,
-    sortedMembers,
+    filteredMembers,
     membersByMltc,
   } = useFilters(members, mltcOptions);
 
@@ -69,22 +67,6 @@ const MembersListPage = () => {
             </div>
 
             <div className="filter-option">
-              <label>Sort By</label>
-              <Dropdown
-                display={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                options={[
-                  'Member ID (0-9)',
-                  'Member ID (9-0)',
-                  'Last Name (A-Z)',
-                  'Last Name (Z-A)',
-                  'First Name (A-Z)',
-                  'First Name (Z-A)',
-                ]}
-              />
-            </div>
-
-            <div className="filter-option">
               <label>Schedule Filter</label>
               <Dropdown
                 display={scheduleFilter}
@@ -104,9 +86,24 @@ const MembersListPage = () => {
                 />
               </div>
             </div>
+
+            <button
+              className="reset-button"
+              onClick={() => {
+                setSearchQuery('');
+                setMltcFilter('');
+                setScheduleFilter([
+                  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+                ]);
+                setShowInactive(false);
+              }}
+            >
+              Reset Filters
+            </button>
+
           </div>
           <p className="members-count">
-            {sortedMembers.length} {sortedMembers.length === 1 ? 'result' : 'results'}
+            {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
           </p>
         </div>
       </div>
