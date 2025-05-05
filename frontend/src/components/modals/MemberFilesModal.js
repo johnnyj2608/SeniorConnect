@@ -64,9 +64,9 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const handleDrop = (e) => {
         e.preventDefault();
         setIsDragging(false);
-
+    
         const file = e.dataTransfer.files[0];
-        if (file && file.type === 'application/pdf') {
+        if (file) {
             const fakeEvent = {
                 target: {
                     files: [file]
@@ -129,7 +129,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         <input
                             id="hiddenFileInput"
                             type="file"
-                            accept="application/pdf"
+                            accept="*/*"
                             onChange={handleChange('file', true, versionIndex)}
                             style={{ display: 'none' }}
                         />
@@ -203,7 +203,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             {isDragging && (
                 <div className="upload-overlay">
                     <Upload className="upload-icon pulse" />
-                    <p>Drop PDF to upload</p>
+                    <p>Drop file to upload</p>
                 </div>
             )}
         </div>
