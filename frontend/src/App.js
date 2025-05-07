@@ -9,6 +9,7 @@ import Navbar from './components/layout/Navbar'
 import HomePage from './pages/HomePage'
 import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
+import ReportsPage from './pages/ReportsPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/members" element={<MembersListPage />} />
               <Route path="/member/:id" element={<MemberPage />} />
+              <Route path="/reports/" element={<ReportsPage />} />
             </Routes>
           </div>
         </div>

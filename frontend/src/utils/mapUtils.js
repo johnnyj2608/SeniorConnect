@@ -27,8 +27,15 @@ const absence_types = {
     other: 'Other',
 };
 
+const report_types = {
+    absences: 'Absences',
+    birthdays: 'Birthdays',
+    enrollment: 'Enrollment',
+};
+
 export {
     contact_types,
     relationship_types,
     absence_types,
+    report_types,
 };
