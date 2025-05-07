@@ -1,0 +1,13 @@
+import React from 'react'
+
+const homeMemberCard = () => {
+  return (
+    <div className="home-main-section">
+      <h3>Members</h3>
+      <p>150 members <span className="change-up">+5%</span></p>
+      <button className="detail-dropdown">▼</button>
+    </div>
+  )
+}
+
+export default homeMemberCard
