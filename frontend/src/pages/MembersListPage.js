@@ -40,10 +40,10 @@ const MembersListPage = () => {
   } = useFilters(members, mltcOptions);
 
   return (
-    <div className="members">
-      <div className="members-header">
-        <div className="members-title-row">
-          <h2 className="members-title">&#9782; Members</h2>
+    <>
+      <div className="page-header">
+        <div className="page-title-row">
+          <h2 className="page-title">&#9782; Members</h2>
           <h2>
             <DownloadButton membersByMltc={membersByMltc} />
           </h2>
@@ -91,7 +91,7 @@ const MembersListPage = () => {
           })
           .map(([mltc, members]) => (
             <div key={mltc}>
-              <h3 className="mltc-section">{mltc}</h3>
+              <h3 className="section-title">{mltc}</h3>
               <div className="members-list">
                 {members.map((member) => (
                   <ListItem key={member.id} member={member} />
@@ -101,7 +101,7 @@ const MembersListPage = () => {
           ))}
       </div>
       <AddButton />
-    </div>
+    </>
   );
 };
 

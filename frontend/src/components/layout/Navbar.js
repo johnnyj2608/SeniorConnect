@@ -42,8 +42,8 @@ const Navbar = () => {
         <button onClick={() => handleNavigate('/reports')}>
           <span className="button-text">Reports</span>
         </button>
-        <button onClick={() => handleNavigate('/auditlog')}>
-          <span className="button-text">Audit Log</span>
+        <button onClick={() => handleNavigate('/audits')}>
+          <span className="button-text">Audits</span>
         </button>
         <button onClick={() => handleNavigate('/settings')}>
           <span className="button-text">Settings</span>

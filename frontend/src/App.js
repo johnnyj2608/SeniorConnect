@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage'
 import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
 import ReportsPage from './pages/ReportsPage'
+import SettingsPage from './pages/SettingsPage'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/members" element={<MembersListPage />} />
               <Route path="/member/:id" element={<MemberPage />} />
               <Route path="/reports/" element={<ReportsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </div>
         </div>

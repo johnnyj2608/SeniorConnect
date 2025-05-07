@@ -25,10 +25,10 @@ const ReportsPage = () => {
     };
 
     return (
-        <div className="members">
-            <div className="members-header">
-                <div className="members-title-row">
-                    <h2 className="members-title">&#9782; Reports</h2>
+        <>
+            <div className="page-header">
+                <div className="page-title-row">
+                    <h2 className="page-title">&#9782; Reports</h2>
                     <h2>
                         <DownloadButton membersByMltc={report} />
                     </h2>
@@ -62,7 +62,7 @@ const ReportsPage = () => {
                     </p>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
