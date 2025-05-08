@@ -1,10 +1,24 @@
+from datetime import datetime
+from calendar import monthrange
+from django.db.models import Q
 from rest_framework.response import Response
 from ..models.absence_model import Absence
-from ..models.member_model import Member
 from ..serializers.absence_serializer import AbsenceSerializer
 
 def getAbsenceList(request):
-    absences = Absence.objects.all()
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
+
+    if month and year:
+        start = datetime(year, month, 1)
+        end = datetime(year, month, monthrange(year, month)[1])
+
+        absences = Absence.objects.filter(
+            Q(start_date__lte=end) & Q(end_date__gte=start)
+        )
+    else:
+        absences = Absence.objects.all()
+
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data)
 

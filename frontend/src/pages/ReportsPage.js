@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DownloadButton from '../components/buttons/DownloadButton';
 import Dropdown from '../components/inputs/Dropdown';
-import { report_types } from '../utils/mapUtils';
+import { formatDate } from '../utils/formatUtils';
+import { report_types, absence_types } from '../utils/mapUtils';
 
 const reportTypes = [
     { name: 'Absences', value: 'absences' },
@@ -19,6 +20,21 @@ const ReportsPage = () => {
         const currentMonthYear = currentDate.toISOString().slice(0, 7);
         setSelectedMonthYear(currentMonthYear);
     }, []);
+
+    useEffect(() => {
+        const fetchReport = async () => {
+            if (reportType === 'absences' && selectedMonthYear) {
+                const [year, month] = selectedMonthYear.split('-');
+                const res = await fetch(`/core/absences/?year=${year}&month=${month}`);
+                const data = await res.json();
+                setReport(data);
+            }
+            // Birthdays
+            // Enrollment
+        };
+    
+        fetchReport();
+    }, [reportType, selectedMonthYear]);
 
     const handleMonthYearChange = (e) => {
         setSelectedMonthYear(e.target.value);
@@ -61,6 +77,33 @@ const ReportsPage = () => {
                         {report.length} {report.length === 1 ? 'result' : 'results'}
                     </p>
                 </div>
+            </div>
+            
+            <div className="report-results">
+                {report.length > 0 && (
+                <table className="report-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Reason</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {report.map((absence) => (
+                            <tr key={absence.id}>
+                                <td>{absence.member_name}</td>
+                                <td>{formatDate(absence.start_date)}</td>
+                                <td>{formatDate(absence.end_date) || 'N/A'}</td>
+                                <td>{absence_types[absence.absence_type]}</td>
+                                <td>{absence.note}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
             </div>
         </>
     );
