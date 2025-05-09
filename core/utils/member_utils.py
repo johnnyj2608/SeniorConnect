@@ -1,13 +1,31 @@
+from collections import defaultdict
 from rest_framework.response import Response
 from ..models.member_model import Member
 from ..serializers.member_serializer import MemberSerializer, MemberListSerializer
 import os
 from django.conf import settings
 
+
+
 def getMemberList(request):
     members = Member.objects.all()
     serializer = MemberListSerializer(members, many=True)
-    return Response(serializer.data)
+
+    grouped_members = defaultdict(list)
+    for member_data in serializer.data:
+        mltc_name = member_data['mltc'] if member_data['mltc'] else "Unknown"
+        grouped_members[mltc_name].append(member_data)
+
+    sorted_grouped_members = sorted(grouped_members.items(), key=lambda x: (x[0] == 'Unknown', x[0]))
+
+    data = []
+    for mltc, members_list in sorted_grouped_members:
+        data.append({
+            "name": mltc,
+            "member_list": members_list
+        })
+
+    return Response(data)
 
 def getMemberDetail(request, pk):
     member = Member.objects.get(id=pk)

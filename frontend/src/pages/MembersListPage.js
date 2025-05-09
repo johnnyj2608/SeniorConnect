@@ -36,8 +36,7 @@ const MembersListPage = () => {
     showInactive,
     setShowInactive,
     filteredMembers,
-    membersByMltc,
-  } = useFilters(members, mltcOptions);
+  } = useFilters(members);
 
   return (
     <>
@@ -45,9 +44,10 @@ const MembersListPage = () => {
         <div className="page-title-row">
           <h2 className="page-title">&#9782; Members</h2>
           <h2>
-            <DownloadButton membersByMltc={membersByMltc} />
+            <DownloadButton members={filteredMembers} />
           </h2>
         </div>
+
         <div className="filter-row">
           <div className="filter-content">
             <div className="filter-option">
@@ -74,8 +74,8 @@ const MembersListPage = () => {
                 />
               </div>
             </div>
-
           </div>
+
           <p className="members-count">
             {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
           </p>
@@ -83,23 +83,19 @@ const MembersListPage = () => {
       </div>
 
       <div className="members-list-content">
-        {Object.entries(membersByMltc)
-          .sort(([mltcA], [mltcB]) => {
-            if (mltcA === 'Unknown') return 1;
-            if (mltcB === 'Unknown') return -1;
-            return mltcA.localeCompare(mltcB);
-          })
-          .map(([mltc, members]) => (
-            <div key={mltc}>
-              <h3 className="section-title">{mltc}</h3>
+        {filteredMembers
+          .map((mltc) => (
+            <div key={mltc.name}>
+              <h3 className="section-title">{mltc.name}</h3>
               <div className="members-list">
-                {members.map((member) => (
+                {mltc.member_list.map((member) => (
                   <ListItem key={member.id} member={member} />
                 ))}
               </div>
             </div>
           ))}
       </div>
+
       <AddButton />
     </>
   );

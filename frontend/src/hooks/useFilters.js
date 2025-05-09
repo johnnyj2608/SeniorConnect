@@ -1,50 +1,39 @@
 import { useState } from 'react';
 
-const groupMembersByMltc = (members) => {
-    return members.reduce((acc, member) => {
-      const mltcName = member.mltc || "Unknown";
-  
-      if (!acc[mltcName]) {
-        acc[mltcName] = [];
-      }
-      acc[mltcName].push(member);
-      return acc;
-    }, {});
-};
+const useFilters = (groupedMltcs) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mltcFilter, setMltcFilter] = useState('');
+  const [showInactive, setShowInactive] = useState(false);
 
-const useFilters = (members, mltcOptions) => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [mltcFilter, setMltcFilter] = useState('');
-    const [showInactive, setShowInactive] = useState(false);
+  const filteredMembers = groupedMltcs.filter((mltc) => {
+    const matchesMltc = mltcFilter ? mltcFilter === mltc.name : true;
 
-    // Filter logic
-    const filteredMembers = members.filter((member) => {
-        const matchesSearch =
-        member.sadc_member_id.toString().startsWith(searchQuery) ||
-        member.first_name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-        member.last_name.toLowerCase().startsWith(searchQuery.toLowerCase());
+    if (!matchesMltc) return false;
 
-        const matchesMltc = mltcFilter
-        ? mltcFilter === member.mltc || (mltcFilter === 'Unknown' && member.mltc === null)
-        : true;
-
-        const matchesDisenrolled = showInactive ? true : member.active;
-
-        return matchesSearch && matchesMltc && matchesDisenrolled;
+    const matchesSearch = mltc.member_list.some((member) => {
+      return (
+        member.sadc_member_id?.toString().startsWith(searchQuery) ||
+        member.first_name?.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+        member.last_name?.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
     });
 
-    const membersByMltc = groupMembersByMltc(filteredMembers, mltcOptions);
+    const matchesActive = showInactive
+      ? true
+      : mltc.member_list.some((member) => member.active);
 
-    return {
-        searchQuery,
-        setSearchQuery,
-        mltcFilter,
-        setMltcFilter,
-        showInactive,
-        setShowInactive,
-        filteredMembers,
-        membersByMltc,
-    };
+    return matchesSearch && matchesActive;
+  });
+
+  return {
+    searchQuery,
+    setSearchQuery,
+    mltcFilter,
+    setMltcFilter,
+    showInactive,
+    setShowInactive,
+    filteredMembers,
+  };
 };
 
 export default useFilters;
