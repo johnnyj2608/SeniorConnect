@@ -1,13 +1,33 @@
+from datetime import datetime, timedelta
+from django.db.models import Q
 from collections import defaultdict
 from rest_framework.response import Response
 from ..models.member_model import Member
-from ..serializers.member_serializer import MemberSerializer, MemberListSerializer
+from ..serializers.member_serializer import (
+    MemberSerializer,
+    MemberListSerializer,
+    MemberBirthdaySerializer
+)
 import os
 from django.conf import settings
 
-
-
 def getMemberList(request):
+    filter_type = request.GET.get('filter')
+
+    if filter_type == 'home':
+        today = datetime.today().date()
+
+        birthday_queries = Q()
+        for i in range(7):
+            future_day = today + timedelta(days=i)
+            birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
+
+        members = Member.objects.filter(birthday_queries)
+
+        serializer = MemberBirthdaySerializer(members, many=True)
+        sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
+        return Response(sorted_data)
+
     members = Member.objects.all()
     serializer = MemberListSerializer(members, many=True)
 

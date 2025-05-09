@@ -1,8 +1,8 @@
 import React from 'react'
 
-const homeActivityCard = () => {
+const HomeActivityCard = () => {
   return (
-    <div className="home-main-section">
+    <div className="home-section">
       <h3>Activity</h3>
       <ul>
         <li><strong>John</strong> added <em>Mary Smith</em></li>
@@ -13,4 +13,4 @@ const homeActivityCard = () => {
   );
 }
 
-export default homeActivityCard
+export default HomeActivityCard

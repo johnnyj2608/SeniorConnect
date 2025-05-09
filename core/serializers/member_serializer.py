@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
 from ..models.authorization_model import Authorization, MLTC
+from datetime import datetime, timedelta
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,3 +66,20 @@ class MemberListSerializer(serializers.ModelSerializer):
     def get_schedule(self, obj):
         auth = self.get_active_auth(obj)
         return auth.schedule if auth else None
+
+class MemberBirthdaySerializer(serializers.ModelSerializer):
+    days_until = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Member
+        fields = ('sadc_member_id', 'first_name', 'last_name', 'days_until')
+
+    def get_days_until(self, obj):
+        """Calculate the days until the birthday."""
+        today = datetime.today().date()
+        birthday = obj.birth_date
+
+        next_birthday = birthday.replace(year=today.year)
+
+        days_until = (next_birthday - today).days
+        return days_until

@@ -1,10 +1,10 @@
 import React from 'react'
-import BirthdaysCard from '../components/homeCards/homeBirthdaysCard'
-import AuditLogsCard from '../components/homeCards/homeAuditLogsCard'
-import MembersCard from '../components/homeCards/homeMembersCard'
-import AbsencesCard from '../components/homeCards/homeAbsencesCard'
-import AuthorizationsCard from '../components/homeCards/homeAuthCard'
-import SnapshotsCard from '../components/homeCards/homeSnapshotsCard'
+import BirthdaysCard from '../components/homeCards/HomeBirthdaysCard'
+import AuditLogsCard from '../components/homeCards/HomeAuditLogsCard'
+import MembersCard from '../components/homeCards/HomeMembersCard'
+import AbsencesCard from '../components/homeCards/HomeAbsencesCard'
+import AuthorizationsCard from '../components/homeCards/HomeAuthCard'
+import SnapshotsCard from '../components/homeCards/HomeSnapshotsCard'
 
 const HomePage = () => {
   return (
@@ -22,7 +22,6 @@ const HomePage = () => {
         <div className="home-main-panel">
           <MembersCard />
           <AbsencesCard />
-          <BirthdaysCard showInMain={true} />
           <AuthorizationsCard />
           <SnapshotsCard />
         </div>

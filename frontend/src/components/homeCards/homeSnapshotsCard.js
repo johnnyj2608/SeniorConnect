@@ -1,8 +1,8 @@
 import React from 'react'
 
-const homeSnapshotCard = () => {
+const HomeSnapshotCard = () => {
   return (
-    <div className="home-main-section">
+    <div className="home-section">
       <h3>Snapshots</h3>
       <p>April report is ready to view.</p>
       <ul>
@@ -16,4 +16,4 @@ const homeSnapshotCard = () => {
   );
 }
 
-export default homeSnapshotCard
+export default HomeSnapshotCard

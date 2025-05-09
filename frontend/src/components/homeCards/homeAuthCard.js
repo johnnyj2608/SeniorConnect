@@ -1,8 +1,8 @@
 import React from 'react'
 
-const homeAuthCard = () => {
+const HomeAuthCard = () => {
   return (
-    <div className="home-main-section">
+    <div className="home-section">
         <h3>Authorizations</h3>
         <ul>
             <li>Jane's authorization expires on 4/1/25</li>
@@ -11,4 +11,4 @@ const homeAuthCard = () => {
   )
 }
 
-export default homeAuthCard
+export default HomeAuthCard

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const homeMemberCard = () => {
+const HomeMemberCard = () => {
   return (
-    <div className="home-main-section">
+    <div className="home-section">
       <h3>Members</h3>
       <p>150 members <span className="change-up">+5%</span></p>
       <button className="detail-dropdown">▼</button>
@@ -10,4 +10,4 @@ const homeMemberCard = () => {
   )
 }
 
-export default homeMemberCard
+export default HomeMemberCard
