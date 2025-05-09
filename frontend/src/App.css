@@ -128,6 +128,24 @@ input {
 }
 
 /* -------------- *
+ * Home
+ * -------------- */
+
+.birthday-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.birthday-item:hover {
+  transform: scale(1.01);
+  background-color: #e0e0e0;
+}
+
+/* -------------- *
  * Members
  * -------------- */
 
@@ -443,25 +461,25 @@ input {
   margin-bottom: 10px;
 }
 
-.member-half-card, .member-full-card {
+.half-card, .full-card {
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
 
-.member-half-card h2, .member-full-card h2 {
+.half-card h2, .full-card h2 {
   padding-left: 10px;
 }
 
-.member-half-card {
+.half-card {
   width: 350px;
 }
 
-.member-full-card {
+.full-card {
   width: 98%;
 }
 
-.member-container {
+.card-container {
   justify-content: center;
   color: var(--color-white);
   background: var(--color-gray);

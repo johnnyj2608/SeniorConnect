@@ -22,9 +22,9 @@ const MemberContactsCard = ({ id, onEdit }) => {
     };
 
     return (
-        <div className="member-half-card">
+        <div className="half-card">
             <h2>Contacts</h2>
-            <div className="member-container">
+            <div className="card-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
                 {contacts.length === 0 ? (
                     <p>No contacts available.</p>

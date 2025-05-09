@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const HomeBirthdayCard = () => {
   const [birthdays, setBirthdays] = useState([]);
@@ -16,25 +17,29 @@ const HomeBirthdayCard = () => {
 
   const renderBirthdayMessage = (daysUntil) => {
     if (daysUntil === 0) {
-      return "'s is today! 🎉";
+      return "🎂";
     } else if (daysUntil === 1) {
-      return "'s is tomorrow";
+      return "1 Day";
     } else {
-      return `'s is in ${daysUntil} days`;
+      return `${daysUntil} Days`;
     }
   };
 
   return (
-    <div className="home-section">
+    <div className="half-card">
       <h3>Birthdays</h3>
-      <ul>
-        {birthdays.map((birthday) => (
-          <li key={birthday.sadc_member_id}>
-            {birthday.sadc_member_id}. {birthday.first_name} {birthday.last_name} 
-            {renderBirthdayMessage(birthday.days_until)}
-          </li>
-        ))}
-      </ul>
+      <div className="card-container">
+        <ul>
+          {birthdays.map((birthday) => (
+            <Link to={`/member/${birthday.id}`}>
+              <li key={birthday.id} className="birthday-item">
+                <span>{birthday.first_name} {birthday.last_name} </span>
+                <span>{renderBirthdayMessage(birthday.days_until)}</span>
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

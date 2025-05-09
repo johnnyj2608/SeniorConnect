@@ -29,9 +29,9 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
   };
   
   return (
-    <div className="member-half-card">
+    <div className="half-card">
       <h2>Details</h2>
-      <div className="member-container">
+      <div className="card-container">
         <Pencil className="edit-icon" onClick={handleEdit} />
         <DetailRow label="Member ID" value={member?.sadc_member_id} />
         <DetailRow label="Last Name" value={member?.last_name} />

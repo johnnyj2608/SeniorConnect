@@ -30,9 +30,9 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
     });
 
     return (
-        <div className="member-half-card">
+        <div className="half-card">
             <h2>Absences</h2>
-            <div className="member-container">
+            <div className="card-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
                 {activeAbsences.length > 0 ? (
                     <ul className="absence-list">

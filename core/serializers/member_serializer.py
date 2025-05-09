@@ -72,7 +72,7 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ('sadc_member_id', 'first_name', 'last_name', 'days_until')
+        fields = ('id', 'first_name', 'last_name', 'days_until')
 
     def get_days_until(self, obj):
         """Calculate the days until the birthday."""

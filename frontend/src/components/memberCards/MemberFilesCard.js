@@ -29,9 +29,9 @@ const MemberFilesCard = ({ id, onEdit }) => {
     };
 
     return (
-        <div className="member-full-card">
+        <div className="full-card">
             <h2>Files</h2>
-            <div className="member-container">
+            <div className="card-container">
                 <Pencil className="edit-icon" onClick={handleEdit} />
                 {files.length > 0 ? (
                     <div className="file-list">
