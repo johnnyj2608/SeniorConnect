@@ -9,6 +9,8 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MemberSerializer(serializers.ModelSerializer):
+    active = serializers.BooleanField(required=False, default=True)
+    
     language = serializers.SlugRelatedField(
         queryset=Language.objects.all(), 
         slug_field='name', 
