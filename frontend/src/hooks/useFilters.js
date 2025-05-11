@@ -5,25 +5,26 @@ const useFilters = (groupedMltcs) => {
   const [mltcFilter, setMltcFilter] = useState('');
   const [showInactive, setShowInactive] = useState(false);
 
-  const filteredMembers = groupedMltcs.filter((mltc) => {
+  const filteredMltcs = groupedMltcs.map((mltc) => {
     const matchesMltc = mltcFilter ? mltcFilter === mltc.name : true;
 
-    if (!matchesMltc) return false;
+    if (!matchesMltc) return { ...mltc, member_list: [] };
 
-    const matchesSearch = mltc.member_list.some((member) => {
-      return (
-        member.sadc_member_id?.toString().startsWith(searchQuery) ||
-        member.first_name?.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-        member.last_name?.toLowerCase().startsWith(searchQuery.toLowerCase())
-      );
+    const filteredMembers = mltc.member_list.filter((member) => {
+      const matchesSearch = 
+        member.sadc_member_id?.toString().includes(searchQuery) ||
+        member.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.last_name?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesActive = showInactive ? true : member.active;
+
+      return matchesSearch && matchesActive;
     });
 
-    const matchesActive = showInactive
-      ? true
-      : mltc.member_list.some((member) => member.active);
-
-    return matchesSearch && matchesActive;
+    return { ...mltc, member_list: filteredMembers };
   });
+
+  const filteredMembers = filteredMltcs.filter(mltc => mltc.member_list.length > 0);
 
   return {
     searchQuery,
