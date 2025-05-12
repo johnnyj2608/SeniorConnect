@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
 from ..models.authorization_model import Authorization, MLTC
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:

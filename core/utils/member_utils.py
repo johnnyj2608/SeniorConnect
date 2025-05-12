@@ -55,25 +55,55 @@ def getMemberDetail(request, pk):
 
 def createMember(request):
     data = request.data.copy()
-    serializer = MemberSerializer(data=data)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        print(serializer.errors)
-        return Response(serializer.errors, status=400)
+    photo = request.FILES.get('photo')
+    if 'photo' in data:
+        del data['photo']
+
+    photo_uploaded = False
+
+    try:
+        with transaction.atomic():
+            serializer = MemberSerializer(data=data)
+            
+            if serializer.is_valid():
+                member = serializer.save()
+
+                if photo:
+                    file_name = f"{member.first_name}_{member.last_name}_profile.{photo.name.split('.')[-1]}"
+                    file_path = f"{member.id}/{file_name}"
+
+                    public_url, error = upload_file_to_supabase(photo, file_path, 'photo')
+                    
+                    if error:
+                        raise Exception(f"Photo upload failed: {error}")
+
+                    photo_uploaded = True
+                    member.photo = public_url
+                    member.save()
+
+                return Response(MemberSerializer(member).data)
+
+            else:
+                raise Exception("Serializer validation failed.")
+
+    except Exception as e:
+        if photo_uploaded:
+            delete_folder_from_supabase(f"{member.id}/")
+        return Response({"error": str(e)}, status=500)
     
 def updateMember(request, pk):
     data = request.data.copy()
     member = Member.objects.get(id=pk)
+
+    photo_uploaded = False
 
     try:
         with transaction.atomic():
 
             if 'photo' in request.FILES:
                 photo = request.FILES['photo']
-                file_name = f"{member.first_name}_{member.last_name}_profile.{photo.name.split('.')[-1]}"
+                file_name = f"{member.first_name}_{member.last_name}_profile.jpg"
                 file_path = f"{member.id}/{file_name}"
 
                 public_url, error = upload_file_to_supabase(photo, file_path, 'photo')
@@ -81,6 +111,7 @@ def updateMember(request, pk):
                 if error:
                     raise Exception(f"Photo upload failed: {error}")
                 
+                photo_uploaded = True
                 data['photo'] = public_url
 
             serializer = MemberSerializer(instance=member, data=data)
@@ -93,10 +124,8 @@ def updateMember(request, pk):
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:
-        if 'photo' in data:
-            file_path = f"{member.id}/{member.first_name}_{member.last_name}_profile"
+        if photo_uploaded:
             delete_photo_from_supabase(file_path)
-
         return Response({"error": str(e)}, status=500)
 
 def deleteMember(request, pk):

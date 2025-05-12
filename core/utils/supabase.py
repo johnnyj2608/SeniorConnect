@@ -20,23 +20,19 @@ def upload_file_to_supabase(file_obj, file_path, file_type):
 
         if file_type == 'photo':
             try:
-                jpg_file_path = f"{file_path.rsplit('.', 1)[0]}.jpg"
-                supabase.storage.from_(settings.SUPABASE_BUCKET).remove([jpg_file_path])
-                print(f"Deleted existing photo file at {jpg_file_path}")
+                supabase.storage.from_(settings.SUPABASE_BUCKET).remove([file_path])
             except Exception as e:
-                print(f"No existing photo file found or error deleting file: {str(e)}")
+                print(f"Error deleting file: {str(e)}")
 
             image = Image.open(file_obj).convert("RGB")
             buffer = BytesIO()
             image.save(buffer, format="JPEG", optimize=True, quality=75)
             buffer.seek(0)
             content = buffer.read()
-            file_path = f"{file_path.rsplit('.', 1)[0]}.jpg"
             content_type = "image/jpeg"
 
         elif file_type == 'pdf':
             content = file_obj.read()
-            file_path = f"{file_path.rsplit('.', 1)[0]}.pdf"
             content_type = "application/pdf"
 
         else:
