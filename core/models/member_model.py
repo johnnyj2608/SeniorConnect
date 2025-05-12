@@ -19,7 +19,7 @@ class Member(models.Model):
 
     # Details
     sadc_member_id = models.IntegerField(null=False, blank=False)
-    photo = models.ImageField(upload_to=member_photo_path, null=True, blank=True)
+    photo = models.URLField(null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
     last_name = models.CharField(max_length=255, null=False, blank=False)
     birth_date = models.DateField(null=False, blank=False)

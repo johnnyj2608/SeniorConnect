@@ -81,6 +81,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+SUPABASE_URL = env('SUPABASE_URL')
+SUPABASE_KEY = env('SUPABASE_KEY')
+SUPABASE_BUCKET = env('SUPABASE_BUCKET')
+
 DATABASES = {
     'default': env.db()
     # 'default': {

@@ -1,3 +1,4 @@
+from django.db import transaction
 from datetime import datetime, timedelta
 from django.db.models import Q
 from collections import defaultdict
@@ -8,8 +9,8 @@ from ..serializers.member_serializer import (
     MemberListSerializer,
     MemberBirthdaySerializer
 )
-import os
 from django.conf import settings
+from core.utils.supabase import *
 
 def getMemberList(request):
     filter_type = request.GET.get('filter')
@@ -62,29 +63,50 @@ def createMember(request):
     else:
         print(serializer.errors)
         return Response(serializer.errors, status=400)
-
+    
 def updateMember(request, pk):
     data = request.data
     member = Member.objects.get(id=pk)
-    serializer = MemberSerializer(instance=member, data=data)
 
-    if serializer.is_valid():
-        if 'photo' in request.FILES and member.photo:
-            old_photo_path = os.path.join(settings.MEDIA_ROOT, str(member.photo))
-            if os.path.exists(old_photo_path):
-                os.remove(old_photo_path)
-        serializer.save()
-    else:
-        print(serializer.errors)
-    return Response(serializer.data)
+    try:
+        with transaction.atomic():
+
+            if 'photo' in request.FILES:
+                photo = request.FILES['photo']
+                file_name = f"{member.first_name}_{member.last_name}_profile.{photo.name.split('.')[-1]}"
+                file_path = f"{member.id}/{file_name}"
+
+                public_url, error = upload_photo_to_supabase(photo, file_path)
+
+                if error:
+                    raise Exception(f"Photo upload failed: {error}")
+                
+                data['photo'] = public_url
+
+            serializer = MemberSerializer(instance=member, data=data)
+
+            if serializer.is_valid():
+                member = serializer.save()
+
+                return Response(MemberSerializer(member).data)
+            else:
+                raise Exception("Serializer validation failed.")
+
+    except Exception as e:
+        if 'photo' in data:
+            file_path = f"{member.id}/{member.first_name}_{member.last_name}_profile"
+            delete_photo_from_supabase(file_path)
+
+        return Response({"error": str(e)}, status=500)
 
 def deleteMember(request, pk):
     member = Member.objects.get(id=pk)
 
     if member.photo:
-        photo_path = member.photo.path
-        if os.path.isfile(photo_path):
-            os.remove(photo_path)
-            
+        try:
+            delete_folder_from_supabase(f"{member.id}/")
+        except Exception as e:
+            print(f"Error deleting photo from Supabase: {e}")
+
     member.delete()
     return Response('Member was deleted')
