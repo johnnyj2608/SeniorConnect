@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { sortSchedule, formatPhoto } from '../utils/formatUtils';
+import { sortSchedule } from '../utils/formatUtils';
 import { 
     compareTabs,
     getActiveAuthIndex,
@@ -127,15 +127,11 @@ function useModal(data, onClose) {
         if (!data?.setData) return;
 
         switch (type) {
-            case 'basic':
-                let photoURL = '';
-                if (savedData.photo) photoURL = formatPhoto(savedData.photo);
-                data.setData({ ...savedData, photo: photoURL });
-                break;
             case 'authorizations':
                 const activeAuthIndex = getActiveAuthIndex(savedData);
                 data.setData(savedData[activeAuthIndex]);
                 break;
+            case 'basic':
             case 'contacts':
             case 'absences':
                 data.setData(savedData);
