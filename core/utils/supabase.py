@@ -5,33 +5,52 @@ from io import BytesIO
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
-def upload_photo_to_supabase(photo_file, file_path):
-    """Uploads a photo to Supabase as JPEG and returns the public URL."""
+def upload_file_to_supabase(file_obj, file_path, file_type):
+    """
+    Uploads a file to Supabase storage and returns the public URL.
+    
+    :param file_obj: Django UploadedFile object
+    :param file_path: Path (within bucket) to store the file
+    :param file_type: 'photo' or 'pdf'
+    :return: (public_url, error)
+    """
     try:
-        if not hasattr(photo_file, 'read'):
-            return None, "Invalid file type."
+        if not hasattr(file_obj, 'read'):
+            return None, "Invalid file object."
 
-        # Convert to JPEG and optimize
-        image = Image.open(photo_file).convert("RGB")
-        buffer = BytesIO()
-        image.save(buffer, format="JPEG", optimize=True, quality=75)
-        buffer.seek(0)
+        if file_type == 'photo':
+            try:
+                jpg_file_path = f"{file_path.rsplit('.', 1)[0]}.jpg"
+                supabase.storage.from_(settings.SUPABASE_BUCKET).remove([jpg_file_path])
+                print(f"Deleted existing photo file at {jpg_file_path}")
+            except Exception as e:
+                print(f"No existing photo file found or error deleting file: {str(e)}")
 
-        # Prepare content and file path
-        content = buffer.read()
-        file_path = f"{file_path.rsplit('.', 1)[0]}.jpg"
+            image = Image.open(file_obj).convert("RGB")
+            buffer = BytesIO()
+            image.save(buffer, format="JPEG", optimize=True, quality=75)
+            buffer.seek(0)
+            content = buffer.read()
+            file_path = f"{file_path.rsplit('.', 1)[0]}.jpg"
+            content_type = "image/jpeg"
 
-        # Upload the image to Supabase
+        elif file_type == 'pdf':
+            content = file_obj.read()
+            file_path = f"{file_path.rsplit('.', 1)[0]}.pdf"
+            content_type = "application/pdf"
+
+        else:
+            return None, "Unsupported file type."
+
         response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
             file_path,
             content,
-            {"content-type": "image/jpeg"}
+            {"content-type": content_type}
         )
 
         if isinstance(response, dict) and 'error' in response:
             return None, response['error']
 
-        # Return the public URL
         public_url = f"{settings.SUPABASE_URL}/storage/v1/object/public/{settings.SUPABASE_BUCKET}/{file_path}"
         return public_url, None
 

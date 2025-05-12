@@ -54,7 +54,7 @@ def getMemberDetail(request, pk):
     return Response(serializer.data)
 
 def createMember(request):
-    data = request.data
+    data = request.data.copy()
     serializer = MemberSerializer(data=data)
 
     if serializer.is_valid():
@@ -65,7 +65,7 @@ def createMember(request):
         return Response(serializer.errors, status=400)
     
 def updateMember(request, pk):
-    data = request.data
+    data = request.data.copy()
     member = Member.objects.get(id=pk)
 
     try:
@@ -76,7 +76,7 @@ def updateMember(request, pk):
                 file_name = f"{member.first_name}_{member.last_name}_profile.{photo.name.split('.')[-1]}"
                 file_path = f"{member.id}/{file_name}"
 
-                public_url, error = upload_photo_to_supabase(photo, file_path)
+                public_url, error = upload_file_to_supabase(photo, file_path, 'photo')
 
                 if error:
                     raise Exception(f"Photo upload failed: {error}")
