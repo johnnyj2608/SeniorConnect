@@ -31,13 +31,13 @@ const HomeBirthdayCard = () => {
       <div className="card-container">
         <ul>
           {birthdays.map((birthday) => (
-            <Link to={`/member/${birthday.id}`}>
-              <li key={birthday.id} className="birthday-item">
-                <span>{birthday.first_name} {birthday.last_name} </span>
-                <span>{renderBirthdayMessage(birthday.days_until)}</span>
-              </li>
-            </Link>
-          ))}
+          <Link to={`/member/${birthday.id}`} key={birthday.id}>
+            <li className="birthday-item">
+              <span>{birthday.first_name} {birthday.last_name} </span>
+              <span>{renderBirthdayMessage(birthday.days_until)}</span>
+            </li>
+          </Link>
+        ))}
         </ul>
       </div>
     </div>
