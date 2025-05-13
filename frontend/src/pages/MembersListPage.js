@@ -38,6 +38,10 @@ const MembersListPage = () => {
     filteredMembers,
   } = useFilters(members);
 
+  const totalFilteredMembers = filteredMembers.reduce((count, mltc) => {
+    return count + mltc.member_list.length;
+  }, 0);
+
   return (
     <>
       <div className="page-header">
@@ -77,7 +81,7 @@ const MembersListPage = () => {
           </div>
 
           <p className="members-count">
-            {filteredMembers.length} {filteredMembers.length === 1 ? 'result' : 'results'}
+            {totalFilteredMembers} {totalFilteredMembers === 1 ? 'result' : 'results'}
           </p>
         </div>
       </div>
