@@ -9,7 +9,6 @@ from ..serializers.member_serializer import (
     MemberListSerializer,
     MemberBirthdaySerializer
 )
-from django.conf import settings
 from core.utils.supabase import *
 
 def getMemberList(request):
@@ -70,10 +69,13 @@ def createMember(request):
                 member = serializer.save()
 
                 if photo:
-                    file_name = f"{member.first_name}_{member.last_name}_profile.{photo.name.split('.')[-1]}"
-                    file_path = f"{member.id}/{file_name}"
+                    new_path = f"{member.id}/{member.first_name}_{member.last_name}"
 
-                    public_url, error = upload_file_to_supabase(photo, file_path, 'photo')
+                    public_url, error = upload_photo_to_supabase(
+                        photo, 
+                        new_path,
+                        member.photo
+                    )
                     
                     if error:
                         raise Exception(f"Photo upload failed: {error}")
@@ -103,10 +105,12 @@ def updateMember(request, pk):
 
             if 'photo' in request.FILES:
                 photo = request.FILES['photo']
-                file_name = f"{member.first_name}_{member.last_name}_profile.jpg"
-                file_path = f"{member.id}/{file_name}"
+                new_path = f"{member.id}/{member.first_name}_{member.last_name}"
 
-                public_url, error = upload_file_to_supabase(photo, file_path, 'photo')
+                public_url, error = upload_photo_to_supabase(
+                    photo, 
+                    new_path,
+                    member.photo)
 
                 if error:
                     raise Exception(f"Photo upload failed: {error}")
@@ -125,7 +129,7 @@ def updateMember(request, pk):
 
     except Exception as e:
         if photo_uploaded:
-            delete_photo_from_supabase(file_path)
+            delete_photo_from_supabase(public_url)
         return Response({"error": str(e)}, status=500)
 
 def deleteMember(request, pk):

@@ -2,53 +2,48 @@ from supabase import create_client, Client
 from django.conf import settings
 from PIL import Image
 from io import BytesIO
+from uuid import uuid4
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
-def upload_file_to_supabase(file_obj, file_path, file_type):
-    """
-    Uploads a file to Supabase storage and returns the public URL.
-    
-    :param file_obj: Django UploadedFile object
-    :param file_path: Path (within bucket) to store the file
-    :param file_type: 'photo' or 'pdf'
-    :return: (public_url, error)
-    """
+def upload_to_supabase(file_path, content, content_type):
+    """Uploads content to Supabase and returns the public URL."""
+    response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
+        file_path,
+        content,
+        {"content-type": content_type}
+    )
+
+    if isinstance(response, dict) and 'error' in response:
+        return None, response['error']
+
+    public_url = f"{settings.SUPABASE_URL}/storage/v1/object/public/{settings.SUPABASE_BUCKET}/{file_path}"
+    return public_url, None
+
+def upload_photo_to_supabase(photo_obj, new_path, old_path):
+    """Deletes old photo if present, optimizes and uploads a new photo to Supabase."""
     try:
-        if not hasattr(file_obj, 'read'):
+        if not hasattr(photo_obj, 'read'):
             return None, "Invalid file object."
 
-        if file_type == 'photo':
-            try:
-                supabase.storage.from_(settings.SUPABASE_BUCKET).remove([file_path])
-            except Exception as e:
-                print(f"Error deleting file: {str(e)}")
+        try:
+            if old_path:
+                relative_path = "/".join(old_path.split("/")[-2:])
+                delete_photo_from_supabase(relative_path)
+        except Exception as e:
+            print(f"Error deleting file: {str(e)}")
 
-            image = Image.open(file_obj).convert("RGB")
-            buffer = BytesIO()
-            image.save(buffer, format="JPEG", optimize=True, quality=75)
-            buffer.seek(0)
-            content = buffer.read()
-            content_type = "image/jpeg"
+        image = Image.open(photo_obj).convert("RGB")
+        image.thumbnail((400, 400), Image.Resampling.LANCZOS)
+        buffer = BytesIO()
+        image.save(buffer, format="JPEG", optimize=True, quality=75)
+        buffer.seek(0)
+        content = buffer.read()
+        content_type = "image/jpeg"
 
-        elif file_type == 'pdf':
-            content = file_obj.read()
-            content_type = "application/pdf"
-
-        else:
-            return None, "Unsupported file type."
-
-        response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
-            file_path,
-            content,
-            {"content-type": content_type}
-        )
-
-        if isinstance(response, dict) and 'error' in response:
-            return None, response['error']
-
-        public_url = f"{settings.SUPABASE_URL}/storage/v1/object/public/{settings.SUPABASE_BUCKET}/{file_path}"
-        return public_url, None
+        short_id = uuid4().hex[:4]
+        file_path = f"{new_path}_{short_id}.jpg"
+        return upload_to_supabase(file_path, content, content_type)
 
     except Exception as e:
         return None, str(e)
@@ -56,7 +51,6 @@ def upload_file_to_supabase(file_obj, file_path, file_type):
 def delete_photo_from_supabase(file_path):
     """Deletes a file from Supabase storage."""
     try:
-        supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
         response = supabase.storage.from_(settings.SUPABASE_BUCKET).remove([file_path])
 
         if isinstance(response, list) and response and isinstance(response[0], dict) and 'error' in response[0]:

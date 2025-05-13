@@ -11,6 +11,7 @@ const ListItem = ({ member }) => {
             alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
             className="members-list-photo"
             onError={(e) => e.target.src = "/default-profile.jpg"}
+            loading="lazy"
         />
         <div className="members-list-details">
           <h3>{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>

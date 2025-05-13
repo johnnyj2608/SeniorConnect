@@ -77,7 +77,7 @@ const formatPhoto = (photo) => {
       return URL.createObjectURL(photo);
   }
   if (photo) {
-      return `${photo}?t=${new Date().getTime()}`;
+      return photo;
   }
   return "/default-profile.jpg";
 };
