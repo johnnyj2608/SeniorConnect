@@ -13,7 +13,7 @@ def member_file_path(instance, filename):
 class File(models.Model):
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='files')
     name = models.CharField(max_length=100) 
-    file = models.FileField(upload_to=member_file_path)
+    file = models.URLField()
     uploaded_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completion_date = models.DateField(null=True, blank=True)

@@ -10,6 +10,7 @@ from ..serializers.member_serializer import (
     MemberBirthdaySerializer
 )
 from core.utils.supabase import *
+from django.utils.text import slugify
 
 def getMemberList(request):
     filter_type = request.GET.get('filter')
@@ -54,12 +55,11 @@ def getMemberDetail(request, pk):
 
 def createMember(request):
     data = request.data.copy()
+    public_url = None
 
     photo = request.FILES.get('photo')
     if 'photo' in data:
         del data['photo']
-
-    photo_uploaded = False
 
     try:
         with transaction.atomic():
@@ -69,67 +69,72 @@ def createMember(request):
                 member = serializer.save()
 
                 if photo:
-                    new_path = f"{member.id}/{member.first_name}_{member.last_name}"
+                    first_name = request.data.get("first_name")
+                    last_name = request.data.get("last_name")
+                    member_name = slugify(f"{first_name} {last_name}")
+                    new_path = f"{member.id}/{member_name}"
 
-                    public_url, error = upload_photo_to_supabase(
+                    public_url, error = upload_file_to_supabase(
                         photo, 
                         new_path,
-                        member.photo
+                        member.photo,
+                        True
                     )
                     
                     if error:
                         raise Exception(f"Photo upload failed: {error}")
 
-                    photo_uploaded = True
                     member.photo = public_url
                     member.save()
-
-                return Response(MemberSerializer(member).data)
+                serializer = MemberSerializer(member)
+                return Response(serializer.data)
 
             else:
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:
-        if photo_uploaded:
+        if public_url:
             delete_folder_from_supabase(f"{member.id}/")
         return Response({"error": str(e)}, status=500)
     
 def updateMember(request, pk):
     data = request.data.copy()
     member = Member.objects.get(id=pk)
-
-    photo_uploaded = False
+    public_url = None
 
     try:
         with transaction.atomic():
 
             if 'photo' in request.FILES:
                 photo = request.FILES['photo']
-                new_path = f"{member.id}/{member.first_name}_{member.last_name}"
+                first_name = request.data.get("first_name")
+                last_name = request.data.get("last_name")
+                member_name = slugify(f"{first_name} {last_name}")
+                new_path = f"{member.id}/{member_name}"
 
-                public_url, error = upload_photo_to_supabase(
+                public_url, error = upload_file_to_supabase(
                     photo, 
                     new_path,
-                    member.photo)
+                    member.photo,
+                    True,
+                )
 
                 if error:
                     raise Exception(f"Photo upload failed: {error}")
                 
-                photo_uploaded = True
                 data['photo'] = public_url
 
             serializer = MemberSerializer(instance=member, data=data)
 
             if serializer.is_valid():
-                member = serializer.save()
-
-                return Response(MemberSerializer(member).data)
+                serializer.save()
+                return Response(serializer.data)
             else:
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:
-        if photo_uploaded:
-            delete_photo_from_supabase(public_url)
+        if public_url:
+            delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=500)
 
 def deleteMember(request, pk):
