@@ -624,25 +624,24 @@ body.modal-open {
   border: none;
 }
 
-.modal-buttons {
+.modal-buttons-container {
   display: flex;
   height: 70px;
   justify-content: space-between;
   border-top: 1px solid var(--color-gray);
 }
 
-.modal-buttons button {
+.modal-button {
   padding: 15px 40px;
   margin: 10px 20px;
   border: none;
   background-color: var(--color-main);
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
   border-radius: 8px;
 }
 
-.modal-buttons button:hover {
+.modal-button:hover {
   background-color: var(--color-hover);
 }
 
@@ -891,39 +890,14 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 10px 40px;
 }
 
-.arrow-btn {
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  fill: var(--color-dark);
-  width: 24px;
-}
-
-.arrow-btn:hover {
-  transform: scale(1.1);
-  transition: all 0.2s ease;
-}
-
-.arrow-btn:disabled {
+.modal-button:disabled {
   opacity: 0.3;
   pointer-events: none;
 }
 
-.file-buttons {
-  display: flex;
-  height: 35px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-}
-
 .file-footer {
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .no-file-chosen {

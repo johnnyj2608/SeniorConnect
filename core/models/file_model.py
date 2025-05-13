@@ -20,7 +20,6 @@ class File(models.Model):
     expiration_date = models.DateField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('member', 'name')
         ordering = ['name']
 
     def __str__(self):

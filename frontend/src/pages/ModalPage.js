@@ -68,14 +68,14 @@ const MemberModal = ({ data, onClose }) => {
                         </div>
                     )}
                 </div>
-                <div className="modal-buttons">
-                    <button onClick={() => onClose()}>Cancel</button>
+                <div className="modal-buttons-container">
+                    <button className="modal-button" onClick={() => onClose()}>Cancel</button>
                     {type !== 'basic' && localData.filter(tab => !tab.deleted).length > 0 && (
-                        <button className="delete-button" onClick={() => handleDelete(activeTab)}>
+                        <button className="modal-button delete-button" onClick={() => handleDelete(activeTab)}>
                             Delete
                         </button>
                     )}
-                    <button onClick={() => handleSave(localData)}>Save</button>
+                    <button className="modal-button" onClick={() => handleSave(localData)}>Save</button>
                 </div>
             </div>
         </div>

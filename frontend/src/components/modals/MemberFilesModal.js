@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import { ReactComponent as Eye } from '../../assets/eye.svg';
-import { ReactComponent as Trash } from '../../assets/trash.svg';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
 import viewFile from '../../utils/viewFile';
-import { formatDate } from '../../utils/formatUtils';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
-    const isNew = activeTab === 'new';
+    const current = data[activeTab] || {};
     const [isDragging, setIsDragging] = useState(false);
-
-    const fileItem = isNew
-        ? { name: '', file: '', completion_date: '', expiration_date: '', edited: true }
-        : data[activeTab] || {};
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -33,6 +26,8 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         setIsDragging(false);
     };
 
+    const disabled = data.filter(tab => !tab.deleted).length <= 0
+
     return (
         <div
             className={`file-drop ${isDragging ? 'drag-over' : ''}`}
@@ -41,15 +36,15 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             onDragLeave={handleDragLeave}
         >
             <div className={`file-content ${isDragging ? 'dimmed' : ''}`}>
-                <h3>{isNew ? 'Add New File' : 'Edit File'}</h3>
 
                 <div className="member-detail">
                     <label>Name *</label>
                     <input
                         type="text"
-                        value={fileItem.name || ''}
+                        value={disabled ? '' : current.name || ''}
                         onChange={handleChange('name')}
                         autoComplete="off"
+                        disabled={disabled}
                     />
                 </div>
 
@@ -59,12 +54,15 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         <button
                             className="custom-file-button"
                             onClick={() => document.getElementById('hiddenFileInput').click()}
+                            disabled={disabled}
                         >
                             Choose File
                         </button>
-                        <span className={`uploaded-file-name ${!fileItem.file ? 'no-file-chosen' : ''}`}>
-                            {fileItem.file ? 'File chosen' : 'No file chosen'}
-                        </span>
+                        {!disabled && (
+                            <span className={`uploaded-file-name ${!current.file ? 'no-file-chosen' : ''}`}>
+                                {current.file ? 'File chosen' : 'No file chosen'}
+                            </span>
+                        )}
                         <input
                             id="hiddenFileInput"
                             type="file"
@@ -79,8 +77,9 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     <label>Completed</label>
                     <input
                         type="date"
-                        value={fileItem.completion_date || ''}
+                        value={disabled ? '' : current.completion_date || ''}
                         onChange={handleChange('completion_date')}
+                        disabled={disabled}
                     />
                 </div>
 
@@ -88,35 +87,21 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     <label>Expiration</label>
                     <input
                         type="date"
-                        value={fileItem.expiration_date || ''}
+                        value={disabled ? '' : current.expiration_date || ''}
                         onChange={handleChange('expiration_date')}
+                        disabled={disabled}
                     />
                 </div>
 
-                <div className="file-buttons">
-                    <button
-                        className="arrow-btn tooltip"
-                        onClick={() => viewFile(fileItem.file)}
-                        disabled={!fileItem.file}
-                        data-tooltip="View File"
-                    >
-                        <Eye />
-                    </button>
-                    {!isNew && (
-                        <button
-                            className="arrow-btn tooltip trash-can"
-                            onClick={() => handleChange('deleted')({ target: { value: true } })}
-                            data-tooltip="Delete File"
-                        >
-                            <Trash />
-                        </button>
-                    )}
-                </div>
-
                 <div className="file-footer">
-                    {fileItem.uploaded_at && (
-                        <p>Uploaded: {formatDate(fileItem.uploaded_at)}</p>
-                    )}
+                    <button
+                        className="modal-button"
+                        onClick={() => viewFile(current.file)}
+                        disabled={disabled || !current.file}
+                    >
+                        View File
+                    </button>
+
                 </div>
             </div>
 
