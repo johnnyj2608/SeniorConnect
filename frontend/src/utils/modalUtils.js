@@ -75,13 +75,7 @@ const getNewTab = (type, localData, id) => {
 const sendRequest = async (url, method, data) => {
     const formData = new FormData();
     for (const key in data) {
-        if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
-            const photo = await urlToFile(data.photo, 'photo.jpg');
-            formData.append(key, photo);
-        } else if (key === 'file' && typeof data.file === 'string' && data.file) {
-            const file = await urlToFile(data.file, 'file.pdf');
-            formData.append(key, file);
-        } else if (key === 'schedule' && data.id !== 'new'){
+        if (key === 'schedule' && data.id !== 'new'){
             formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {
             formData.append(key, '');

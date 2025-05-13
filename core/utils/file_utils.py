@@ -37,8 +37,6 @@ def createFile(request):
                     raise Exception(f"File upload failed: {error}")
 
                 data['file'] = public_url
-            else:
-                return Response({"error": "No file provided."}, status=400)
 
             serializer = FileSerializer(data=data)
             if serializer.is_valid():
@@ -76,8 +74,6 @@ def updateFile(request, pk):
                     raise Exception(f"File upload failed: {error}")
 
                 data['file'] = public_url
-            else:
-                return Response({"error": "No file provided."}, status=400)
 
             serializer = FileSerializer(instance=file, data=data)
             if serializer.is_valid():
