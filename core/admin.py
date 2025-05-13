@@ -8,7 +8,7 @@ from .models.contact_model import Contact
 from .models.authorization_model import Authorization, MLTC
 from .models.sadc_model import SADC
 from .models.absence_model import Absence
-from .models.file_model import FileTab, FileVersion
+from .models.file_model import File
 
 admin.site.register(Member)
 admin.site.register(Language)
@@ -21,5 +21,4 @@ admin.site.register(Contact)
 admin.site.register(Authorization)
 admin.site.register(SADC)
 admin.site.register(Absence)
-admin.site.register(FileTab)
-admin.site.register(FileVersion)
+admin.site.register(File)

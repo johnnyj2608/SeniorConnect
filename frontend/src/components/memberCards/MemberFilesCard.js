@@ -9,7 +9,7 @@ const MemberFilesCard = ({ id, onEdit }) => {
 
     useEffect(() => {
         const getFilesByMember = async () => {
-            const response = await fetch(`/core/file/latest/${id}`);
+            const response = await fetch(`/core/files/member/${id}`);
             const data = await response.json();
             setFiles(data);
         };
@@ -20,12 +20,7 @@ const MemberFilesCard = ({ id, onEdit }) => {
     }, [id]);
 
     const handleEdit = () => {
-        const getFileTabVersionsByMember = async () => {
-            const response = await fetch(`/core/file/member/${id}`);
-            const data = await response.json();
-            onEdit('files', data, setFiles);
-        };
-        getFileTabVersionsByMember();
+        onEdit('files', files, setFiles);
     };
 
     return (
@@ -36,15 +31,14 @@ const MemberFilesCard = ({ id, onEdit }) => {
                 {files.length > 0 ? (
                     <div className="file-list">
                         {files.map((file, index) => {
-                            const content = file.content;
-                            const isExpired = content?.expiration_date && new Date(content.expiration_date) < new Date();
-                            const tooltipText = `Completed: ${formatDate(content?.completion_date) || 'N/A'}`;
+                            const isExpired = file.expiration_date && new Date(file.expiration_date) < new Date();
+                            const tooltipText = `Completed: ${formatDate(file.completion_date) || 'N/A'}`;
 
                             return (
                                 <div
                                     key={index}
                                     className="file-item tooltip"
-                                    onClick={() => content?.file && viewFile(content.file)}
+                                    onClick={() => file.file && viewFile(file.file)}
                                     data-tooltip={tooltipText}
                                 >
                                     <FileIcon className="file-icon" />

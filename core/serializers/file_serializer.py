@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from ..models.file_model import FileTab, FileVersion
+from ..models.file_model import File
 
-class FileTabSerializer(serializers.ModelSerializer):
+class FileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FileTab
-        fields = '__all__'
-
-class FileVersionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FileVersion
+        model = File
         fields = '__all__'

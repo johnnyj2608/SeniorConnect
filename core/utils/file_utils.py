@@ -1,178 +1,19 @@
 from rest_framework.response import Response
-from django.db import transaction
-from ..models.file_model import FileTab, FileVersion
-from ..serializers.file_serializer import FileTabSerializer, FileVersionSerializer
-import json
-import os
-from django.conf import settings
-import shutil
+from ..models.file_model import File
+from ..serializers.file_serializer import FileSerializer
 
-# File Utils
-def getFileTabVersionsByMember(request, member_id):
-    file_tabs = FileTab.objects.filter(member_id=member_id)
-    file_tabs_with_versions = []
-
-    for file_tab in file_tabs:
-        versions = FileVersion.objects.filter(tab=file_tab)
-        serialized_versions = FileVersionSerializer(versions, many=True).data
-        
-        file_tabs_with_versions.append({
-            'id': file_tab.id,
-            'member': member_id,
-            'name': file_tab.name,
-            'created_at': file_tab.created_at,
-            'versions': serialized_versions
-        })
-
-    return Response(file_tabs_with_versions)
-
-def getFileTabLatestVersionsByMember(request, member_id):
-    file_tabs = FileTab.objects.filter(member_id=member_id)
-    file_tabs_with_versions = []
-
-    for file_tab in file_tabs:
-        latest_version = FileVersion.objects.filter(tab=file_tab).first()
-        
-        if latest_version:
-            latest_version_data = FileVersionSerializer(latest_version).data
-            
-            file_tabs_with_versions.append({
-                'name': file_tab.name,
-                'content': latest_version_data
-            })
-
-    return Response(file_tabs_with_versions)
-
-# FileTab Utils
-def getFileTabList(request):
-    file_tabs = FileTab.objects.all()
-    serializer = FileTabSerializer(file_tabs, many=True)
+def getFileList(request):
+    files = File.objects.all()
+    serializer = FileSerializer(files, many=True)
     return Response(serializer.data)
 
-def getFileTabDetail(request, pk):
-    file_tab = FileTab.objects.get(id=pk)
-    serializer = FileTabSerializer(file_tab)
+def getFileDetail(request, pk):
+    file = File.objects.get(id=pk)
+    serializer = FileSerializer(file)
     return Response(serializer.data)
 
-def createFileTab(request):
-    data = request.data.copy()
-    files = request.FILES.getlist('files')
-    versions = data.pop('versions', '[]')
-
-    with transaction.atomic():
-        serializer = FileTabSerializer(data=data)
-        if serializer.is_valid():
-            file_tab = serializer.save()
-
-            version_instances = []
-            for i, version in enumerate(versions):
-                version = json.loads(version)
-                version['tab'] = file_tab.id
-
-                if version.get('deleted'):
-                    continue
-
-                version['file'] = files[i]
-                if version.get('completion_date') == '':
-                    version['completion_date'] = None
-                if version.get('expiration_date') == '':
-                    version['expiration_date'] = None
-
-                version_serializer = FileVersionSerializer(data=version)
-                if version_serializer.is_valid():
-                    version_instance = version_serializer.save()
-                    version_instances.append(version_instance)
-                else:
-                    transaction.set_rollback(True)
-                    print("Version serializer error:", version_serializer.errors)
-                    return Response(version_serializer.errors, status=400)
-
-            return Response({
-                "file_tab": FileTabSerializer(file_tab).data,
-                "versions": FileVersionSerializer(version_instances, many=True).data
-            })
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=400)
-
-def updateFileTab(request, pk):
-    data = request.data.copy()
-    files = request.FILES.getlist('files')
-    versions = data.pop('versions', '[]')
-
-    with transaction.atomic():
-        file_tab = FileTab.objects.get(id=pk)
-        serializer = FileTabSerializer(instance=file_tab, data=data)
-
-        if serializer.is_valid():
-            file_tab = serializer.save()
-
-            version_instances = []
-            for i, version in enumerate(versions):
-                version = json.loads(version)
-                version['tab'] = file_tab.id
-
-                if version.get('deleted') and version['id'] != 'new':
-                    file_version = FileVersion.objects.get(id=version['id'])
-    
-                    if file_version.file and os.path.isfile(file_version.file.path):
-                        os.remove(file_version.file.path)
-                    
-                    file_version.delete()
-                    continue
-
-                version['file'] = files[i]
-                if version.get('completion_date') == '':
-                    version['completion_date'] = None
-                if version.get('expiration_date') == '':
-                    version['expiration_date'] = None
-
-                if version['id'] == 'new':
-                    version_serializer = FileVersionSerializer(data=version)
-                else:
-                    file_version = FileVersion.objects.get(id=version['id'])
-                    version_serializer = FileVersionSerializer(instance=file_version, data=version)
-                if version_serializer.is_valid():
-                    version_instance = version_serializer.save()
-                    version_instances.append(version_instance)
-                else:
-                    transaction.set_rollback(True)
-                    print("Version serializer error:", version_serializer.errors)
-                    return Response(version_serializer.errors, status=400)
-
-            cleanUnusedFiles(file_tab.id)    
-            
-            return Response({
-                "file_tab": FileTabSerializer(file_tab).data,
-                "versions": FileVersionSerializer(version_instances, many=True).data
-            })
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=400)
-
-def deleteFileTab(request, pk):
-    file_tab = FileTab.objects.get(id=pk)
-
-    tab_folder_path = os.path.join(settings.MEDIA_ROOT, str(file_tab.member.id), str(file_tab.id))
-    if os.path.exists(tab_folder_path) and os.path.isdir(tab_folder_path):
-        shutil.rmtree(tab_folder_path)
-
-    file_tab.delete()
-    return Response('FileTab was deleted')
-
-# FileVersion Utils
-def getFileVersionList(request):
-    file_versions = FileVersion.objects.all()
-    serializer = FileVersionSerializer(file_versions, many=True)
-    return Response(serializer.data)
-
-def getFileVersionDetail(request, pk):
-    file_version = FileVersion.objects.get(id=pk)
-    serializer = FileVersionSerializer(file_version)
-    return Response(serializer.data)
-
-def createFileVersion(request):
-    serializer = FileVersionSerializer(data=request.data)
+def createFile(request):
+    serializer = FileSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
@@ -181,51 +22,24 @@ def createFileVersion(request):
         print(serializer.errors)
         return Response(serializer.errors, status=400)
 
-def updateFileVersion(request, pk):
+def updateFile(request, pk):
     data = request.data
-    file_version = FileVersion.objects.get(id=pk)
-    serializer = FileVersionSerializer(instance=file_version, data=data)
-    
+    file = File.objects.get(id=pk)
+    serializer = FileSerializer(instance=file, data=data)
+
     if serializer.is_valid():
         serializer.save()
     else:
-        return Response(serializer.errors, status=400)
-    
+        print(serializer.errors)
     return Response(serializer.data)
 
-def deleteFileVersion(request, pk):
-    file_version = FileVersion.objects.get(id=pk)
-    file_version.delete()
-    return Response('FileVersion was deleted')
+def deleteFile(request, pk):
+    file = File.objects.get(id=pk)
+    file.delete()
+    return Response('File was deleted')
 
-# Maitenance Utils
-def cleanUnusedFiles(tab_id):
-    used_files = set()
-    file_versions = FileVersion.objects.filter(tab_id=tab_id)
 
-    for version in file_versions:
-        if version.file:
-            try:
-                used_files.add(os.path.abspath(version.file.path))
-            except ValueError:
-                continue
-
-    tab = FileTab.objects.get(id=tab_id)
-    tab_folder_path = os.path.join(settings.MEDIA_ROOT, str(tab.member.id), str(tab.id))
-
-    removed_files = []
-
-    for root, dirs, files in os.walk(tab_folder_path):
-        for filename in files:
-            file_path = os.path.abspath(os.path.join(root, filename))
-            if file_path not in used_files:
-                try:
-                    os.remove(file_path)
-                    removed_files.append(file_path)
-                except Exception as e:
-                    print(f"Error deleting {file_path}: {e}")
-
-    return Response({
-        "removed_files": removed_files,
-        "message": f"{len(removed_files)} unused file(s) deleted from tab {tab_id}."
-    })
+def getFileListByMember(request, member_pk):
+    files = File.objects.filter(member=member_pk)
+    serializer = FileSerializer(files, many=True)
+    return Response(serializer.data)

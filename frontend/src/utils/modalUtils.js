@@ -61,16 +61,9 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 member: id,
                 name: '',
-                versions: [
-                    {
-                        id: 'new',
-                        tab: 'new',
-                        file: '',
-                        completion_date: '',
-                        expiration_date: '',
-                        edited: true,
-                    }
-                ],
+                file: '',
+                completion_date: '',
+                expiration_date: '',
                 edited: true,
             };
         }
@@ -85,15 +78,9 @@ const sendRequest = async (url, method, data) => {
         if (key === 'photo' && typeof data.photo === 'string' && data.photo) {
             const photo = await urlToFile(data.photo, 'photo.jpg');
             formData.append(key, photo);
-        } else if (key === 'versions') {
-            for (const v of data[key]) {
-                formData.append('versions', JSON.stringify(v));
-                let file = v.file;
-                if (typeof file === 'string') {
-                    file = await urlToFile(file, 'file.pdf');
-                }
-                formData.append('files', file);
-            };
+        } else if (key === 'file' && typeof data.file === 'string' && data.file) {
+            const file = await urlToFile(data.file, 'file.pdf');
+            formData.append(key, file);
         } else if (key === 'schedule' && data.id !== 'new'){
             formData.append(key, JSON.stringify(data[key]));
         } else if (data[key] === null) {
@@ -195,7 +182,7 @@ const saveDataTabs = async (data, endpoint, id=null) => {
     ]));
     
     const savedData = dataArray
-        .filter(data => !(data.id === 'new' && data.deleted))
+        .filter(data => !(data.deleted))
         .map(data => processedData.find(updated => updated.id === data.id) || data)
         .concat(processedData.filter(updated => !dataArray.some(data => data.id === updated.id)));
     return savedData

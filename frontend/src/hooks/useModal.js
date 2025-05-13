@@ -29,7 +29,7 @@ function useModal(data, onClose) {
         };
     }, []);
 
-    const handleChange = (field, isVersion=false, versionIndex=0) => (event) => {
+    const handleChange = (field) => (event) => {
         const { value, files, checked } = event.target;
         const normalizedValue = field.includes('date') && value === '' ? null : value;
 
@@ -59,26 +59,14 @@ function useModal(data, onClose) {
                     newValue = sortSchedule(newSchedule);
                 }
 
-                let updatedTab = { ...currentTab };
-
-                if (isVersion) {
-                    const updatedVersions = [...(currentTab.versions || [])];
-                    const updatedVersion = {
-                        ...updatedVersions[versionIndex],
-                        [field]: files?.[0] || newValue,
-                    };
-                    updatedVersions[versionIndex] = updatedVersion;
-
-                    updatedTab = {
-                        ...updatedTab,
-                        versions: updatedVersions,
-                    };
-                } else {
-                    updatedTab = {
-                        ...updatedTab,
-                        [field]: newValue,
-                    };
+                if (field === 'file') {
+                    newValue = files?.[0] || null;
                 }
+
+                const updatedTab = {
+                    ...currentTab,
+                    [field]: newValue,
+                };
 
                 const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab - newTabsCount]);
 
@@ -134,21 +122,8 @@ function useModal(data, onClose) {
             case 'basic':
             case 'contacts':
             case 'absences':
-                data.setData(savedData);
-                break;
             case 'files':
-                const transformedData = savedData
-                    .filter(item => !item.deleted)
-                    .map(item => {
-                        const validVersion = item.versions?.find(version => !version.deleted);
-                        if (!validVersion) return null;
-                        return {
-                            name: item.name,
-                            content: validVersion
-                        };
-                    })
-                    .filter(Boolean); // Remove nulls
-                data.setData(transformedData);
+                data.setData(savedData);
                 break;
             default:
                 console.error("Unknown update type:", type);
@@ -196,27 +171,10 @@ function useModal(data, onClose) {
                 break;
 
             case 'files':
-                requiredFields = ['name'];
+                requiredFields = ['name', 'file'];
                 if (checkMissingFields(updatedData, requiredFields)) return;
 
-                const visitedNames = new Set();
-                for (const tab of updatedData) {
-                    if (tab.deleted) continue;
-
-                    if (visitedNames.has(tab.name.trim().toLowerCase())) {
-                        alert(`Duplicate tab name detected: "${tab.name}"`);
-                        return;
-                    }
-                    visitedNames.add(tab.name.trim().toLowerCase());
-
-                    for (const version of tab.versions) {
-                        if (checkMissingFields(version, ['file'])) {
-                            return;
-                        }
-                    }
-                }
-
-                savedData = await saveDataTabs(updatedData, 'file-tabs');
+                savedData = await saveDataTabs(updatedData, 'files');
                 break;
 
             default:
