@@ -5,12 +5,10 @@ import { report_types } from '../utils/mapUtils';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
-import ReportBirthdaysTable from '../components/reportTables/ReportBirthdaysTable';
 
 const reportTypes = [
     { name: 'Absences', value: 'absences' },
     // { name: 'Audit Log', value: 'audit_log' },
-    { name: 'Birthdays', value: 'birthdays' },
     // { name: 'Enrollment', value: 'enrollment' },
 ];
 
@@ -31,8 +29,6 @@ const ReportsPage = () => {
             let response;
             if (reportType === 'absences') {
                 response = await fetch(`/core/absences/?page=${currentPage}`);
-            } else if (reportType === 'birthdays') {
-                response = await fetch(`/core/members/?filter=reports`);
             } else {
                 return;
             }
@@ -94,11 +90,7 @@ const ReportsPage = () => {
             
             <div className="report-results">
             {report.length > 0 && (
-                reportType === 'birthdays' ? (
-                <ReportBirthdaysTable report={report} />
-                ) : (
                 <ReportAbsencesTable report={report} />
-                )
             )}
             </div>
         </>

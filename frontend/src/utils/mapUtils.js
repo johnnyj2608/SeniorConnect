@@ -30,7 +30,6 @@ const absence_types = {
 const report_types = {
     absences: 'Absences',
     audit_log: 'Audit Log',
-    birthdays: 'Birthdays',
     enrollment: 'Enrollment',
 };
 

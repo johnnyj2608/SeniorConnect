@@ -6,7 +6,7 @@ const HomeBirthdayCard = () => {
 
   useEffect(() => {
     const getBirthdays = async () => {
-        const response = await fetch(`/core/members/?filter=home`)
+        const response = await fetch(`/core/members/?filter=birthdays`)
         const data = await response.json();
         setBirthdays(data);
     };
@@ -34,7 +34,7 @@ const HomeBirthdayCard = () => {
           <Link to={`/member/${birthday.id}`} key={birthday.id}>
             <li className="birthday-item">
               <span>{birthday.first_name} {birthday.last_name} </span>
-              <span>{renderBirthdayMessage(birthday.days_until)}</span>
+              <span>{renderBirthdayMessage(birthday.days_until_birthday)}</span>
             </li>
           </Link>
         ))}

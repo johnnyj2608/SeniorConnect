@@ -62,7 +62,6 @@ class MemberListSerializer(serializers.ModelSerializer):
 
 class MemberBirthdaySerializer(serializers.ModelSerializer):
     days_until_birthday = serializers.SerializerMethodField()
-    age_on_birthday = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
@@ -73,7 +72,6 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
             'first_name', 
             'last_name', 
             'days_until_birthday',
-            'age_on_birthday',
         )
 
     def get_days_until_birthday(self, obj):
@@ -88,20 +86,3 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
 
         days_until_birthday = (next_birthday - today).days
         return days_until_birthday
-    
-    def get_age_on_birthday(self, obj):
-        """Calculate the age the member will be on their next birthday."""
-        today = datetime.today().date()
-        birth_date = obj.birth_date
-
-        next_birthday = birth_date.replace(year=today.year)
-
-        if next_birthday < today:
-            next_birthday = next_birthday.replace(year=today.year + 1)
-
-        age = next_birthday.year - birth_date.year
-
-        if (next_birthday.month, next_birthday.day) < (today.month, today.day):
-            age -= 1
-
-        return age
