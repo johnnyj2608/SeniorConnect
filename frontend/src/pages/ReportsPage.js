@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import DownloadButton from '../components/buttons/DownloadButton';
 import Dropdown from '../components/inputs/Dropdown';
-import { formatDate } from '../utils/formatUtils';
-import { report_types, absence_types } from '../utils/mapUtils';
+import { report_types } from '../utils/mapUtils';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
+import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
+import ReportBirthdaysTable from '../components/reportTables/ReportBirthdaysTable';
 
 const reportTypes = [
     { name: 'Absences', value: 'absences' },
+    { name: 'Audit Log', value: 'audit_log' },
     { name: 'Birthdays', value: 'birthdays' },
     { name: 'Enrollment', value: 'enrollment' },
 ];
 
 const ReportsPage = () => {
     const [report, setReport] = useState([]);
-    const [reportType, setReportType] = useState('absences');
+    const [reportType, setReportType] = useState('birthdays');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         const fetchReport = async () => {
-          const response = await fetch(`/core/absences/?page=${currentPage}`);
-          const data = await response.json();
-          setReport(data.results);
-          setTotalPages(Math.ceil(data.count / 25));
+            let response;
+            if (reportType === 'absences') {
+                response = await fetch(`/core/absences/?page=${currentPage}`);
+            }
+            
+            if (reportType === 'birthdays') {
+                response = await fetch(`/core/members/?filter=reports`)
+            }
+            const data = await response.json();
+            setReport(data.results);
+            setTotalPages(Math.ceil(data.count / 25));
         };
       
         fetchReport();
@@ -64,7 +72,7 @@ const ReportsPage = () => {
                             <button
                                 className="arrow-btn"
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                disabled={currentPage === totalPages}
+                                disabled={currentPage === totalPages || totalPages === 0}
                             >
                                 <ArrowRight />
                             </button>
@@ -78,35 +86,12 @@ const ReportsPage = () => {
             </div>
             
             <div className="report-results">
-                {report.length > 0 && (
-                <table className="report-table">
-                    <thead>
-                        <tr>
-                        <th style={{ width: '25%' }}>Member</th>
-                        <th style={{ width: '15%' }}>Start Date</th>
-                        <th style={{ width: '15%' }}>End Date</th>
-                        <th style={{ width: '15%' }}>Reason</th>
-                        <th style={{ width: '15%' }}>Note</th>
-                        <th style={{ width: '15%' }}>Created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {report.map((absence) => (
-                            <tr key={absence.id}>
-                                <td>
-                                    <Link to={`/member/${absence.member}`} className="report-link">
-                                        {absence.sadc_member_id}. {absence.member_name}
-                                    </Link>
-                                </td>
-                                <td>{formatDate(absence.start_date)}</td>
-                                <td>{formatDate(absence.end_date) || 'N/A'}</td>
-                                <td>{absence_types[absence.absence_type]}</td>
-                                <td>{absence.note}</td>
-                                <td>{formatDate(absence.created_at)}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            {report.length > 0 && (
+                reportType === 'birthdays' ? (
+                <ReportBirthdaysTable report={report} />
+                ) : (
+                <ReportAbsencesTable report={report} />
+                )
             )}
             </div>
         </>

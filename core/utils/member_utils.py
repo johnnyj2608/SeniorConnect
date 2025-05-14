@@ -1,6 +1,6 @@
+from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
-from django.db.models import Q, F, ExpressionWrapper, DateField, Case, When
-from django.db.models.functions import TruncYear
+from django.db.models import Q
 from datetime import datetime, timedelta
 from collections import defaultdict
 from rest_framework.response import Response
@@ -29,6 +29,14 @@ def getMemberList(request):
         serializer = MemberBirthdaySerializer(members, many=True)
         sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
         return Response(sorted_data)
+    
+    if filter_type == 'reports':
+        members = Member.objects.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(members, request)
+        serializer = MemberBirthdaySerializer(result_page, many=True)
+        sorted_data = sorted(serializer.data, key=lambda x: x['days_until_birthday'])
+        return paginator.get_paginated_response(sorted_data)
 
     members = Member.objects.all().order_by('active_auth__mltc__name', )
     serializer = MemberListSerializer(members, many=True)
