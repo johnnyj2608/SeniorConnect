@@ -43,6 +43,7 @@ def createFile(request):
                 serializer.save()
                 return Response(serializer.data)
             else:
+                transaction.set_rollback(True)
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:
@@ -80,6 +81,7 @@ def updateFile(request, pk):
                 serializer.save()
                 return Response(serializer.data)
             else:
+                transaction.set_rollback(True)
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:

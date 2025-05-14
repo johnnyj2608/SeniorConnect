@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework.response import Response
-from ..models.authorization_model import Authorization, MLTC
+from ..models.authorization_model import Authorization
 from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 import json
@@ -32,6 +32,9 @@ def createAuthorization(request):
             if member.enrollment_date is None and not Authorization.objects.filter(member_id=member.id).exclude(id=auth.id).exists():
                 member.enrollment_date = auth.start_date
 
+            if auth.active:
+                member.active_auth = auth
+
             member.save()
         else:
             transaction.set_rollback(True)
@@ -44,7 +47,15 @@ def updateAuthorization(request, pk):
     authorization = Authorization.objects.get(id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
     if serializer.is_valid():
-        serializer.save()
+        updated_auth = serializer.save()
+        member = updated_auth.member
+
+        if updated_auth.active:
+            member.active_authorization = updated_auth
+        elif member.active_authorization_id == updated_auth.id:
+            member.active_authorization = None
+
+        member.save()
     else:
         print(serializer.errors)
     return Response(serializer.data)

@@ -32,6 +32,13 @@ class Member(models.Model):
     language = models.ForeignKey('Language', null=True, blank=True, on_delete=models.SET_NULL)
     enrollment_date = models.DateField(null=True, blank=True) 
     note = models.TextField(null=True, blank=True)
+    active_auth = models.OneToOneField(
+        'Authorization',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='active_for_member'
+    )
 
     # Status
     active = models.BooleanField(default=True)

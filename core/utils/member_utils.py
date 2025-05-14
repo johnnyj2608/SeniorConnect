@@ -1,6 +1,7 @@
 from django.db import transaction
+from django.db.models import Q, F, ExpressionWrapper, DateField, Case, When
+from django.db.models.functions import TruncYear
 from datetime import datetime, timedelta
-from django.db.models import Q
 from collections import defaultdict
 from rest_framework.response import Response
 from ..models.member_model import Member
@@ -9,8 +10,8 @@ from ..serializers.member_serializer import (
     MemberListSerializer,
     MemberBirthdaySerializer
 )
-from core.utils.supabase import *
 from django.utils.text import slugify
+from core.utils.supabase import *
 
 def getMemberList(request):
     filter_type = request.GET.get('filter')
@@ -29,7 +30,7 @@ def getMemberList(request):
         sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
         return Response(sorted_data)
 
-    members = Member.objects.all()
+    members = Member.objects.all().order_by('active_auth__mltc__name', )
     serializer = MemberListSerializer(members, many=True)
 
     grouped_members = defaultdict(list)
@@ -37,10 +38,8 @@ def getMemberList(request):
         mltc_name = member_data['mltc'] if member_data['mltc'] else "Unknown"
         grouped_members[mltc_name].append(member_data)
 
-    sorted_grouped_members = sorted(grouped_members.items(), key=lambda x: (x[0] == 'Unknown', x[0]))
-
     data = []
-    for mltc, members_list in sorted_grouped_members:
+    for mltc, members_list in grouped_members.items():
         data.append({
             "name": mltc,
             "member_list": members_list
@@ -90,6 +89,7 @@ def createMember(request):
                 return Response(serializer.data)
 
             else:
+                transaction.set_rollback(True)
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:
@@ -130,6 +130,7 @@ def updateMember(request, pk):
                 serializer.save()
                 return Response(serializer.data)
             else:
+                transaction.set_rollback(True)
                 raise Exception("Serializer validation failed.")
 
     except Exception as e:

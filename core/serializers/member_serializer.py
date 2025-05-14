@@ -44,30 +44,21 @@ class MemberListSerializer(serializers.ModelSerializer):
             'active',
             'mltc',
             'schedule',
-            )
+        )
         
-    def get_active_auth(self, obj):
-        """Cach the active authorization for a given member."""
-        if not hasattr(self, '_active_auth_cache'):
-            self._active_auth_cache = {}
-        
-        if obj.id not in self._active_auth_cache:
-            active_auth = Authorization.objects.filter(
-                member=obj.id,
-                active=True
-            ).order_by('start_date').first()
-            
-            self._active_auth_cache[obj.id] = active_auth
-        
-        return self._active_auth_cache[obj.id]
-
     def get_mltc(self, obj):
-        auth = self.get_active_auth(obj)
-        return auth.mltc.name if auth and auth.mltc else None
+        """Fetch the MLTC name from the active authorization."""
+        active_auth = obj.active_auth
+        if active_auth and active_auth.mltc:
+            return active_auth.mltc.name
+        return None
 
     def get_schedule(self, obj):
-        auth = self.get_active_auth(obj)
-        return auth.schedule if auth else None
+        """Fetch the schedule from the active authorization."""
+        active_auth = obj.active_auth
+        if active_auth:
+            return active_auth.schedule
+        return None
 
 class MemberBirthdaySerializer(serializers.ModelSerializer):
     days_until = serializers.SerializerMethodField()
