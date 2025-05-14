@@ -24,14 +24,14 @@ def getMemberList(request):
             future_day = today + timedelta(days=i)
             birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
 
-        members = Member.objects.filter(birthday_queries)
+        members = Member.objects.filter(active=True).filter(birthday_queries)
 
         serializer = MemberBirthdaySerializer(members, many=True)
         sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
         return Response(sorted_data)
     
     if filter_type == 'reports':
-        members = Member.objects.all()
+        members = Member.objects.filter(active=True)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(members, request)
         serializer = MemberBirthdaySerializer(result_page, many=True)

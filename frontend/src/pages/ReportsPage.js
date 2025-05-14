@@ -9,33 +9,41 @@ import ReportBirthdaysTable from '../components/reportTables/ReportBirthdaysTabl
 
 const reportTypes = [
     { name: 'Absences', value: 'absences' },
-    { name: 'Audit Log', value: 'audit_log' },
+    // { name: 'Audit Log', value: 'audit_log' },
     { name: 'Birthdays', value: 'birthdays' },
-    { name: 'Enrollment', value: 'enrollment' },
+    // { name: 'Enrollment', value: 'enrollment' },
 ];
 
 const ReportsPage = () => {
     const [report, setReport] = useState([]);
-    const [reportType, setReportType] = useState('birthdays');
+    const [reportType, setReportType] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    useEffect(() => {
+        setReport([]);
+        setTotalPages(1);
+        setCurrentPage(1);
+    }, [reportType]);
 
     useEffect(() => {
         const fetchReport = async () => {
             let response;
             if (reportType === 'absences') {
                 response = await fetch(`/core/absences/?page=${currentPage}`);
-            }
-            
-            if (reportType === 'birthdays') {
-                response = await fetch(`/core/members/?filter=reports`)
+            } else if (reportType === 'birthdays') {
+                response = await fetch(`/core/members/?filter=reports`);
+            } else {
+                return;
             }
             const data = await response.json();
             setReport(data.results);
             setTotalPages(Math.ceil(data.count / 25));
         };
       
-        fetchReport();
+        if (reportType) {
+            fetchReport();
+        }
     }, [reportType, currentPage]);
 
     return (
@@ -56,7 +64,6 @@ const ReportsPage = () => {
                                 display={report_types[reportType]}
                                 onChange={(e) => setReportType(e.target.value)}
                                 options={reportTypes}
-                                placeholder={false}
                             />
                         </div>
 
