@@ -1030,15 +1030,57 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* -------------- *
- * Month Year Picker
+ * Pagination
  * -------------- */
 
-.month-year-picker {
-  min-width: 150px;
-  padding: 7px;
-  border-radius: 4px;
+.pagination-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 0.8rem;
+  margin-left: 1rem;
+  font-size: 20px;
+}
+
+.arrow-btn {
+  display: flex;
+  align-items: center;
+  background: none;
   border: none;
-  color: var(--color-white);
+  cursor: pointer;
+  fill: var(--color-dark);
+  width: 24px;
+}
+
+.arrow-btn:hover {
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.arrow-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* -------------- *
+ * Reports
+ * -------------- */
+
+ .report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th, .report-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 20px;
+}
+
+.report-link:hover {
+  color: var(--color-main);
+  text-decoration: underline;
 }
 
 /* -------------- *

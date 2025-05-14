@@ -1,26 +1,14 @@
-from datetime import datetime
-from calendar import monthrange
-from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from ..models.absence_model import Absence
 from ..serializers.absence_serializer import AbsenceSerializer
 
 def getAbsenceList(request):
-    year = int(request.GET.get('year'))
-    month = int(request.GET.get('month'))
-
-    if month and year:
-        start = datetime(year, month, 1)
-        end = datetime(year, month, monthrange(year, month)[1])
-
-        absences = Absence.objects.filter(
-            Q(start_date__lte=end) & Q(end_date__gte=start)
-        )
-    else:
-        absences = Absence.objects.all()
-
-    serializer = AbsenceSerializer(absences, many=True)
-    return Response(serializer.data)
+    absences = Absence.objects.all()
+    paginator = PageNumberPagination()
+    result_page = paginator.paginate_queryset(absences, request)
+    serializer = AbsenceSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 def getAbsenceDetail(request, pk):
     absence = Absence.objects.get(id=pk)
