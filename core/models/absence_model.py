@@ -1,11 +1,16 @@
 from django.db import models
 
 class Absence(models.Model):
+    VACATION = 'vacation'
+    HOSPITAL = 'hospital'
+    PERSONAL = 'personal'
+    OTHER = 'other'
+
     ABSENCE_TYPES = [
-        ('vacation', 'Vacation'),
-        ('hospital', 'Hospital'),
-        ('personal', 'Personal'),
-        ('other', 'Other'),
+        (VACATION, 'Vacation'),
+        (HOSPITAL, 'Hospital'),
+        (PERSONAL, 'Personal'),
+        (OTHER, 'Other'),
     ]
 
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='absences')

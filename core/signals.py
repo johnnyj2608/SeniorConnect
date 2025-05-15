@@ -15,7 +15,7 @@ def handle_member_change(sender, instance, created, **kwargs):
         if instance.active == False:
             Enrollment.objects.create(
                 member=instance,
-                change_type=Enrollment.DISENROLLMENT,
+                enrollment=False,
                 mltc=active_auth.mltc,
             )
         active_auth.active = False
@@ -33,7 +33,7 @@ def handle_authorization_change(sender, instance, created, **kwargs):
             if member.active_auth == None or member.active_auth.mltc != instance.mltc:
                 Enrollment.objects.create(
                     member=member,
-                    change_type=Enrollment.ENROLLMENT,
+                    enrollment=True,
                     mltc=instance.mltc
                 )
                 if member.enrollment_date is None:
@@ -41,9 +41,9 @@ def handle_authorization_change(sender, instance, created, **kwargs):
         else:
             if not created and member.active_auth.mltc == instance.mltc:
                 Enrollment.objects.create(
-                        member=member,
-                        change_type=Enrollment.DISENROLLMENT,
-                        mltc=instance.mltc,
-                    )
+                    member=member,
+                    enrollment=False,
+                    mltc=instance.mltc,
+                )
 
         member.save()

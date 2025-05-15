@@ -2,26 +2,45 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class Contact(models.Model):
+    
+    EMERGENCY = 'emergency'
+    PRIMARY_PROVIDER = 'primary_provider'
+    PHARMACY = 'pharmacy'
+    HOME_AID = 'home_aid'
+    HOME_CARE = 'home_care'
+    OTHER = 'other'
+
     CONTACT_TYPE_CHOICES = [
-        ('emergency', 'Emergency Contact'),
-        ('primary_provider', 'Primary Care Provider'),
-        ('pharmacy', 'Pharmacy'),
-        ('home_aid', 'Home Aid'),
-        ('home_care', 'Home Care'),
-        ('other', 'Other'),
+        (EMERGENCY, 'Emergency Contact'),
+        (PRIMARY_PROVIDER, 'Primary Care Provider'),
+        (PHARMACY, 'Pharmacy'),
+        (HOME_AID, 'Home Aid'),
+        (HOME_CARE, 'Home Care'),
+        (OTHER, 'Other'),
     ]
 
+    # Relationship Types
+    HUSBAND = 'husband'
+    WIFE = 'wife'
+    SON = 'son'
+    DAUGHTER = 'daughter'
+    BROTHER = 'brother'
+    SISTER = 'sister'
+    FRIEND = 'friend'
+    FATHER = 'father'
+    MOTHER = 'mother'
+
     RELATIONSHIP_TYPE_CHOICES = [
-        ('husband', 'Husband'),
-        ('wife', 'Wife'),
-        ('son', 'Son'),
-        ('daughter', 'Daughter'),
-        ('brother', 'Brother'),
-        ('sister', 'Sister'),
-        ('friend', 'Friend'),
-        ('father', 'Father'),
-        ('mother', 'Mother'),
-        ('other', 'Other'),
+        (HUSBAND, 'Husband'),
+        (WIFE, 'Wife'),
+        (SON, 'Son'),
+        (DAUGHTER, 'Daughter'),
+        (BROTHER, 'Brother'),
+        (SISTER, 'Sister'),
+        (FRIEND, 'Friend'),
+        (FATHER, 'Father'),
+        (MOTHER, 'Mother'),
+        (OTHER, 'Other'),
     ]
 
     members = models.ManyToManyField('Member', related_name='contacts')
