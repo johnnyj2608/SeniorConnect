@@ -37,9 +37,13 @@ def updateContact(request, pk):
     serializer = ContactSerializer(instance=contact, data=data)
 
     if serializer.is_valid():
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
+        return Response(serializer.errors, status=400)
     return Response(serializer.data)
 
 def deleteContact(request, pk, member_id):

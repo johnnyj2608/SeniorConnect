@@ -13,14 +13,18 @@ def getMLTCDetail(request, pk):
     return Response(serializer.data)
 
 def createMLTC(request):
-    serializer = MLTCSerializer(data=request.data)
+    data = request.data
+    serializer = MLTCSerializer(data=data)
 
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=400)
+    return Response(serializer.data)
 
 def updateMLTC(request, pk):
     data = request.data
@@ -28,9 +32,13 @@ def updateMLTC(request, pk):
     serializer = MLTCSerializer(instance=mltc, data=data)
 
     if serializer.is_valid():
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
+        return Response(serializer.errors, status=400)
     return Response(serializer.data)
 
 def deleteMLTC(request, pk):

@@ -22,7 +22,10 @@ def createAuthorization(request):
   
     serializer = AuthorizationSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
         print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=400)
@@ -33,9 +36,13 @@ def updateAuthorization(request, pk):
     authorization = Authorization.objects.get(id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
     if serializer.is_valid():
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
+        return Response(serializer.errors, status=400)
     return Response(serializer.data)
 
 def deleteAuthorization(request, pk):

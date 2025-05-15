@@ -13,14 +13,18 @@ def getLanguageDetail(request, pk):
     return Response(serializer.data)
 
 def createLanguage(request):
-    serializer = LanguageSerializer(data=request.data)
+    data = request.data
+    serializer = LanguageSerializer(data=data)
 
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=400)
+    return Response(serializer.data)
 
 def updateLanguage(request, pk):
     data = request.data
@@ -28,9 +32,13 @@ def updateLanguage(request, pk):
     serializer = LanguageSerializer(instance=language, data=data)
 
     if serializer.is_valid():
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
     else:
-        print(serializer.errors)
+        print("Serializer error:", serializer.errors)
+        return Response(serializer.errors, status=400)
     return Response(serializer.data)
 
 def deleteLanguage(request, pk):
