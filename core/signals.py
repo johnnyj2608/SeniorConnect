@@ -1,8 +1,24 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from .models.member_model import Member
 from .models.authorization_model import Authorization, Enrollment
 from django.db import transaction
-from datetime import timedelta
+
+@receiver(post_save, sender=Member)
+def handle_member_change(sender, instance, created, **kwargs):
+    active_auth = instance.active_auth
+
+    if not active_auth:
+        return
+    
+    with transaction.atomic():
+        if instance.active == False:
+            Enrollment.objects.create(
+                member=instance,
+                change_type=Enrollment.DISENROLLMENT,
+                mltc=active_auth.mltc,
+            )
+        active_auth.active = False
 
 @receiver(post_save, sender=Authorization)
 def handle_authorization_change(sender, instance, created, **kwargs):
@@ -12,8 +28,9 @@ def handle_authorization_change(sender, instance, created, **kwargs):
         return
     
     with transaction.atomic():
-        if member.active_auth == None or member.active_auth.mltc != instance.mltc:
-            if instance.active:
+
+        if instance.active:
+            if member.active_auth == None or member.active_auth.mltc != instance.mltc:
                 Enrollment.objects.create(
                     member=member,
                     change_type=Enrollment.ENROLLMENT,
@@ -21,16 +38,12 @@ def handle_authorization_change(sender, instance, created, **kwargs):
                 )
                 if member.enrollment_date is None:
                     member.enrollment_date = instance.start_date
-
-                if member.active_auth != instance:
-                    member.active_auth = instance
-            else:
-                if not created:
-                    Enrollment.objects.create(
+        else:
+            if not created and member.active_auth.mltc == instance.mltc:
+                Enrollment.objects.create(
                         member=member,
                         change_type=Enrollment.DISENROLLMENT,
                         mltc=instance.mltc,
                     )
-                    member.active_auth = None
 
         member.save()

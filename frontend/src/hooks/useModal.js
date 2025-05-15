@@ -152,6 +152,12 @@ function useModal(data, onClose) {
                 if (checkInvalidDates(updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'auths');
+                const activeAuth = savedData.find(auth => auth.active === true);
+                await fetch(`/core/members/${id}/`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active_auth: activeAuth ? activeAuth.id : null }),
+                });
                 break;
 
             case 'contacts':

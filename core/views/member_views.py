@@ -5,7 +5,8 @@ from ..utils.member_utils import (
     getMemberDetail,
     deleteMember,
     getMemberList,
-    createMember
+    createMember,
+    updatePartialMember,
 )
 
 @api_view(['GET', 'POST'])
@@ -18,7 +19,7 @@ def getMembers(request):
         return createMember(request)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def getMember(request, pk):
 
     if request.method == 'GET':
@@ -26,6 +27,9 @@ def getMember(request, pk):
 
     if request.method == 'PUT':
         return updateMember(request, pk)
+    
+    if request.method == 'PATCH':
+        return updatePartialMember(request, pk)
 
     if request.method == 'DELETE':
         return deleteMember(request, pk)

@@ -135,6 +135,14 @@ def updateMember(request, pk):
         if public_url:
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=500)
+    
+def updatePartialMember(request, pk):
+    member = Member.objects.get(id=pk)
+    serializer = MemberSerializer(member, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
 
 def deleteMember(request, pk):
     member = Member.objects.get(id=pk)
