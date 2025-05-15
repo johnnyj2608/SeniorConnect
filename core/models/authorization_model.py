@@ -27,3 +27,23 @@ class Authorization(models.Model):
 
     def __str__(self):
         return f"{self.mltc}: {self.mltc_auth_id}"
+
+class Enrollment(models.Model):
+    ENROLLMENT = 'enrollment'
+    DISENROLLMENT = 'disenrollment'
+
+    CHANGE_TYPE_CHOICES = [
+        (ENROLLMENT, 'Enrollment'),
+        (DISENROLLMENT, 'Disenrollment'),
+    ]
+
+    member = models.ForeignKey('Member', null=True, on_delete=models.SET_NULL)
+    change_type = models.CharField(choices=CHANGE_TYPE_CHOICES, max_length=20)
+    mltc = models.ForeignKey(MLTC, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.member_id}: {self.change_type}"
