@@ -153,10 +153,18 @@ function useModal(data, onClose) {
 
                 savedData = await saveDataTabs(updatedData, 'auths');
                 const activeAuth = savedData.find(auth => auth.active === true);
-                await fetch(`/core/members/${id}/`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ active_auth: activeAuth ? activeAuth.id : null }),
+                const newMLTC = activeAuth?.mltc || null;
+
+                const response = await fetch(`/core/members/${id}/transition/`);
+                const data = await response.json();
+                const oldMLTC = data.mltc;
+
+                await sendRequest(`/core/members/${id}/transition/`, 'POST', {
+                    old_mltc: oldMLTC,
+                    new_mltc: newMLTC,
+                    change_type: !oldMLTC ? 'enrollment' :
+                                    !newMLTC ? 'disenrollment' : 'transfer',
+                    active_auth: activeAuth ? activeAuth.id : null,
                 });
                 break;
 

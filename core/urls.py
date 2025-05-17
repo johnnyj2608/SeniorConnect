@@ -11,8 +11,9 @@ from .views import (
 
 urlpatterns = [
     # Member related paths
-    path('members/', member_views.getMembers, name="members"),
+    path('members/<str:pk>/transition/', member_views.getMemberTransition, name="member_transition"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
+    path('members/', member_views.getMembers, name="members"),
     
     # MLTC related paths
     path('mltcs/', mltc_views.getMLTCs, name="mltcs"),

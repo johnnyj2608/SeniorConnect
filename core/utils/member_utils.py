@@ -9,6 +9,7 @@ from ..serializers.member_serializer import (
     MemberListSerializer,
     MemberBirthdaySerializer
 )
+from ..serializers.authorization_serializer import EnrollmentSerializer
 from django.utils.text import slugify
 from core.utils.supabase import *
 
@@ -136,13 +137,40 @@ def updateMember(request, pk):
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=500)
     
-def updatePartialMember(request, pk):
+def getActiveAuth(request, pk):
     member = Member.objects.get(id=pk)
-    serializer = MemberSerializer(member, data=request.data, partial=True)
+    if member.active_auth and member.active_auth.mltc:
+        return Response({"mltc": member.active_auth.mltc.name})
+    return Response({"mltc": None})
+    
+def transitionMember(request, pk):
+    member = Member.objects.get(id=pk)
+    data = request.data.copy()
+
+    start_date = data.get('start_date')
+    if member.enrollment_date is None and start_date:
+        member.enrollment_date = start_date
+
+    active_auth_id = data.get('active_auth') or None
+    member.active_auth_id = active_auth_id
+    member.save()
+
+    old_mltc = data.get('old_mltc')
+    new_mltc = data.get('new_mltc')
+    if old_mltc == new_mltc:
+        return Response({"detail": "Extension, no action required"})
+
+    data['member'] = member.id
+    serializer = EnrollmentSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors)
+        try:
+            serializer.save()
+        except Exception as e:
+            print(e)
+    else:
+        print("Serializer error:", serializer.errors)
+        return Response(serializer.errors, status=400)
+    return Response(serializer.data)
 
 def deleteMember(request, pk):
     member = Member.objects.get(id=pk)

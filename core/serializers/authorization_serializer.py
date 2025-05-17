@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.authorization_model import Authorization, MLTC
+from ..models.authorization_model import Authorization, MLTC, Enrollment
 
 class MLTCSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +21,21 @@ class AuthorizationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("End date cannot be before start date.")
         
         return data
+    
+class EnrollmentSerializer(serializers.ModelSerializer):
+    old_mltc = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=MLTC.objects.all(),
+        allow_null=True,
+        required=False
+    )
+    new_mltc = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=MLTC.objects.all(),
+        allow_null=True,
+        required=False
+    )
+
+    class Meta:
+        model = Enrollment
+        fields = '__all__'

@@ -1,7 +1,7 @@
 from django.db import models
 
 class MLTC(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     dx_codes = models.JSONField(default=list)
 
     def __str__(self):
@@ -29,13 +29,36 @@ class Authorization(models.Model):
         return f"{self.mltc}: {self.mltc_auth_id}"
 
 class Enrollment(models.Model):
+    ENROLLMENT = 'enrollment'
+    TRANSFER = 'transfer'
+    DISENROLLMENT = 'disenrollment'
+
+    CHANGE_TYPES = [
+        (ENROLLMENT, 'Enrollment'),
+        (TRANSFER, 'Transfer'),
+        (DISENROLLMENT, 'Disenrollment'),
+    ]
     member = models.ForeignKey('Member', null=True, on_delete=models.SET_NULL)
-    enrollment = models.BooleanField(default=True)
-    mltc = models.ForeignKey(MLTC, null=True, blank=True, on_delete=models.SET_NULL)
+    change_type = models.CharField(max_length=20, choices=CHANGE_TYPES)
+    new_mltc = models.ForeignKey(
+        MLTC,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='new_enrollments'
+    )
+    
+    old_mltc = models.ForeignKey(
+        MLTC,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='old_enrollments'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.member_id}: {self.enrollment}"
+        return f"{self.member_id}: {self.change_type} ({self.old_mltc} → {self.new_mltc})"
