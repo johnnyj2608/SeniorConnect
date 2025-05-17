@@ -151,20 +151,22 @@ function useModal(data, onClose) {
                 if (checkMissingFields(updatedData, requiredFields)) return;
                 if (checkInvalidDates(updatedData)) return;
 
+                const response = await fetch(`/core/members/${id}/auth/`);
+                const oldActiveAuth = await response.json();
+                const oldMLTC = oldActiveAuth?.mltc || null;
+
                 savedData = await saveDataTabs(updatedData, 'auths');
                 const activeAuth = savedData.find(auth => auth.active === true);
                 const newMLTC = activeAuth?.mltc || null;
 
-                const response = await fetch(`/core/members/${id}/transition/`);
-                const data = await response.json();
-                const oldMLTC = data.mltc;
-
-                await sendRequest(`/core/members/${id}/transition/`, 'POST', {
+                await sendRequest(`/core/enrollments/`, 'POST', {
+                    member: id,
                     old_mltc: oldMLTC,
                     new_mltc: newMLTC,
                     change_type: !oldMLTC ? 'enrollment' :
                                     !newMLTC ? 'disenrollment' : 'transfer',
                     active_auth: activeAuth ? activeAuth.id : null,
+                    start_date: activeAuth ? activeAuth.start_date : null,
                 });
                 break;
 

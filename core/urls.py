@@ -7,11 +7,12 @@ from .views import (
     contact_views,
     absence_views,
     file_views,
+    enrollment_views,
 )
 
 urlpatterns = [
     # Member related paths
-    path('members/<str:pk>/transition/', member_views.getMemberTransition, name="member_transition"),
+    path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),
     
@@ -22,10 +23,13 @@ urlpatterns = [
     path('languages/', language_views.getLanguages, name="languages"),
 
     # Authorization related paths
-    path('auths/active/<str:pk>/', authorization_views.getActiveAuthorizationsByMember, name="active_auth_by_member"),
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),
     path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/', authorization_views.getAuthorizations, name="auths"),
+
+    # Absence related paths
+    path('enrollments/', enrollment_views.getEnrollments, name="enrollments"),
+    path('enrollment/', enrollment_views.getEnrollment, name="enrollment"),
 
     # Contact related paths
     path('contacts/search/', contact_views.searchContacts, name="contact_search"),

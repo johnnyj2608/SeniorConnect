@@ -8,7 +8,7 @@ const MemberAuthCard = ({ id, onEdit }) => {
 
     useEffect(() => {
         const getActiveAuthByMember = async () => {
-            const response = await fetch(`/core/auths/active/${id}`);
+            const response = await fetch(`/core/members/${id}/auth/`);
             const data = await response.json();
             setAuth(data);
         };

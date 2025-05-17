@@ -7,7 +7,6 @@ from ..utils.authorization_utils import (
     getAuthorizationList,
     createAuthorization,
     getAuthorizationListByMember,
-    getActiveAuthorizationByMember,
 )
 
 @api_view(['GET', 'POST'])
@@ -37,8 +36,3 @@ def getAuthorization(request, pk):
 def getAuthorizationsByMember(request, pk):
     if request.method == 'GET':
         return getAuthorizationListByMember(request, pk)
-    
-@api_view(['GET'])
-def getActiveAuthorizationsByMember(request, pk):
-    if request.method == 'GET':
-        return getActiveAuthorizationByMember(request, pk)

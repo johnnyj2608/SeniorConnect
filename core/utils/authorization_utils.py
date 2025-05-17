@@ -65,8 +65,3 @@ def getAuthorizationListByMember(request, member_pk):
     authorizations = Authorization.objects.filter(member=member_pk)
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
-
-def getActiveAuthorizationByMember(request, member_pk):
-    authorization = Authorization.objects.filter(member=member_pk, active=True).first()
-    serializer = AuthorizationSerializer(authorization)
-    return Response(serializer.data)

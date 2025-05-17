@@ -7,7 +7,6 @@ from ..utils.member_utils import (
     getMemberList,
     createMember,
     getActiveAuth,
-    transitionMember,
 )
 
 @api_view(['GET', 'POST'])
@@ -32,11 +31,8 @@ def getMember(request, pk):
     if request.method == 'DELETE':
         return deleteMember(request, pk)
     
-@api_view(['GET', 'POST'])
-def getMemberTransition(request, pk):
+@api_view(['GET'])
+def getMemberAuth(request, pk):
 
     if request.method == 'GET':
         return getActiveAuth(request, pk)
-
-    if request.method == 'POST':
-        return transitionMember(request, pk)
