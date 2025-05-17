@@ -23,6 +23,9 @@ class AuthorizationSerializer(serializers.ModelSerializer):
         return data
     
 class EnrollmentSerializer(serializers.ModelSerializer):
+    member_name = serializers.SerializerMethodField()
+    sadc_member_id = serializers.SerializerMethodField()
+
     old_mltc = serializers.SlugRelatedField(
         slug_field='name',
         queryset=MLTC.objects.all(),
@@ -39,3 +42,9 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = '__all__'
+
+    def get_member_name(self, obj):
+        return f"{obj.member.last_name}, {obj.member.first_name} "
+
+    def get_sadc_member_id(self, obj):
+        return obj.member.sadc_member_id

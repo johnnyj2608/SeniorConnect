@@ -1,3 +1,4 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from ..models.member_model import Member
 from ..models.authorization_model import Enrollment
@@ -5,8 +6,10 @@ from ..serializers.authorization_serializer import EnrollmentSerializer
 
 def getEnrollmentList(request):
     enrollments = Enrollment.objects.all()
-    serializer = EnrollmentSerializer(enrollments, many=True)
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    result_page = paginator.paginate_queryset(enrollments, request)
+    serializer = EnrollmentSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 def getEnrollmentDetail(request, pk):
     enrollment = Enrollment.objects.get(id=pk)
@@ -15,7 +18,6 @@ def getEnrollmentDetail(request, pk):
 
 def createEnrollment(request):
     data = request.data.copy()
-    print(data)
     member_id = data.get('member')
     member = Member.objects.get(id=member_id)
     if not member.active:

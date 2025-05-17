@@ -1097,6 +1097,22 @@ input[type="number"]::-webkit-inner-spin-button {
   text-decoration: underline;
 }
 
+.green {
+  color: #00cc00;;
+  font-weight: bold;
+}
+
+.red {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.orange {
+  color: #ff7f00;
+  font-weight: bold;
+}
+
+
 /* -------------- *
  * Settings
  * -------------- */

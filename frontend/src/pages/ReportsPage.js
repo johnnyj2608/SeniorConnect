@@ -5,11 +5,12 @@ import { report_types } from '../utils/mapUtils';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
+import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
 
 const reportTypes = [
     { name: 'Absences', value: 'absences' },
     // { name: 'Audit Log', value: 'audit_log' },
-    // { name: 'Enrollment', value: 'enrollment' },
+    { name: 'Enrollments', value: 'enrollments' },
 ];
 
 const ReportsPage = () => {
@@ -26,21 +27,35 @@ const ReportsPage = () => {
 
     useEffect(() => {
         const fetchReport = async () => {
-            let response;
+            let endpoint;
             if (reportType === 'absences') {
-                response = await fetch(`/core/absences/?page=${currentPage}`);
+                endpoint = 'absences'
+            } else if (reportType === 'enrollments') {
+                endpoint = 'enrollments'
             } else {
                 return;
             }
+            const response = await fetch(`/core/${endpoint}/?page=${currentPage}`);
             const data = await response.json();
             setReport(data.results);
-            setTotalPages(Math.ceil(data.count / 25));
+            setTotalPages(Math.ceil(data.count / 20));
         };
       
         if (reportType) {
             fetchReport();
         }
     }, [reportType, currentPage]);
+
+    const getReportContent = () => {
+        switch (reportType) {
+            case 'absences':
+                return <ReportAbsencesTable report={report} />;
+            case 'enrollments':
+                return <ReportEnrollmentsTable report={report} />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <>
@@ -89,9 +104,7 @@ const ReportsPage = () => {
             </div>
             
             <div className="report-results">
-            {report.length > 0 && (
-                <ReportAbsencesTable report={report} />
-            )}
+                {report.length > 0 && getReportContent()}
             </div>
         </>
     );
