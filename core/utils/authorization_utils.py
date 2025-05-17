@@ -19,6 +19,11 @@ def createAuthorization(request):
     
     schedule = data.get('schedule', '').split(',')
     data['schedule'] = json.dumps(schedule)
+
+    member_id = data.get('member')
+    member = Member.objects.get(id=member_id)
+    if not member.active:
+            data['active'] = False
   
     serializer = AuthorizationSerializer(data=data)
     if serializer.is_valid():
@@ -32,7 +37,13 @@ def createAuthorization(request):
     return Response(serializer.data)
 
 def updateAuthorization(request, pk):
-    data = request.data
+    data = request.data.copy()
+
+    member_id = data.get('member')
+    member = Member.objects.get(id=member_id)
+    if not member.active:
+            data['active'] = False
+
     authorization = Authorization.objects.get(id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
     if serializer.is_valid():

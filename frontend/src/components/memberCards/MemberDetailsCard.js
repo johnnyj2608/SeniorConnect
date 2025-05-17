@@ -3,7 +3,7 @@ import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
 import DetailRow from '../members/MemberDetail';
 
-const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
+const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
   const [member, setMember] = useState(null);
 
   useEffect(() => {
@@ -21,6 +21,10 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate }) => {
   useEffect(() => {
     onPhotoUpdate(member?.photo);
   }, [member, onPhotoUpdate]);
+
+  useEffect(() => {
+    onStatusUpdate(member?.active);
+  }, [member, onStatusUpdate]);
 
   const handleEdit = () => {
     if (member) {

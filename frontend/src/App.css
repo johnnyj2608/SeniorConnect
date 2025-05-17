@@ -575,6 +575,20 @@ input {
   margin-left: -25px;
 }
 
+.inactive-banner {
+  position: sticky;
+  top: 55px;
+  background-color: #ffe0e0;
+  color: #a00;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #a00;
+  border-radius: 4px;
+  z-index: 99;
+}
+
 /* -------------- *
  * Modal
  * -------------- */

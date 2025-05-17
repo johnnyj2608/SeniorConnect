@@ -145,6 +145,9 @@ def getActiveAuth(request, pk):
     
 def transitionMember(request, pk):
     member = Member.objects.get(id=pk)
+    if not member.active:
+        return Response({"detail": "Member is inactive; no transition performed."})
+    
     data = request.data.copy()
 
     start_date = data.get('start_date')

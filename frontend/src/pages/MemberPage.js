@@ -7,7 +7,7 @@ import MemberContactsCard from '../components/memberCards/MemberContactsCard';
 import MemberAbsencesCard from '../components/memberCards/MemberAbsencesCard';
 import MemberFilesCard from '../components/memberCards/MemberFilesCard';
 import MemberPhotoCard from '../components/memberCards/MemberPhotoCard';
-
+import MemberStatusBanner from '../components/members/StatusBanner';
 
 const MemberPage = () => {
   const { id } = useParams();
@@ -16,6 +16,7 @@ const MemberPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [status, setStatus] = useState(false);
 
   useEffect(() => {
     if (id === 'new') {
@@ -55,6 +56,10 @@ const MemberPage = () => {
     setPhoto(newPhoto);
   };
 
+  const handleStatusUpdate = (newStatus) => {
+    setStatus(newStatus);
+  };
+
   const handleModalOpen = (type, data, setData) => {
     setModalData({ id, type, data, setData });
     setModalOpen(true);
@@ -62,6 +67,7 @@ const MemberPage = () => {
 
   return (
     <div className="member">
+      <MemberStatusBanner status={status} />
       <div className="member-row">
         <MemberPhotoCard photo={photo} /> 
       </div>
@@ -69,6 +75,7 @@ const MemberPage = () => {
         <MemberDetailsCard id={id}
           onEdit={handleModalOpen}
           onPhotoUpdate={handlePhotoUpdate}
+          onStatusUpdate={handleStatusUpdate}
         />
         <MemberAuthCard
           id={id}
