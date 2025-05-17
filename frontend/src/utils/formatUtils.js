@@ -82,6 +82,25 @@ const formatPhoto = (photo) => {
   return "/default-profile.jpg";
 };
 
+const formatAbsenceStatus = (start_date, end_date) => {
+  const today = new Date();
+  
+  const start = new Date(start_date) || null;
+  const end = new Date(end_date) || null;
+
+  if (start === null) {
+    return ''
+  } else if (start > today) {
+      return 'Upcoming';
+  } else if (end && end < today) {
+      return 'Expired';
+  } else if (start <= today && (end === null || end >= today)) {
+      return 'Ongoing';
+  } else {
+      return '';
+  }
+}
+
 export {
   formatDate,
   formatPhone,
@@ -90,4 +109,5 @@ export {
   sortSchedule,
   formatSSN,
   formatPhoto,
+  formatAbsenceStatus,
 };

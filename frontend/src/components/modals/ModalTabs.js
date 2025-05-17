@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { contact_types, absence_types } from '../../utils/mapUtils';
-import { formatDate } from '../../utils/formatUtils';
+import { formatDate, formatAbsenceStatus } from '../../utils/formatUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
@@ -32,20 +32,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: contact_types[item.contact_type],
                 };
             case 'absences':
-                const start = item.start_date ? new Date(item.start_date) : null;
-                const end = item.end_date ? new Date(item.end_date) : null;
-
-                if (start === null) {
-                    status = '';
-                } else if (start > today) {
-                    status = 'Upcoming';
-                } else if (end && end < today) {
-                    status = 'Expired';
-                } else if (start <= today && (end === null || end >= today)) {
-                    status = 'Ongoing';
-                } else {
-                    status = '';
-                }
+                status = formatAbsenceStatus(item.start_date, item.end_date)
 
                 return { 
                     heading: absence_types[item.absence_type] || 'Unknown', 
