@@ -4,4 +4,4 @@ from ..models.contact_model import Contact
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
-        fields = '__all__'
+        exclude = ['created_at', 'updated_at']

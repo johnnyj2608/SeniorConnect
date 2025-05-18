@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
-from ..models.authorization_model import Authorization, MLTC
+from ..models.authorization_model import MLTC
 from datetime import datetime
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = '__all__'
+        exclude = ['created_at', 'updated_at']
 
 class MemberListSerializer(serializers.ModelSerializer):
     mltc = serializers.SerializerMethodField()

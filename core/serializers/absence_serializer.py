@@ -7,7 +7,7 @@ class AbsenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Absence
-        fields = '__all__'
+        exclude = ['created_at', 'updated_at']
 
     def get_member_name(self, obj):
         return f"{obj.member.last_name}, {obj.member.first_name} "

@@ -16,8 +16,6 @@ class Language(models.Model):
         return self.name
 
 class Member(models.Model):
-
-    # Details
     sadc_member_id = models.IntegerField(null=False, blank=False)
     photo = models.URLField(null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
@@ -39,11 +37,9 @@ class Member(models.Model):
         on_delete=models.SET_NULL,
         related_name='active_for_member'
     )
-
-    # Status
     active = models.BooleanField(default=True)
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False)
 
     class Meta:
         ordering = ['sadc_member_id']

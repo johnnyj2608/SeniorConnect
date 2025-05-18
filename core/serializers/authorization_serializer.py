@@ -11,7 +11,7 @@ class AuthorizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Authorization
-        fields = '__all__'
+        exclude = ['created_at', 'updated_at']
 
     def validate(self, data):
         start = data.get('start_date')
@@ -41,7 +41,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = '__all__'
+        exclude = ['created_at']
 
     def get_member_name(self, obj):
         return f"{obj.member.last_name}, {obj.member.first_name} "

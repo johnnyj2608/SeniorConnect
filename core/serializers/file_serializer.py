@@ -4,4 +4,4 @@ from ..models.file_model import File
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = '__all__'
+        exclude = ['created_at', 'updated_at']
