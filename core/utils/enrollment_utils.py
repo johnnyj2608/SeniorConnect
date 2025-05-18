@@ -1,25 +1,26 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..models.authorization_model import Enrollment
 from ..serializers.authorization_serializer import EnrollmentSerializer
 
 def getEnrollmentList(request):
-    enrollments = Enrollment.objects.all()
+    enrollments = Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc').all()
     paginator = PageNumberPagination()
     result_page = paginator.paginate_queryset(enrollments, request)
     serializer = EnrollmentSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 def getEnrollmentDetail(request, pk):
-    enrollment = Enrollment.objects.get(id=pk)
+    enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
     serializer = EnrollmentSerializer(enrollment)
     return Response(serializer.data)
 
 def createEnrollment(request):
     data = request.data.copy()
     member_id = data.get('member')
-    member = Member.objects.get(id=member_id)
+    member = get_object_or_404(Member, id=member_id)
     if not member.active:
         return Response({"detail": "Member is inactive; no transition performed."})
 
@@ -50,7 +51,7 @@ def createEnrollment(request):
 
 def updateEnrollment(request, pk):
     data = request.data
-    enrollment = Enrollment.objects.get(id=pk)
+    enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
     serializer = EnrollmentSerializer(instance=enrollment, data=data)
 
     if serializer.is_valid():
@@ -64,6 +65,6 @@ def updateEnrollment(request, pk):
     return Response(serializer.data)
 
 def deleteEnrollment(request, pk):
-    enrollment = Enrollment.objects.get(id=pk)
+    enrollment = get_object_or_404(Enrollment, id=pk)
     enrollment.delete()
     return Response('Enrollment was deleted')

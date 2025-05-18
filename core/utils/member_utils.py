@@ -3,6 +3,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from collections import defaultdict
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..serializers.member_serializer import (
     MemberSerializer,
@@ -29,7 +30,7 @@ def getMemberList(request):
         sorted_data = sorted(serializer.data, key=lambda x: x['days_until_birthday'])
         return Response(sorted_data)
 
-    members = Member.objects.all().order_by('active_auth__mltc__name', )
+    members = Member.objects.all().select_related('active_auth', 'active_auth__mltc').order_by('active_auth__mltc__name')
     serializer = MemberListSerializer(members, many=True)
 
     grouped_members = defaultdict(list)
@@ -47,7 +48,7 @@ def getMemberList(request):
     return Response(data)
 
 def getMemberDetail(request, pk):
-    member = Member.objects.get(id=pk)
+    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     serializer = MemberSerializer(member)
     return Response(serializer.data)
 
@@ -98,7 +99,7 @@ def createMember(request):
     
 def updateMember(request, pk):
     data = request.data.copy()
-    member = Member.objects.get(id=pk)
+    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     public_url = None
 
     try:
@@ -138,14 +139,14 @@ def updateMember(request, pk):
         return Response({"error": str(e)}, status=500)
     
 def getActiveAuth(request, pk):
-    member = Member.objects.get(id=pk)
+    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     if member.active_auth:
         serializer = AuthorizationSerializer(member.active_auth)
         return Response(serializer.data)
     return Response({})
 
 def deleteMember(request, pk):
-    member = Member.objects.get(id=pk)
+    member = get_object_or_404(Member, id=pk)
 
     if member.photo:
         try:

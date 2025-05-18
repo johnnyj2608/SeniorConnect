@@ -1,17 +1,18 @@
 from django.db import transaction
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.file_model import File
 from ..serializers.file_serializer import FileSerializer
 from core.utils.supabase import *
 from django.utils.text import slugify
 
 def getFileList(request):
-    files = File.objects.all()
+    files = File.objects.select_related('member').all()
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data)
 
 def getFileDetail(request, pk):
-    file = File.objects.get(id=pk)
+    file = get_object_or_404(File.objects.select_related('member'), id=pk)
     serializer = FileSerializer(file)
     return Response(serializer.data)
 
@@ -53,7 +54,7 @@ def createFile(request):
 
 def updateFile(request, pk):
     data = request.data.copy()
-    file = File.objects.get(id=pk)
+    file = get_object_or_404(File.objects.select_related('member'), id=pk)
     public_url = None
 
     try:
@@ -90,7 +91,7 @@ def updateFile(request, pk):
         return Response({"error": str(e)}, status=500)
 
 def deleteFile(request, pk):
-    file = File.objects.get(id=pk)
+    absence = get_object_or_404(Absence, id=pk)
     if file.file:
         file_path = get_relative_path_of_supabase(file.file)
         delete_file_from_supabase(file_path)

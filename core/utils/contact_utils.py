@@ -1,22 +1,23 @@
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializer import ContactSerializer
 
 def getContactList(request):
-    contacts = Contact.objects.all()
+    contacts = Contact.objects.prefetch_related('members').all()
     serializer = ContactSerializer(contacts, many=True)
     return Response(serializer.data)
 
 def getContactDetail(request, pk):
-    contact = Contact.objects.get(id=pk)
+    contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
     serializer = ContactSerializer(contact)
     return Response(serializer.data)
 
 def createContact(request):
     data = request.data
     member_ids = data.getlist('members')
-    member = Member.objects.get(id=member_ids[-1])
+    member = get_object_or_404(Member, id=member_ids[-1])
 
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
@@ -33,7 +34,7 @@ def createContact(request):
 
 def updateContact(request, pk):
     data = request.data
-    contact = Contact.objects.get(id=pk)
+    contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
     serializer = ContactSerializer(instance=contact, data=data)
 
     if serializer.is_valid():
@@ -47,7 +48,7 @@ def updateContact(request, pk):
     return Response(serializer.data)
 
 def deleteContact(request, pk, member_id):
-    contact = Contact.objects.get(id=pk)
+    contact = get_object_or_404(Contact, id=pk)
     members = contact.members.all()
 
     deletedMember = members.filter(id=member_id).first()
@@ -61,7 +62,7 @@ def deleteContact(request, pk, member_id):
     return Response('Contact was deleted')
 
 def getContactListByMember(request, member_pk):
-    contacts = Contact.objects.filter(members__id=member_pk)
+    contacts = Contact.objects.prefetch_related('members').filter(members__id=member_pk)
     serializer = ContactSerializer(contacts, many=True)
     return Response(serializer.data)
 
@@ -81,5 +82,6 @@ def searchContactList(request):
     if member_id:
         contacts = contacts.exclude(members__id=member_id)
 
+    contacts = contacts.prefetch_related('members')
     serializer = ContactSerializer(contacts, many=True)
     return Response(serializer.data)

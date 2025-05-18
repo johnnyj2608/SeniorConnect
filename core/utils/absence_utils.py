@@ -1,17 +1,18 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from ..models.absence_model import Absence
 from ..serializers.absence_serializer import AbsenceSerializer
 
 def getAbsenceList(request):
-    absences = Absence.objects.all()
+    absences = Absence.objects.select_related('member').all()
     paginator = PageNumberPagination()
     result_page = paginator.paginate_queryset(absences, request)
     serializer = AbsenceSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 def getAbsenceDetail(request, pk):
-    absence = Absence.objects.get(id=pk)
+    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
     serializer = AbsenceSerializer(absence)
     return Response(serializer.data)
 
@@ -31,7 +32,7 @@ def createAbsence(request):
 
 def updateAbsence(request, pk):
     data = request.data
-    absence = Absence.objects.get(id=pk)
+    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
     serializer = AbsenceSerializer(instance=absence, data=data)
 
     if serializer.is_valid():
@@ -45,11 +46,11 @@ def updateAbsence(request, pk):
     return Response(serializer.data)
 
 def deleteAbsence(request, pk):
-    absence = Absence.objects.get(id=pk)
+    absence = get_object_or_404(Absence, id=pk)
     absence.delete()
     return Response('Absence was deleted')
 
 def getAbsenceListByMember(request, member_pk):
-    absences = Absence.objects.filter(member=member_pk)
+    absences = Absence.objects.select_related('member').filter(member=member_pk)
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data)

@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.member_model import Language
 from ..serializers.member_serializer import LanguageSerializer
 
@@ -8,7 +9,7 @@ def getLanguageList(request):
     return Response(serializer.data)
 
 def getLanguageDetail(request, pk):
-    language = Language.objects.get(id=pk)
+    language = get_object_or_404(Language, id=pk)
     serializer = LanguageSerializer(language)
     return Response(serializer.data)
 
@@ -28,7 +29,7 @@ def createLanguage(request):
 
 def updateLanguage(request, pk):
     data = request.data
-    language = Language.objects.get(id=pk)
+    language = get_object_or_404(Language, id=pk)
     serializer = LanguageSerializer(instance=language, data=data)
 
     if serializer.is_valid():
@@ -42,6 +43,6 @@ def updateLanguage(request, pk):
     return Response(serializer.data)
 
 def deleteLanguage(request, pk):
-    language = Language.objects.get(id=pk)
+    language = get_object_or_404(Language, id=pk)
     language.delete()
     return Response('Language was deleted')

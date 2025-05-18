@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import MLTC
 from ..serializers.authorization_serializer import MLTCSerializer
 
@@ -8,7 +9,7 @@ def getMLTCList(request):
     return Response(serializer.data)
 
 def getMLTCDetail(request, pk):
-    mltc = MLTC.objects.get(id=pk)
+    mltc = get_object_or_404(MLTC, id=pk)
     serializer = MLTCSerializer(mltc)
     return Response(serializer.data)
 
@@ -28,7 +29,7 @@ def createMLTC(request):
 
 def updateMLTC(request, pk):
     data = request.data
-    mltc = MLTC.objects.get(id=pk)
+    mltc = get_object_or_404(MLTC, id=pk)
     serializer = MLTCSerializer(instance=mltc, data=data)
 
     if serializer.is_valid():
@@ -42,6 +43,6 @@ def updateMLTC(request, pk):
     return Response(serializer.data)
 
 def deleteMLTC(request, pk):
-    mltc = MLTC.objects.get(id=pk)
+    mltc = get_object_or_404(MLTC, id=pk)
     mltc.delete()
     return Response('MLTC was deleted')

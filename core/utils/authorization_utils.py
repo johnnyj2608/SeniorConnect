@@ -1,16 +1,17 @@
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import Authorization
 from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 import json
 
 def getAuthorizationList(request):
-    authorizations = Authorization.objects.all()
+    authorizations = Authorization.objects.select_related('mltc', 'member').all()
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
 
 def getAuthorizationDetail(request, pk):
-    authorization = Authorization.objects.get(id=pk)
+    authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(authorization)
     return Response(serializer.data)
 
@@ -44,7 +45,7 @@ def updateAuthorization(request, pk):
     if not member.active:
             data['active'] = False
 
-    authorization = Authorization.objects.get(id=pk)
+    authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
     if serializer.is_valid():
         try:
@@ -57,11 +58,11 @@ def updateAuthorization(request, pk):
     return Response(serializer.data)
 
 def deleteAuthorization(request, pk):
-    authorization = Authorization.objects.get(id=pk)
+    authorization = get_object_or_404(Authorization, id=pk)
     authorization.delete()
     return Response('Authorization was deleted')
 
 def getAuthorizationListByMember(request, member_pk):
-    authorizations = Authorization.objects.filter(member=member_pk)
+    authorizations = Authorization.objects.select_related('mltc', 'member').filter(member=member_pk)
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data)
