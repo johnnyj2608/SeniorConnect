@@ -3,6 +3,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 from collections import defaultdict
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..serializers.member_serializer import (
@@ -13,6 +14,7 @@ from ..serializers.member_serializer import (
 from ..serializers.authorization_serializer import AuthorizationSerializer
 from django.utils.text import slugify
 from core.utils.supabase import *
+from .handle_serializer import handle_serializer
 
 def getMemberList(request):
     filter_type = request.GET.get('filter')
@@ -28,7 +30,7 @@ def getMemberList(request):
 
         serializer = MemberBirthdaySerializer(members, many=True)
         sorted_data = sorted(serializer.data, key=lambda x: x['days_until_birthday'])
-        return Response(sorted_data)
+        return Response(sorted_data, status=status.HTTP_200_OK)
 
     members = Member.objects.all().select_related('active_auth', 'active_auth__mltc').order_by('active_auth__mltc__name')
     serializer = MemberListSerializer(members, many=True)
@@ -45,12 +47,12 @@ def getMemberList(request):
             "member_list": members_list
         })
 
-    return Response(data)
+    return Response(data, status=status.HTTP_200_OK)
 
 def getMemberDetail(request, pk):
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     serializer = MemberSerializer(member)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createMember(request):
     data = request.data.copy()
@@ -63,39 +65,41 @@ def createMember(request):
     try:
         with transaction.atomic():
             serializer = MemberSerializer(data=data)
-            
-            if serializer.is_valid():
-                member = serializer.save()
+            response = handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
 
-                if photo:
-                    first_name = request.data.get("first_name")
-                    last_name = request.data.get("last_name")
-                    member_name = slugify(f"{first_name} {last_name}")
-                    new_path = f"{member.id}/{member_name}"
-
-                    public_url, error = upload_file_to_supabase(
-                        photo, 
-                        new_path,
-                        member.photo,
-                        True
-                    )
-                    
-                    if error:
-                        raise Exception(f"Photo upload failed: {error}")
-
-                    member.photo = public_url
-                    member.save()
-                serializer = MemberSerializer(member)
-                return Response(serializer.data)
-
-            else:
-                transaction.set_rollback(True)
+            if response.status_code >= 400:
                 raise Exception("Serializer validation failed.")
+            
+            member = serializer.instance
+
+            if photo:
+                first_name = request.data.get("first_name")
+                last_name = request.data.get("last_name")
+                member_name = slugify(f"{first_name} {last_name}")
+                new_path = f"{member.id}/{member_name}"
+
+                public_url, error = upload_file_to_supabase(
+                    photo, 
+                    new_path,
+                    member.photo,
+                    True
+                )
+                
+                if error:
+                    raise Exception(f"Photo upload failed: {error}")
+
+                member.photo = public_url
+                member.save()
+
+                serializer = MemberSerializer(member)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            return response
 
     except Exception as e:
         if public_url:
             delete_folder_from_supabase(f"{member.id}/")
-        return Response({"error": str(e)}, status=500)
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 def updateMember(request, pk):
     data = request.data.copy()
@@ -125,25 +129,24 @@ def updateMember(request, pk):
                 data['photo'] = public_url
 
             serializer = MemberSerializer(instance=member, data=data)
+            response = handle_serializer(serializer, success_status=status.HTTP_200_OK)
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                transaction.set_rollback(True)
+            if response.status_code >= 400:
                 raise Exception("Serializer validation failed.")
+
+            return response
 
     except Exception as e:
         if public_url:
             delete_file_from_supabase(public_url)
-        return Response({"error": str(e)}, status=500)
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 def getActiveAuth(request, pk):
     member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     if member.active_auth:
         serializer = AuthorizationSerializer(member.active_auth)
-        return Response(serializer.data)
-    return Response({})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({}, status=status.HTTP_200_OK)
 
 def deleteMember(request, pk):
     member = get_object_or_404(Member, id=pk)
@@ -155,4 +158,4 @@ def deleteMember(request, pk):
             print(f"Error deleting photo from Supabase: {e}")
 
     member.delete()
-    return Response('Member was deleted')
+    return Response({'detail': 'Member was deleted'}, status=status.HTTP_204_NO_CONTENT)

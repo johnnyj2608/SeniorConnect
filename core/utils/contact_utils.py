@@ -1,18 +1,20 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializer import ContactSerializer
+from .handle_serializer import handle_serializer
 
 def getContactList(request):
     contacts = Contact.objects.prefetch_related('members').all()
     serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getContactDetail(request, pk):
     contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
     serializer = ContactSerializer(contact)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createContact(request):
     data = request.data
@@ -30,22 +32,13 @@ def createContact(request):
 
     contact.members.add(member)
     serializer = ContactSerializer(contact)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
 
 def updateContact(request, pk):
     data = request.data
     contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
     serializer = ContactSerializer(instance=contact, data=data)
-
-    if serializer.is_valid():
-        try:
-            serializer.save()
-        except Exception as e:
-            print(e)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=400)
-    return Response(serializer.data)
+    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
 
 def deleteContact(request, pk, member_id):
     contact = get_object_or_404(Contact, id=pk)
@@ -58,13 +51,14 @@ def deleteContact(request, pk, member_id):
 
     if len(contact.members.all()) == 0:
         contact.delete()
-
-    return Response('Contact was deleted')
+        return Response({'detail': 'Contact and association deleted'}, status=status.HTTP_204_NO_CONTENT)
+    
+    return Response({'detail': 'Member association removed'}, status=status.HTTP_200_OK)
 
 def getContactListByMember(request, member_pk):
     contacts = Contact.objects.prefetch_related('members').filter(members__id=member_pk)
     serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def searchContactList(request):
     contact_type = request.query_params.get('contact_type', '')
@@ -84,4 +78,4 @@ def searchContactList(request):
 
     contacts = contacts.prefetch_related('members')
     serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)

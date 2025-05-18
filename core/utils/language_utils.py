@@ -1,48 +1,32 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Language
 from ..serializers.member_serializer import LanguageSerializer
+from .handle_serializer import handle_serializer
 
 def getLanguageList(request):
     languages = Language.objects.all()
     serializer = LanguageSerializer(languages, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getLanguageDetail(request, pk):
     language = get_object_or_404(Language, id=pk)
     serializer = LanguageSerializer(language)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createLanguage(request):
     data = request.data
     serializer = LanguageSerializer(data=data)
-
-    if serializer.is_valid():
-        try:
-            serializer.save()
-        except Exception as e:
-            print(e)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=400)
-    return Response(serializer.data)
+    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
 
 def updateLanguage(request, pk):
     data = request.data
     language = get_object_or_404(Language, id=pk)
     serializer = LanguageSerializer(instance=language, data=data)
-
-    if serializer.is_valid():
-        try:
-            serializer.save()
-        except Exception as e:
-            print(e)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=400)
-    return Response(serializer.data)
+    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
 
 def deleteLanguage(request, pk):
     language = get_object_or_404(Language, id=pk)
     language.delete()
-    return Response('Language was deleted')
+    return Response({'detail': 'Language was deleted'}, status=status.HTTP_204_NO_CONTENT)

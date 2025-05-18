@@ -1,19 +1,21 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import Authorization
 from ..models.member_model import Member
 from ..serializers.authorization_serializer import AuthorizationSerializer
 import json
+from .handle_serializer import handle_serializer
 
 def getAuthorizationList(request):
     authorizations = Authorization.objects.select_related('mltc', 'member').all()
     serializer = AuthorizationSerializer(authorizations, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getAuthorizationDetail(request, pk):
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(authorization)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createAuthorization(request):
     data = request.data.copy()
@@ -27,15 +29,7 @@ def createAuthorization(request):
             data['active'] = False
   
     serializer = AuthorizationSerializer(data=data)
-    if serializer.is_valid():
-        try:
-            serializer.save()
-        except Exception as e:
-            print(e)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=400)
-    return Response(serializer.data)
+    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
 
 def updateAuthorization(request, pk):
     data = request.data.copy()
@@ -47,22 +41,14 @@ def updateAuthorization(request, pk):
 
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
-    if serializer.is_valid():
-        try:
-            serializer.save()
-        except Exception as e:
-            print(e)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=400)
-    return Response(serializer.data)
+    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
 
 def deleteAuthorization(request, pk):
     authorization = get_object_or_404(Authorization, id=pk)
     authorization.delete()
-    return Response('Authorization was deleted')
+    return Response({'detail': 'Authorization was deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 def getAuthorizationListByMember(request, member_pk):
     authorizations = Authorization.objects.select_related('mltc', 'member').filter(member=member_pk)
     serializer = AuthorizationSerializer(authorizations, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
