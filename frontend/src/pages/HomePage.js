@@ -1,7 +1,7 @@
 import React from 'react'
 import BirthdaysCard from '../components/homeCards/HomeBirthdaysCard'
 import AuditLogsCard from '../components/homeCards/HomeAuditLogsCard'
-import MembersCard from '../components/homeCards/HomeMembersCard'
+import StatsCard from '../components/homeCards/HomeStatsCard'
 import AbsencesCard from '../components/homeCards/HomeAbsencesCard'
 import AuthorizationsCard from '../components/homeCards/HomeAuthCard'
 import SnapshotsCard from '../components/homeCards/HomeSnapshotsCard'
@@ -20,7 +20,7 @@ const HomePage = () => {
           <BirthdaysCard />
         </div>
         <div className="home-main-panel">
-          <MembersCard />
+          <StatsCard />
           <AbsencesCard />
           <AuthorizationsCard />
           <SnapshotsCard />

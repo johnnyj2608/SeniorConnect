@@ -7,6 +7,7 @@ from ..utils.member_utils import (
     getMemberList,
     createMember,
     getActiveAuth,
+    getActiveMemberStats,
 )
 
 @api_view(['GET', 'POST'])
@@ -36,3 +37,8 @@ def getMemberAuth(request, pk):
 
     if request.method == 'GET':
         return getActiveAuth(request, pk)
+    
+@api_view(['GET'])
+def getMembersCount(request):
+    if request.method == 'GET':
+        return getActiveMemberStats(request)

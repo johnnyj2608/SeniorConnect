@@ -6,6 +6,7 @@ import Dropdown from '../components/inputs/Dropdown';
 import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import useFilters from '../hooks/useFilters';
+import { useLocation } from 'react-router-dom';
 
 const MembersListPage = () => {
   const [members, setMembers] = useState([]);
@@ -28,6 +29,10 @@ const MembersListPage = () => {
     getMltcOptions();
   }, []);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const mltcQueryParam = queryParams.get('mltc');
+
   const {
     searchQuery,
     setSearchQuery,
@@ -37,6 +42,12 @@ const MembersListPage = () => {
     setShowInactive,
     filteredMembers,
   } = useFilters(members);
+
+  useEffect(() => {
+    if (mltcQueryParam && mltcFilter !== mltcQueryParam) {
+      setMltcFilter(mltcQueryParam);
+    }
+  }, [mltcQueryParam, mltcFilter, setMltcFilter]);
 
   const totalFilteredMembers = filteredMembers.reduce((count, mltc) => {
     return count + mltc.member_list.length;

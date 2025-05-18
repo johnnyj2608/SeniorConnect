@@ -12,6 +12,7 @@ from .views import (
 
 urlpatterns = [
     # Member related paths
+    path('members/stats/', member_views.getMembersCount, name="members_count"),
     path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),

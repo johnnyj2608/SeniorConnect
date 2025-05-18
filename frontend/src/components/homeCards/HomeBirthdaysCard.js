@@ -33,7 +33,7 @@ const HomeBirthdayCard = () => {
           {birthdays.map((birthday) => (
           <Link to={`/member/${birthday.id}`} key={birthday.id}>
             <li className="birthday-item">
-              <span>{birthday.first_name} {birthday.last_name} </span>
+              <span>{birthday.last_name}, {birthday.first_name}</span>
               <span>{renderBirthdayMessage(birthday.days_until_birthday)}</span>
             </li>
           </Link>

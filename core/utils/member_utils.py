@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Count, F, Q
 from datetime import datetime, timedelta
 from collections import defaultdict
 from rest_framework.response import Response
@@ -159,3 +159,19 @@ def deleteMember(request, pk):
 
     member.delete()
     return Response({'detail': 'Member was deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+def getActiveMemberStats(request):
+    active_count = Member.objects.filter(active=True).count()
+
+    mltc_counts = (
+        Member.objects
+        .filter(active=True)
+        .values(name=F("active_auth__mltc__name"))
+        .annotate(count=Count("id"))
+        .order_by("name")
+    )
+
+    return Response({
+        "active_count": active_count,
+        "mltc_count": list(mltc_counts),
+    }, status=status.HTTP_200_OK)
