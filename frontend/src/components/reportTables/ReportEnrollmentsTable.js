@@ -8,8 +8,8 @@ const ReportEnrollmentsTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '40%' }}>Member</th>
-                <th style={{ width: '40%' }}>Status</th>
+                <th style={{ width: '30%' }}>Member</th>
+                <th style={{ width: '50%' }}>Status</th>
                 <th style={{ width: '20%' }}>Date</th>
             </tr>
         </thead>
@@ -25,7 +25,7 @@ const ReportEnrollmentsTable = ({ report }) => {
                              </Link>
                         </td>
                         <td>{formatEnrollmentStatus(change_type, old_mltc, new_mltc)}</td>
-                        <td>{formatDate(entry.created_at)}</td>
+                        <td>{formatDate(entry.change_date)}</td>
                     </tr>
                 );
             })}

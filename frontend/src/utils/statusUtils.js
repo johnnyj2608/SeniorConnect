@@ -24,19 +24,19 @@ const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
     case 'enrollment':
         return (
         <>
-            <span className="green">Enrolled</span> in {new_mltc}
+            <span className="green">Enrolled:</span> {new_mltc}
         </>
         );
     case 'disenrollment':
         return (
         <>
-            <span className="red">Disenrolled</span> from {old_mltc}
+            <span className="red">Disenrolled:</span> {old_mltc}
         </>
         );
     case 'transfer':
         return (
         <>
-            <span className="orange">Transferred</span> from {old_mltc} to {new_mltc}
+            <span className="orange">Transferred:</span> {old_mltc} → {new_mltc}
         </>
         );
     default:

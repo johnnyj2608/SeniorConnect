@@ -166,7 +166,7 @@ function useModal(data, onClose) {
                     change_type: !oldMLTC ? 'enrollment' :
                                     !newMLTC ? 'disenrollment' : 'transfer',
                     active_auth: activeAuth ? activeAuth.id : null,
-                    start_date: activeAuth ? activeAuth.start_date : null,
+                    change_date: activeAuth ? activeAuth.start_date : null,
                 });
                 break;
 

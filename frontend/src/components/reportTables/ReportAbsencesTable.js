@@ -9,11 +9,11 @@ const ReportAbsencesTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '40%' }}>Member</th>
+                <th style={{ width: '30%' }}>Member</th>
                 <th style={{ width: '15%' }}>Start Date</th>
                 <th style={{ width: '15%' }}>End Date</th>
-                <th style={{ width: '15%' }}>Reason</th>
-                <th style={{ width: '15%' }}>Status</th>
+                <th style={{ width: '20%' }}>Reason</th>
+                <th style={{ width: '20%' }}>Status</th>
             </tr>
         </thead>
         <tbody>

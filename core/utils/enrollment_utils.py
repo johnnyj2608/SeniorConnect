@@ -26,9 +26,9 @@ def createEnrollment(request):
     if not member.active:
         return Response({"detail": "Member is inactive; no transition performed."}, status=status.HTTP_400_BAD_REQUEST)
 
-    start_date = data.get('start_date')
-    if member.enrollment_date is None and start_date:
-        member.enrollment_date = start_date
+    change_date = data.get('change_date')
+    if member.enrollment_date is None and change_date:
+        member.enrollment_date = change_date
 
     active_auth_id = data.get('active_auth') or None
     member.active_auth_id = active_auth_id

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class MLTC(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -55,10 +56,11 @@ class Enrollment(models.Model):
         on_delete=models.SET_NULL,
         related_name='old_enrollments'
     )
+    change_date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-change_date']
 
     def __str__(self):
         return f"{self.member_id}: {self.change_type} ({self.old_mltc} → {self.new_mltc})"
