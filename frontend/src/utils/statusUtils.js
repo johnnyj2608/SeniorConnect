@@ -45,12 +45,20 @@ const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
 };
 
 const formatChangeStatus = (count, change) => {
-    if (change > 0) {
-      return <span className="green outline">{count} (+{change})</span>;
-    } else if (change < 0) {
-      return <span className="red outline">{count} ({change})</span>;
+    let percentChange;
+
+    if (count - change === 0) {
+        percentChange = count * 100;
     } else {
-      return <span>{count} (0)</span>;
+        percentChange = Math.round((change / (count - change)) * 100);
+    }
+
+    if (change > 0) {
+      return <span className="green outline">↑ +{count} ({percentChange}%)</span>;
+    } else if (change < 0) {
+      return <span className="red outline">↓ -{count} ({percentChange}%)</span>;
+    } else {
+      return <span>(0%)</span>;
     }
 };
 

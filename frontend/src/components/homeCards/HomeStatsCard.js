@@ -37,7 +37,7 @@ const HomeStatsCard = () => {
         <div className="stats-container">
           <h3 className="stats-count">{stats ? `${stats.active_count}` : '...'}</h3>
           <p className="stats-change ">
-            {formatChangeStatus(+5, change?.Overall ?? 0)}
+            {formatChangeStatus(stats?.active_count, change?.Overall ?? 0)}
           </p>  
           <span
             className={`dropdown-icon ${showDetails ? 'open' : ''}`}
@@ -58,6 +58,7 @@ const HomeStatsCard = () => {
                     className="stats-mltc"
                   >
                     <h4>{mltcName}</h4>
+                    <p>{item.count}</p>
                     <p>{formatChangeStatus(item.count, netChange)}</p>
                   </Link>
                 );
