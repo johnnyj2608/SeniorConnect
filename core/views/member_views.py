@@ -39,6 +39,6 @@ def getMemberAuth(request, pk):
         return getActiveAuth(request, pk)
     
 @api_view(['GET'])
-def getMembersCount(request):
+def getMembersStats(request):
     if request.method == 'GET':
         return getActiveMemberStats(request)

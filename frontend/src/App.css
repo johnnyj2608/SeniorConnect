@@ -1144,19 +1144,20 @@ input[type="number"]::-webkit-inner-spin-button {
   text-decoration: underline;
 }
 
+.outline {
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+
 .green {
-  color: #00cc00;;
-  font-weight: bold;
+  color: #00cc00;
 }
 
 .red {
   color: #ff0000;
-  font-weight: bold;
 }
 
 .orange {
   color: #ff7f00;
-  font-weight: bold;
 }
 
 

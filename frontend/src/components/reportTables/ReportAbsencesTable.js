@@ -9,11 +9,12 @@ const ReportAbsencesTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>Member</th>
+                <th style={{ width: '35%' }}>Member</th>
                 <th style={{ width: '15%' }}>Start Date</th>
                 <th style={{ width: '15%' }}>End Date</th>
-                <th style={{ width: '20%' }}>Reason</th>
-                <th style={{ width: '20%' }}>Status</th>
+                <th style={{ width: '10%' }}>Reason</th>
+                <th style={{ width: '10%' }}>Status</th>
+                <th style={{ width: '15%' }}>Note</th>
             </tr>
         </thead>
         <tbody>
@@ -28,6 +29,7 @@ const ReportAbsencesTable = ({ report }) => {
                 <td>{formatDate(absence.end_date) || 'N/A'}</td>
                 <td>{absence_types[absence.absence_type]}</td>
                 <td>{formatAbsenceStatus(absence.start_date, absence.end_date)}</td>
+                <td>{absence.note}</td>
             </tr>
             ))}
         </tbody>

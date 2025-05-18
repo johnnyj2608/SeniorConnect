@@ -6,6 +6,7 @@ from ..utils.enrollment_utils import (
     deleteEnrollment,
     getEnrollmentList,
     createEnrollment,
+    getCurrentMonthEnrollmentStats,
 )
 
 @api_view(['GET', 'POST'])
@@ -29,3 +30,9 @@ def getEnrollment(request, pk):
 
     if request.method == 'DELETE':
         return deleteEnrollment(request, pk)
+
+
+@api_view(['GET'])
+def getEnrollmentStats(request):
+    if request.method == 'GET':
+        return getCurrentMonthEnrollmentStats(request)

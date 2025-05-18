@@ -12,7 +12,7 @@ from .views import (
 
 urlpatterns = [
     # Member related paths
-    path('members/stats/', member_views.getMembersCount, name="members_count"),
+    path('members/stats/', member_views.getMembersStats, name="members_stats"),
     path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),
@@ -28,9 +28,9 @@ urlpatterns = [
     path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/', authorization_views.getAuthorizations, name="auths"),
 
-    # Absence related paths
+    # Enrollment related paths
+    path('enrollments/stats/', enrollment_views.getEnrollmentStats, name="enrollments_stats"),
     path('enrollments/', enrollment_views.getEnrollments, name="enrollments"),
-    path('enrollment/', enrollment_views.getEnrollment, name="enrollment"),
 
     # Contact related paths
     path('contacts/search/', contact_views.searchContacts, name="contact_search"),
