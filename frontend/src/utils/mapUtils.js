@@ -33,9 +33,23 @@ const report_types = {
     enrollment: 'Enrollment',
 };
 
+const absence_status = {
+    ongoing: 'Ongoing',
+    upcoming: 'Upcoming',
+    completed: 'Completed',
+}
+
+const enrollment_status = {
+    enrollment: 'Enrollment',
+    transfer: 'Transfer',
+    disenrollment: 'Disenrollment',
+}
+
 export {
     contact_types,
     relationship_types,
     absence_types,
     report_types,
+    absence_status,
+    enrollment_status,
 };

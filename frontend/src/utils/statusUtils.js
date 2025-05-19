@@ -11,7 +11,7 @@ const formatAbsenceStatus = (start_date, end_date) => {
     } else if (start > today) {
         return <span className="orange">Upcoming</span>;
     } else if (end && end < today) {
-        return <span>Expired</span>;
+        return <span>Completed</span>;
     } else if (start <= today && (end === null || end >= today)) {
         return <span className="green">Ongoing</span>;
     } else {
