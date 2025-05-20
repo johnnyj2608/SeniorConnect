@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MemberBasicModal, MemberSideBasicModal } from '../components/modals/MemberBasicModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
@@ -37,6 +37,8 @@ const MemberModal = ({ data, onClose }) => {
         }
     };
 
+    const add_tab = useMemo(() => ({ add: true }), []);
+
     return (
         <div className="modal">
             <div className="modal-body">
@@ -53,9 +55,9 @@ const MemberModal = ({ data, onClose }) => {
                         <div className="modal-tabs">
                             <ModalTabs 
                                 key="new-tab" 
-                                index={localData.length} 
+                                index={-1} 
                                 handleTabClick={handleAdd} 
-                                tab={{ add: true }} />
+                                tab={add_tab} />
                             {localData.map((tab, index) => (
                                 <ModalTabs 
                                     key={index} 

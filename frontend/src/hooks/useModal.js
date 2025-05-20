@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
     compareTabs,
     getActiveAuthIndex,
@@ -64,14 +64,17 @@ function useModal(data, onClose) {
         });
     };
 
-    const handleAdd = () => {
+    const handleAdd = useCallback(() => {
         setLocalData((prevData) => {
             const updatedData = [...prevData];
-            const activeAuthIndex = getActiveAuthIndex(localData);
+            const activeAuthIndex = getActiveAuthIndex(updatedData);
             const activeAuth = updatedData[activeAuthIndex];
             if (activeAuth) {
                 const updatedTab = { ...activeAuth, active: false };
-                const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeAuthIndex - newTabsCount]);
+                const isEdited = compareTabs(
+                    updatedTab,
+                    updatedTab.id === 'new' ? newTab : originalData[activeAuthIndex - newTabsCount]
+                );
                 updatedData[activeAuthIndex] = { ...updatedTab, edited: isEdited };
             }
             updatedData.unshift(newTab);
@@ -79,7 +82,7 @@ function useModal(data, onClose) {
         });
         setNewTabsCount((prevCount) => prevCount + 1);
         setActiveTab(0);
-    };
+    }, [newTabsCount]);
 
     const handleDelete = (index) => {
         setLocalData((prevData) => {
