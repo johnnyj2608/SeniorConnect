@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+import datetime
 
 class MLTC(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -56,7 +56,7 @@ class Enrollment(models.Model):
         on_delete=models.SET_NULL,
         related_name='old_enrollments'
     )
-    change_date = models.DateField(default=timezone.now)
+    change_date = models.DateField(default=datetime.date.today)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

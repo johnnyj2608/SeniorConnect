@@ -162,7 +162,7 @@ def deleteMember(request, pk):
     return Response({'detail': 'Member was deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 def getActiveMemberStats(request):
-    active_count = Member.objects.filter(active=True).count()
+    active_count = Member.objects.filter(active=True, active_auth__isnull=False).count()
 
     try:
         mltc_counts = (
