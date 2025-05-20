@@ -28,7 +28,7 @@ const ReportAbsencesTable = ({ report }) => {
                 <td>{formatDate(absence.start_date)}</td>
                 <td>{formatDate(absence.end_date) || 'N/A'}</td>
                 <td>{absence_types[absence.absence_type]}</td>
-                <td>{formatAbsenceStatus(absence.start_date, absence.end_date)}</td>
+                <td>{formatAbsenceStatus(absence.start_date, absence.end_date, true)}</td>
                 <td>{absence.note}</td>
             </tr>
             ))}
