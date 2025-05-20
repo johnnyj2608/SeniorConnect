@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo }  from 'react'
 import { Link } from 'react-router-dom'
 import { ReactComponent as AddIcon } from '../../assets/add.svg'
 
@@ -12,4 +12,4 @@ const AddButton = () => {
   )
 }
 
-export default AddButton
+export default memo(AddButton)

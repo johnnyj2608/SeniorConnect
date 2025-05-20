@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { contact_types, absence_types } from '../../utils/mapUtils';
 import { formatDate } from '../../utils/formatUtils';
@@ -7,7 +7,7 @@ import { formatAbsenceStatus } from '../../utils/statusUtils';
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
         return;
-    }
+    } 
 
     const getTabLabel = (type, item) => {
         const today = new Date();
@@ -77,4 +77,4 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     );
 };
 
-export default React.memo(ModalTabs);
+export default memo(ModalTabs);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const StatusBanner = ({ status }) => {
   if (status === undefined || status === null || status === true) return null;
@@ -10,4 +10,4 @@ const StatusBanner = ({ status }) => {
   );
 };
 
-export default React.memo(StatusBanner);
+export default memo(StatusBanner);

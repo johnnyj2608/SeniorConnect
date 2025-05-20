@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { ReactComponent as FileIcon } from '../../assets/file.svg';
 import viewFile from '../../utils/viewFile';
@@ -57,4 +57,4 @@ const MemberFilesCard = ({ id, onEdit }) => {
     );
 };
 
-export default React.memo(MemberFilesCard);
+export default memo(MemberFilesCard);

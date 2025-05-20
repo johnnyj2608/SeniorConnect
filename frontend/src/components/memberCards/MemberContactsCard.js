@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import ContactDetail from '../members/ContactDetail';
 
@@ -42,4 +42,4 @@ const MemberContactsCard = ({ id, onEdit }) => {
     );
 };
 
-export default React.memo(MemberContactsCard);
+export default memo(MemberContactsCard);

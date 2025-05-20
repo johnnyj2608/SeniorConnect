@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate, formatPhone, formatSchedule, formatPhoto } from '../../utils/formatUtils';
 
@@ -28,4 +28,4 @@ const ListItem = ({ member }) => {
   )
 }
 
-export default ListItem
+export default memo(ListItem)

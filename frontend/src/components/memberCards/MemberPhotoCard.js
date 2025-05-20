@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
 
 const MemberPhotoCard = ({ photo }) => {
@@ -16,4 +16,4 @@ const MemberPhotoCard = ({ photo }) => {
 };
 
 
-export default React.memo(MemberPhotoCard);
+export default memo(MemberPhotoCard);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { absence_types } from '../../utils/mapUtils';
 import { formatDate } from '../../utils/formatUtils';
@@ -61,4 +61,4 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
     );
 };
 
-export default React.memo(MemberAbsencesCard);
+export default memo(MemberAbsencesCard);

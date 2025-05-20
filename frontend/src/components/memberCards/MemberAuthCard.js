@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
 import DetailRow from '../members/MemberDetail';
@@ -47,4 +47,4 @@ const MemberAuthCard = ({ id, onEdit }) => {
     );
 };
 
-export default React.memo(MemberAuthCard);
+export default memo(MemberAuthCard);
