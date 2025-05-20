@@ -159,7 +159,7 @@ def deleteMember(request, pk):
             print(f"Error deleting photo from Supabase: {e}")
 
     member.delete()
-    return Response({'detail': 'Member was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 def getActiveMemberStats(request):
     active_count = Member.objects.filter(active=True, active_auth__isnull=False).count()

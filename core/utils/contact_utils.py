@@ -51,7 +51,7 @@ def deleteContact(request, pk, member_id):
 
     if len(contact.members.all()) == 0:
         contact.delete()
-        return Response({'detail': 'Contact and association deleted'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
     return Response({'detail': 'Member association removed'}, status=status.HTTP_200_OK)
 

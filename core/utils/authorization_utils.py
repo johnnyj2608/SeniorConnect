@@ -46,7 +46,7 @@ def updateAuthorization(request, pk):
 def deleteAuthorization(request, pk):
     authorization = get_object_or_404(Authorization, id=pk)
     authorization.delete()
-    return Response({'detail': 'Authorization was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 def getAuthorizationListByMember(request, member_pk):
     authorizations = (

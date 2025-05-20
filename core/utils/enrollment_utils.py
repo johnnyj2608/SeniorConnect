@@ -57,7 +57,7 @@ def updateEnrollment(request, pk):
 def deleteEnrollment(request, pk):
     enrollment = get_object_or_404(Enrollment, id=pk)
     enrollment.delete()
-    return Response({"detail": "Enrollment was deleted."},status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 def getCurrentMonthEnrollmentStats(request):
     today = now()

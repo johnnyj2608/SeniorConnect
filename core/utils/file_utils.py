@@ -98,7 +98,7 @@ def deleteFile(request, pk):
         file_path = get_relative_path_of_supabase(file.file)
         delete_file_from_supabase(file_path)
     file.delete()
-    return Response({'detail': 'File was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def getFileListByMember(request, member_pk):

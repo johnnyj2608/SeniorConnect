@@ -29,4 +29,4 @@ def updateLanguage(request, pk):
 def deleteLanguage(request, pk):
     language = get_object_or_404(Language, id=pk)
     language.delete()
-    return Response({'detail': 'Language was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)

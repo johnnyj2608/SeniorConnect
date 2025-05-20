@@ -32,7 +32,7 @@ def updateAbsence(request, pk):
 def deleteAbsence(request, pk):
     absence = get_object_or_404(Absence, id=pk)
     absence.delete()
-    return Response({'detail': 'Absence was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 def getAbsenceListByMember(request, member_pk):
     absences = Absence.objects.select_related('member').filter(member=member_pk)

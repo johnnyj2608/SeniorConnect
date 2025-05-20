@@ -29,4 +29,4 @@ def updateMLTC(request, pk):
 def deleteMLTC(request, pk):
     mltc = get_object_or_404(MLTC, id=pk)
     mltc.delete()
-    return Response({'detail': 'MLTC was deleted'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
