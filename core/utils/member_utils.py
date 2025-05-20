@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
+from ..models.authorization_model import MLTC
 from ..serializers.member_serializer import (
     MemberSerializer,
     MemberListSerializer,
@@ -163,13 +164,25 @@ def deleteMember(request, pk):
 def getActiveMemberStats(request):
     active_count = Member.objects.filter(active=True).count()
 
-    mltc_counts = (
-        Member.objects
-        .filter(active=True)
-        .values(name=F("active_auth__mltc__name"))
-        .annotate(count=Count("id"))
-        .order_by("name")
-    )
+    try:
+        mltc_counts = (
+            MLTC.objects
+            .annotate(
+                count=Count(
+                    'authorization__member',
+                    filter=Q(
+                        authorization__active=True,
+                        authorization__member__active=True,
+                    ),
+                    distinct=True,
+                )
+            )
+            .values('name', 'count')
+            .order_by('name')
+        )
+    except Exception as e:
+        print('Exception in query:', e)
+        mltc_counts = []
 
     return Response({
         "active_count": active_count,
