@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Dropdown from '../inputs/Dropdown';
+import { sortSchedule } from '../../utils/formatUtils';
 
-const MemberAuthModal = ({ data, handleChange, activeTab }) => {
+const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
     const current = data[activeTab] || {};
 
@@ -17,6 +18,18 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
 
     const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes
+
+    const handleScheduleChange = (day) => (event) => {
+        const { checked } = event.target;
+        const currentSchedule = current.schedule || [];
+
+        const newSchedule = checked
+            ? [...currentSchedule, day]
+            : currentSchedule.filter(d => d !== day);
+        const sortedSchedule = sortSchedule(newSchedule);
+
+        handleChange('schedule')({ target: { value: sortedSchedule } });
+    };
 
     const daysOfWeek = [
         { label: "Monday", value: "Monday" },
@@ -38,7 +51,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                     <input
                         type="checkbox"
                         checked={disabled ? false : current.active === true }
-                        onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
+                        onChange={(e) => handleActiveToggle(e.target.checked)}
                         disabled={disabled}
                     />
                 Active
@@ -87,7 +100,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab }) => {
                                 type="checkbox"
                                 value={day.value}
                                 checked={disabled ? false : current.schedule?.includes(day.value) || false}
-                                onChange={handleChange('schedule')}
+                                onChange={handleScheduleChange(day.value)}
                                 disabled={disabled}
                             />
                             {day.label}

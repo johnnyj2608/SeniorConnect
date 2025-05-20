@@ -49,6 +49,11 @@ def deleteAuthorization(request, pk):
     return Response({'detail': 'Authorization was deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 def getAuthorizationListByMember(request, member_pk):
-    authorizations = Authorization.objects.select_related('mltc', 'member').filter(member=member_pk)
+    authorizations = (
+        Authorization.objects
+        .select_related('mltc', 'member')
+        .filter(member=member_pk)
+        .order_by('-active', '-start_date')
+    )
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { sortSchedule } from '../utils/formatUtils';
 import { 
     compareTabs,
     getActiveAuthIndex,
@@ -30,46 +29,18 @@ function useModal(data, onClose) {
     }, []);
 
     const handleChange = (field) => (event) => {
-        const { value, files, checked } = event.target;
-        const normalizedValue = field.includes('date') && value === '' ? null : value;
+        const { value, files } = event.target;
+        const newValue = files?.[0] ?? (field.includes('date') && value === '' ? null : value);
 
         setLocalData((prevData) => {
-            if (type !== 'basic' && field === 'active') {
-                const updatedData = [...prevData];
-                updatedData.forEach((item, index) => {
-                    if (index === activeTab && item.active === false) {
-                        updatedData[index] = { ...item, active: true };
-                    } else {
-                        updatedData[index] = { ...item, active: false };
-                    }
-                    const isEdited = compareTabs(updatedData[index], updatedData[index].id === 'new' ? newTab : originalData[index - newTabsCount]);
-                    updatedData[index] = { ...updatedData[index], edited: isEdited };
-                });
-                return updatedData;
-            }
-
             if (type !== 'basic') {
                 const currentTab = prevData[activeTab];
-                let newValue = normalizedValue;
-                if (field === 'schedule') {
-                    const currentSchedule = currentTab?.schedule || [];
-                    const newSchedule = checked
-                        ? [...currentSchedule, value]
-                        : currentSchedule.filter((day) => day !== value);
-                    newValue = sortSchedule(newSchedule);
-                }
-
-                if (field === 'file') {
-                    newValue = files?.[0] || null;
-                }
-
                 const updatedTab = {
                     ...currentTab,
                     [field]: newValue,
                 };
 
                 const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab - newTabsCount]);
-
                 const updatedData = [...prevData];
                 updatedData[activeTab] = {
                     ...updatedTab,
@@ -78,6 +49,18 @@ function useModal(data, onClose) {
                 return updatedData;
             }
             return { ...prevData, [field]: files?.[0] || value };
+        });
+    };
+
+    const handleActiveToggle = (checked) => {
+        setLocalData((prevData) => {
+            const updatedData = prevData.map((item, index) => {
+                const isActive = index === activeTab ? checked : false;
+                const updatedItem = { ...item, active: isActive };
+                const isEdited = compareTabs(updatedItem, updatedItem.id === 'new' ? newTab : originalData[index - newTabsCount]);
+                return { ...updatedItem, edited: isEdited };
+            });
+            return updatedData;
         });
     };
 
@@ -202,10 +185,12 @@ function useModal(data, onClose) {
     };
 
     return {
+        type,
         localData,
         activeTab,
         newTabsCount,
         handleChange,
+        handleActiveToggle,
         handleAdd,
         handleDelete,
         handleSave,

@@ -9,23 +9,23 @@ import useModal from '../hooks/useModal';
 
 const MemberModal = ({ data, onClose }) => {
     const {
+        type,
         localData,
         activeTab,
         handleChange,
+        handleActiveToggle,
         handleAdd,
         handleDelete,
         handleSave,
         setActiveTab
     } = useModal(data, onClose);
 
-    const type = data.type;
-
     const getModalContent = () => {
         switch (type) {
             case 'basic':
                 return <MemberBasicModal data={localData} handleChange={handleChange} />;
             case 'authorizations':
-                return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} handleActiveToggle={handleActiveToggle} />;
             case 'contacts':
                 return <MemberContactsModal data={localData} handleChange={handleChange} activeTab={activeTab} memberID={data.id} />;
             case 'absences':
