@@ -44,7 +44,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         exclude = ['created_at']
 
     def get_member_name(self, obj):
-        return f"{obj.member.last_name}, {obj.member.first_name} "
+        return f"{obj.member.last_name}, {obj.member.first_name}"
 
     def get_sadc_member_id(self, obj):
         return obj.member.sadc_member_id

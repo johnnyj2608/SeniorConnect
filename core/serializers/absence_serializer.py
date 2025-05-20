@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ..models.absence_model import Absence
+from datetime import date, timedelta
 
 class AbsenceSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()
@@ -23,3 +24,40 @@ class AbsenceSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("End date cannot be before start date.")
         
         return data
+    
+class AbsenceUpcomingSerializer(serializers.ModelSerializer):
+    member_name = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    days_until = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Absence
+        fields = [
+            'id',
+            'member_name',
+            'absence_type',
+            'status',
+            'days_until',
+        ]
+
+    def get_member_name(self, obj):
+        return f"{obj.member.last_name}, {obj.member.first_name}"
+
+    def get_status(self, obj):
+        today = date.today()
+        in_7_days = today + timedelta(days=7)
+
+        if today <= obj.start_date <= in_7_days:
+            return "Leaving"
+        if obj.end_date and today <= obj.end_date <= in_7_days:
+            return "Returning"
+        return "N/A"
+
+    def get_days_until(self, obj):
+        today = date.today()
+        in_7_days = today + timedelta(days=7)
+        if today <= obj.start_date <= in_7_days:
+            return (obj.start_date - today).days
+        if obj.end_date and today <= obj.end_date <= in_7_days:
+            return (obj.end_date - today).days
+        return None

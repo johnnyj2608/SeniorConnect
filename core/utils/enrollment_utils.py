@@ -94,5 +94,4 @@ def getCurrentMonthEnrollmentStats(request):
     }
 
     flat_data['Overall'] = sum(flat_data.values())
-    print(flat_data)
     return Response(flat_data, status=status.HTTP_200_OK)

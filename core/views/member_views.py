@@ -8,6 +8,7 @@ from ..utils.member_utils import (
     createMember,
     getActiveAuth,
     getActiveMemberStats,
+    getUpcomingBirthdays,
 )
 
 @api_view(['GET', 'POST'])
@@ -42,3 +43,8 @@ def getMemberAuth(request, pk):
 def getMembersStats(request):
     if request.method == 'GET':
         return getActiveMemberStats(request)
+    
+@api_view(['GET'])
+def getMembersBirthdays(request):
+    if request.method == 'GET':
+        return getUpcomingBirthdays(request)

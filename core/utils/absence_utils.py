@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta
+from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from ..models.absence_model import Absence
-from ..serializers.absence_serializer import AbsenceSerializer
+from ..serializers.absence_serializer import AbsenceSerializer, AbsenceUpcomingSerializer
 from .handle_serializer import handle_serializer
 
 def getAbsenceList(request):
@@ -38,3 +40,23 @@ def getAbsenceListByMember(request, member_pk):
     absences = Absence.objects.select_related('member').filter(member=member_pk)
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+def getUpcomingAbsences(request):
+    today = datetime.today().date()
+    in_7_days = today + timedelta(days=7)
+
+    leaving = Absence.objects.filter(
+        start_date__range=(today, in_7_days)
+    ).select_related('member')
+
+    returning = Absence.objects.filter(
+        end_date__range=(today, in_7_days)
+    ).select_related('member')
+
+    leaving_serialized = AbsenceUpcomingSerializer(leaving, many=True).data
+    returning_serialized = AbsenceUpcomingSerializer(returning, many=True).data
+
+    return Response({
+        "leaving": leaving_serialized,
+        "returning": returning_serialized,
+    }, status=status.HTTP_200_OK)

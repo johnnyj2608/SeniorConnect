@@ -61,20 +61,19 @@ class MemberListSerializer(serializers.ModelSerializer):
         return None
 
 class MemberBirthdaySerializer(serializers.ModelSerializer):
-    days_until_birthday = serializers.SerializerMethodField()
+    days_until = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
         fields = (
             'id', 
             'sadc_member_id', 
-            'birth_date', 
             'first_name', 
             'last_name', 
-            'days_until_birthday',
+            'days_until',
         )
 
-    def get_days_until_birthday(self, obj):
+    def get_days_until(self, obj):
         """Calculate the days until the birthday."""
         today = datetime.today().date()
         birth_date = obj.birth_date
@@ -84,5 +83,5 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
         if next_birthday < today:
             next_birthday = next_birthday.replace(year=today.year + 1)
 
-        days_until_birthday = (next_birthday - today).days
-        return days_until_birthday
+        days_until = (next_birthday - today).days
+        return days_until

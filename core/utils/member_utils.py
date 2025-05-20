@@ -18,21 +18,6 @@ from core.utils.supabase import *
 from .handle_serializer import handle_serializer
 
 def getMemberList(request):
-    filter_type = request.GET.get('filter')
-    if filter_type == 'birthdays':
-        today = datetime.today().date()
-
-        birthday_queries = Q()
-        for i in range(7):
-            future_day = today + timedelta(days=i)
-            birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
-
-        members = Member.objects.filter(active=True).filter(birthday_queries)
-
-        serializer = MemberBirthdaySerializer(members, many=True)
-        sorted_data = sorted(serializer.data, key=lambda x: x['days_until_birthday'])
-        return Response(sorted_data, status=status.HTTP_200_OK)
-
     members = Member.objects.all().select_related('active_auth', 'active_auth__mltc').order_by('active_auth__mltc__name')
     serializer = MemberListSerializer(members, many=True)
 
@@ -188,3 +173,17 @@ def getActiveMemberStats(request):
         "active_count": active_count,
         "mltc_count": list(mltc_counts),
     }, status=status.HTTP_200_OK)
+
+def getUpcomingBirthdays(request):
+    today = datetime.today().date()
+
+    birthday_queries = Q()
+    for i in range(7):
+        future_day = today + timedelta(days=i)
+        birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
+
+    members = Member.objects.filter(active=True).filter(birthday_queries)
+
+    serializer = MemberBirthdaySerializer(members, many=True)
+    sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
+    return Response(sorted_data, status=status.HTTP_200_OK)

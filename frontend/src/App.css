@@ -135,7 +135,7 @@ input {
  * Home
  * -------------- */
 
-.birthday-item {
+.home-item {
   display: flex;
   justify-content: space-between;
   padding: 5px;
@@ -144,7 +144,7 @@ input {
   border-radius: 4px;
 }
 
-.birthday-item:hover {
+.home-item:hover {
   transform: scale(1.01);
   background-color: #e0e0e0;
 }
@@ -194,6 +194,22 @@ input {
 .stats-mltc:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.absence-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.absence-list {
+  flex: 1 1 45%;
+  min-width: 250px;
+}
+
+.absence-list > h3 {
+  padding: 0 5px;
 }
 
 /* -------------- *

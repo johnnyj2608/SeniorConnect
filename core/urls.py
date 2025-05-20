@@ -13,6 +13,7 @@ from .views import (
 urlpatterns = [
     # Member related paths
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
+    path('members/birthdays/', member_views.getMembersBirthdays, name="members_birthdays"),
     path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),
@@ -40,6 +41,7 @@ urlpatterns = [
     path('contacts/', contact_views.getContacts, name="contacts"),
 
     # Absence related paths
+    path('absences/upcoming/', absence_views.getAbsencesUpcoming, name="absences_upcoming"),
     path('absences/member/<str:pk>/', absence_views.getAbsencesByMember, name="absence_by_member"),
     path('absences/<str:pk>/', absence_views.getAbsence, name="absence"),
     path('absences/', absence_views.getAbsences, name="absences"),
