@@ -1,6 +1,7 @@
 import React from 'react';
 
 const StatusBanner = ({ status }) => {
+  console.log('status')
   if (status === undefined || status === null || status === true) return null;
 
   return (
@@ -10,4 +11,4 @@ const StatusBanner = ({ status }) => {
   );
 };
 
-export default StatusBanner;
+export default React.memo(StatusBanner);

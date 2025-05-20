@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { sortSchedule } from '../utils/formatUtils';
 import { 
     compareTabs,
@@ -13,14 +13,14 @@ import {
 function useModal(data, onClose) {
     const id = data.id;
     const type = data.type;
-    const originalData = [
-        ...Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
-    ];
+    const originalData = useMemo(() => (
+        Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
+    ), [data]);
 
     const [localData, setLocalData] = useState(type === 'basic' ? { ...data.data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
-    const [newTab] = useState(() => getNewTab(type, localData, id));
+    const newTab = useMemo(() => getNewTab(type, localData, id), [type, localData, id]);
 
     useEffect(() => {
         document.body.classList.add('modal-open');

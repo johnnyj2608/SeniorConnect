@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { contact_types, absence_types } from '../../utils/mapUtils';
-import { formatDate,  } from '../../utils/formatUtils';
+import { formatDate } from '../../utils/formatUtils';
 import { formatAbsenceStatus } from '../../utils/statusUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
@@ -77,4 +77,4 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     );
 };
 
-export default ModalTabs;
+export default React.memo(ModalTabs);

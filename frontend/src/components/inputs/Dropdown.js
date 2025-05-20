@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ReactComponent as DropdownIcon } from '../../assets/dropdown.svg';
 import { formatSchedule, sortSchedule } from '../../utils/formatUtils';
 
@@ -75,24 +75,25 @@ const Dropdown = ({
 
     const isDisabled = disabled || options.length === 0;
     
-    const formattedOptions = Array.isArray(options) 
-        ? options.map(option => {
+    const formattedOptions = useMemo(() => {
+        if (Array.isArray(options)) {
+          return options.map(option => {
             if (typeof option === 'string') {
-                return { name: option, value: option };
+              return { name: option, value: option };
             }
             if (typeof option === 'object') {
-                return {
-                    name: option.name || '',
-                    value: option.value != null ? option.value : option.name || '',
-                };
+              return {
+                name: option.name || '',
+                value: option.value != null ? option.value : option.name || '',
+              };
             }
             return null;
-        })
-        : Object.entries(options).map(([value, name]) => ({
-            name,
-            value
-        }))
-        .filter(option => option && option.name !== '');
+          });
+        }
+        return Object.entries(options)
+          .map(([value, name]) => ({ name, value }))
+          .filter(option => option && option.name !== '');
+    }, [options]);
 
     const handleSelect = (option) => {
         if (multiSelect) {
