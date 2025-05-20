@@ -47,4 +47,4 @@ const MemberAuthCard = ({ id, onEdit }) => {
     );
 };
 
-export default MemberAuthCard;
+export default React.memo(MemberAuthCard);

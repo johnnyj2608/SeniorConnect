@@ -57,4 +57,4 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
   );
 };
 
-export default MemberDetailsCard;
+export default React.memo(MemberDetailsCard);

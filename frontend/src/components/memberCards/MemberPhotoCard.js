@@ -16,4 +16,4 @@ const MemberPhotoCard = ({ photo }) => {
 };
 
 
-export default MemberPhotoCard;
+export default React.memo(MemberPhotoCard);

@@ -57,4 +57,4 @@ const MemberFilesCard = ({ id, onEdit }) => {
     );
 };
 
-export default MemberFilesCard;
+export default React.memo(MemberFilesCard);

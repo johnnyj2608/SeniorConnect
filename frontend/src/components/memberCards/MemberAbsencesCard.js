@@ -61,4 +61,4 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
     );
 };
 
-export default MemberAbsencesCard;
+export default React.memo(MemberAbsencesCard);

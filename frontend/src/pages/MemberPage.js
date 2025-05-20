@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
 import MemberDetailsCard from '../components/memberCards/MemberDetailsCard';
@@ -16,7 +16,7 @@ const MemberPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     if (id === 'new') {
@@ -52,18 +52,18 @@ const MemberPage = () => {
     }
   };
   
-  const handlePhotoUpdate = (newPhoto) => {
+  const handlePhotoUpdate = useCallback((newPhoto) => {
     setPhoto(newPhoto);
-  };
-
-  const handleStatusUpdate = (newStatus) => {
+  }, []);
+  
+  const handleStatusUpdate = useCallback((newStatus) => {
     setStatus(newStatus);
-  };
+  }, []);
 
-  const handleModalOpen = (type, data, setData) => {
+  const handleModalOpen = useCallback((type, data, setData) => {
     setModalData({ id, type, data, setData });
     setModalOpen(true);
-  };
+  }, [id]);
 
   return (
     <div className="member">

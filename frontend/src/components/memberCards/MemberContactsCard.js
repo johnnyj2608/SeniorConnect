@@ -42,4 +42,4 @@ const MemberContactsCard = ({ id, onEdit }) => {
     );
 };
 
-export default MemberContactsCard;
+export default React.memo(MemberContactsCard);
