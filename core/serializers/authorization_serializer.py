@@ -23,6 +23,7 @@ class AuthorizationSerializer(serializers.ModelSerializer):
         return data
     
 class EnrollmentSerializer(serializers.ModelSerializer):
+    change_type = serializers.SerializerMethodField()
     member_name = serializers.SerializerMethodField()
     sadc_member_id = serializers.SerializerMethodField()
 
@@ -42,6 +43,9 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         exclude = ['created_at']
+
+    def get_change_type(self, obj):
+        return obj.get_change_type_display()
 
     def get_member_name(self, obj):
         return f"{obj.member.last_name}, {obj.member.first_name}"

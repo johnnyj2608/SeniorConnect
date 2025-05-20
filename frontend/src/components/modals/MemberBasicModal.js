@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Dropdown from '../inputs/Dropdown';
 import { formatPhoto } from '../../utils/formatUtils';
 
 const MemberBasicModal = ({ data, handleChange }) => {
@@ -177,11 +176,16 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
 
             <div className="member-detail">
                 <label>Language</label>
-                <Dropdown 
-                    display={data?.language || 0} 
-                    onChange={handleChange('language')}
-                    options={languageOptions} 
-                />
+                <select 
+                    value={data?.language || 0} 
+                    onChange={handleChange('language')}>
+                <option value="">Select an option</option>
+                {languageOptions.map((option) => (
+                    <option key={option} value={option}>
+                        {option}
+                    </option>
+                ))}
+                </select>
             </div>
 
             <div className="member-detail">

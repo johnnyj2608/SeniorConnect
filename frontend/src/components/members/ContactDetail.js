@@ -1,11 +1,10 @@
 import React from 'react'
 import { formatPhone } from '../../utils/formatUtils';
-import { contact_types } from '../../utils/mapUtils';
 
 const ContactDetail = ({ label, contact }) => {
     return (
         <div className="member-detail">
-            <label>{contact_types[label]}:</label>
+            <label>{label}:</label>
             <span className="member-detail-contacts">
                 {contact ? (
                     <>

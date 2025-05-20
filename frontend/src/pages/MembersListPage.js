@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ListItem from '../components/members/ListItem';
 import AddButton from '../components/buttons/AddButton';
 import DownloadButton from '../components/buttons/DownloadButton';
-import Dropdown from '../components/inputs/Dropdown';
 import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import useFilters from '../hooks/useFilters';
@@ -72,11 +71,17 @@ const MembersListPage = () => {
 
             <div className="filter-option">
               <label>MLTC Filter</label>
-              <Dropdown
-                display={mltcFilter}
-                onChange={(e) => setMltcFilter(e.target.value)}
-                options={[...mltcOptions, { name: 'Unknown' }]}
-              />
+              <select 
+                value={mltcFilter} 
+                onChange={(e) => setMltcFilter(e.target.value)}>
+              <option value="">Select an option</option>
+              {mltcOptions.map((option) => (
+                  <option key={option.name} value={option.name}>
+                      {option.name}
+                  </option>
+              ))}
+              <option value="Unknown">Unknown</option>
+              </select>
             </div>
 
             <div className="filter-option">

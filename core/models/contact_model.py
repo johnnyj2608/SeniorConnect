@@ -10,7 +10,7 @@ class Contact(models.Model):
     HOME_CARE = 'home_care'
     OTHER = 'other'
 
-    CONTACT_TYPE_CHOICES = [
+    CONTACT_TYPES = [
         (EMERGENCY, 'Emergency Contact'),
         (PRIMARY_PROVIDER, 'Primary Care Provider'),
         (PHARMACY, 'Pharmacy'),
@@ -19,7 +19,6 @@ class Contact(models.Model):
         (OTHER, 'Other'),
     ]
 
-    # Relationship Types
     HUSBAND = 'husband'
     WIFE = 'wife'
     SON = 'son'
@@ -30,7 +29,7 @@ class Contact(models.Model):
     FATHER = 'father'
     MOTHER = 'mother'
 
-    RELATIONSHIP_TYPE_CHOICES = [
+    RELATIONSHIP_TYPES = [
         (HUSBAND, 'Husband'),
         (WIFE, 'Wife'),
         (SON, 'Son'),
@@ -44,12 +43,12 @@ class Contact(models.Model):
     ]
 
     members = models.ManyToManyField('Member', related_name='contacts')
-    contact_type = models.CharField(max_length=20, choices=CONTACT_TYPE_CHOICES)
+    contact_type = models.CharField(max_length=20, choices=CONTACT_TYPES)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
     relationship_type = models.CharField(
         max_length=20,
-        choices=RELATIONSHIP_TYPE_CHOICES,
+        choices=RELATIONSHIP_TYPES,
         null=True,
         blank=True,
         help_text="Only used if this if contact type is emergency"

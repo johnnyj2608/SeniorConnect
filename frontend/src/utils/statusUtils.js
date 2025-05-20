@@ -25,19 +25,19 @@ const formatAbsenceStatus = (start_date, end_date, color=false) => {
 
 const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
     switch (change_type) {
-    case 'enrollment':
+    case 'Enrollment':
         return (
         <>
             <span className="green">Enrolled:</span> {new_mltc}
         </>
         );
-    case 'disenrollment':
+    case 'Disenrollment':
         return (
         <>
             <span className="red">Disenrolled:</span> {old_mltc}
         </>
         );
-    case 'transfer':
+    case 'Transfer':
         return (
         <>
             <span className="orange">Transferred:</span> {old_mltc} → {new_mltc}

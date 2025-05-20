@@ -1,34 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DownloadButton from '../components/buttons/DownloadButton';
-import Dropdown from '../components/inputs/Dropdown';
-import { report_types, absence_status, enrollment_status } from '../utils/mapUtils';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
 
 const reportTypes = [
-    { name: 'Absences', value: 'absences' },
-    // { name: 'Audit Log', value: 'audit_log' },
-    { name: 'Enrollments', value: 'enrollments' },
+    'Absences',
+    'Enrollments',
 ];
 
 const reportFilters = {
-    absences: [
-      { name: 'Ongoing', value: 'ongoing' },
-      { name: 'Upcoming', value: 'upcoming' },
-      { name: 'Completed', value: 'completed' },
+    Absences: [
+        'Ongoing',
+        'Upcoming',
+        'Completed'
     ],
-    enrollments: [
-      { name: 'Enrollment', value: 'enrollment' },
-      { name: 'Transfer', value: 'transfer' },
-      { name: 'Disenrollment', value: 'disenrollment' },
+    Enrollments: [
+        'Enrollment',
+        'Transfer',
+        'Disenrollment',
     ],
-};
-
-const reportFiltersMap = {
-    absences: absence_status,
-    enrollments: enrollment_status,
 };
 
 const ReportsPage = () => {
@@ -50,9 +42,9 @@ const ReportsPage = () => {
             if (!reportType) return;
 
             let endpoint;
-            if (reportType === 'absences') {
+            if (reportType === 'Absences') {
                 endpoint = 'absences';
-            } else if (reportType === 'enrollments') {
+            } else if (reportType === 'Enrollments') {
                 endpoint = 'enrollments';
             } else {
                 return;
@@ -74,18 +66,18 @@ const ReportsPage = () => {
     const filteredReport = useMemo(() => {
         if (!reportFilter) return report;
 
-        if (reportType === 'absences') {
+        if (reportType === 'Absences') {
             const now = new Date();
             return report.filter(absence => {
                 const start = new Date(absence.start_date);
                 const end = absence.end_date ? new Date(absence.end_date) : null;
 
                 switch(reportFilter) {
-                    case 'ongoing':
+                    case 'Ongoing':
                         return start <= now && (!end || end >= now);
-                    case 'upcoming':
+                    case 'Upcoming':
                         return start > now;
-                    case 'completed':
+                    case 'Completed':
                         return end && end < now;
                     default:
                         return true;
@@ -93,7 +85,7 @@ const ReportsPage = () => {
             });
         }
 
-        if (reportType === 'enrollments') {
+        if (reportType === 'Enrollments') {
             return report.filter(entry => entry.change_type === reportFilter);
         }
 
@@ -102,9 +94,9 @@ const ReportsPage = () => {
 
     const getReportContent = () => {
         switch (reportType) {
-            case 'absences':
+            case 'Absences':
                 return <ReportAbsencesTable report={filteredReport} />;
-            case 'enrollments':
+            case 'Enrollments':
                 return <ReportEnrollmentsTable report={filteredReport} />;
             default:
                 return null;
@@ -125,20 +117,30 @@ const ReportsPage = () => {
 
                         <div className="filter-option">
                             <label>Report Type</label>
-                            <Dropdown
-                                display={report_types[reportType]}
-                                onChange={(e) => setReportType(e.target.value)}
-                                options={reportTypes}
-                            />
+                            <select 
+                                value={reportType} 
+                                onChange={(e) => setReportType(e.target.value)}>
+                            <option value="">Select an option</option>
+                            {reportTypes.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                            </select>
                         </div>
 
                         <div className="filter-option">
                             <label>Status Filter</label>
-                            <Dropdown
-                                display={reportFiltersMap[reportType]?.[reportFilter] || ''}
-                                onChange={(e) => setReportFilter(e.target.value)}
-                                options={reportFilters[reportType]}
-                            />
+                            <select
+                                value={reportFilter}
+                                onChange={(e) => setReportFilter(e.target.value)}>
+                            <option value="">Select an option</option>
+                            {reportFilters[reportType]?.map((filterOption) => (
+                                <option key={filterOption} value={filterOption}>
+                                    {filterOption}
+                                </option>
+                            ))}
+                            </select>
                         </div>
 
                         <div className="pagination-controls">

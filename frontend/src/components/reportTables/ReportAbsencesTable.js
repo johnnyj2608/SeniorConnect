@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { absence_types } from '../../utils/mapUtils';
 import { formatDate } from '../../utils/formatUtils';
 import { formatAbsenceStatus } from '../../utils/statusUtils';
 
@@ -27,7 +26,7 @@ const ReportAbsencesTable = ({ report }) => {
                 </td>
                 <td>{formatDate(absence.start_date)}</td>
                 <td>{formatDate(absence.end_date) || 'N/A'}</td>
-                <td>{absence_types[absence.absence_type]}</td>
+                <td>{absence.absence_type}</td>
                 <td>{formatAbsenceStatus(absence.start_date, absence.end_date, true)}</td>
                 <td>{absence.note}</td>
             </tr>

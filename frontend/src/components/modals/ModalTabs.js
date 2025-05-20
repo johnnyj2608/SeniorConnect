@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
-import { contact_types, absence_types } from '../../utils/mapUtils';
 import { formatDate } from '../../utils/formatUtils';
 import { formatAbsenceStatus } from '../../utils/statusUtils';
 
@@ -30,13 +29,13 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'contacts':
                 return { 
                     heading: item.name || 'Unknown', 
-                    subheading: contact_types[item.contact_type],
+                    subheading: item.contact_type,
                 };
             case 'absences':
                 status = formatAbsenceStatus(item.start_date, item.end_date)
 
                 return { 
-                    heading: absence_types[item.absence_type] || 'Unknown', 
+                    heading: item.absence_type || 'Unknown', 
                     subheading: status,
                 };
             case 'files':

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
-import { absence_types } from '../../utils/mapUtils';
 import { formatDate } from '../../utils/formatUtils';
 import DetailRow from '../members/MemberDetail';
 
@@ -42,7 +41,7 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
                     
                             return (
                                 <li key={idx} className="absence-item">
-                                    <DetailRow label="Absence Type" value={absence_types[abs.absence_type]} />
+                                    <DetailRow label="Absence Type" value={abs.absence_type} />
                                     <DetailRow label="Start Date" value={formatDate(abs.start_date)} />
                                     <DetailRow label="End Date" value={formatDate(abs.end_date)} />
                                     <DetailRow label="Status" value={status} />

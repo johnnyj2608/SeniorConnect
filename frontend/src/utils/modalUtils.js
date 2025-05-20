@@ -64,14 +64,20 @@ const checkInvalidDates = (data) => {
 const sendRequest = async (url, method, data) => {
     const formData = new FormData();
     for (const key in data) {
-        if (key === 'schedule' && data.id !== 'new'){
-            formData.append(key, JSON.stringify(data[key]));
-        } else if (data[key] === null) {
+        let value = data[key];
+
+        if (key.includes('type') && typeof value === 'string') {
+            value = value.toLowerCase();
+        }
+
+        if (key === 'schedule' && data.id !== 'new') {
+            formData.append(key, JSON.stringify(value));
+        } else if (value === null) {
             formData.append(key, '');
         } else if (key === 'members') {
-            data[key].forEach(value => formData.append(key, value));
+            value.forEach(member => formData.append(key, member));
         } else {
-            formData.append(key, data[key]);
+            formData.append(key, value);
         }
     }
 

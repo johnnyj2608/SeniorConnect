@@ -28,6 +28,7 @@ def createAbsence(request):
 def updateAbsence(request, pk):
     data = request.data
     absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
+    print(data)
     serializer = AbsenceSerializer(instance=absence, data=data)
     return handle_serializer(serializer, success_status=status.HTTP_200_OK)
 

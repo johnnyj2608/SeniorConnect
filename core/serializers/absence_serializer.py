@@ -3,6 +3,7 @@ from ..models.absence_model import Absence
 from datetime import date, timedelta
 
 class AbsenceSerializer(serializers.ModelSerializer):
+    absence_type = serializers.ChoiceField(choices=Absence.ABSENCE_TYPES)
     member_name = serializers.SerializerMethodField()
     sadc_member_id = serializers.SerializerMethodField()
 
@@ -10,8 +11,13 @@ class AbsenceSerializer(serializers.ModelSerializer):
         model = Absence
         exclude = ['created_at', 'updated_at']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['absence_type'] = instance.get_absence_type_display()
+        return data
+
     def get_member_name(self, obj):
-        return f"{obj.member.last_name}, {obj.member.first_name} "
+        return f"{obj.member.last_name}, {obj.member.first_name}"
 
     def get_sadc_member_id(self, obj):
         return obj.member.sadc_member_id
@@ -26,6 +32,7 @@ class AbsenceSerializer(serializers.ModelSerializer):
         return data
     
 class AbsenceUpcomingSerializer(serializers.ModelSerializer):
+    absence_type = serializers.SerializerMethodField()
     member_name = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     days_until = serializers.SerializerMethodField()
@@ -39,6 +46,9 @@ class AbsenceUpcomingSerializer(serializers.ModelSerializer):
             'status',
             'days_until',
         ]
+
+    def get_absence_type(self, obj):
+        return obj.get_absence_type_display()
 
     def get_member_name(self, obj):
         return f"{obj.member.last_name}, {obj.member.first_name}"

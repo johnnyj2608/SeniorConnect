@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { absence_types } from '../../utils/mapUtils'
 
 const HomeAbsenceCard = () => {
   const [leaving, setLeaving] = useState([]);
@@ -28,7 +27,7 @@ const HomeAbsenceCard = () => {
               {leaving.map(absence => (
                 <Link to={`/member/${absence.id}`} key={absence.id}>
                   <li className="home-item">
-                    <span>{absence.member_name}: {absence_types[absence.absence_type]}</span>
+                    <span>{absence.member_name}: {absence.absence_type}</span>
                     <span>{absence.days_until} Days</span>
                   </li>
                 </Link>
@@ -41,7 +40,7 @@ const HomeAbsenceCard = () => {
               {returning.map(absence => (
                 <Link to={`/member/${absence.id}`} key={absence.id}>
                   <li className="home-item">
-                    <span>{absence.member_name}: {absence_types[absence.absence_type]}</span>
+                    <span>{absence.member_name}: {absence.absence_type}</span>
                     <span>{absence.days_until} Days</span>
                   </li>
                 </Link>

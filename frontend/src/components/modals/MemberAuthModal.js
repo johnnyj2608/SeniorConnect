@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Dropdown from '../inputs/Dropdown';
 import { sortSchedule } from '../../utils/formatUtils';
 
 const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) => {
@@ -17,7 +16,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
     }, []);
 
     const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
-    const dx_codes = selectedMltc?.dx_codes
+    const dx_codes = selectedMltc?.dx_codes || [];
 
     const handleScheduleChange = (day) => (event) => {
         const { checked } = event.target;
@@ -70,15 +69,20 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
             <div className="member-detail">
                 <label>MLTC *</label>
-                <Dropdown 
-                    display={disabled ? '' : current.mltc || ''} 
+                <select 
+                    value={disabled ? '' : current.mltc || ''} 
                     onChange={(e) => {
                         handleChange('mltc')(e);
                         handleChange('dx_code')({target: { value: '' }});
                     }}
-                    options={mltcOptions}
-                    disabled={disabled}
-                />
+                    disabled={disabled}>
+                <option value="">Select an option</option>
+                {mltcOptions.map((option) => (
+                    <option key={option.name} value={option.name}>
+                        {option.name}
+                    </option>
+                ))}
+                </select>
             </div>
             <div className="member-detail">
                 <label>Auth ID *</label>
@@ -128,12 +132,17 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
             <div className="member-detail">
                 <label>DX Code</label>
-                <Dropdown 
-                    display={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
+                <select 
+                    value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
                     onChange={handleChange('dx_code')}
-                    options={dx_codes}
-                    disabled={disabled}
-                />
+                    disabled={disabled}>
+                <option value="">Select an option</option>
+                {dx_codes.map((option) => (
+                    <option key={option} value={option}>
+                        {option}
+                    </option>
+                ))}
+                </select>
             </div>
             <div className="member-detail">
                 <label>SDC Code</label>
