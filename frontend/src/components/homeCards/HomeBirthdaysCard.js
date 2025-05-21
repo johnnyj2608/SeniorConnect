@@ -26,7 +26,7 @@ const HomeBirthdayCard = () => {
   };
 
   return (
-    <div className="half-card">
+    <div className="full-card">
       <h3>Birthdays</h3>
       <div className="card-container">
         <ul>
