@@ -11,6 +11,7 @@ import MembersListPage from './pages/MembersListPage'
 import MemberPage from './pages/MemberPage'
 import ReportsPage from './pages/ReportsPage'
 import SettingsPage from './pages/SettingsPage'
+import LoginPage from './pages/LoginPage'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/member/:id" element={<MemberPage />} />
               <Route path="/reports/" element={<ReportsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </div>
         </div>
