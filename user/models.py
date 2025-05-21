@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from organization.models import Sadc
+from core.models.sadc_model import Sadc
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -23,15 +23,15 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-class StaffUser(AbstractBaseUser, PermissionsMixin):
-    sadc = models.ForeignKey('organization.Sadc', on_delete=models.CASCADE, related_name='users')
+class User(AbstractBaseUser, PermissionsMixin):
+    sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='users')
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
     role = models.CharField(max_length=50, choices=[('admin', 'Admin'), ('staff', 'Staff')], default='staff')
     preferences = models.JSONField(default=dict, blank=True)
 
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)   # Access to Django Admin
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -40,16 +40,17 @@ class StaffUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
-    
+
     def __str__(self):
         return self.email
 
     def get_full_name(self):
         return self.name
 
-class Organization(models.Model):
-    name = models.CharField(max_length=255)
-    # other fields like address, contact info, etc.
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
 
-    def __str__(self):
-        return self.name
+    @property
+    def is_staff_user(self):
+        return self.role == 'staff'

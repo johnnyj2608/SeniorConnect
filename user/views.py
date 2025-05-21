@@ -2,32 +2,32 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .utils import (
-    updateStaffUser,
-    getStaffUserDetail,
-    deleteStaffUser,
-    getStaffUserList,
-    createStaffUser,
+    updateUser,
+    getUserDetail,
+    deleteUser,
+    getUserList,
+    createUser,
 )
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def getStaffUsers(request):
+def getUsers(request):
 
     if request.method == 'GET':
-        return getStaffUserList(request)
+        return getUserList(request)
 
     if request.method == 'POST':
-        return createStaffUser(request)
+        return createUser(request)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def getStaffUser(request, pk):
+def getUser(request, pk):
 
     if request.method == 'GET':
-        return getStaffUserDetail(request, pk)
+        return getUserDetail(request, pk)
 
     if request.method == 'PUT':
-        return updateStaffUser(request, pk)
+        return updateUser(request, pk)
 
     if request.method == 'DELETE':
-        return deleteStaffUser(request, pk)
+        return deleteUser(request, pk)

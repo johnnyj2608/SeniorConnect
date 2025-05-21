@@ -2,11 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import StaffUser
+from .models import User
 
-class StaffUserAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'name', 'role', 'is_staff', 'is_active', 'created_at')
     search_fields = ('email', 'name')
     list_filter = ('role', 'is_staff', 'is_active')
 
-admin.site.register(StaffUser, StaffUserAdmin)
+admin.site.register(User, UserAdmin)

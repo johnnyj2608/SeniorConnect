@@ -1,22 +1,22 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from .models import StaffUser
-from .serializers import StaffUserSerializer
+from .models import User
+from .serializers import UserSerializer
 
-def getStaffUserList(request):
-    users = StaffUser.objects.all()
-    serializer = StaffUserSerializer(users, many=True)
+def getUserList(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def getStaffUserDetail(request, pk):
-    user = get_object_or_404(StaffUser, id=pk)
-    serializer = StaffUserSerializer(user)
+def getUserDetail(request, pk):
+    user = get_object_or_404(User, id=pk)
+    serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def createStaffUser(request):
+def createUser(request):
     data = request.data
-    serializer = StaffUserSerializer(data=data)
+    serializer = UserSerializer(data=data)
     if serializer.is_valid():
         try:
             serializer.save()
@@ -31,10 +31,10 @@ def createStaffUser(request):
         print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def updateStaffUser(request, pk):
+def updateUser(request, pk):
     data = request.data
-    user = get_object_or_404(StaffUser, id=pk)
-    serializer = StaffUserSerializer(instance=user, data=data)
+    user = get_object_or_404(User, id=pk)
+    serializer = UserSerializer(instance=user, data=data)
     if serializer.is_valid():
         try:
             serializer.save()
@@ -49,7 +49,7 @@ def updateStaffUser(request, pk):
         print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def deleteStaffUser(request, pk):
-    user = get_object_or_404(StaffUser, id=pk)
+def deleteUser(request, pk):
+    user = get_object_or_404(User, id=pk)
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
