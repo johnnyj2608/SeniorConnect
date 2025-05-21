@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from .models import StaffUser
-from .serializer import StaffUserSerializer
+from .serializers import StaffUserSerializer
 
 def getStaffUserList(request):
     users = StaffUser.objects.all()

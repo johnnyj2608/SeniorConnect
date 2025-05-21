@@ -7,12 +7,12 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..models.authorization_model import MLTC
-from ..serializers.member_serializer import (
+from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
     MemberBirthdaySerializer
 )
-from ..serializers.authorization_serializer import AuthorizationSerializer
+from ..serializers.authorization_serializers import AuthorizationSerializer
 from django.utils.text import slugify
 from core.utils.supabase import *
 from .handle_serializer import handle_serializer

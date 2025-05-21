@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from ..models.absence_model import Absence
-from ..serializers.absence_serializer import AbsenceSerializer, AbsenceUpcomingSerializer
+from ..serializers.absence_serializers import AbsenceSerializer, AbsenceUpcomingSerializer
 from .handle_serializer import handle_serializer
 
 def getAbsenceList(request):

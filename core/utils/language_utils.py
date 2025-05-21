@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Language
-from ..serializers.member_serializer import LanguageSerializer
+from ..serializers.member_serializers import LanguageSerializer
 from .handle_serializer import handle_serializer
 
 def getLanguageList(request):

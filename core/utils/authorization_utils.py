@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import Authorization
 from ..models.member_model import Member
-from ..serializers.authorization_serializer import AuthorizationSerializer
+from ..serializers.authorization_serializers import AuthorizationSerializer
 import json
 from .handle_serializer import handle_serializer
 

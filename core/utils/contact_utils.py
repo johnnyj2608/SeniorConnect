@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
-from ..serializers.contact_serializer import ContactSerializer
+from ..serializers.contact_serializers import ContactSerializer
 from .handle_serializer import handle_serializer
 
 def getContactList(request):

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.file_model import File
-from ..serializers.file_serializer import FileSerializer
+from ..serializers.file_serializers import FileSerializer
 from core.utils.supabase import *
 from django.utils.text import slugify
 from .handle_serializer import handle_serializer
