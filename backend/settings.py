@@ -41,8 +41,12 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'organization',
+    'user',
     'core',
 ]
+
+AUTH_USER_MODEL = 'user.StaffUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
