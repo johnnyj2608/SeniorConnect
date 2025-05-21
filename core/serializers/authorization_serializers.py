@@ -23,7 +23,7 @@ class AuthorizationSerializer(serializers.ModelSerializer):
         return data
     
 class EnrollmentSerializer(serializers.ModelSerializer):
-    change_type = serializers.SerializerMethodField()
+    change_type = serializers.ChoiceField(choices=Enrollment.CHANGE_TYPES)
     member_name = serializers.SerializerMethodField()
     sadc_member_id = serializers.SerializerMethodField()
 
@@ -44,8 +44,10 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         exclude = ['created_at']
 
-    def get_change_type(self, obj):
-        return obj.get_change_type_display()
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['change_type'] = instance.get_change_type_display()
+        return data
 
     def get_member_name(self, obj):
         return f"{obj.member.last_name}, {obj.member.first_name}"
