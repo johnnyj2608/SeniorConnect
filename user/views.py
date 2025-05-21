@@ -1,5 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from .permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from .utils import (
     updateUser,
@@ -10,7 +11,7 @@ from .utils import (
 )
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getUsers(request):
 
     if request.method == 'GET':
@@ -21,6 +22,7 @@ def getUsers(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def getUser(request, pk):
 
     if request.method == 'GET':
