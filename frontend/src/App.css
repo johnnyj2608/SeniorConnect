@@ -137,7 +137,7 @@ input {
 
  .home-grid {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 2fr 1fr;
   margin-top: 1rem;
 }
 
@@ -217,7 +217,7 @@ input {
 
 .absence-list {
   flex: 1 1 45%;
-  min-width: 250px;
+  min-width: 235px;
 }
 
 .absence-list > h3 {

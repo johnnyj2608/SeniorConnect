@@ -15,12 +15,10 @@ const HomePage = () => {
       </div>
 
       <div className="home-grid">
-        <div className="home-side-panel">
-          <BirthdaysCard />
-        </div>
         <div className="home-main-panel">
           <StatsCard />
           <AbsencesCard />
+          <BirthdaysCard />
           <SnapshotsCard />
         </div>
         <div className="home-side-panel">
