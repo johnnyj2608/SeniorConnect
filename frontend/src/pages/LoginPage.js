@@ -1,24 +1,32 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PasswordField from '../components/inputs/PasswordField'
+import { AuthContext } from '../context/AuthContext'
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate()
+    const { user, setUser, loading } = useContext(AuthContext)
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate('/')
+        }
+    }, [loading, user, navigate])
 
     const handleChange = (field) => (event) => {
-        const { value } = event.target;
-      
-        if (field === 'email') {
-          setEmail(value);
+        const { value } = event.target
+            if (field === 'email') {
+            setEmail(value)
         } else if (field === 'password') {
-          setPassword(value);
+            setPassword(value)
         }
-    };
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         try {
             const response = await fetch('/user/auth/login/', {
@@ -26,19 +34,22 @@ const LoginPage = () => {
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password }),
-              });
-          
-              if (!response.ok) {
-                throw new Error('Login failed');
-              }
-          
-              console.log('Logged in successfully');
-              navigate('/');
+            })
+
+            if (!response.ok) {
+                throw new Error('Login failed')
+            }
+
+            const data = await response.json()
+            setUser(data.user)
+            navigate('/')
         } catch (error) {
-            console.error('Login error:', error);
-            alert('Invalid credentials');
+            console.error('Login error:', error)
+            alert('Invalid credentials')
         }
-    };
+    }
+
+    if (loading) return <div>Loading...</div>
 
     return (
         <div className="login-container">
@@ -55,10 +66,12 @@ const LoginPage = () => {
                     value={password}
                     onChange={handleChange('password')}
                 />
-                <button className="login-submit" type="submit">Log In</button>
+                <button className="login-submit" type="submit">
+                    Log In
+                </button>
             </form>
-        </div>  
+        </div>
     )
-    }
+}
 
 export default LoginPage

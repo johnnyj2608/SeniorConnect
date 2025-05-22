@@ -3,6 +3,9 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from .models import User
 from .serializers import UserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+from django.conf import settings
 
 def getUserList(request):
     users = User.objects.all()
@@ -58,3 +61,45 @@ def deleteUser(request, pk):
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+def getAuthUser(request):
+    user = request.user
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+def handleLogin(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    user = authenticate(request, username=email, password=password)
+
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(user)
+        res = Response({
+            'message': 'Logged in successfully',
+            'user': serializer.data
+        }, status=200)
+
+        res.set_cookie(
+            key='access',
+            value=str(refresh.access_token),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+        )
+        res.set_cookie(
+            key='refresh',
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+        )
+        return res
+
+    return Response({'detail': 'Invalid credentials'}, status=401)
+
+def handleLogout(request):
+    res = Response({'message': 'Logged out successfully'}, status=200)
+    res.delete_cookie('access')
+    res.delete_cookie('refresh')
+    return res

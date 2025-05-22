@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
 
 const SettingsPage = () => {
-
     const navigate = useNavigate()
+    const { setUser } = useContext(AuthContext)
 
     const handleLogout = async () => {
         try {
@@ -15,6 +16,8 @@ const SettingsPage = () => {
             if (!response.ok) {
                 throw new Error('Logout failed')
             }
+
+            setUser(null)
 
             console.log('Logged out successfully')
             navigate('/login')

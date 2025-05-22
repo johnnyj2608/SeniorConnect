@@ -8,10 +8,10 @@ from .utils import (
     deleteUser,
     getUserList,
     createUser,
+    getAuthUser,
+    handleLogin,
+    handleLogout,
 )
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from django.conf import settings
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsAdminUser])
@@ -37,37 +37,19 @@ def getUser(request, pk):
     if request.method == 'DELETE':
         return deleteUser(request, pk)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAuthenticatedUser(request):
+    
+    if request.method == 'GET':
+        return getAuthUser(request)
+    
 @api_view(['POST'])
 def cookieLogin(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    user = authenticate(request, email=email, password=password)
-
-    if user is not None:
-        refresh = RefreshToken.for_user(user)
-        res = Response({'message': 'Logged in successfully'})
-
-        res.set_cookie(
-            key='access',
-            value=str(refresh.access_token),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite='Lax',
-        )
-        res.set_cookie(
-            key='refresh',
-            value=str(refresh),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite='Lax',
-        )
-        return res
-
-    return Response({'detail': 'Invalid credentials'}, status=401)
+    if request.method == 'POST':
+        return handleLogin(request)
 
 @api_view(['POST'])
 def cookieLogout(request):
-    res = Response({'message': 'Logged out successfully'})
-    res.delete_cookie('access')
-    res.delete_cookie('refresh')
-    return res
+    if request.method == 'POST':
+        return handleLogout(request)
