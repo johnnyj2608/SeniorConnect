@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,10 +16,27 @@ const LoginPage = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Email:', email);
-        console.log('Password:', password);
+
+        try {
+            const response = await fetch('/user/auth/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password }),
+              });
+          
+              if (!response.ok) {
+                throw new Error('Login failed');
+              }
+          
+              console.log('Logged in successfully');
+              navigate('/');
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Invalid credentials');
+        }
     };
 
     return (
