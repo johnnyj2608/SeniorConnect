@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext'
 
 const SettingsPage = () => {
     const navigate = useNavigate()
-    const { setUser } = useContext(AuthContext)
+    const { user, setUser } = useContext(AuthContext)
 
     const handleLogout = async () => {
         try {
@@ -59,6 +59,15 @@ const SettingsPage = () => {
                     <li>Support</li>
                 </ul>
             </div>
+
+            {user?.is_admin_user && (
+                <div className="settings-content">
+                    <h3 className="section-title">Admin</h3>
+                    <ul className="settings-list">
+                        <li>User Management</li>
+                    </ul>
+                </div>
+            )}
 
             <div className="settings-content">
                 <h3 className="section-title">Account</h3>
