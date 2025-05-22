@@ -160,6 +160,7 @@ input {
 }
 
 .login-container input {
+  width: 100%;
   padding: 12px;
   font-size: 16px;
   border-radius: 4px;
@@ -170,7 +171,7 @@ input {
   color: var(--color-white);
 }
 
-.login-container button {
+.login-submit {
   padding: 12px;
   font-size: 16px;
   border-radius: 4px;
@@ -181,8 +182,35 @@ input {
   transition: background-color 0.3s;
 }
 
-.login-container button:hover {
+.login-submit:hover {
   background-color: var(--color-hover);
+}
+
+.password-field-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.eye-open {
+  width: 20px;
+  height: 20px;
+  margin-right: 1px;
+}
+
+.eye-close {
+  width: 22px;
+  height: 22px;
 }
 
 /* -------------- *
@@ -1172,6 +1200,10 @@ input[type="number"]::-webkit-inner-spin-button {
  * Settings
  * -------------- */
 
+.logout {
+  color: red;
+  cursor: pointer;
+}
 
 @media (max-width: 835px) {
   .navbar-toggle {

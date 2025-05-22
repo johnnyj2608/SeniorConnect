@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import PasswordField from '../components/inputs/PasswordField'
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -50,14 +51,11 @@ const LoginPage = () => {
                     onChange={handleChange('email')}
                     required
                 />
-                <input
-                    type="password"
-                    placeholder="Password"
+                <PasswordField
                     value={password}
                     onChange={handleChange('password')}
-                    required
                 />
-                <button type="submit">Log In</button>
+                <button className="login-submit" type="submit">Log In</button>
             </form>
         </div>  
     )
