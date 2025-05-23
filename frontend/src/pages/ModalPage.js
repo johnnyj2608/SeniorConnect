@@ -4,10 +4,11 @@ import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
 import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
 import MemberFilesModal from '../components/modals/MemberFilesModal';
+import SettingsUserModal from '../components/modals/SettingsUserModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import useModal from '../hooks/useModal';
 
-const MemberModal = ({ data, onClose }) => {
+const ModalPage = ({ data, onClose }) => {
     const {
         type,
         localData,
@@ -32,6 +33,8 @@ const MemberModal = ({ data, onClose }) => {
                 return <MemberAbsencesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'files':
                 return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+            case 'users':
+                return <SettingsUserModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             default:
                 return null;
         }
@@ -84,4 +87,4 @@ const MemberModal = ({ data, onClose }) => {
     );
 };
 
-export default MemberModal;
+export default ModalPage;

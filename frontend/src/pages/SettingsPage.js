@@ -1,10 +1,40 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import ModalPage from './ModalPage';
 
 const SettingsPage = () => {
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+
+    const handleModalOpen = useCallback(async () => {
+        if (!user?.is_admin_user) return;
+
+        try {
+            const response = await fetch(`/user/users`, {
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch users');
+            }
+
+            const data = await response.json();
+            setModalData({ type: "users", data });
+            setModalOpen(true);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            alert('Could not load users. Please try again.');
+        }
+    }, [user]);
+
+
+    const handleModalClose = useCallback(() => {
+        setModalOpen(false)
+        setModalData(null)
+    }, [])
 
     const handleLogout = async () => {
         try {
@@ -64,7 +94,10 @@ const SettingsPage = () => {
                 <div className="settings-content">
                     <h3 className="section-title">Admin</h3>
                     <ul className="settings-list">
-                        <li>User Management</li>
+                        <li className=""
+                            onClick={handleModalOpen}>
+                            User Management
+                        </li>
                     </ul>
                 </div>
             )}
@@ -77,6 +110,13 @@ const SettingsPage = () => {
                     </li>
                 </ul>
             </div>
+
+            {modalOpen && (
+                <ModalPage
+                    data={modalData}
+                    onClose={handleModalClose}
+                />
+            )}
         </>
     )
 }
