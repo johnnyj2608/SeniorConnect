@@ -135,6 +135,30 @@ input {
   padding-top: 55px;
 }
 
+.loading-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  text-align: center;
+}
+
+.spinner {
+  width: 100px;
+  height: 100px;
+  border: 6px solid #ccc;
+  border-top: 6px solid var(--color-main);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* -------------- *
  * Login
  * -------------- */
