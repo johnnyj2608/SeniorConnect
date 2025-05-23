@@ -41,7 +41,7 @@ const HomeAbsenceCard = () => {
                 <Link to={`/member/${absence.id}`} key={absence.id}>
                   <li className="home-item">
                     <span>{absence.member_name}: {absence.absence_type}</span>
-                    <span>{absence.days_until} Days</span>
+                    <span className="nowrap">{absence.days_until === 0 ? 'Today' : `${absence.days_until} Days`}</span>
                   </li>
                 </Link>
               ))}

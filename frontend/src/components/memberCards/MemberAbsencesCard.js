@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate } from '../../utils/formatUtils';
+import { formatAbsenceStatus } from '../../utils/statusUtils';
 import DetailRow from '../members/MemberDetail';
 
 const MemberAbsencesCard = ({ id, onEdit }) => {
@@ -23,9 +24,12 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
     };
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const activeAbsences = absences.filter(abs => {
-        const endDate = abs.end_date ? new Date(abs.end_date) : null;
-        return !endDate || endDate >= today;
+    if (!abs.end_date) return true;
+        const [year, month, day] = abs.end_date.split('-');
+        const endDate = new Date(year, month - 1, day);
+        return endDate >= today;
     });
 
     return (
@@ -36,15 +40,12 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
                 {activeAbsences.length > 0 ? (
                     <ul className="absence-list">
                         {activeAbsences.map((abs, idx) => {
-                            const start = new Date(abs.start_date);
-                            const status = start > today ? 'Upcoming' : 'Ongoing';
-                    
                             return (
                                 <li key={idx} className="absence-item">
                                     <DetailRow label="Absence Type" value={abs.absence_type} />
                                     <DetailRow label="Start Date" value={formatDate(abs.start_date)} />
                                     <DetailRow label="End Date" value={formatDate(abs.end_date)} />
-                                    <DetailRow label="Status" value={status} />
+                                    <DetailRow label="Status" value={formatAbsenceStatus(abs.start_date, abs.end_date)} />
                                     {abs.note && (
                                         <DetailRow label="Note" value={abs.note} />
                                     )}

@@ -1,27 +1,27 @@
 import React from "react";
 
 const formatAbsenceStatus = (start_date, end_date, color=false) => {
-  const today = new Date();
+    const today = new Date();
 
-  const start = start_date ? new Date(start_date) : null;
-  const end = end_date ? new Date(end_date) : null;
+    const start = start_date ? new Date(start_date) : null;
+    const end = end_date ? new Date(end_date) : null;
 
-  if (!start) {
+    if (!start) {
         return '';
     } else if (start > today) {
         return color
-        ? <span className="orange">Upcoming</span>
-        : 'Upcoming';
+            ? <span className="orange">Upcoming</span>
+            : 'Upcoming';
     } else if (end && end < today) {
         return <span>Completed</span>
     } else if (start <= today && (!end || end >= today)) {
         return color
-        ? <span className="green">Ongoing</span>
-        : 'Ongoing';
+            ? <span className="green">Ongoing</span>
+            : 'Ongoing';
     } else {
         return '';
     }
-    };
+};
 
 const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
     switch (change_type) {

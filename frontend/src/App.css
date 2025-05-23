@@ -54,6 +54,10 @@ input {
   font-size: 13px;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 /* -------------- *
  * App
  * -------------- */
@@ -643,7 +647,7 @@ select {
   padding: 5px;
 }
 
-.member-detail span {
+.member-detail > span {
   margin-left: 7px;
   flex: 1;
 }
