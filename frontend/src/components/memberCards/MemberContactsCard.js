@@ -1,20 +1,27 @@
 import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import ContactDetail from '../members/ContactDetail';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberContactsCard = ({ id, onEdit }) => {
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
+        if (id === 'new') return;
+
         const getContactsByMember = async () => {
-            const response = await fetch(`/core/contacts/member/${id}`);
-            const data = await response.json();
-            setContacts(data);
+            try {
+                const response = await fetchWithRefresh(`/core/contacts/member/${id}`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                setContacts(data);
+            } catch (error) {
+                console.error('Failed to fetch contacts by member:', error);
+            }
         };
 
-        if (id !== 'new') {
-            getContactsByMember();
-        }
+        getContactsByMember();
     }, [id]);
 
     const handleEdit = () => {

@@ -4,6 +4,7 @@ import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
+import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const reportTypes = [
     'Absences',
@@ -50,10 +51,16 @@ const ReportsPage = () => {
                 return;
             }
 
-            const response = await fetch(`/core/${endpoint}/?page=${currentPage}`);
-            const data = await response.json();
-            setReport(data.results);
-            setTotalPages(Math.ceil(data.count / 20));
+            try {
+                const response = await fetchWithRefresh(`/core/${endpoint}/?page=${currentPage}`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                setReport(data.results);
+                setTotalPages(Math.ceil(data.count / 20));
+            } catch (error) {
+                console.error('Failed to fetch report:', error);
+            }
         };
 
         fetchReport();

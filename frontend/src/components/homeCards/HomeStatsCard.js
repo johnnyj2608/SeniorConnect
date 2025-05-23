@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ReactComponent as DropdownIcon } from '../../assets/dropdown.svg';
 import { Link } from 'react-router-dom';
 import { formatChangeStatus } from '../../utils/statusUtils';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeStatsCard = () => {
   const [stats, setStats] = useState(null);
@@ -10,21 +11,33 @@ const HomeStatsCard = () => {
 
   useEffect(() => {
     const getStats = async () => {
-      const response = await fetch(`/core/members/stats/`)
-      const data = await response.json();
-      setStats(data);
+      try {
+        const response = await fetchWithRefresh('/core/members/stats/');
+        if (!response.ok) return;
+
+        const data = await response.json();
+        setStats(data);
+      } catch (error) {
+        console.log('Failed to fetch stats:', error);
+      }
     };
 
     const getChange = async () => {
-      const response = await fetch(`/core/enrollments/stats/`)
-      const data = await response.json();
-      setChange(data);
+      try {
+        const response = await fetchWithRefresh('/core/enrollments/stats/');
+        if (!response.ok) return;
+
+        const data = await response.json();
+        setChange(data);
+      } catch (error) {
+        console.log('Failed to fetch change stats:', error);
+      }
     };
 
     getStats();
     getChange();
-    
   }, []);
+
 
   const toggleDetails = () => {
     setShowDetails(prev => !prev);

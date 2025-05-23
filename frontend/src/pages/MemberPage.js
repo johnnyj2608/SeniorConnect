@@ -8,6 +8,7 @@ import MemberAbsencesCard from '../components/memberCards/MemberAbsencesCard';
 import MemberFilesCard from '../components/memberCards/MemberFilesCard';
 import MemberPhotoCard from '../components/memberCards/MemberPhotoCard';
 import MemberStatusBanner from '../components/members/StatusBanner';
+import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const MemberPage = () => {
   const { id } = useParams();
@@ -27,8 +28,10 @@ const MemberPage = () => {
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm('Are you sure you want to delete this member?');
-    if (isConfirmed) {
-      const response = await fetch(`/core/members/${id}/`, {
+    if (!isConfirmed) return;
+
+    try {
+      const response = await fetchWithRefresh(`/core/members/${id}/`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +41,8 @@ const MemberPage = () => {
       if (response.ok) {
         navigate('/members');
       }
+    } catch (error) {
+      console.error('Failed to delete member:', error);
     }
   };
 

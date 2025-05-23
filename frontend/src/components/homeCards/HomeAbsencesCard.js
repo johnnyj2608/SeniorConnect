@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeAbsenceCard = () => {
   const [leaving, setLeaving] = useState([]);
@@ -7,10 +8,16 @@ const HomeAbsenceCard = () => {
 
   useEffect(() => {
     const getAbsences = async () => {
-      const response = await fetch(`/core/absences/upcoming/`)
-      const data = await response.json();
-      setLeaving(data.leaving);
-      setReturning(data.returning);
+      try {
+        const response = await fetchWithRefresh('/core/absences/upcoming/');
+        if (!response.ok) return;
+
+        const data = await response.json();
+        setLeaving(data.leaving);
+        setReturning(data.returning);
+      } catch (error) {
+        console.log('Failed to fetch absences:', error);
+      }
     };
 
     getAbsences();

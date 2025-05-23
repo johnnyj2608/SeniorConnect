@@ -6,21 +6,36 @@ import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import useFilters from '../hooks/useFilters';
 import { useLocation } from 'react-router-dom';
+import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const MembersListPage = () => {
   const [members, setMembers] = useState([]);
   const [mltcOptions, setMltcOptions] = useState([]);
 
   const getMembers = async () => {
-    const response = await fetch('/core/members');
-    const data = await response.json();
-    setMembers(data);
+    try {
+      const response = await fetchWithRefresh('/core/members');
+      if (!response.ok) {
+        throw new Error('Failed to fetch members');
+      }
+      const data = await response.json();
+      setMembers(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getMltcOptions = async () => {
-    const response = await fetch('/core/mltcs/');
-    const data = await response.json();
-    setMltcOptions(data);
+    try {
+      const response = await fetchWithRefresh('/core/mltcs/');
+      if (!response.ok) {
+        throw new Error('Failed to fetch MLTC options');
+      }
+      const data = await response.json();
+      setMltcOptions(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {

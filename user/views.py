@@ -44,6 +44,7 @@ def getAuthenticatedUser(request):
         return getAuthUser(request)
 
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def cookieLogin(request):
     if request.method == 'POST':

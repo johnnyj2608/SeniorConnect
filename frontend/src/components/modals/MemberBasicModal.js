@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberBasicModal = ({ data, handleChange }) => {
     return (
@@ -123,14 +124,20 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
     const [languageOptions, setLanguageOptions] = useState([]);
 
     useEffect(() => {
-        getLanguageOptions()
-    }, []);
+        const getLanguageOptions = async () => {
+            try {
+                const response = await fetchWithRefresh('/core/languages/');
+                if (!response.ok) return;
 
-    const getLanguageOptions = async () => {
-        const response = await fetch('/core/languages/');
-        const data = await response.json();
-        setLanguageOptions(data);
-    };
+                const data = await response.json();
+                setLanguageOptions(data);
+            } catch (error) {
+                console.error('Failed to fetch language options:', error);
+            }
+        };
+
+        getLanguageOptions();
+    }, []);
 
     return (
         <>

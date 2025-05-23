@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeBirthdayCard = () => {
   const [birthdays, setBirthdays] = useState([]);
 
   useEffect(() => {
     const getBirthdays = async () => {
-        const response = await fetch(`/core/members/birthdays/`)
+      try {
+        const response = await fetchWithRefresh('/core/members/birthdays/');
+        if (!response.ok) return;
+
         const data = await response.json();
         setBirthdays(data);
+      } catch (error) {
+        console.log('Failed to fetch birthdays:', error);
+      }
     };
 
     getBirthdays();
-    
   }, []);
 
   const renderBirthdayMessage = (daysUntil) => {

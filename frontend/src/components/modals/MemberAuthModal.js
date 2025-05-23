@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sortSchedule } from '../../utils/formatUtils';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
@@ -7,12 +8,18 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
 
     useEffect(() => {
         const getMltcOptions = async () => {
-            const response = await fetch('/core/mltcs/');
-            const data = await response.json();
-            setMltcOptions(data);
+            try {
+                const response = await fetchWithRefresh('/core/mltcs/');
+                if (!response.ok) return;
+
+                const data = await response.json();
+                setMltcOptions(data);
+            } catch (error) {
+                console.error('Failed to fetch MLTC options:', error);
+            }
         };
-        
-        getMltcOptions()
+
+        getMltcOptions();
     }, []);
 
     const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);

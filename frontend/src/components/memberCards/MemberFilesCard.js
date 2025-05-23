@@ -3,20 +3,27 @@ import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { ReactComponent as FileIcon } from '../../assets/file.svg';
 import viewFile from '../../utils/viewFile';
 import { formatDate } from '../../utils/formatUtils';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberFilesCard = ({ id, onEdit }) => {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
+        if (id === 'new') return;
+
         const getFilesByMember = async () => {
-            const response = await fetch(`/core/files/member/${id}`);
-            const data = await response.json();
-            setFiles(data);
+            try {
+                const response = await fetchWithRefresh(`/core/files/member/${id}`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                setFiles(data);
+            } catch (error) {
+                console.error('Failed to fetch files by member:', error);
+            }
         };
 
-        if (id !== 'new') {
-            getFilesByMember();
-        }
+        getFilesByMember();
     }, [id]);
 
     const handleEdit = () => {

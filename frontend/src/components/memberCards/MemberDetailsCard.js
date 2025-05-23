@@ -2,20 +2,27 @@ import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
 import DetailRow from '../members/MemberDetail';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
   const [member, setMember] = useState(null);
 
-  useEffect(() => {
-    const getMember = async () => {
-      const response = await fetch(`/core/members/${id}/`);
-      const data = await response.json();
-      setMember(data);
-    };
+    useEffect(() => {
+      if (id === 'new') return;
 
-    if (id !== 'new') {
+      const getMember = async () => {
+        try {
+          const response = await fetchWithRefresh(`/core/members/${id}/`);
+          if (!response.ok) return;
+
+          const data = await response.json();
+          setMember(data);
+        } catch (error) {
+          console.error('Failed to fetch member:', error);
+        }
+      };
+
       getMember();
-    }
   }, [id]);
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import {
     checkInvalidDates,
     saveDataTabs,
 } from '../utils/modalUtils';
+import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 function useModal(data, onClose) {
     const id = data.id;
@@ -137,24 +138,34 @@ function useModal(data, onClose) {
                 if (checkMissingFields(updatedData, requiredFields)) return;
                 if (checkInvalidDates(updatedData)) return;
 
-                const response = await fetch(`/core/members/${id}/auth/`);
-                const oldActiveAuth = await response.json();
-                const oldMLTC = oldActiveAuth?.mltc || null;
+                try {
+                    const response = await fetchWithRefresh(`/core/members/${id}/auth/`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch member auth data');
+                    }
+                    const oldActiveAuth = await response.json();
+                    const oldMLTC = oldActiveAuth?.mltc || null;
 
-                savedData = await saveDataTabs(updatedData, 'auths');
-                const activeAuth = savedData.find(auth => auth.active === true);
-                const newMLTC = activeAuth?.mltc || null;
+                    savedData = await saveDataTabs(updatedData, 'auths');
+                    const activeAuth = savedData.find(auth => auth.active === true);
+                    const newMLTC = activeAuth?.mltc || null;
 
-                await sendRequest(`/core/enrollments/`, 'POST', {
-                    member: id,
-                    old_mltc: oldMLTC,
-                    new_mltc: newMLTC,
-                    change_type: !oldMLTC ? 'enrollment' :
-                                    !newMLTC ? 'disenrollment' : 'transfer',
-                    active_auth: activeAuth ? activeAuth.id : null,
-                    change_date: activeAuth ? activeAuth.start_date : null,
-                });
-                break;
+                    await sendRequest(`/core/enrollments/`, 'POST', {
+                        member: id,
+                        old_mltc: oldMLTC,
+                        new_mltc: newMLTC,
+                        change_type: !oldMLTC
+                            ? 'enrollment'
+                            : !newMLTC
+                            ? 'disenrollment'
+                            : 'transfer',
+                        active_auth: activeAuth ? activeAuth.id : null,
+                        change_date: activeAuth ? activeAuth.start_date : null,
+                    });
+                    } catch (error) {
+                        console.error('Error during auth fetch or enrollment update:', error);
+                    }
+                    break;
 
             case 'contacts':
                 requiredFields = ['contact_type', 'name', 'phone'];
