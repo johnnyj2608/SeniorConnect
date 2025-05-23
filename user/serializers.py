@@ -15,8 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
             'created_at', 
             'updated_at', 
             'sadc', 
-            'role'
         ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['role'] = instance.get_role_display()
+        return data
 
     def get_is_admin_user(self, obj):
         return obj.role == 'admin'

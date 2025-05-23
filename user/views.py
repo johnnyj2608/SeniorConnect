@@ -1,7 +1,7 @@
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from .permissions import IsAdminUser
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .utils import (
     updateUser,
     getUserDetail,
@@ -11,10 +11,11 @@ from .utils import (
     getAuthUser,
     handleLogin,
     handleLogout,
+    handleRefresh,
 )
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAdminUser])
 def getUsers(request):
 
     if request.method == 'GET':
@@ -25,7 +26,6 @@ def getUsers(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
 def getUser(request, pk):
 
     if request.method == 'GET':
@@ -36,15 +36,15 @@ def getUser(request, pk):
 
     if request.method == 'DELETE':
         return deleteUser(request, pk)
-    
+
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getAuthenticatedUser(request):
     
     if request.method == 'GET':
         return getAuthUser(request)
-    
+
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def cookieLogin(request):
     if request.method == 'POST':
         return handleLogin(request)
@@ -53,3 +53,10 @@ def cookieLogin(request):
 def cookieLogout(request):
     if request.method == 'POST':
         return handleLogout(request)
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def cookieRefresh(request):
+    if request.method == 'POST':
+        return handleRefresh(request)

@@ -48,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
 
     @property
-    def is_admin(self):
+    def is_admin_user(self):
         return self.role == 'admin'
 
     @property

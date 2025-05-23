@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from .models import User
 from .serializers import UserSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from django.conf import settings
 
@@ -103,3 +103,28 @@ def handleLogout(request):
     res.delete_cookie('access')
     res.delete_cookie('refresh')
     return res
+
+def handleRefresh(request):
+    refresh_token = request.COOKIES.get('refresh')
+
+    if not refresh_token:
+        return Response({'detail': 'Refresh token missing.'}, status=401)
+
+    try:
+        refresh = RefreshToken(refresh_token)
+        access_token = str(refresh.access_token)
+
+        res = Response({'access': access_token}, status=200)
+
+        res.set_cookie(
+            key='access',
+            value=access_token,
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+        )
+
+        return res
+
+    except TokenError:
+        return Response({'detail': 'Invalid refresh token.'}, status=401)
