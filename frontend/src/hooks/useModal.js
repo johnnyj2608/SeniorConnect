@@ -82,7 +82,7 @@ function useModal(data, onClose) {
         });
         setNewTabsCount((prevCount) => prevCount + 1);
         setActiveTab(0);
-    }, [newTabsCount]);
+    }, [newTab, originalData, newTabsCount]);
 
     const handleDelete = (index) => {
         setLocalData((prevData) => {
