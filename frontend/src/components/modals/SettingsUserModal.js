@@ -35,8 +35,8 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>Role Type *</label>
                 <select 
-                    value={disabled ? '' : current.role || ''} 
-                    onChange={handleChange('role')} 
+                    value={disabled ? '' : current.role_type || ''} 
+                    onChange={handleChange('role_type')} 
                     disabled={disabled}>
                 <option value="">Select an option</option>
                 {roleTypes.map((type) => (

@@ -46,7 +46,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'users':
                 return { 
                     heading: item.name || 'Unknown', 
-                    subheading: item.role || '',
+                    subheading: item.role_type || '',
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };

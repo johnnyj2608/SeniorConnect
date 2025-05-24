@@ -88,7 +88,7 @@ const sendRequest = async (url, method, data) => {
     return response.json();
 };
 
-const saveDataTabs = async (data, endpoint, id=null) => {
+const saveDataTabs = async (data, endpoint, api='core', id=null) => {
     const dataArray = Object.values(data);
 
     const updatedData = dataArray.filter(data => data.edited && !data.deleted);
@@ -97,7 +97,7 @@ const saveDataTabs = async (data, endpoint, id=null) => {
 
     const processedData = (await Promise.all([
         ...updatedData.map(async (data) => {
-            const dataEndpoint = `/core/${endpoint}/${data.id === 'new' ? '' : data.id + '/'}`;
+            const dataEndpoint = `/${api}/${endpoint}/${data.id === 'new' ? '' : data.id + '/'}`;
             const dataMethod = data.id === 'new' ? 'POST' : 'PUT';
             const response = await sendRequest(dataEndpoint, dataMethod, data);
     
@@ -109,9 +109,9 @@ const saveDataTabs = async (data, endpoint, id=null) => {
         }),
         ...deletedData.map(async (data) => {
             if (id === null) {
-                await fetch(`/core/${endpoint}/${data.id}/`, { method: 'DELETE' });
+                await fetch(`/${api}/${endpoint}/${data.id}/`, { method: 'DELETE' });
             } else {
-                await fetch(`/core/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
+                await fetch(`/${api}/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
             }
             return data;
         })
@@ -174,6 +174,15 @@ const getNewTab = (type, localData, id) => {
                 file: '',
                 completion_date: '',
                 expiration_date: '',
+                edited: true,
+            };
+        }
+        case 'users': {
+            return {
+                id: 'new',
+                name: '',
+                email: '',
+                role_type: '',
                 edited: true,
             };
         }

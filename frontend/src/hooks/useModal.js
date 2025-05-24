@@ -190,6 +190,13 @@ function useModal(data, onClose) {
                 savedData = await saveDataTabs(updatedData, 'files');
                 break;
 
+            case 'users':
+                requiredFields = ['name', 'email', 'role_type'];
+                if (checkMissingFields(updatedData, requiredFields)) return;
+
+                savedData = await saveDataTabs(updatedData, 'users', 'user');
+                break;
+
             default:
                 console.error("Unknown save type:", type);
         }

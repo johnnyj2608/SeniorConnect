@@ -14,19 +14,19 @@ class UserSerializer(serializers.ModelSerializer):
             'is_staff', 
             'created_at', 
             'updated_at', 
-            'sadc', 
+            'sadc',
         ]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['role'] = instance.get_role_display()
+        data['role_type'] = instance.get_role_type_display()
         return data
 
     def get_is_admin_user(self, obj):
-        return obj.role == 'admin'
+        return obj.role_type == 'admin'
 
     def get_is_staff_user(self, obj):
-        return obj.role == 'staff'
+        return obj.role_type == 'staff'
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-    
+
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for attr, value in validated_data.items():

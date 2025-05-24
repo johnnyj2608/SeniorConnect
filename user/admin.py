@@ -5,8 +5,8 @@ from django.contrib import admin
 from .models import User
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'name', 'role', 'is_staff', 'is_active', 'created_at')
+    list_display = ('email', 'name', 'role_type', 'is_staff', 'is_active', 'created_at')
     search_fields = ('email', 'name')
-    list_filter = ('role', 'is_staff', 'is_active')
+    list_filter = ('role_type', 'is_staff', 'is_active')
 
 admin.site.register(User, UserAdmin)

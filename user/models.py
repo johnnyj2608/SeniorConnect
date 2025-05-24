@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='users')
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
-    role = models.CharField(max_length=50, choices=[('admin', 'Admin'), ('staff', 'Staff')], default='staff')
+    role_type = models.CharField(max_length=50, choices=[('admin', 'Admin'), ('staff', 'Staff')], default='staff')
     preferences = models.JSONField(default=dict, blank=True)
 
     is_active = models.BooleanField(default=True)
@@ -49,8 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_admin_user(self):
-        return self.role == 'admin'
+        return self.role_type == 'admin'
 
     @property
     def is_staff_user(self):
-        return self.role == 'staff'
+        return self.role_type == 'staff'
