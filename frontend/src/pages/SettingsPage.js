@@ -34,7 +34,7 @@ const SettingsPage = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('/user/auth/logout/', {
+            const response = await fetchWithRefresh('/user/auth/logout/', {
                 method: 'POST',
                 credentials: 'include',
             })
