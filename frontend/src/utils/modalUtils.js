@@ -74,6 +74,7 @@ const sendRequest = async (url, method, data) => {
         'is_superuser', 
         'is_admin_user',
         'is_staff_user',
+        'sadc',
         'edited',
     ]);
 
@@ -87,10 +88,10 @@ const sendRequest = async (url, method, data) => {
             value = value.toLowerCase().replace(/\s+/g, '_');
         }
 
-        if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
-            formData.append(key, JSON.stringify(value));
-        } else if (value === null) {
+        if (value === null) {
             formData.append(key, '');
+        } else if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
+            formData.append(key, JSON.stringify(value));
         } else if (key === 'members') {
             value.forEach(member => formData.append(key, member));
         } else {
