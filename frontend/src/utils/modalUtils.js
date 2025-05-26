@@ -74,7 +74,6 @@ const sendRequest = async (url, method, data) => {
         'is_superuser', 
         'is_admin_user',
         'is_staff_user',
-        'sadc',
         'edited',
     ]);
 

@@ -12,9 +12,17 @@ def getUserList(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+def getUserDetail(request, pk):
+    current_user = request.user
+    user = get_object_or_404(User, id=pk)
+    if current_user.is_admin_user or current_user.id == user.id:
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
 def createUser(request):
     data = request.data
-    serializer = UserSerializer(data=data)
+    serializer = UserSerializer(data=data, context={'request': request})
     if serializer.is_valid():
         try:
             serializer.save()
@@ -26,14 +34,6 @@ def createUser(request):
         print("Serializer error:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def getUserDetail(request, pk):
-    current_user = request.user
-    user = get_object_or_404(User, id=pk)
-    if current_user.is_admin_user or current_user.id == user.id:
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
@@ -41,7 +41,6 @@ def updateUser(request, pk):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     data = request.data
-    print(data)
     serializer = UserSerializer(instance=user, data=data)
     if serializer.is_valid():
         try:
