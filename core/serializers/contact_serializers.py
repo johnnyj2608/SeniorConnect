@@ -2,10 +2,6 @@ from rest_framework import serializers
 from ..models.contact_model import Contact
 
 class ContactSerializer(serializers.ModelSerializer):
-    contact_type = serializers.ChoiceField(choices=Contact.CONTACT_TYPES)
-    relationship_type = serializers.ChoiceField(
-        choices=Contact.RELATIONSHIP_TYPES, required=False, allow_null=True
-    )
 
     class Meta:
         model = Contact

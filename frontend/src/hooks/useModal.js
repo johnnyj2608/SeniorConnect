@@ -172,7 +172,7 @@ function useModal(data, onClose) {
                 dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency' }];
                 if (checkMissingFields(updatedData, requiredFields, dependentFields)) return;
 
-                savedData = await saveDataTabs(updatedData, 'contacts', id);
+                savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
                 break;
 
             case 'absences':

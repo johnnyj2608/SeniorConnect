@@ -23,7 +23,6 @@ class AuthorizationSerializer(serializers.ModelSerializer):
         return data
     
 class EnrollmentSerializer(serializers.ModelSerializer):
-    change_type = serializers.ChoiceField(choices=Enrollment.CHANGE_TYPES)
     member_name = serializers.SerializerMethodField()
     sadc_member_id = serializers.SerializerMethodField()
 

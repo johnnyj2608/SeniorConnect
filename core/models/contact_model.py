@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 
 class Contact(models.Model):
     
-    EMERGENCY = 'emergency'
+    EMERGENCY = 'emergency_contact'
     PRIMARY_PROVIDER = 'primary_provider'
     PHARMACY = 'pharmacy'
     HOME_AID = 'home_aid'
@@ -43,7 +43,7 @@ class Contact(models.Model):
     ]
 
     members = models.ManyToManyField('Member', related_name='contacts')
-    contact_type = models.CharField(max_length=20, choices=CONTACT_TYPES)
+    contact_type = models.CharField(max_length=30, choices=CONTACT_TYPES)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
     relationship_type = models.CharField(

@@ -84,7 +84,7 @@ const sendRequest = async (url, method, data) => {
         let value = data[key];
 
         if (key.includes('type') && typeof value === 'string') {
-            value = value.toLowerCase();
+            value = value.toLowerCase().replace(/\s+/g, '_');
         }
 
         if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {

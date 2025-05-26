@@ -3,7 +3,6 @@ from ..models.absence_model import Absence
 from datetime import date, timedelta
 
 class AbsenceSerializer(serializers.ModelSerializer):
-    absence_type = serializers.ChoiceField(choices=Absence.ABSENCE_TYPES)
     member_name = serializers.SerializerMethodField()
     sadc_member_id = serializers.SerializerMethodField()
 
