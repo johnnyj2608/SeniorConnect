@@ -7,7 +7,7 @@ class AuditLog(models.Model):
     
     CREATE = 'create'
     UPDATE = 'update'
-    DELETE = 'pharmacy'
+    DELETE = 'delete'
 
     ACTION_TYPES = (
         (CREATE, 'Create'),
@@ -27,4 +27,4 @@ class AuditLog(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        return f"{self.timestamp} - {self.user} - {self.action} {self.content_type} #{self.object_id}"
+        return f"{self.timestamp} - {self.user} - {self.get_action_type_display()} {self.content_type} #{self.object_id}"
