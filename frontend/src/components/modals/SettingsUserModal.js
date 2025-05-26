@@ -11,7 +11,18 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
 
     return (
         <>
+            <div className="member-detail modal-checkbox-heading">
             <h3>Edit Users</h3>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={disabled ? false : current.is_active === true }
+                        onChange={(e) => handleChange('is_active')({ target: { value: e.target.checked } })}
+                        disabled={disabled}
+                    />
+                Active
+                </label>
+            </div>
             <div className="member-detail">
                 <label>Name *</label>
                 <input

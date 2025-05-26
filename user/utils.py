@@ -29,7 +29,7 @@ def createUser(request):
 def getUserDetail(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if current_user.is_admin or current_user.id == user.id:
+    if current_user.is_admin_user or current_user.id == user.id:
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -37,10 +37,11 @@ def getUserDetail(request, pk):
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if not (current_user.is_admin or current_user.id == user.id):
+    if not (current_user.is_admin_user or current_user.id == user.id):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     data = request.data
+    print(data)
     serializer = UserSerializer(instance=user, data=data)
     if serializer.is_valid():
         try:
@@ -56,7 +57,7 @@ def updateUser(request, pk):
 def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if not current_user.is_admin:
+    if not current_user.is_admin_user:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     user.delete()

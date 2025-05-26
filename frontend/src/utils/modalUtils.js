@@ -1,3 +1,5 @@
+import fetchWithRefresh from './fetchWithRefresh';
+
 const compareTabs = (updatedTab, originalTab) => {
     const stripEdited = ({ edited, ...rest }) => rest;
     return JSON.stringify(stripEdited(updatedTab)) !== JSON.stringify(stripEdited(originalTab));
@@ -62,15 +64,31 @@ const checkInvalidDates = (data) => {
 };
 
 const sendRequest = async (url, method, data) => {
+    const excludedKeys = new Set([
+        'last_login', 
+        'groups', 
+        'user_permissions', 
+        'created_at', 
+        'updated_at', 
+        'is_staff', 
+        'is_superuser', 
+        'is_admin_user',
+        'is_staff_user',
+        'sadc',
+        'edited',
+    ]);
+
     const formData = new FormData();
     for (const key in data) {
+        if (excludedKeys.has(key)) continue;
+
         let value = data[key];
 
         if (key.includes('type') && typeof value === 'string') {
             value = value.toLowerCase();
         }
 
-        if (key === 'schedule' && data.id !== 'new') {
+        if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
             formData.append(key, JSON.stringify(value));
         } else if (value === null) {
             formData.append(key, '');
@@ -81,7 +99,7 @@ const sendRequest = async (url, method, data) => {
         }
     }
 
-    const response = await fetch(url, { method, body: formData });
+    const response = await fetchWithRefresh(url, { method, body: formData });
 
     if (!response.ok) return Promise.reject(response);
 
@@ -109,9 +127,9 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
         }),
         ...deletedData.map(async (data) => {
             if (id === null) {
-                await fetch(`/${api}/${endpoint}/${data.id}/`, { method: 'DELETE' });
+                await fetchWithRefresh(`/${api}/${endpoint}/${data.id}/`, { method: 'DELETE' });
             } else {
-                await fetch(`/${api}/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
+                await fetchWithRefresh(`/${api}/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
             }
             return data;
         })
@@ -183,6 +201,7 @@ const getNewTab = (type, localData, id) => {
                 name: '',
                 email: '',
                 role_type: '',
+                is_active: true,
                 edited: true,
             };
         }

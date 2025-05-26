@@ -51,7 +51,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
 
     return (
         <>
-            <div className="member-detail modal-auth-heading">
+            <div className="member-detail modal-checkbox-heading">
             <h3>Edit Authorization</h3>
                 <label>
                     <input

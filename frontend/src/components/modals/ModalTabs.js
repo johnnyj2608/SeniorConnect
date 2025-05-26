@@ -47,15 +47,16 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return { 
                     heading: item.name || 'Unknown', 
                     subheading: item.role_type || '',
+                    inactive: item.is_active === false,
                 };
             default:
                 return { heading: 'Unknown', subheading: '' };
         }
     };
 
-    const { heading, subheading } = getTabLabel(type, tab, index); 
+    const { heading, subheading, inactive: inactive } = getTabLabel(type, tab, index); 
     const isActive = activeTab === index;
-    const isExpired = subheading === 'Expired';
+    const isExpired = subheading === 'Expired' || inactive;
     const isEdited = tab.edited === true;
 
     return (

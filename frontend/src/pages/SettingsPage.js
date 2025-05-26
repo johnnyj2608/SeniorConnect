@@ -2,6 +2,7 @@ import React, { useContext, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import ModalPage from './ModalPage';
+import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const SettingsPage = () => {
     const navigate = useNavigate()
@@ -13,13 +14,8 @@ const SettingsPage = () => {
         if (!user?.is_admin_user) return;
 
         try {
-            const response = await fetch(`/user/users`, {
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
+            const response = await fetchWithRefresh(`/user/users`);
+            if (!response.ok) return;
 
             const data = await response.json();
             setModalData({ type: "users", data });
