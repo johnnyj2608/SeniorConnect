@@ -4,14 +4,19 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
 
 class AuditLog(models.Model):
+    
+    CREATE = 'create'
+    UPDATE = 'update'
+    DELETE = 'pharmacy'
+
     ACTION_TYPES = (
-        ('create', 'Create'),
-        ('update', 'Update'),
-        ('delete', 'Delete'),
+        (CREATE, 'Create'),
+        (UPDATE, 'Update'),
+        (DELETE, 'Delete'),
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    action = models.CharField(max_length=20, choices=ACTION_TYPES)
+    action_type = models.CharField(max_length=20, choices=ACTION_TYPES)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')

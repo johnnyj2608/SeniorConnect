@@ -31,7 +31,7 @@ def log_create_update(sender, instance, created, **kwargs):
         user=user,
         content_type=content_type,
         object_id=instance.pk,
-        action='create' if created else 'update',
+        action=AuditLog.CREATE if created else AuditLog.UPDATE,
         changes={}
     )
 
@@ -51,6 +51,6 @@ def log_delete(sender, instance, **kwargs):
         user=user,
         content_type=content_type,
         object_id=instance.pk,
-        action='delete',
+        action_type=AuditLog.DELETE,
         changes={}
     )

@@ -48,6 +48,31 @@ const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
     }
 };
 
+const formatAuditStatus = (change_type) => {
+    switch (change_type) {
+    case 'Create':
+        return (
+        <>
+            <span className="green">Create</span>
+        </>
+        );
+    case 'Delete':
+        return (
+        <>
+            <span className="red">Delete</span>
+        </>
+        );
+    case 'Update':
+        return (
+        <>
+            <span className="orange">Update</span>
+        </>
+        );
+    default:
+        return null;
+    }
+};
+
 const formatChangeStatus = (count, change) => {
     let percentChange;
 
@@ -69,5 +94,6 @@ const formatChangeStatus = (count, change) => {
 export {
     formatAbsenceStatus,
     formatEnrollmentStatus,
+    formatAuditStatus,
     formatChangeStatus,
 };

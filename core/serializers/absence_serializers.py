@@ -4,7 +4,6 @@ from datetime import date, timedelta
 
 class AbsenceSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()
-    sadc_member_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Absence
@@ -16,10 +15,7 @@ class AbsenceSerializer(serializers.ModelSerializer):
         return data
 
     def get_member_name(self, obj):
-        return f"{obj.member.last_name}, {obj.member.first_name}"
-
-    def get_sadc_member_id(self, obj):
-        return obj.member.sadc_member_id
+        return f"{obj.member.sadc_member_id}. {obj.member.last_name}, {obj.member.first_name}"
 
     def validate(self, data):
         start = data.get('start_date')

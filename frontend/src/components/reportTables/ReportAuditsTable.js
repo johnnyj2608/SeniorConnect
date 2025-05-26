@@ -1,21 +1,22 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
-import { formatEnrollmentStatus } from '../../utils/statusUtils';
+import { formatAuditStatus } from '../../utils/statusUtils';
 
-const ReportEnrollmentsTable = ({ report }) => {
+const ReportAuditsTable = ({ report }) => {
 
     return (
         <table className="report-table">
         <thead>
             <tr>
                 <th style={{ width: '30%' }}>Member</th>
-                <th style={{ width: '55%' }}>Status</th>
+                <th style={{ width: '15%' }}>Action</th>
+                <th style={{ width: '20%' }}>Change</th>
+                <th style={{ width: '20%' }}>User</th>
                 <th style={{ width: '15%' }}>Date</th>
             </tr>
         </thead>
         <tbody>
             {report.map((entry) => {
-                const { change_type, old_mltc, new_mltc } = entry;
 
                 return (
                     <tr key={entry.id}>
@@ -24,8 +25,10 @@ const ReportEnrollmentsTable = ({ report }) => {
                                 {entry.member_name}
                              </Link>
                         </td>
-                        <td>{formatEnrollmentStatus(change_type, old_mltc, new_mltc)}</td>
-                        <td>{formatDate(entry.change_date)}</td>
+                        <td>{formatAuditStatus(entry.action_type)}</td>
+                        <td>{entry.model_name}</td>
+                        <td>{entry.user_name}</td>
+                        <td>{formatDate(entry.timestamp)}</td>
                     </tr>
                 );
             })}
@@ -34,4 +37,4 @@ const ReportEnrollmentsTable = ({ report }) => {
     );
 };
 
-export default ReportEnrollmentsTable;
+export default ReportAuditsTable;

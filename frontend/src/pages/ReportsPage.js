@@ -3,11 +3,13 @@ import DownloadButton from '../components/buttons/DownloadButton';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
+import ReportAuditsTable from '../components/reportTables/ReportAuditsTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const reportTypes = [
     'Absences',
+    'Audit Log',
     'Enrollments',
 ];
 
@@ -21,6 +23,11 @@ const reportFilters = {
         'Enrollment',
         'Transfer',
         'Disenrollment',
+    ],
+    "Audit Log": [
+        'Create',
+        'Update',
+        'Delete',
     ],
 };
 
@@ -43,16 +50,20 @@ const ReportsPage = () => {
             if (!reportType) return;
 
             let endpoint;
+            let api = 'core';
             if (reportType === 'Absences') {
                 endpoint = 'absences';
             } else if (reportType === 'Enrollments') {
                 endpoint = 'enrollments';
+            } else if (reportType === 'Audit Log') {
+                endpoint = 'audits'
+                api = 'audit'
             } else {
                 return;
             }
 
             try {
-                const response = await fetchWithRefresh(`/core/${endpoint}/?page=${currentPage}`);
+                const response = await fetchWithRefresh(`/${api}/${endpoint}/?page=${currentPage}`);
                 if (!response.ok) return;
 
                 const data = await response.json();
@@ -95,6 +106,9 @@ const ReportsPage = () => {
         if (reportType === 'Enrollments') {
             return report.filter(entry => entry.change_type === reportFilter);
         }
+        if (reportType === 'Audit Log') {
+            return report.filter(entry => entry.action_type === reportFilter);
+        }
 
         return report;
     }, [report, reportFilter, reportType]);
@@ -105,6 +119,8 @@ const ReportsPage = () => {
                 return <ReportAbsencesTable report={filteredReport} />;
             case 'Enrollments':
                 return <ReportEnrollmentsTable report={filteredReport} />;
+            case 'Audit Log':
+                return <ReportAuditsTable report={filteredReport} />;
             default:
                 return null;
         }
