@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'core',
     'user',
+    'audit',
 ]
 
 AUTH_USER_MODEL = 'user.User'
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'user.middleware.ClearThreadLocalsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
