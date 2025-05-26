@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import DownloadButton from '../components/buttons/DownloadButton';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ReactComponent as RefreshButton } from '../assets/refresh.svg'
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
@@ -45,44 +45,44 @@ const ReportsPage = () => {
         setCurrentPage(1);
     }, [reportType]);
 
-    useEffect(() => {
-        const fetchReport = async () => {
-            if (!reportType) return;
-    
-            let endpoint;
-            let api = 'core';
-    
-            if (reportType === 'Absences') {
-                endpoint = 'absences';
-            } else if (reportType === 'Enrollments') {
-                endpoint = 'enrollments';
-            } else if (reportType === 'Audit Log') {
-                endpoint = 'audits';
-                api = 'audit';
-            } else {
-                return;
-            }
-    
-            const params = new URLSearchParams({ page: currentPage });
-            if (reportFilter) {
-                params.append('filter', reportFilter.toLowerCase());
-            }
-            const url = `/${api}/${endpoint}?${params.toString()}`;
-    
-            try {
-                const response = await fetchWithRefresh(url);
-                if (!response.ok) return;
-    
-                const data = await response.json();
-                setReport(data.results);
-                setTotalPages(Math.ceil(data.count / 20));
-            } catch (error) {
-                console.error('Failed to fetch report:', error);
-            }
-        };
-    
-        fetchReport();
+    const fetchReport = useCallback(async () => {
+        if (!reportType) return;
+
+        let endpoint;
+        let api = 'core';
+
+        if (reportType === 'Absences') {
+            endpoint = 'absences';
+        } else if (reportType === 'Enrollments') {
+            endpoint = 'enrollments';
+        } else if (reportType === 'Audit Log') {
+            endpoint = 'audits';
+            api = 'audit';
+        } else {
+            return;
+        }
+
+        const params = new URLSearchParams({ page: currentPage });
+        if (reportFilter) {
+            params.append('filter', reportFilter.toLowerCase());
+        }
+        const url = `/${api}/${endpoint}?${params.toString()}`;
+
+        try {
+            const response = await fetchWithRefresh(url);
+            if (!response.ok) return;
+
+            const data = await response.json();
+            setReport(data.results);
+            setTotalPages(Math.ceil(data.count / 20));
+        } catch (error) {
+            console.error('Failed to fetch report:', error);
+        }
     }, [reportType, currentPage, reportFilter]);
+
+    useEffect(() => {
+        fetchReport();
+    }, [fetchReport]);
 
     useEffect(() => {
         setCurrentPage(1);
@@ -106,8 +106,8 @@ const ReportsPage = () => {
             <div className="page-header">
                 <div className="page-title-row">
                     <h2 className="page-title">&#9782; Reports</h2>
-                    <h2>
-                        <DownloadButton membersByMltc={report} />
+                    <h2 className="refresh-icon" onClick={fetchReport}>
+                        <RefreshButton />
                     </h2>
                 </div>
                 <div className="filter-row">
