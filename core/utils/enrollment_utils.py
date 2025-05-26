@@ -37,6 +37,7 @@ def createEnrollment(request):
     
     active_auth_id = data.get('active_auth') or None
     member.active_auth_id = active_auth_id
+    member._skip_audit = True
     member.save()
 
     old_mltc = data.get('old_mltc')

@@ -19,6 +19,9 @@ WHITELISTED_MODELS = (Member, Contact, Authorization, Absence, File)
 def log_create_update(sender, instance, created, **kwargs):
     if sender not in WHITELISTED_MODELS:
         return
+    
+    if getattr(instance, '_skip_audit', False):
+        return
 
     user = get_current_user()
 

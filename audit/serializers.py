@@ -3,6 +3,7 @@ from .models import AuditLog
 from core.models.member_model import Member
 
 class AuditLogSerializer(serializers.ModelSerializer):
+    member = serializers.SerializerMethodField()
     member_name = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
     model_name = serializers.SerializerMethodField()
@@ -20,15 +21,21 @@ class AuditLogSerializer(serializers.ModelSerializer):
         related_obj = obj.content_object
 
         if isinstance(related_obj, Member):
-            return related_obj
+            return related_obj.id
 
         if hasattr(related_obj, 'member') and related_obj.member:
-            return related_obj.member
+            return related_obj.member.id
 
         return None
 
     def get_member_name(self, obj):
-        member = self.get_member(obj)
+        related_obj = obj.content_object
+        member = None
+        if isinstance(related_obj, Member):
+            member = related_obj
+        elif hasattr(related_obj, 'member') and related_obj.member:
+            member = related_obj.member
+
         if member:
             return f"{member.sadc_member_id}. {member.first_name} {member.last_name}"
         return None
