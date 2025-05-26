@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { formatDate } from '../../utils/formatUtils';
-import { formatAbsenceStatus } from '../../utils/statusUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     if (tab.deleted) {
@@ -32,11 +31,9 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: item.contact_type,
                 };
             case 'absences':
-                status = formatAbsenceStatus(item.start_date, item.end_date)
-
                 return { 
                     heading: item.absence_type || 'Unknown', 
-                    subheading: status,
+                    subheading: item.status,
                 };
             case 'files':
                 return { 

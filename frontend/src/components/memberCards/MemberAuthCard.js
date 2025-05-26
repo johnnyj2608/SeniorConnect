@@ -25,15 +25,15 @@ const MemberAuthCard = ({ id, onEdit }) => {
 		}, [id]);
 
     const handleEdit = async () => {
-      try {
-				const response = await fetchWithRefresh(`/core/auths/member/${id}`);
-				if (!response.ok) return;
+        try {
+            const response = await fetchWithRefresh(`/core/auths/member/${id}`);
+            if (!response.ok) return;
 
-				const data = await response.json();
-				onEdit('authorizations', data, setAuth);
-			} catch (error) {
-				console.error('Failed to fetch auths for edit:', error);
-			}
+            const data = await response.json();
+            onEdit('authorizations', data, setAuth);
+        } catch (error) {
+            console.error('Failed to fetch auths for edit:', error);
+        }
     };
 
     return (

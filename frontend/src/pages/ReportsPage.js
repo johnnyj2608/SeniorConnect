@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import DownloadButton from '../components/buttons/DownloadButton';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
@@ -48,24 +48,31 @@ const ReportsPage = () => {
     useEffect(() => {
         const fetchReport = async () => {
             if (!reportType) return;
-
+    
             let endpoint;
             let api = 'core';
+    
             if (reportType === 'Absences') {
                 endpoint = 'absences';
             } else if (reportType === 'Enrollments') {
                 endpoint = 'enrollments';
             } else if (reportType === 'Audit Log') {
-                endpoint = 'audits'
-                api = 'audit'
+                endpoint = 'audits';
+                api = 'audit';
             } else {
                 return;
             }
-
+    
+            const params = new URLSearchParams({ page: currentPage });
+            if (reportFilter) {
+                params.append('filter', reportFilter.toLowerCase());
+            }
+            const url = `/${api}/${endpoint}?${params.toString()}`;
+    
             try {
-                const response = await fetchWithRefresh(`/${api}/${endpoint}/?page=${currentPage}`);
+                const response = await fetchWithRefresh(url);
                 if (!response.ok) return;
-
+    
                 const data = await response.json();
                 setReport(data.results);
                 setTotalPages(Math.ceil(data.count / 20));
@@ -73,54 +80,22 @@ const ReportsPage = () => {
                 console.error('Failed to fetch report:', error);
             }
         };
-
+    
         fetchReport();
-    }, [reportType, currentPage]);
+    }, [reportType, currentPage, reportFilter]);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [reportFilter]);
 
-    const filteredReport = useMemo(() => {
-        if (!reportFilter) return report;
-
-        if (reportType === 'Absences') {
-            const now = new Date();
-            return report.filter(absence => {
-                const start = new Date(absence.start_date);
-                const end = absence.end_date ? new Date(absence.end_date) : null;
-
-                switch(reportFilter) {
-                    case 'Ongoing':
-                        return start <= now && (!end || end >= now);
-                    case 'Upcoming':
-                        return start > now;
-                    case 'Completed':
-                        return end && end < now;
-                    default:
-                        return true;
-                }
-            });
-        }
-
-        if (reportType === 'Enrollments') {
-            return report.filter(entry => entry.change_type === reportFilter);
-        }
-        if (reportType === 'Audit Log') {
-            return report.filter(entry => entry.action_type === reportFilter);
-        }
-
-        return report;
-    }, [report, reportFilter, reportType]);
-
     const getReportContent = () => {
         switch (reportType) {
             case 'Absences':
-                return <ReportAbsencesTable report={filteredReport} />;
+                return <ReportAbsencesTable report={report} />;
             case 'Enrollments':
-                return <ReportEnrollmentsTable report={filteredReport} />;
+                return <ReportEnrollmentsTable report={report} />;
             case 'Audit Log':
-                return <ReportAuditsTable report={filteredReport} />;
+                return <ReportAuditsTable report={report} />;
             default:
                 return null;
         }
@@ -132,7 +107,7 @@ const ReportsPage = () => {
                 <div className="page-title-row">
                     <h2 className="page-title">&#9782; Reports</h2>
                     <h2>
-                        <DownloadButton membersByMltc={filteredReport} />
+                        <DownloadButton membersByMltc={report} />
                     </h2>
                 </div>
                 <div className="filter-row">
@@ -186,13 +161,13 @@ const ReportsPage = () => {
 
                     </div>
                     <p className="members-count">
-                        {filteredReport.length} {filteredReport.length === 1 ? 'result' : 'results'}
+                        {report.length} {report.length === 1 ? 'result' : 'results'}
                     </p>
                 </div>
             </div>
             
             <div className="report-results">
-                {filteredReport.length > 0 && getReportContent()}
+                {report.length > 0 && getReportContent()}
             </div>
         </>
     );

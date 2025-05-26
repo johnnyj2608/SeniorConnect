@@ -1,75 +1,77 @@
 import React from "react";
 
-const formatAbsenceStatus = (start_date, end_date, color=false) => {
-    const today = new Date();
-
-    const start = start_date ? new Date(start_date) : null;
-    const end = end_date ? new Date(end_date) : null;
-
-    if (!start) {
-        return '';
-    } else if (start > today) {
-        return color
-            ? <span className="orange">Upcoming</span>
-            : 'Upcoming';
-    } else if (end && end < today) {
-        return <span>Completed</span>
-    } else if (start <= today && (!end || end >= today)) {
-        return color
-            ? <span className="green">Ongoing</span>
-            : 'Ongoing';
-    } else {
-        return '';
+const formatAbsenceStatus = (status) => {
+    switch (status) {
+        case 'Ongoing':
+            return (
+            <>
+                <span className="green">Ongoing</span>
+            </>
+            );
+        case 'Completed':
+            return (
+            <>
+                <span>Completed</span>
+            </>
+            );
+        case 'Upcoming':
+            return (
+            <>
+                <span className="orange">Upcoming</span>
+            </>
+            );
+        default:
+            return null;
     }
 };
 
-const formatEnrollmentStatus = (change_type, old_mltc, new_mltc) => {
-    switch (change_type) {
-    case 'Enrollment':
-        return (
-        <>
-            <span className="green">Enrolled:</span> {new_mltc}
-        </>
-        );
-    case 'Disenrollment':
-        return (
-        <>
-            <span className="red">Disenrolled:</span> {old_mltc}
-        </>
-        );
-    case 'Transfer':
-        return (
-        <>
-            <span className="orange">Transferred:</span> {old_mltc} → {new_mltc}
-        </>
-        );
-    default:
-        return null;
+const formatEnrollmentStatus = (status, old_mltc, new_mltc) => {
+    switch (status) {
+        case 'Enrollment':
+            return (
+            <>
+                <span className="green">Enrolled:</span> {new_mltc}
+            </>
+            );
+        case 'Disenrollment':
+            return (
+            <>
+                <span className="red">Disenrolled:</span> {old_mltc}
+            </>
+            );
+        case 'Transfer':
+            return (
+            <>
+                <span className="orange">Transferred:</span> {old_mltc} → {new_mltc}
+            </>
+            );
+        default:
+            return null;
     }
 };
 
-const formatAuditStatus = (change_type) => {
-    switch (change_type) {
-    case 'Create':
-        return (
-        <>
-            <span className="green">Create</span>
-        </>
-        );
-    case 'Delete':
-        return (
-        <>
-            <span className="red">Delete</span>
-        </>
-        );
-    case 'Update':
-        return (
-        <>
-            <span className="orange">Update</span>
-        </>
-        );
-    default:
-        return null;
+const formatAuditStatus = (status) => {
+    switch (status) {
+        case 'Create':
+            return (
+            <>
+                <span className="green">Create</span>
+            </>
+            );
+        case 'Delete':
+            return (
+            <>
+                <span className="red">Delete</span>
+            </>
+            );
+        case 'Update':
+            return (
+            <>
+                <span className="orange">Update</span>
+            </>
+            );
+        default:
+            return null;
     }
 };
 

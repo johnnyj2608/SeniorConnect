@@ -1,7 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { ReactComponent as Pencil } from '../../assets/pencil.svg';
 import { formatDate } from '../../utils/formatUtils';
-import { formatAbsenceStatus } from '../../utils/statusUtils';
 import DetailRow from '../members/MemberDetail';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
@@ -42,26 +41,26 @@ const MemberAbsencesCard = ({ id, onEdit }) => {
 		<div className="half-card">
 			<h2>Absences</h2>
 			<div className="card-container">
-					<Pencil className="edit-icon" onClick={handleEdit} />
-					{activeAbsences.length > 0 ? (
-						<ul className="absence-list">
-							{activeAbsences.map((abs, idx) => {
-									return (
-										<li key={idx} className="absence-item">
-											<DetailRow label="Absence Type" value={abs.absence_type} />
-											<DetailRow label="Start Date" value={formatDate(abs.start_date)} />
-											<DetailRow label="End Date" value={formatDate(abs.end_date)} />
-											<DetailRow label="Status" value={formatAbsenceStatus(abs.start_date, abs.end_date)} />
-											{abs.note && (
-													<DetailRow label="Note" value={abs.note} />
-											)}
-										</li>
-									);
-							})}
-						</ul>
-					) : (
-						<p>No active absences</p>
-					)}
+                <Pencil className="edit-icon" onClick={handleEdit} />
+                {activeAbsences.length > 0 ? (
+                    <ul className="absence-list">
+                        {activeAbsences.map((abs, idx) => {
+                            return (
+                                <li key={idx} className="absence-item">
+                                    <DetailRow label="Absence Type" value={abs.absence_type} />
+                                    <DetailRow label="Start Date" value={formatDate(abs.start_date)} />
+                                    <DetailRow label="End Date" value={formatDate(abs.end_date)} />
+                                    <DetailRow label="Status" value={abs.status} />
+                                    {abs.note && (
+                                            <DetailRow label="Note" value={abs.note} />
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <p>No active absences</p>
+                )}
 			</div>
 		</div>
 	);

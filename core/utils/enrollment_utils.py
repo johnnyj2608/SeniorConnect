@@ -11,6 +11,9 @@ from .handle_serializer import handle_serializer
 
 def getEnrollmentList(request):
     enrollments = Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc').all()
+    filter_param = request.GET.get('filter')
+    if filter_param:
+        enrollments = enrollments.filter(change_type__iexact=filter_param)
     paginator = PageNumberPagination()
     result_page = paginator.paginate_queryset(enrollments, request)
     serializer = EnrollmentSerializer(result_page, many=True)
@@ -31,7 +34,7 @@ def createEnrollment(request):
     change_date = data.get('change_date')
     if member.enrollment_date is None and change_date:
         member.enrollment_date = change_date
-
+    
     active_auth_id = data.get('active_auth') or None
     member.active_auth_id = active_auth_id
     member.save()

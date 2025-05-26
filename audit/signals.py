@@ -31,7 +31,7 @@ def log_create_update(sender, instance, created, **kwargs):
         user=user,
         content_type=content_type,
         object_id=instance.pk,
-        action=AuditLog.CREATE if created else AuditLog.UPDATE,
+        action_type=AuditLog.CREATE if created else AuditLog.UPDATE,
         changes={}
     )
 
