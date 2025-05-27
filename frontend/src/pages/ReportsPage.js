@@ -62,9 +62,7 @@ const ReportsPage = () => {
         }
 
         const params = new URLSearchParams({ page: currentPage });
-        if (reportFilter) {
-            params.append('filter', reportFilter.toLowerCase());
-        }
+        if (reportFilter) params.append('filter', reportFilter);
         const url = `/${api}/${endpoint}?${params.toString()}`;
 
         try {
