@@ -194,16 +194,6 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 ))}
                 </select>
             </div>
-
-            <div className="member-detail">
-                <label>Active</label>
-                <input
-                    type="checkbox"
-                    name="active"
-                    checked={data.active !== false}
-                    onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
-                />
-            </div>
         </>
     );
 };

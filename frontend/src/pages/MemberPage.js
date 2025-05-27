@@ -46,6 +46,29 @@ const MemberPage = () => {
     }
   };
 
+  const handleStatus = async () => {
+    const isConfirmed = window.confirm(
+      `Are you sure you want to ${status ? 'deactivate' : 'activate'} this member?`
+    );
+    if (!isConfirmed) return;
+
+    try {
+      const response = await fetchWithRefresh(`/core/members/${id}/`, {
+        method: "PATCH",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setStatus(data.active);
+      }
+    } catch (error) {
+      console.error('Failed to toggle status for member:', error);
+    }
+  }
+
   const handleCancel = (newId) => {
     if (newId || id !== 'new') {
       if (newId) {
@@ -100,7 +123,9 @@ const MemberPage = () => {
         />
       </div>
       <div className="member-row">
-        <h3><button className="delete-button" onClick={handleDelete}>Delete</button></h3>
+        <button className="modal-button status-button" onClick={handleStatus}>
+          {status ? 'Deactivate' : 'Activate'}
+        </button><button className="modal-button delete-button" onClick={handleDelete}>Delete</button>
       </div>
       {modalOpen && (
         <ModalPage

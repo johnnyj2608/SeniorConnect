@@ -188,3 +188,9 @@ def getUpcomingBirthdays(request):
     serializer = MemberBirthdaySerializer(members, many=True)
     sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])
     return Response(sorted_data, status=status.HTTP_200_OK)
+
+def toggleMemberStatus(request, pk):
+    member = get_object_or_404(Member, id=pk)
+    member.active = not member.active
+    member.save()
+    return Response({"active": member.active}, status=status.HTTP_200_OK)

@@ -9,6 +9,7 @@ from ..utils.member_utils import (
     getActiveAuth,
     getActiveMemberStats,
     getUpcomingBirthdays,
+    toggleMemberStatus,
 )
 
 @api_view(['GET', 'POST'])
@@ -21,7 +22,7 @@ def getMembers(request):
         return createMember(request)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def getMember(request, pk):
 
     if request.method == 'GET':
@@ -32,6 +33,9 @@ def getMember(request, pk):
 
     if request.method == 'DELETE':
         return deleteMember(request, pk)
+    
+    if request.method == 'PATCH':
+        return toggleMemberStatus(request, pk)
     
 @api_view(['GET'])
 def getMemberAuth(request, pk):

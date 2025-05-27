@@ -873,6 +873,13 @@ input[type="number"]::-webkit-inner-spin-button {
   opacity: 0.8;
 }
 
+.status-button {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .delete-button {
   background-color: red !important;
 }
