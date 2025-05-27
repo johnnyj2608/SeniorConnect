@@ -56,6 +56,7 @@ class AbsenceUpcomingSerializer(serializers.ModelSerializer):
         model = Absence
         fields = [
             'id',
+            'member',
             'member_name',
             'absence_type',
             'status',

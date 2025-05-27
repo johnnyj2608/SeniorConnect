@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropdownButton from '../buttons/DropdownButton';
-import { Link } from 'react-router-dom';
+import MltcItem from '../items/MltcItem';
 import { formatChangeStatus } from '../../utils/statusUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
@@ -54,25 +54,16 @@ const HomeStatsCard = () => {
           </p>
           <DropdownButton showDetails={showDetails} toggleDetails={toggleDetails} />
           {showDetails && stats?.mltc_count && (
-            <div className="stats-mltcs">
-              {stats.mltc_count.map(item => {
-                const mltcName = item.name || 'Unknown';
-                const netChange = change ? change[mltcName] ?? 0 : 0;
-
-                return (
-                  <Link
-                    key={mltcName}
-                    to={`/members?mltc=${encodeURIComponent(mltcName)}`}
-                    className="stats-mltc"
-                  >
-                    <h4>{mltcName}</h4>
-                    <p>{item.count}</p>
-                    <p>{formatChangeStatus(item.count, netChange)}</p>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <div className="stats-mltcs">
+            {stats.mltc_count.map(item => (
+              <MltcItem
+                key={item.name || 'Unknown'}
+                item={item}
+                change={change}
+              />
+            ))}
+          </div>
+        )}
         </div>
       </div>
     </div>

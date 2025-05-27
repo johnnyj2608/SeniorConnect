@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import AbsenceItem from '../items/AbsenceItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeAbsenceCard = () => {
@@ -23,12 +23,6 @@ const HomeAbsenceCard = () => {
     getAbsences();
   }, []);
 
-  const renderDaysUntil = (days) => {
-    if (days === 0) return 'Today';
-    if (days === 1) return '1 Day';
-    return `${days} Days`;
-  };
-
   return (
     <div className="full-card">
       <h3>Absences</h3>
@@ -38,32 +32,22 @@ const HomeAbsenceCard = () => {
             <h3>Leaving Soon</h3>
             <ul>
               {leaving.map(absence => (
-                <Link to={`/member/${absence.id}`} key={absence.id}>
-                  <li className="home-item">
-                    <span>{absence.member_name}: {absence.absence_type}</span>
-                    <span className="nowrap">{renderDaysUntil(absence.days_until)}</span>
-                  </li>
-                </Link>
+                <AbsenceItem key={absence.member} absence={absence} />
               ))}
             </ul>
-         </div>
+          </div>
           <div className="absence-list">
             <h3>Returning Soon</h3>
             <ul>
               {returning.map(absence => (
-                <Link to={`/member/${absence.id}`} key={absence.id}>
-                  <li className="home-item">
-                    <span>{absence.member_name}: {absence.absence_type}</span>
-                    <span className="nowrap">{renderDaysUntil(absence.days_until)}</span>
-                  </li>
-                </Link>
+                <AbsenceItem key={absence.member} absence={absence} />
               ))}
             </ul>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomeAbsenceCard
+export default HomeAbsenceCard;

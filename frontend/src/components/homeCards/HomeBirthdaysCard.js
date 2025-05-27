@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import BirthdayItem from '../items/BirthdayItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeBirthdayCard = () => {
@@ -21,37 +21,22 @@ const HomeBirthdayCard = () => {
     getBirthdays();
   }, []);
 
-  const renderBirthdayMessage = (daysUntil) => {
-    if (daysUntil === 0) {
-      return "🎂";
-    } else if (daysUntil === 1) {
-      return "1 Day";
-    } else {
-      return `${daysUntil} Days`;
-    }
-  };
-
   return (
     <div className="full-card">
       <h3>Birthdays</h3>
       <div className="card-container">
-        <ul>
-          {birthdays.length === 0 ? (
-            <li className="home-item">No upcoming birthdays.</li>
-          ) : (
-            birthdays.map((birthday) => (
-              <Link to={`/member/${birthday.id}`} key={birthday.id}>
-                <li className="home-item">
-                  <span>{birthday.last_name}, {birthday.first_name}</span>
-                  <span>{renderBirthdayMessage(birthday.days_until)}</span>
-                </li>
-              </Link>
-            ))
-          )}
-        </ul>
+        {birthdays.length === 0 ? (
+          <p>No upcoming birthdays.</p>
+        ) : (
+          <ul>
+            {birthdays.map(birthday => (
+              <BirthdayItem key={birthday.id} birthday={birthday} />
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default HomeBirthdayCard
+export default HomeBirthdayCard;

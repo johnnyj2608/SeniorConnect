@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import EditButton from '../buttons/EditButton';
-import FileItem from '../layout/FileItem';
+import FileItem from '../items/FileItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberFilesCard = ({ id, onEdit }) => {
