@@ -11,7 +11,7 @@ const SettingsPage = () => {
     const [modalData, setModalData] = useState(null);
 
     const handleModalOpen = useCallback(async () => {
-        if (!user?.is_admin_user) return;
+        if (!user?.is_org_admin) return;
 
         try {
             const response = await fetchWithRefresh(`/user/users`);
@@ -86,7 +86,7 @@ const SettingsPage = () => {
                 </ul>
             </div>
 
-            {user?.is_admin_user && (
+            {user?.is_org_admin && (
                 <div className="settings-content">
                     <h3 className="section-title">Admin</h3>
                     <ul className="settings-list">

@@ -42,6 +42,11 @@ const ModalPage = ({ data, onClose }) => {
 
     const add_tab = useMemo(() => ({ add: true }), []);
 
+    const showDeleteButton = 
+        type !== 'basic' &&
+        localData.filter(tab => !tab.deleted).length > 0 &&
+        !localData[activeTab]?.is_org_admin;
+
     return (
         <div className="modal">
             <div className="modal-body">
@@ -75,8 +80,10 @@ const ModalPage = ({ data, onClose }) => {
                 </div>
                 <div className="modal-buttons-container">
                     <button className="modal-button" onClick={() => onClose()}>Cancel</button>
-                    {type !== 'basic' && localData.filter(tab => !tab.deleted).length > 0 && (
-                        <button className="modal-button delete-button" onClick={() => handleDelete(activeTab)}>
+                    {showDeleteButton && (
+                        <button 
+                            className="modal-button delete-button" 
+                            onClick={() => handleDelete(activeTab)}>
                             Delete
                         </button>
                     )}

@@ -27,8 +27,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='users')
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
-    role_type = models.CharField(max_length=50, choices=[('admin', 'Admin'), ('staff', 'Staff')], default='staff')
     preferences = models.JSONField(default=dict, blank=True)
+    is_org_admin = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)   # Access to Django Admin
@@ -41,16 +41,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
+    class Meta:
+        ordering = ['is_org_admin', 'name']
+
     def __str__(self):
         return self.email
 
     def get_full_name(self):
         return self.name
-
-    @property
-    def is_admin_user(self):
-        return self.role_type == 'admin'
-
-    @property
-    def is_staff_user(self):
-        return self.role_type == 'staff'

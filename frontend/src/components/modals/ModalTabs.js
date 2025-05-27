@@ -43,7 +43,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'users':
                 return { 
                     heading: item.name || 'Unknown', 
-                    subheading: item.role_type || '',
+                    subheading: item.is_org_admin ? 'Admin' : 'Staff',
                     inactive: item.is_active === false,
                 };
             default:

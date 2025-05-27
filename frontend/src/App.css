@@ -862,6 +862,11 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: space-between;
 }
 
+.modal-checkbox-heading > h3 {
+  padding: 5px 0;
+  white-space: nowrap;
+}
+
 .expired {
   background-color: gray !important;
   opacity: 0.6;

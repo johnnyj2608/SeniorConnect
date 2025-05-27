@@ -3,30 +3,17 @@ from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
-    is_admin_user = serializers.SerializerMethodField()
-    is_staff_user = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = '__all__'
-        read_only_fields = [
-            'id', 
-            'is_staff', 
-            'created_at', 
-            'updated_at', 
-            'sadc',
+        fields = [
+            'name',
+            'email',
+            'preferences',
+            'password',
+            'is_org_admin',
+            'is_active',
         ]
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['role_type'] = instance.get_role_type_display()
-        return data
-
-    def get_is_admin_user(self, obj):
-        return obj.role_type == 'admin'
-
-    def get_is_staff_user(self, obj):
-        return obj.role_type == 'staff'
     
     def create(self, validated_data):
         request = self.context.get('request')
@@ -45,3 +32,9 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
         return user
+    
+    def validate_email(self, value):
+        if self.instance and self.instance.is_org_admin:
+            if value != self.instance.email:
+                raise serializers.ValidationError("Cannot change email for admin users.")
+        return value

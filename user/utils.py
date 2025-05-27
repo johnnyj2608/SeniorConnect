@@ -15,7 +15,7 @@ def getUserList(request):
 def getUserDetail(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if current_user.is_admin_user or current_user.id == user.id:
+    if current_user.is_org_admin or current_user.id == user.id:
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -37,7 +37,7 @@ def createUser(request):
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if not (current_user.is_admin_user or current_user.id == user.id):
+    if not (current_user.is_org_admin or current_user.id == user.id):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     data = request.data
@@ -56,8 +56,11 @@ def updateUser(request, pk):
 def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
-    if not current_user.is_admin_user:
+    if not current_user.is_org_admin:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
+    if user.is_org_admin:
+        return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_400_BAD_REQUEST)
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
