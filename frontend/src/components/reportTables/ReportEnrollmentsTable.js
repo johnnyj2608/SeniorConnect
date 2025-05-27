@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
-import { formatEnrollmentStatus } from '../../utils/statusUtils';
+import { colorEnrollment } from '../../utils/colorUtils';
 
 const ReportEnrollmentsTable = ({ report }) => {
 
@@ -24,7 +24,7 @@ const ReportEnrollmentsTable = ({ report }) => {
                                 {entry.member_name}
                              </Link>
                         </td>
-                        <td>{formatEnrollmentStatus(change_type, old_mltc, new_mltc)}</td>
+                        <td>{colorEnrollment(change_type, old_mltc, new_mltc)}</td>
                         <td>{formatDate(entry.change_date)}</td>
                     </tr>
                 );

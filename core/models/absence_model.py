@@ -13,10 +13,17 @@ class Absence(models.Model):
         (OTHER, 'Other'),
     ]
 
-    member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='absences')
+    member = models.ForeignKey(
+        'Member',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='absences'
+    )
     absence_type = models.CharField(max_length=20, choices=ABSENCE_TYPES)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=True, blank=True)
+    called = models.BooleanField(default=False)
     note = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

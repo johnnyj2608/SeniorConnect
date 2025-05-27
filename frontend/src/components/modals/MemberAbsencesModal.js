@@ -13,7 +13,18 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
 
     return (
         <>
+            <div className="member-detail modal-checkbox-heading">
             <h3>Edit Absences</h3>
+                <label>
+                    <input
+                       type="checkbox"
+                            checked={disabled ? false : current.called === true}
+                            onChange={(e) => handleChange('called')({ target: { value: e.target.checked } })}
+                            disabled={disabled}
+                    />
+                Called
+                </label>
+            </div>
             <div className="member-detail">
                 <label>Absence Type *</label>
                 <select 
@@ -33,7 +44,6 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 <label>Start Date *</label>
                 <input
                     type="date"
-                    name="start_date"
                     value={disabled ? '' : current.start_date || ''}
                     onChange={handleChange('start_date')}
                     disabled={disabled}
@@ -44,7 +54,6 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 <label>End Date</label>
                 <input
                     type="date"
-                    name="end_date"
                     value={disabled ? '' : current.end_date || ''}
                     onChange={handleChange('end_date')}
                     disabled={disabled}

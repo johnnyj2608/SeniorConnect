@@ -56,6 +56,10 @@ input {
   white-space: nowrap;
 }
 
+input[type="checkbox"] {
+  margin-right: 2px;
+}
+
 /* -------------- *
  * App
  * -------------- */
@@ -795,10 +799,6 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: center;
 }
 
-.schedule-container input[type="checkbox"] {
-  margin-right: 2px;
-}
-
 .modal-tabs {
   background: var(--color-white);
   width: 30%;
@@ -1180,7 +1180,8 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 10px;
   align-items: center;
   margin-top: 0.8rem;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   font-size: 20px;
 }
 

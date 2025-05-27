@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { formatChangeStatus } from '../../utils/statusUtils';
+import { colorStats } from '../../utils/colorUtils';
 
 const MltcItem = ({ item, change }) => {
   const mltcName = item.name || 'Unknown';
@@ -13,7 +13,7 @@ const MltcItem = ({ item, change }) => {
     >
       <h4>{mltcName}</h4>
       <p>{item.count}</p>
-      <p>{formatChangeStatus(item.count, netChange)}</p>
+      <p>{colorStats(item.count, netChange)}</p>
     </Link>
   );
 };

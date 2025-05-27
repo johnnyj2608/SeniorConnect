@@ -1,6 +1,12 @@
-import React from "react";
+const colorBoolean = (status) => {
+    if (status) {
+        return <span className="green">Yes</span>
+    } else {
+        return <span className="red">No</span>
+    }
+};
 
-const formatAbsenceStatus = (status) => {
+const colorAbsence = (status) => {
     switch (status) {
         case 'Ongoing':
             return (
@@ -25,7 +31,7 @@ const formatAbsenceStatus = (status) => {
     }
 };
 
-const formatEnrollmentStatus = (status, old_mltc, new_mltc) => {
+const colorEnrollment = (status, old_mltc, new_mltc) => {
     switch (status) {
         case 'Enrollment':
             return (
@@ -50,7 +56,7 @@ const formatEnrollmentStatus = (status, old_mltc, new_mltc) => {
     }
 };
 
-const formatAuditStatus = (status) => {
+const colorAudit = (status) => {
     switch (status) {
         case 'Create':
             return (
@@ -75,7 +81,7 @@ const formatAuditStatus = (status) => {
     }
 };
 
-const formatChangeStatus = (count, change) => {
+const colorStats = (count, change) => {
     let percentChange;
 
     if (count - change === 0) {
@@ -85,17 +91,18 @@ const formatChangeStatus = (count, change) => {
     }
 
     if (change > 0) {
-      return <span className="green outline">↑ +{count} ({percentChange}%)</span>;
+        return <span className="green outline">↑ +{count} ({percentChange}%)</span>;
     } else if (change < 0) {
-      return <span className="red outline">↓ -{count} ({percentChange}%)</span>;
+        return <span className="red outline">↓ -{count} ({percentChange}%)</span>;
     } else {
-      return <span>(0%)</span>;
+        return <span>(0%)</span>;
     }
 };
 
 export {
-    formatAbsenceStatus,
-    formatEnrollmentStatus,
-    formatAuditStatus,
-    formatChangeStatus,
+    colorAbsence,
+    colorBoolean,
+    colorEnrollment,
+    colorAudit,
+    colorStats,
 };

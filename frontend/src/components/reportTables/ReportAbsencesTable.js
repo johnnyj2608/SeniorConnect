@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
-import { formatAbsenceStatus } from '../../utils/statusUtils';
+import { colorAbsence, colorBoolean } from '../../utils/colorUtils';
 
 const ReportAbsencesTable = ({ report }) => {
 
@@ -13,7 +13,7 @@ const ReportAbsencesTable = ({ report }) => {
                 <th style={{ width: '15%' }}>End Date</th>
                 <th style={{ width: '15%' }}>Reason</th>
                 <th style={{ width: '15%' }}>Status</th>
-                <th style={{ width: '10%' }}>Note</th>
+                <th style={{ width: '10%' }}>Called</th>
             </tr>
         </thead>
         <tbody>
@@ -27,8 +27,8 @@ const ReportAbsencesTable = ({ report }) => {
                 <td>{formatDate(entry.start_date)}</td>
                 <td>{formatDate(entry.end_date) || 'N/A'}</td>
                 <td>{entry.absence_type}</td>
-                <td>{formatAbsenceStatus(entry.status, true)}</td>
-                <td>{entry.note}</td>
+                <td>{colorAbsence(entry.status, true)}</td>
+                <td>{colorBoolean(entry.called)}</td>
             </tr>
             ))}
         </tbody>

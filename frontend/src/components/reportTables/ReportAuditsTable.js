@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
-import { formatAuditStatus } from '../../utils/statusUtils';
+import { colorAudit } from '../../utils/colorUtils';
 
 const ReportAuditsTable = ({ report }) => {
 
@@ -25,7 +25,7 @@ const ReportAuditsTable = ({ report }) => {
                                 {entry.member_name}
                              </Link>
                         </td>
-                        <td>{formatAuditStatus(entry.action_type)}</td>
+                        <td>{colorAudit(entry.action_type)}</td>
                         <td>{entry.model_name}</td>
                         <td>{entry.user_name}</td>
                         <td>{formatDate(entry.timestamp)}</td>

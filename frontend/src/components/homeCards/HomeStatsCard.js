@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DropdownButton from '../buttons/DropdownButton';
 import MltcItem from '../items/MltcItem';
-import { formatChangeStatus } from '../../utils/statusUtils';
+import { colorStats } from '../../utils/colorUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeStatsCard = () => {
@@ -50,7 +50,7 @@ const HomeStatsCard = () => {
         <div className="stats-container">
           <h3 className="stats-count">{stats ? `${stats.active_count}` : '...'}</h3>
           <p className="stats-change ">
-            {formatChangeStatus(stats?.active_count, change?.Overall ?? 0)}
+            {colorStats(stats?.active_count, change?.Overall ?? 0)}
           </p>
           <DropdownButton showDetails={showDetails} toggleDetails={toggleDetails} />
           {showDetails && stats?.mltc_count && (
