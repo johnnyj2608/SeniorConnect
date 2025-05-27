@@ -3,7 +3,7 @@ import React from 'react'
 const HomeSnapshotCard = () => {
   return (
     <div className="home-section">
-      <h3>Snapshots</h3>
+      <h2>Snapshots</h2>
       <p>April report is ready to view.</p>
       <ul>
         <li>Members</li>

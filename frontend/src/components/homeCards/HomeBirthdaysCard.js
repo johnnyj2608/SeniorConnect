@@ -23,7 +23,7 @@ const HomeBirthdayCard = () => {
 
   return (
     <div className="full-card">
-      <h3>Birthdays</h3>
+      <h2>Birthdays</h2>
       <div className="card-container">
         {birthdays.length === 0 ? (
           <p>No upcoming birthdays.</p>

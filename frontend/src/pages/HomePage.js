@@ -18,10 +18,11 @@ const HomePage = () => {
         <div className="home-main-panel">
           <StatsCard />
           <AbsencesCard />
-          <BirthdaysCard />
+          
           <SnapshotsCard />
         </div>
         <div className="home-side-panel">
+          <BirthdaysCard />
           <AuditLogsCard />
         </div>
       </div>

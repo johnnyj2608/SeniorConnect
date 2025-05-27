@@ -25,7 +25,7 @@ const HomeAbsenceCard = () => {
 
   return (
     <div className="full-card">
-      <h3>Absences</h3>
+      <h2>Absences</h2>
       <div className="card-container">
         <div className="absence-container">
           <div className="absence-list">

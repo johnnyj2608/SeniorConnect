@@ -45,7 +45,7 @@ const HomeStatsCard = () => {
 
   return (
     <div className="full-card">
-      <h3>Members</h3>
+      <h2>Members</h2>
       <div className="card-container">
         <div className="stats-container">
           <h3 className="stats-count">{stats ? `${stats.active_count}` : '...'}</h3>

@@ -24,14 +24,14 @@ const HomeAuditLogsCard = () => {
 
   return (
     <div className="full-card">
-      <h3>Audit Log</h3>
+      <h2>Audit Log</h2>
       <div className="card-container">
         {auditLogs.length === 0 ? (
           <p>No recent audits.</p>
         ) : (
           auditLogs.map(({ date, audits }) => (
             <div key={date} className="audit-group">
-              <h4>{formatDate(date)}</h4>
+              <h3>{formatDate(date)}</h3>
               <ul>
                 {audits.map((audit) => (
                   <AuditItem key={audit.id} audit={audit} />
