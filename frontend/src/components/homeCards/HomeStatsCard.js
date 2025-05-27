@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ReactComponent as DropdownIcon } from '../../assets/dropdown.svg';
+import DropdownButton from '../buttons/DropdownButton';
 import { Link } from 'react-router-dom';
 import { formatChangeStatus } from '../../utils/statusUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
@@ -51,13 +51,8 @@ const HomeStatsCard = () => {
           <h3 className="stats-count">{stats ? `${stats.active_count}` : '...'}</h3>
           <p className="stats-change ">
             {formatChangeStatus(stats?.active_count, change?.Overall ?? 0)}
-          </p>  
-          <span
-            className={`dropdown-icon ${showDetails ? 'open' : ''}`}
-            onClick={toggleDetails}
-          >
-            <DropdownIcon />
-          </span>
+          </p>
+          <DropdownButton showDetails={showDetails} toggleDetails={toggleDetails} />
           {showDetails && stats?.mltc_count && (
             <div className="stats-mltcs">
               {stats.mltc_count.map(item => {

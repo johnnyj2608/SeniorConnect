@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ReactComponent as RefreshButton } from '../assets/refresh.svg'
-import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
-import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg'
+import RefreshButton from '../components/buttons/RefreshButton';
+import PaginationButtons from '../components/buttons/PaginationButtons';
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
 import ReportAuditsTable from '../components/reportTables/ReportAuditsTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
@@ -106,9 +105,7 @@ const ReportsPage = () => {
             <div className="page-header">
                 <div className="page-title-row">
                     <h2 className="page-title">&#9782; Reports</h2>
-                    <h2 className="refresh-icon" onClick={fetchReport}>
-                        <RefreshButton />
-                    </h2>
+                    <RefreshButton onClick={fetchReport} />
                 </div>
                 <div className="filter-row">
                     <div className="filter-content">
@@ -141,23 +138,11 @@ const ReportsPage = () => {
                             </select>
                         </div>
 
-                        <div className="pagination-controls">
-                            <button
-                                className="arrow-btn"
-                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                disabled={currentPage === 1}
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <span>Page {currentPage} of {totalPages}</span>
-                            <button
-                                className="arrow-btn"
-                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                disabled={currentPage === totalPages || totalPages === 0}
-                            >
-                                <ArrowRight />
-                            </button>
-                        </div>
+                        <PaginationButtons
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            setCurrentPage={setCurrentPage}
+                        />
 
                     </div>
                     <p className="members-count">

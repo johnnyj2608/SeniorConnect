@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
-import { ReactComponent as Pencil } from '../../assets/pencil.svg';
+import EditButton from '../buttons/EditButton';
+import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
-import DetailRow from '../members/MemberDetail';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
@@ -43,7 +43,7 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
     <div className="half-card">
       <h2>Details</h2>
       <div className="card-container">
-        <Pencil className="edit-icon" onClick={handleEdit} />
+        <EditButton onClick={handleEdit} />
         <DetailRow label="Member ID" value={member?.sadc_member_id} />
         <DetailRow label="Last Name" value={member?.last_name} />
         <DetailRow label="First Name" value={member?.first_name} />

@@ -101,6 +101,7 @@ const SettingsPage = () => {
             <div className="settings-content">
                 <h3 className="section-title">Account</h3>
                 <ul className="settings-list">
+                    <li>Reset password</li>
                     <li className="logout" onClick={handleLogout}>
                         Log out
                     </li>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
-import { ReactComponent as Pencil } from '../../assets/pencil.svg';
-import ContactDetail from '../members/ContactDetail';
+import EditButton from '../buttons/EditButton';
+import ContactDetail from '../layout/ContactDetail';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberContactsCard = ({ id, onEdit }) => {
@@ -32,7 +32,7 @@ const MemberContactsCard = ({ id, onEdit }) => {
         <div className="half-card">
             <h2>Contacts</h2>
             <div className="card-container">
-                <Pencil className="edit-icon" onClick={handleEdit} />
+                <EditButton onClick={handleEdit} />
                 {contacts.length === 0 ? (
                     <p>No contacts available.</p>
                 ) : (

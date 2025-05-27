@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
-import { ReactComponent as Pencil } from '../../assets/pencil.svg';
+import EditButton from '../buttons/EditButton';
+import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
-import DetailRow from '../members/MemberDetail';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberAuthCard = ({ id, onEdit }) => {
@@ -40,7 +40,7 @@ const MemberAuthCard = ({ id, onEdit }) => {
         <div className="half-card">
             <h2>Authorization</h2>
             <div className="card-container">
-                <Pencil className="edit-icon" onClick={handleEdit} />
+                <EditButton onClick={handleEdit} />
                 <DetailRow label="Member ID" value={auth?.mltc_member_id} />
                 <DetailRow label="MLTC" value={auth?.mltc} />
                 <DetailRow label="Auth ID" value={auth?.mltc_auth_id} />

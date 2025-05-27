@@ -35,7 +35,6 @@
   font-family: 'Lexend', sans-serif;
   color: inherit;
   scroll-behavior: smooth;
-  overscroll-behavior: none;
 }
 
 body {
@@ -43,7 +42,7 @@ body {
 }
 
 body::-webkit-scrollbar {
-  width: 0px;
+  width: 0;
 }
 
 a {
@@ -447,6 +446,8 @@ select {
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  background: none;
+  border: none;
 }
 
 .dropdown-icon.open > svg {
@@ -636,7 +637,7 @@ select {
   height: 180px;
 }
 
-.edit-icon, .refresh-icon {
+.icon-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -644,16 +645,19 @@ select {
   width: 24px;
   height: 24px;
   z-index: 1;
+  background: none;
+  border: none;
+  fill: var(--color-dark);
 }
 
-.edit-icon:hover, .refresh-icon:hover {
-  fill: #0078d4;
+.icon-button.dark {
+  fill: var(--color-white);
+}
+
+.icon-button:hover{
+  fill: var(--color-main);
   transform: scale(1.1);
   transition: all 0.2s ease;
-}
-
-.refresh-icon {
-  fill: var(--color-dark);
 }
 
 .member-detail {
@@ -947,7 +951,6 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-  overflow: hidden;
   max-width: 100%;
   max-height: 205px;
   overflow-x: hidden;
@@ -1194,7 +1197,11 @@ input[type="number"]::-webkit-inner-spin-button {
  * Reports
  * -------------- */
 
- .report-table {
+.report-results {
+  overflow-x: auto;
+}
+
+.report-table {
   width: 100%;
   border-collapse: collapse;
 }

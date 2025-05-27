@@ -7,7 +7,7 @@ import MemberContactsCard from '../components/memberCards/MemberContactsCard';
 import MemberAbsencesCard from '../components/memberCards/MemberAbsencesCard';
 import MemberFilesCard from '../components/memberCards/MemberFilesCard';
 import MemberPhotoCard from '../components/memberCards/MemberPhotoCard';
-import MemberStatusBanner from '../components/members/StatusBanner';
+import MemberStatusBanner from '../components/layout/StatusBanner';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 
 const MemberPage = () => {

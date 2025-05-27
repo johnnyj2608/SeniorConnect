@@ -28,8 +28,8 @@ const DownloadButton = ({ membersByMltc  }) => {
   };
 
   return (
-    <button onClick={handleDownload} className="download-button">
-      <DownloadIcon width={32} height={32} />
+    <button onClick={handleDownload} className="icon-button">
+      <DownloadIcon />
     </button>
   );
 };
