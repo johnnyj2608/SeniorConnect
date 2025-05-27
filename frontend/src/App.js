@@ -6,7 +6,8 @@ import {
 } from "react-router-dom";
 
 import './App.css';
-import PrivateRoute from './components/auth/PrivateRoute';
+import PrivateRoute from './components/routes/PrivateRoute';
+import ScrollUp from './components/routes/ScrollUp';
 import Navbar from './components/layout/Navbar';
 import HomePage from './pages/HomePage';
 import MembersListPage from './pages/MembersListPage';
@@ -41,6 +42,7 @@ function Main() {
 function App() {
   return (
     <Router>
+      <ScrollUp />
       <Main />
     </Router>
   );

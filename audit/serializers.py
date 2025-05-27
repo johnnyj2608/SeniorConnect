@@ -8,7 +8,7 @@ class AuditLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuditLog
-        fields = '__all__'
+        exclude = ['user', 'content_type', 'object_id']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

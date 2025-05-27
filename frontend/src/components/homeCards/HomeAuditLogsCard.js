@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import AuditItem from '../items/AuditItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { formatDate } from '../../utils/formatUtils';
 
@@ -31,18 +31,10 @@ const HomeAuditLogsCard = () => {
         ) : (
           auditLogs.map(({ date, audits }) => (
             <div key={date} className="audit-group">
-              <h3>{formatDate(date)}</h3>
+              <h4>{formatDate(date)}</h4>
               <ul>
                 {audits.map((audit) => (
-                  <Link to={`/member/${audit.member}`} key={audit.id}>
-                    <li className="home-item">
-                      <span>
-                        <strong>{audit.user_name}</strong>{' '}
-                        {audit.action_type.toLowerCase()}d{' '}
-                        {audit.member_name} | {audit.model_name}
-                      </span>
-                    </li>
-                  </Link>
+                  <AuditItem key={audit.id} audit={audit} />
                 ))}
               </ul>
             </div>
@@ -53,4 +45,4 @@ const HomeAuditLogsCard = () => {
   );
 };
 
-export default HomeAuditLogsCard
+export default HomeAuditLogsCard;
