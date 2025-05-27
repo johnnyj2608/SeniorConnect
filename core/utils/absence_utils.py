@@ -61,12 +61,12 @@ def getUpcomingAbsences(request):
 
     leaving = Absence.objects.filter(
         start_date__range=(today, in_7_days)
-    ).select_related('member')
+    ).select_related('member')[:20]
 
     returning = (
         Absence.objects.filter(end_date__range=(today, in_7_days))
         .exclude(pk__in=leaving.values_list('pk', flat=True))
-        .select_related('member')
+        .select_related('member')[:20]
     )
 
     leaving_serialized = AbsenceUpcomingSerializer(leaving, many=True).data

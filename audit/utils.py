@@ -48,7 +48,7 @@ def getRecentAudits(request):
         .select_related('user', 'content_type', 'member')
         .filter(timestamp__gte=seven_days_ago)
         .annotate(date=TruncDate('timestamp'))
-        .order_by('-timestamp')
+        .order_by('-timestamp')[:20]
     )
 
     grouped = defaultdict(list)
