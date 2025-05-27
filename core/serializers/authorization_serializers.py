@@ -48,4 +48,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         return data
 
     def get_member_name(self, obj):
-        return f"{obj.member.sadc_member_id}. {obj.member.last_name}, {obj.member.first_name}"
+        member = obj.member
+        if member:
+            return f"{member.sadc_member_id}. {member.last_name}, {member.first_name}"
+        return None

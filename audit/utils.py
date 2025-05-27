@@ -7,7 +7,7 @@ from core.utils import handle_serializer
 from rest_framework.pagination import PageNumberPagination
 
 def getAuditList(request):
-    audits = AuditLog.objects.select_related('user', 'content_type').all()
+    audits = AuditLog.objects.select_related('user', 'content_type', 'member').all()
     filter_param = request.GET.get('filter')
     if filter_param:
         audits = audits.filter(action_type__iexact=filter_param)

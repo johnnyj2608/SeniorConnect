@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from core.models.member_model import Member
 
 class AuditLog(models.Model):
     
@@ -22,6 +23,7 @@ class AuditLog(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     timestamp = models.DateTimeField(auto_now_add=True)
     changes = models.JSONField(null=True, blank=True)
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL, related_name='audit_logs')
 
     class Meta:
         ordering = ['-timestamp']
