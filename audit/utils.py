@@ -1,5 +1,9 @@
 from rest_framework.response import Response
+from django.db.models.functions import TruncDate
+from collections import defaultdict
 from rest_framework import status
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.generics import get_object_or_404
 from .models import AuditLog
 from .serializers import AuditLogSerializer
@@ -36,3 +40,27 @@ def deleteAudit(request, pk):
     audit = get_object_or_404(AuditLog, id=pk)
     audit.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+def getRecentAudits(request):
+    seven_days_ago = timezone.now() - timedelta(days=7)
+    recent_audits = (
+        AuditLog.objects
+        .select_related('user', 'content_type', 'member')
+        .filter(timestamp__gte=seven_days_ago)
+        .annotate(date=TruncDate('timestamp'))
+        .order_by('-timestamp')
+    )
+
+    grouped = defaultdict(list)
+    for audit in recent_audits:
+        grouped[audit.date].append(audit)
+
+    data = []
+    for date, audit_list in grouped.items():
+        serializer = AuditLogSerializer(audit_list, many=True)
+        data.append({
+            'date': date,
+            'audits': serializer.data
+        })
+
+    return Response(data, status=status.HTTP_200_OK)

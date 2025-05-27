@@ -1,6 +1,7 @@
 from django.db import transaction
-from django.db.models import Count, F, Q
-from datetime import datetime, timedelta
+from django.db.models import Count, Q
+from datetime import timedelta
+from django.utils import timezone
 from collections import defaultdict
 from rest_framework.response import Response
 from rest_framework import status
@@ -175,7 +176,7 @@ def getActiveMemberStats(request):
     }, status=status.HTTP_200_OK)
 
 def getUpcomingBirthdays(request):
-    today = datetime.today().date()
+    today = timezone.now().date()
 
     birthday_queries = Q()
     for i in range(7):

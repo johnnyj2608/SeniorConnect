@@ -6,6 +6,7 @@ from .utils import (
     deleteAudit,
     getAuditList,
     createAudit,
+    getRecentAudits
 )
 
 @api_view(['GET', 'POST'])
@@ -29,3 +30,8 @@ def getAudit(request, pk):
 
     if request.method == 'DELETE':
         return deleteAudit(request, pk)
+
+@api_view(['GET'])
+def getRecentAuditLogs(request):
+    if request.method == 'GET':
+        return getRecentAudits(request)

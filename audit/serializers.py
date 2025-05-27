@@ -29,4 +29,7 @@ class AuditLogSerializer(serializers.ModelSerializer):
         return None
 
     def get_model_name(self, obj):
-        return obj.content_type.model if obj.content_type else None
+        if obj.content_type:
+            model = obj.content_type.model
+            return model.capitalize()
+        return None

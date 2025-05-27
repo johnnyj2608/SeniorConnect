@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from ..models.member_model import Member, Language
 from ..models.authorization_model import MLTC
-from datetime import datetime
+from django.utils import timezone
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,7 +75,7 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
 
     def get_days_until(self, obj):
         """Calculate the days until the birthday."""
-        today = datetime.today().date()
+        today = timezone.now().date()
         birth_date = obj.birth_date
 
         next_birthday = birth_date.replace(year=today.year)

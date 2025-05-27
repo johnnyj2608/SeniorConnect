@@ -36,14 +36,18 @@ const HomeBirthdayCard = () => {
       <h3>Birthdays</h3>
       <div className="card-container">
         <ul>
-          {birthdays.map((birthday) => (
-          <Link to={`/member/${birthday.id}`} key={birthday.id}>
-            <li className="home-item">
-              <span>{birthday.last_name}, {birthday.first_name}</span>
-              <span>{renderBirthdayMessage(birthday.days_until)}</span>
-            </li>
-          </Link>
-        ))}
+          {birthdays.length === 0 ? (
+            <li className="home-item">No upcoming birthdays.</li>
+          ) : (
+            birthdays.map((birthday) => (
+              <Link to={`/member/${birthday.id}`} key={birthday.id}>
+                <li className="home-item">
+                  <span>{birthday.last_name}, {birthday.first_name}</span>
+                  <span>{renderBirthdayMessage(birthday.days_until)}</span>
+                </li>
+              </Link>
+            ))
+          )}
         </ul>
       </div>
     </div>
