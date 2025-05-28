@@ -88,15 +88,15 @@ const ReportsPage = () => {
     const getReportContent = () => {
         switch (reportType) {
             case 'Absences':
-                return <ReportAbsencesTable report={report} />;
+                return <ReportAbsencesTable key={currentPage} report={report} />;
             case 'Enrollments':
-                return <ReportEnrollmentsTable report={report} />;
+                return <ReportEnrollmentsTable key={currentPage} report={report} />;
             case 'Audit Log':
-                return <ReportAuditsTable report={report} />;
+                return <ReportAuditsTable key={currentPage} report={report} />;
             default:
                 return null;
         }
-    };
+    };    
 
     return (
         <>
