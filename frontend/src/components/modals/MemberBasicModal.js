@@ -40,15 +40,6 @@ const MemberBasicModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Birth Date *</label>
-                <input
-                    type="date"
-                    value={data.birth_date || ''}
-                    onChange={handleChange('birth_date')}
-                />
-            </div>
-
-            <div className="member-detail">
                 <label>Phone</label>
                 <input
                     type="number"
@@ -91,7 +82,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
             <div className="member-detail">
                 <label>SSN</label>
                 <input
-                    type="text"
+                    type="number"
                     value={data.ssn || ''}
                     onChange={handleChange('ssn')}
                     autoComplete="off"
@@ -159,6 +150,16 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                     style={{ display: 'none' }}
                 />
             </div>
+
+            <div className="member-detail">
+                <label>Birth Date *</label>
+                <input
+                    type="date"
+                    value={data.birth_date || ''}
+                    onChange={handleChange('birth_date')}
+                />
+            </div>
+
             <div className="member-detail">
                 <label>Gender *</label>
                 <div className="radio-group">

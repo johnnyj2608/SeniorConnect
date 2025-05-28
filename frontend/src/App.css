@@ -48,8 +48,8 @@ a {
   text-decoration: none;
 }
 
-input {
-  font-size: 13px;
+input:not([type="radio"]):not([type="checkbox"]) {
+  min-width: 150px;
 }
 
 .nowrap {

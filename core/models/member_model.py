@@ -22,7 +22,7 @@ class Member(models.Model):
     last_name = models.CharField(max_length=255, null=False, blank=False)
     birth_date = models.DateField(null=False, blank=False)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=False, blank=False)
-    address = models.ForeignKey('Address', null=True, blank=True, on_delete=models.SET_NULL)
+    address = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=10, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     medicaid = models.CharField(max_length=8, null=True, blank=True)

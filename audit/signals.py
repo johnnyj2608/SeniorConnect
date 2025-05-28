@@ -7,11 +7,11 @@ from user.authentication import get_current_user
 from audit.models import AuditLog
 from core.models.member_model import Member
 from core.models.contact_model import Contact
-from core.models.authorization_model import Authorization
+from core.models.authorization_model import Authorization, MLTC
 from core.models.absence_model import Absence
 from core.models.file_model import File
 
-WHITELISTED_MODELS = (Member, Contact, Authorization, Absence, File)
+WHITELISTED_MODELS = (Member, Contact, Authorization, MLTC, Absence, File)
 
 def get_related_member(instance):
     if isinstance(instance, Member):
