@@ -18,27 +18,26 @@ def getContacts(request):
     if request.method == 'POST':
         return createContact(request)
 
-
-@api_view(['GET', 'PUT'])
+@api_view(['GET'])
 def getContact(request, pk):
     if request.method == 'GET':
         return getContactDetail(request, pk)
-
-    if request.method == 'PUT':
-        return updateContact(request, pk)
-    
 
 @api_view(['GET'])
 def getContactsByMember(request, pk):
     if request.method == 'GET':
         return getContactListByMember(request, pk)
     
+
+@api_view(['PUT', 'DELETE'])
+def getContactWithMember(request, pk, member_id):
+    if request.method == 'PUT':
+        return updateContact(request, pk, member_id)
+    
+    if request.method == 'DELETE':
+        return deleteContact(request, pk, member_id)
+    
 @api_view(['GET'])
 def searchContacts(request):
     if request.method == 'GET':
         return searchContactList(request)
-    
-@api_view(['DELETE'])
-def deleteMemberFromContact(request, pk, member_id):
-    if request.method == 'DELETE':
-        return deleteContact(request, pk, member_id)

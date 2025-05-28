@@ -91,10 +91,10 @@ const sendRequest = async (url, method, data) => {
 
         if (value === null) {
             formData.append(key, '');
-        } else if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
-            formData.append(key, JSON.stringify(value));
         } else if (key === 'members') {
             value.forEach(member => formData.append(key, member));
+        } else if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
+            formData.append(key, JSON.stringify(value));
         } else {
             formData.append(key, value);
         }
@@ -115,25 +115,32 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
     const deletedData = dataArray.filter(data => data.id !== 'new' && data.deleted);
 
     const processedData = (await Promise.all([
-        ...updatedData.map(async (data) => {
-            const dataEndpoint = `/${api}/${endpoint}/${data.id === 'new' ? '' : data.id + '/'}`;
-            const dataMethod = data.id === 'new' ? 'POST' : 'PUT';
-            const response = await sendRequest(dataEndpoint, dataMethod, data);
+        ...updatedData.map(async (item) => {
+            let dataEndpoint = `/${api}/${endpoint}/`;
+            const dataMethod = item.id === 'new' ? 'POST' : 'PUT';
+            if (dataMethod === 'PUT') {
+                dataEndpoint += `${item.id}/`;
+                if (id !== null) {
+                  dataEndpoint += `${id}/`;
+                }
+            }
+            const response = await sendRequest(dataEndpoint, dataMethod, item);
     
-            if (data.id === 'new' && response.id) {
-                data.id = response.id;
+            if (item.id === 'new' && response.id) {
+                item.id = response.id;
             }
     
-            return data;
+            return item;
         }),
-        ...deletedData.map(async (data) => {
-            if (id === null) {
-                await fetchWithRefresh(`/${api}/${endpoint}/${data.id}/`, { method: 'DELETE' });
-            } else {
-                await fetchWithRefresh(`/${api}/${endpoint}/${data.id}/delete/${id}/`, { method: 'DELETE' });
+        ...deletedData.map(async (item) => {
+            let dataEndpoint = `/${api}/${endpoint}/${item.id}/`;
+            if (id !== null) {
+              dataEndpoint += `${id}/`;
             }
-            return data;
-        })
+      
+            await fetchWithRefresh(dataEndpoint, { method: 'DELETE' });
+            return item;
+          })
     ]));
     
     const savedData = dataArray

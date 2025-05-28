@@ -88,7 +88,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             <div className="member-detail">
                 <label>Phone *</label>
                 <input
-                    type="text"
+                    type="number"
                     value={disableFields ? '' : current.phone || ''}
                     onChange={handleChange('phone')}
                     placeholder="Required"

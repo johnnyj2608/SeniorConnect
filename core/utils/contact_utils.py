@@ -20,7 +20,6 @@ def createContact(request):
     data = request.data
     member_ids = data.getlist('members')
     member = get_object_or_404(Member, id=member_ids[-1])
-    print(data)
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
@@ -29,14 +28,16 @@ def createContact(request):
             'relationship_type': data.get('relationship_type', None),
         }
     )
-    print(member)
     contact.members.add(member)
     serializer = ContactSerializer(contact)
     return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
 
-def updateContact(request, pk):
+def updateContact(request, pk, member_id):
     data = request.data
     contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
+    member = get_object_or_404(Member, id=member_id)
+    contact._acting_member = member
+
     serializer = ContactSerializer(instance=contact, data=data)
     return handle_serializer(serializer, success_status=status.HTTP_200_OK)
 
