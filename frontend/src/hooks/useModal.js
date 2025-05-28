@@ -150,7 +150,7 @@ function useModal(data, onClose) {
                     const activeAuth = savedData.find(auth => auth.active === true);
                     const newMLTC = activeAuth?.mltc || null;
 
-                    await sendRequest(`/core/enrollments/`, 'POST', {
+                    sendRequest(`/core/enrollments/`, 'POST', {
                         member: id,
                         old_mltc: oldMLTC,
                         new_mltc: newMLTC,
