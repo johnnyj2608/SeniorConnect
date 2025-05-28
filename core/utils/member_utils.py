@@ -19,20 +19,24 @@ from core.utils.supabase import *
 from .handle_serializer import handle_serializer
 
 def getMemberList(request):
-    members = Member.objects.all().select_related('active_auth', 'active_auth__mltc').order_by('active_auth__mltc__name')
+    members = Member.objects.select_related('active_auth', 'active_auth__mltc')
+    filter_param = request.GET.get('filter')
+    if filter_param == "Unknown":
+        members = members.filter(active_auth__mltc__isnull=True)
+    elif filter_param:
+        members = members.filter(active_auth__mltc__name__iexact=filter_param)
+
+    show_inactive = request.GET.get('show_inactive', 'false').lower() == 'true'
+    if not show_inactive:
+        members = members.filter(active=True)
+
+    members = members.order_by('active_auth__mltc__name')
     serializer = MemberListSerializer(members, many=True)
 
-    grouped_members = defaultdict(list)
+    data = defaultdict(list)
     for member_data in serializer.data:
         mltc_name = member_data['mltc'] if member_data['mltc'] else "Unknown"
-        grouped_members[mltc_name].append(member_data)
-
-    data = []
-    for mltc, members_list in grouped_members.items():
-        data.append({
-            "name": mltc,
-            "member_list": members_list
-        })
+        data[mltc_name].append(member_data)
 
     return Response(data, status=status.HTTP_200_OK)
 
