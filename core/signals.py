@@ -8,19 +8,16 @@ def handle_member_change(sender, instance, created, **kwargs):
     if created:
         return
     
-    active_auth = instance.active_auth
-    if not active_auth:
-        return
-    
-    if instance.active == False:
+    if instance.active == False and instance.active_auth:
+        active_auth = instance.active_auth
+        active_auth.active = False
+        active_auth.save(update_fields=['active'])
+
         Enrollment.objects.create(
             member=instance,
             change_type=Enrollment.DISENROLLMENT,
             new_mltc=None,
             old_mltc=active_auth.mltc,
         )
-        instance.active_auth = None
-        instance.save(update_fields=['active_auth'])
-        
-        active_auth.active = False
-        active_auth.save()
+
+        Member.objects.filter(pk=instance.pk).update(active_auth=None)
