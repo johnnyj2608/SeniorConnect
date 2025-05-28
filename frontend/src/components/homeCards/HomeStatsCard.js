@@ -52,7 +52,11 @@ const HomeStatsCard = () => {
           <p className="stats-change ">
             {colorStats(stats?.active_count, change?.Overall ?? 0)}
           </p>
-          <DropdownButton showDetails={showDetails} toggleDetails={toggleDetails} />
+          <DropdownButton 
+            showDetails={showDetails} 
+            toggleDetails={toggleDetails} 
+            className="dark"
+          />
           {showDetails && stats?.mltc_count && (
           <div className="stats-mltcs">
             {stats.mltc_count.map(item => (

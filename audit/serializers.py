@@ -13,6 +13,19 @@ class AuditLogSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['action_type'] = instance.get_action_type_display()
+
+        changes = data.get('changes')
+        if changes and isinstance(changes, dict):
+            lines = []
+            for i, (field, change) in enumerate(changes.items(), start=1):
+                formatted_field = ' '.join(word.capitalize() for word in field.split('_'))
+                old = change.get('old')
+                new = change.get('new')
+                lines.append(f"{i}. {formatted_field}: {old} → {new}")
+            data['changes'] = '\n'.join(lines)
+        else:
+            data['changes'] = ''
+
         return data
     
     def get_member_name(self, obj):

@@ -8,9 +8,9 @@ const ReportEnrollmentsTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>Member</th>
-                <th style={{ width: '55%' }}>Status</th>
-                <th style={{ width: '15%' }}>Date</th>
+                <th>Member</th>
+                <th>Status</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>

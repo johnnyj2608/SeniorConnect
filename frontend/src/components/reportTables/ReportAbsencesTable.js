@@ -8,12 +8,12 @@ const ReportAbsencesTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>Member</th>
-                <th style={{ width: '15%' }}>Start Date</th>
-                <th style={{ width: '15%' }}>End Date</th>
-                <th style={{ width: '15%' }}>Reason</th>
-                <th style={{ width: '15%' }}>Status</th>
-                <th style={{ width: '10%' }}>Called</th>
+                <th>Member</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Called</th>
             </tr>
         </thead>
         <tbody>

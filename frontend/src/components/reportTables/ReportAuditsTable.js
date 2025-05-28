@@ -1,35 +1,65 @@
+import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DropdownButton from '../buttons/DropdownButton';
 import { formatDate } from '../../utils/formatUtils';
 import { colorAudit } from '../../utils/colorUtils';
 
 const ReportAuditsTable = ({ report }) => {
+    const [expandedRows, setExpandedRows] = useState({});
+
+    const toggleDetails = (id) => {
+        setExpandedRows(prev => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
 
     return (
         <table className="report-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>Member</th>
-                <th style={{ width: '15%' }}>Action</th>
-                <th style={{ width: '20%' }}>Change</th>
-                <th style={{ width: '20%' }}>User</th>
-                <th style={{ width: '15%' }}>Date</th>
+                <th>Member</th>
+                <th>Change</th>
+                <th>Action</th>
+                <th>User</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
             {report.map((entry) => {
+                const isExpanded = !!expandedRows[entry.id];
+                const showDropdown = entry.action_type === 'Update' && entry.changes && Object.keys(entry.changes).length > 0;
 
                 return (
-                    <tr key={entry.id}>
-                        <td>
-                            <Link to={`/member/${entry.member}`} className="report-link">
+                    <Fragment key={entry.id}>
+                        <tr className={isExpanded ? 'expanded' : ''}>
+                            <td>
+                                <Link to={`/member/${entry.member}`} className="report-link">
                                 {entry.member_name}
-                             </Link>
-                        </td>
-                        <td>{colorAudit(entry.action_type)}</td>
-                        <td>{entry.model_name}</td>
-                        <td>{entry.user_name}</td>
-                        <td>{formatDate(entry.timestamp)}</td>
-                    </tr>
+                                </Link>
+                            </td>
+                            <td>{entry.model_name}</td>
+                            <td className="report-dropdown">
+                                {colorAudit(entry.action_type)}{' '}
+                                {showDropdown && (
+                                <DropdownButton
+                                    showDetails={isExpanded}
+                                    toggleDetails={() => toggleDetails(entry.id)}
+                                />
+                                )}
+                            </td>
+                            <td>{entry.user_name}</td>
+                            <td>{formatDate(entry.timestamp)}</td>
+                        </tr>
+
+                        {isExpanded && entry.changes && (
+                        <tr>
+                            <td colSpan={5}>
+                            <pre>{entry.changes}</pre>
+                            </td>
+                        </tr>
+                        )}
+                    </Fragment>
                 );
             })}
         </tbody>

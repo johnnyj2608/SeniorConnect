@@ -294,10 +294,6 @@ ul, li {
   line-height: 1.5;
 }
 
-.stats-container svg {
-  width: 32px;
-}
-
 .stats-mltcs {
   display: flex;
   flex-wrap: wrap;
@@ -449,18 +445,6 @@ select {
   background-repeat: no-repeat;
   background-position: right 6px center;
   background-size: 20px 20px;
-}
-
-.dropdown-icon {
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  background: none;
-  border: none;
-}
-
-.dropdown-icon.open > svg {
-  transform: rotate(180deg);
 }
 
 /* -------------- *
@@ -660,7 +644,8 @@ select {
   z-index: 1;
   background: none;
   border: none;
-  fill: var(--color-dark);
+  fill: var(--color-text);
+  transition: all 0.2s ease;
 }
 
 .icon-button.dark {
@@ -670,7 +655,19 @@ select {
 .icon-button:hover{
   fill: var(--color-main);
   transform: scale(1.1);
-  transition: all 0.2s ease;
+}
+
+.dropdown-icon {
+  position: relative;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.dropdown-icon.open > svg {
+  transform: rotate(180deg);
 }
 
 .member-detail {
@@ -1226,16 +1223,28 @@ input[type="number"]::-webkit-inner-spin-button {
   border-collapse: collapse;
 }
 
+.report-table tr {
+  font-size: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
 .report-table th, .report-table td {
   padding: 15px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-size: 20px;
 }
 
 .report-link:hover {
   color: var(--color-main);
   text-decoration: underline;
+}
+
+.report-dropdown {
+  display: flex;
+  gap: 10px;
+}
+
+.report-table tr.expanded {
+  border-bottom: none;
 }
 
 .outline {
