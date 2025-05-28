@@ -61,11 +61,14 @@ const ModalPage = ({ data, onClose }) => {
                     </div>
                     {type !== 'basic' && (
                         <div className="modal-tabs">
-                            <ModalTabs 
-                                key="new-tab" 
-                                index={-1} 
-                                handleTabClick={handleAdd} 
-                                tab={add_tab} />
+                            <div className="sticky-add-tab">
+                                <ModalTabs 
+                                    key="new-tab" 
+                                    index={-1} 
+                                    handleTabClick={handleAdd} 
+                                    tab={add_tab} 
+                                />
+                            </div>
                             {localData.map((tab, index) => (
                                 <ModalTabs 
                                     key={index} 
@@ -73,7 +76,8 @@ const ModalPage = ({ data, onClose }) => {
                                     activeTab={activeTab} 
                                     handleTabClick={setActiveTab} 
                                     type={type} 
-                                    tab={tab} />
+                                    tab={tab} 
+                                />
                             ))}
                         </div>
                     )}
