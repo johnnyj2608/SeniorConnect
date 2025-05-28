@@ -11,59 +11,6 @@ const getActiveAuthIndex = (data) => {
     return activeIndex;
 };
 
-const checkMissingFields = (data, requiredFields, dependentFields = []) => {
-    const items = Array.isArray(data)
-        ? data.filter(item => item.edited && !item.deleted)
-        : [data];
-
-    const missingFields = items.reduce((acc, item) => {
-        requiredFields.forEach(field => {
-            const value = item[field];
-            if (!(typeof value === 'string' ? value.trim() : value)) {
-                acc.add(field);
-            }
-        });
-
-        dependentFields.forEach(({ field, dependsOn, value }) => {
-            if (item[dependsOn] === value) {
-                const depValue = item[field];
-                if (!(typeof depValue === 'string' ? depValue.trim() : depValue)) {
-                    acc.add(field);
-                }
-            }
-        });
-
-        return acc;
-    }, new Set());
-
-    if (missingFields.size > 0) {
-        alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
-        return true
-    }
-
-    return false;
-};
-
-const checkInvalidDates = (data) => {
-    const invalidDates = data.reduce((acc, item) => {
-        const startDate = new Date(item.start_date);
-        const endDate = item.end_date ? new Date(item.end_date) : null;
-
-        if (item.deleted !== true && endDate && endDate < startDate) {
-            acc.add('start_date - end_date');
-        }
-
-        return acc;
-    }, new Set());
-
-    if (invalidDates.size > 0) {
-        alert('Invalid dates: End date cannot be before start date.');
-        return true;
-    }
-
-    return false;
-};
-
 const sendRequest = async (url, method, data) => {
     const excludedKeys = new Set([
         'last_login', 
@@ -221,8 +168,6 @@ const getNewTab = (type, localData, id) => {
 export {
     compareTabs,
     getActiveAuthIndex,
-    checkMissingFields,
-    checkInvalidDates,
     sendRequest,
     saveDataTabs,
     getNewTab,

@@ -1,0 +1,95 @@
+const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
+    const items = Array.isArray(data)
+        ? data.filter(item => item.edited && !item.deleted)
+        : [data];
+
+    const missingFields = items.reduce((acc, item) => {
+        requiredFields.forEach(field => {
+            const value = item[field];
+            const isEmpty = typeof value === 'string' ? value.trim() === '' : value == null;
+
+            if (isEmpty) {
+                acc.add(field);
+            } else if (field === 'phone' && !validateInputLength(10, value)) {
+                acc.add(field);
+            }
+        });
+
+        dependentFields.forEach(({ field, dependsOn, value }) => {
+            if (item[dependsOn] === value) {
+                const depValue = item[field];
+                const isEmpty = typeof depValue === 'string' ? depValue.trim() === '' : depValue == null;
+                if (isEmpty) {
+                    acc.add(field);
+                }
+            }
+        });
+
+        return acc;
+    }, new Set());
+
+    if (missingFields.size > 0) {
+        alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+        return false;
+    }
+
+    return true;
+};
+
+const validateDateRange = (data) => {
+    const invalidDates = data.reduce((acc, item) => {
+        const startDate = new Date(item.start_date);
+        const endDate = item.end_date ? new Date(item.end_date) : null;
+
+        if (item.deleted !== true && endDate && endDate < startDate) {
+            acc.add('start_date - end_date');
+        }
+
+        return acc;
+    }, new Set());
+
+    if (invalidDates.size > 0) {
+        alert('Invalid dates: End date cannot be before start date.');
+        return false;
+    }
+
+    return true;
+};
+
+// Phone (10) && SSN (9)
+const validateInputLength = (length, data, type='Phone') => {
+    if (data === null || data === undefined || String(data).trim() === '') {
+        return true;
+    }
+
+    const str = String(data).trim();
+    if (str.length !== length) {
+        alert(`${type} must be exactly ${length} characters long.`);
+        return false;
+    }
+
+    return true;
+};
+
+
+const validateMedicaid = (data) => {
+    if (data === null || data === undefined || String(data).trim() === '') {
+        return true;
+    }
+
+    const medicaidPattern = /^[a-zA-Z]{2}\d{5}[a-zA-Z]$/;
+    if (!medicaidPattern.test(data.trim())) {
+        alert('Medicaid ID must be in the format XX12345X (2 letters, 5 digits, 1 letter).');
+        return false;
+    }
+
+    return true;
+};
+
+
+export {
+    validateRequiredFields,
+    validateDateRange,
+    validateInputLength,
+    validateMedicaid,
+};

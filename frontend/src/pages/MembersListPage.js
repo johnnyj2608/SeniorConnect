@@ -21,7 +21,9 @@ const MembersListPage = () => {
 	const getMembers = async () => {
 		const params = new URLSearchParams();
 		if (mltcFilter) params.append('filter', mltcFilter);
-		params.append('show_inactive', showInactive.toString());
+		if (showInactive) {
+			params.append('show_inactive', 'true');
+		}
 		const url = `/core/members?${params.toString()}`;
 
 		try {
