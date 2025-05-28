@@ -33,4 +33,6 @@ class Absence(models.Model):
         ordering = ['-start_date', '-end_date']
 
     def __str__(self):
-        return f"{self.member} | {self.absence_type} {self.start_date} to {self.end_date}"
+        start = self.start_date.strftime('%m/%d/%Y') if self.start_date else ''
+        end = f" to {self.end_date.strftime('%m/%d/%Y')}" if self.end_date else ''
+        return f"{self.get_absence_type_display()} from {start}{end}"

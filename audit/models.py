@@ -24,6 +24,7 @@ class AuditLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     changes = models.JSONField(null=True, blank=True)
     member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL, related_name='audit_logs')
+    object_display = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ['-timestamp']

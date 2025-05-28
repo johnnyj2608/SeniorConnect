@@ -60,11 +60,11 @@ class Contact(models.Model):
         ordering = ['contact_type']
 
     def clean(self):
-        if self.contact_type == 'emergency' and not self.relationship_type:
+        if self.contact_type == self.EMERGENCY and not self.relationship_type:
             raise ValidationError("relationship_type must be set for emergency contacts.")
         
-        if self.contact_type != 'emergency' and self.relationship_type:
+        if self.contact_type != self.EMERGENCY and self.relationship_type:
             raise ValidationError("relationship_type can only be set for emergency contacts.")
 
     def __str__(self):
-        return f"{self.name} ({self.contact_type})"
+        return f"{self.name}: {self.get_contact_type_display()} — {self.phone}"

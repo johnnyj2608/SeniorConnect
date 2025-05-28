@@ -45,4 +45,4 @@ class Member(models.Model):
         ordering = ['sadc_member_id']
 
     def __str__(self):
-        return f"({self.id}) {self.sadc_member_id}. {self.first_name} {self.last_name}"
+        return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"

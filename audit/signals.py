@@ -56,6 +56,10 @@ def log_create_update(sender, instance, created, **kwargs):
 
             old_value = original.get(field_name)
             new_value = getattr(instance, field_name)
+
+            if old_value in [None, ''] and new_value in [None, '']:
+                continue
+
             if old_value != new_value:
                 changes[field_name] = {'old': old_value, 'new': new_value}
 
@@ -65,6 +69,7 @@ def log_create_update(sender, instance, created, **kwargs):
         object_id=instance.pk,
         action_type=AuditLog.CREATE if created else AuditLog.UPDATE,
         member=member,
+        object_display=str(instance),
         changes=changes,
     )
 
@@ -88,7 +93,8 @@ def log_delete(sender, instance, **kwargs):
         content_type=content_type,
         object_id=instance.pk,
         action_type=AuditLog.DELETE,
-        member=member
+        member=member,
+        object_display=str(instance),
     )
 
 @receiver(m2m_changed, sender=Contact.members.through)
@@ -113,4 +119,5 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
             object_id=instance.pk,
             action_type=action_type,
             member_id=member_id,
+            object_display=str(instance),
         )

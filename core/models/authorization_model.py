@@ -27,7 +27,9 @@ class Authorization(models.Model):
         ordering = ['-start_date', '-end_date']
 
     def __str__(self):
-        return f"{self.mltc}: {self.mltc_auth_id}"
+        start = self.start_date.strftime('%m/%d/%Y')
+        end = self.end_date.strftime('%m/%d/%Y')
+        return f"{self.mltc} Auth from {start} to {end}"
 
 class Enrollment(models.Model):
     ENROLLMENT = 'enrollment'
@@ -63,4 +65,11 @@ class Enrollment(models.Model):
         ordering = ['-change_date']
 
     def __str__(self):
-        return f"{self.member_id}: {self.change_type} ({self.old_mltc} → {self.new_mltc})"
+        if self.change_type == self.ENROLLMENT:
+            details = f"to {self.new_mltc}"
+        elif self.change_type == self.DISENROLLMENT:
+            details = f"from {self.old_mltc}"
+        else:
+            details = f"from {self.old_mltc} to {self.new_mltc}"
+
+        return f"{self.get_change_type_display()} {details} on {self.change_date.strftime('%m/%d/%Y')}"
