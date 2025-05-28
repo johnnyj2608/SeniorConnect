@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useDebounce from '../../hooks/useDebounce';
-import { formatPhone } from '../../utils/formatUtils';
+import { formatPhone, normalizeField } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState(true);
   const debouncedValue = useDebounce(value, 500);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const fetchSuggestions = async (searchName, contactType) => {
       try {
         const params = new URLSearchParams({
           name: searchName,
-          contact_type: contactType,
+          contact_type: normalizeField(contactType),
           member_id: memberId,
         });
         const response = await fetchWithRefresh(`/core/contacts/search/?${params.toString()}`);
@@ -32,8 +33,20 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
     }
   }, [debouncedValue, contactType, selectedSuggestion, memberId]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSelectedSuggestion(true);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
   return (
-    <div className="search-dropdown-container">
+    <div className="search-dropdown-container" ref={searchRef}>
       <input
         type="text"
         value={value}

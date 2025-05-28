@@ -82,6 +82,11 @@ const formatPhoto = (photo) => {
   return "/default-profile.jpg";
 };
 
+const normalizeField = (str) => {
+  if (!str) return '';
+  return str.toLowerCase().replace(/\s+/g, '_');
+};
+
 export {
   formatDate,
   formatPhone,
@@ -90,4 +95,5 @@ export {
   sortSchedule,
   formatSSN,
   formatPhoto,
+  normalizeField,
 };

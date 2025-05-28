@@ -1,4 +1,5 @@
 import fetchWithRefresh from './fetchWithRefresh';
+import { normalizeField } from './formatUtils';
 
 const compareTabs = (updatedTab, originalTab) => {
     const stripEdited = ({ edited, ...rest }) => rest;
@@ -85,7 +86,7 @@ const sendRequest = async (url, method, data) => {
         let value = data[key];
 
         if (key.includes('type') && typeof value === 'string') {
-            value = value.toLowerCase().replace(/\s+/g, '_');
+            value = normalizeField(value)
         }
 
         if (value === null) {

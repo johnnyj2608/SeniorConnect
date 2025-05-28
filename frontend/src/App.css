@@ -919,11 +919,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .search-dropdown-container {
   display: flex;
   position: relative;
-  flex-grow: 1;
-}
-
-.search-dropdown-container > input {
-  flex: 1;
+  flex: 1 1;
+  min-width: 0;
 }
 
 .search-dropdown {
