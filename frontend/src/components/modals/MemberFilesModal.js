@@ -95,7 +95,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
 
                 <div className="file-footer">
                     <button
-                        className="modal-button"
+                        className="action-button"
                         onClick={() => viewFile(current.file)}
                         disabled={disabled || !current.file}
                     >

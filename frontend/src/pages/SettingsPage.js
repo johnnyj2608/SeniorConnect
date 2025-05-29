@@ -1,82 +1,58 @@
-import React, { useContext, useState, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContext'
+import React, { useEffect, useRef, useState } from 'react';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsData from '../components/settingsContent/SettingsData';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
 import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
-import ModalPage from './ModalPage';
-import fetchWithRefresh from '../utils/fetchWithRefresh'
-import { ReactComponent as AngleRight } from '../assets/angle-right.svg'
+import SettingsItem from '../components/items/SettingsItem'
+
+const sections = [
+    { label: 'General', component: <SettingsGeneral />, id: 'settings-general' },
+    { label: 'Data', component: <SettingsData />, id: 'settings-data' },
+    { label: 'Snapshots', component: <SettingsSnapshots />, id: 'settings-snapshots' },
+    { label: 'Support', component: <SettingsSupport />, id: 'settings-support' },
+    { label: 'Account', component: <SettingsAccount />, id: 'settings-account' },
+];
 
 const SettingsPage = () => {
-    const navigate = useNavigate()
-    const { user, setUser } = useContext(AuthContext)
-    const [content, setContent] = useState('General');
-    const [modalOpen, setModalOpen] = useState(false);
-    const [modalData, setModalData] = useState(null);
+    const [active, setActive] = useState(sections[0].id);
+    const observer = useRef(null);
 
-    const handleModalOpen = useCallback(async () => {
-        if (!user?.is_org_admin) return;
-
-        try {
-            const response = await fetchWithRefresh(`/user/users`);
-            if (!response.ok) return;
-
-            const data = await response.json();
-            setModalData({ type: "users", data });
-            setModalOpen(true);
-        } catch (error) {
-            console.error('Error fetching users:', error);
-            alert('Could not load users. Please try again.');
+    const handleScrollToSection = (id) => {
+        const section = document.getElementById(id);
+        const offset = 110;
+    
+        if (section) {
+            const top = section.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
         }
-    }, [user]);
+    };
 
-
-    const handleModalClose = useCallback(() => {
-        setModalOpen(false)
-        setModalData(null)
-    }, [])
-
-    const handleLogout = async () => {
-        try {
-            const response = await fetchWithRefresh('/user/auth/logout/', {
-                method: 'POST',
-                credentials: 'include',
-            })
-
-            if (!response.ok) {
-                throw new Error('Logout failed')
+    useEffect(() => {
+        const options = {
+          root: null,
+          rootMargin: '-110px 0px -60% 0px',
+          threshold: 0,
+        };
+    
+        observer.current = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                setActive(entry.target.id);
             }
-
-            setUser(null)
-
-            console.log('Logged out successfully')
-            navigate('/login')
-        } catch (error) {
-            console.error('Logout error:', error)
-            alert('Logout failed. Please try again.')
-        }
-    }
-
-    const getContent = () => {
-        switch (content) {
-            case 'General':
-                return <SettingsGeneral />;
-            case 'Data':
-                return <SettingsData />;
-            case 'Snapshots':
-                return <SettingsSnapshots />;
-            case 'Support':
-                return <SettingsSupport />;
-            case 'Account':
-                return <SettingsAccount />;
-            default:
-                return null;
-        }
-    };    
-
+          });
+        }, options);
+    
+        sections.forEach((section) => {
+          const sectionElement = document.getElementById(section.id);
+          if (sectionElement) observer.current.observe(sectionElement);
+        });
+    
+        return () => {
+          if (observer.current) observer.current.disconnect();
+        };
+    }, []);
+    
     return (
         <>
             <div className="page-header">
@@ -87,69 +63,24 @@ const SettingsPage = () => {
 
             <div className="settings-body">
                 <div className="settings-nav">
-                    <div 
-                        className="settings-nav-item"
-                        onClick={() => setContent('General')}>
-                        <span>General</span>
-                        <AngleRight/>
-                    </div>
-                    <div 
-                        className="settings-nav-item"
-                        onClick={() => setContent('Data')}>
-                        <span>Data</span>
-                        <AngleRight/>
-                    </div>
-                    <div 
-                        className="settings-nav-item"
-                        onClick={() => setContent('Snapshots')}>
-                        <span>Snapshots</span>
-                        <AngleRight/>
-                    </div>
-                    <div 
-                        className="settings-nav-item"
-                        onClick={() => setContent('Support')}>
-                        <span>Support</span>
-                        <AngleRight/>
-                    </div>
-                    <div 
-                        className="settings-nav-item"
-                        onClick={() => setContent('Account')}>
-                        <span>Account</span>
-                        <AngleRight/>
-                    </div>                
+                {sections.map((section) => (
+                    <SettingsItem
+                        key={section.id}
+                        label={section.label}
+                        isActive={active === section.id}
+                        onClick={() => handleScrollToSection(section.id)}
+                    />
+                ))}
                 </div>
 
                 <div className="settings-content">
-                    {getContent()}
+                {sections.map((section) => (
+                    <div key={section.id} id={section.id}>
+                        {section.component}
+                    </div>
+                ))}
                 </div>
             </div>
-            
-            {/* {user?.is_org_admin && (
-                <div className="settings-content">
-                    <ul className="settings-list">
-                        <li className=""
-                            onClick={handleModalOpen}>
-                            User Management
-                        </li>
-                    </ul>
-                </div>
-            )}
-
-            <div className="settings-content">
-                <ul className="settings-list">
-                    <li>Reset password</li>
-                    <li className="logout" onClick={handleLogout}>
-                        Log out
-                    </li>
-                </ul>
-            </div> */}
-
-            {modalOpen && (
-                <ModalPage
-                    data={modalData}
-                    onClose={handleModalClose}
-                />
-            )}
         </>
     )
 }

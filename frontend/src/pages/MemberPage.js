@@ -124,13 +124,13 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
       <button
-        className={`modal-button status-button ${status ? 'caution' : ''}`}
+        className={`action-button ${status ? 'caution' : ''}`}
         onClick={handleStatus}
       >
         {status ? 'Deactivate' : 'Activate'}
       </button>
 
-        <button className="modal-button delete-button" onClick={handleDelete}>Delete</button>
+        <button className="action-button destructive" onClick={handleDelete}>Delete</button>
       </div>
       {modalOpen && (
         <ModalPage

@@ -2,10 +2,12 @@ import React from 'react'
 
 const SettingsGeneral = () => {
   return (
-    <div>
-      General
-      Notification, Dark Mode, Language
-    </div>
+    <>
+      <h3 className="section-title">General</h3>
+      <div className="section-main">
+        Notification, Dark Mode, Language
+      </div>
+    </>
   )
 }
 

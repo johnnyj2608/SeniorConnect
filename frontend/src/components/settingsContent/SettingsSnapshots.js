@@ -2,10 +2,12 @@ import React from 'react'
 
 const SettingsSnapshots = () => {
   return (
-    <div>
-      Snapshots
-      Member, Birthdays, Absences, Enrollment
-    </div>
+    <>
+      <h3 className="section-title">Snapshots</h3>
+      <div className="section-main">
+        Members, Birthdays, Absences, Enrollment
+      </div>
+    </>
   )
 }
 

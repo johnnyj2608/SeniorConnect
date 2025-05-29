@@ -82,16 +82,16 @@ const ModalPage = ({ data, onClose }) => {
                         </div>
                     )}
                 </div>
-                <div className="modal-buttons-container">
-                    <button className="modal-button" onClick={() => onClose()}>Cancel</button>
+                <div className="action-buttons-container">
+                    <button className="action-button" onClick={() => onClose()}>Cancel</button>
                     {showDeleteButton && (
                         <button 
-                            className="modal-button delete-button" 
+                            className="action-button destructive" 
                             onClick={() => handleDelete(activeTab)}>
                             Delete
                         </button>
                     )}
-                    <button className="modal-button" onClick={() => handleSave(localData)}>Save</button>
+                    <button className="action-button" onClick={() => handleSave(localData)}>Save</button>
                 </div>
             </div>
         </div>
