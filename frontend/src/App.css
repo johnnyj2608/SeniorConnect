@@ -354,7 +354,6 @@ ul, li {
 .page-title-row {
   display: flex;
   justify-content: space-between;
-  height: 40px;
 }
 
 .page-title {
@@ -387,6 +386,7 @@ ul, li {
 .filter-row {
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
 }
 
 .filter-content {
@@ -1284,6 +1284,43 @@ input[type="number"]::-webkit-inner-spin-button {
 /* -------------- *
  * Settings
  * -------------- */
+
+.settings-body {
+  display: flex;
+}
+
+.settings-nav {
+  width: 25%;
+  border-right: 1px solid var(--color-gray);
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--color-gray);
+  cursor: pointer;
+}
+
+.settings-nav-item > span {
+  transition: transform 0.2s ease;
+}
+
+.settings-nav-item:hover > span {
+  transform: scale(1.05);
+}
+
+.settings-nav-item svg {
+  width: 30px;
+  height: 30px;
+  fill: var(--color-gray);
+}
+
+.settings-content {
+  width: 75%;
+}
 
 .logout {
   color: red;

@@ -1,12 +1,19 @@
 import React, { useContext, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import SettingsAccount from '../components/settingsContent/SettingsAccount';
+import SettingsData from '../components/settingsContent/SettingsData';
+import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
+import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
+import SettingsSupport from '../components/settingsContent/SettingsSupport';
 import ModalPage from './ModalPage';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
+import { ReactComponent as AngleRight } from '../assets/angle-right.svg'
 
 const SettingsPage = () => {
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)
+    const [content, setContent] = useState('General');
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
 
@@ -53,6 +60,23 @@ const SettingsPage = () => {
         }
     }
 
+    const getContent = () => {
+        switch (content) {
+            case 'General':
+                return <SettingsGeneral />;
+            case 'Data':
+                return <SettingsData />;
+            case 'Snapshots':
+                return <SettingsSnapshots />;
+            case 'Support':
+                return <SettingsSupport />;
+            case 'Account':
+                return <SettingsAccount />;
+            default:
+                return null;
+        }
+    };    
+
     return (
         <>
             <div className="page-header">
@@ -61,34 +85,47 @@ const SettingsPage = () => {
                 </div>
             </div>
 
-            <div className="settings-content">
-                <h3 className="section-title">General</h3>
-                <ul className="settings-list">
-                    <li>Notifications</li>
-                    <li>Dark Mode</li>
-                    <li>Localization</li>
-                </ul>
-            </div>
+            <div className="settings-body">
+                <div className="settings-nav">
+                    <div 
+                        className="settings-nav-item"
+                        onClick={() => setContent('General')}>
+                        <span>General</span>
+                        <AngleRight/>
+                    </div>
+                    <div 
+                        className="settings-nav-item"
+                        onClick={() => setContent('Data')}>
+                        <span>Data</span>
+                        <AngleRight/>
+                    </div>
+                    <div 
+                        className="settings-nav-item"
+                        onClick={() => setContent('Snapshots')}>
+                        <span>Snapshots</span>
+                        <AngleRight/>
+                    </div>
+                    <div 
+                        className="settings-nav-item"
+                        onClick={() => setContent('Support')}>
+                        <span>Support</span>
+                        <AngleRight/>
+                    </div>
+                    <div 
+                        className="settings-nav-item"
+                        onClick={() => setContent('Account')}>
+                        <span>Account</span>
+                        <AngleRight/>
+                    </div>                
+                </div>
 
-            <div className="settings-content">
-                <h3 className="section-title">Snapshots</h3>
-                <ul className="settings-list">
-                    <li>Archived Reports (X frequency)</li>
-                </ul>
-            </div>
-
-            <div className="settings-content">
-                <h3 className="section-title">Support</h3>
-                <ul className="settings-list">
-                    <li>Terms of Service</li>
-                    <li>Privacy Policy</li>
-                    <li>Support</li>
-                </ul>
-            </div>
-
-            {user?.is_org_admin && (
                 <div className="settings-content">
-                    <h3 className="section-title">Admin</h3>
+                    {getContent()}
+                </div>
+            </div>
+            
+            {/* {user?.is_org_admin && (
+                <div className="settings-content">
                     <ul className="settings-list">
                         <li className=""
                             onClick={handleModalOpen}>
@@ -99,14 +136,13 @@ const SettingsPage = () => {
             )}
 
             <div className="settings-content">
-                <h3 className="section-title">Account</h3>
                 <ul className="settings-list">
                     <li>Reset password</li>
                     <li className="logout" onClick={handleLogout}>
                         Log out
                     </li>
                 </ul>
-            </div>
+            </div> */}
 
             {modalOpen && (
                 <ModalPage
