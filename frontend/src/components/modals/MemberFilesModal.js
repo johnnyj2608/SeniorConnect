@@ -52,14 +52,14 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     <label>Upload File *</label>
                     <div className="file-container">
                         <button
-                            className="custom-file-button"
+                            className="action-button thin"
                             onClick={() => document.getElementById('hiddenFileInput').click()}
                             disabled={disabled}
                         >
                             Choose File
                         </button>
                         {!disabled && (
-                            <span className={`uploaded-file-name ${!current.file ? 'no-file-chosen' : ''}`}>
+                            <span className={`uploaded-file-name ${!current.file ? 'file-expired' : ''}`}>
                                 {current.file ? 'File chosen' : 'No file chosen'}
                             </span>
                         )}
@@ -95,7 +95,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
 
                 <div className="file-footer">
                     <button
-                        className="action-button"
+                        className="action-button thin"
                         onClick={() => viewFile(current.file)}
                         disabled={disabled || !current.file}
                     >

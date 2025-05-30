@@ -39,14 +39,16 @@ const ReportAuditsTable = ({ report }) => {
                                 </Link>
                             </td>
                             <td>{entry.model_name}</td>
-                            <td className="report-dropdown">
-                                {colorAudit(entry.action_type)}{' '}
-                                {showDropdown && (
-                                <DropdownButton
-                                    showDetails={isExpanded}
-                                    toggleDetails={() => toggleDetails(entry.id)}
-                                />
-                                )}
+                            <td>
+                                <span className="report-dropdown">
+                                    {colorAudit(entry.action_type)}{' '}
+                                    {showDropdown && (
+                                    <DropdownButton
+                                        showDetails={isExpanded}
+                                        toggleDetails={() => toggleDetails(entry.id)}
+                                    />
+                                    )}
+                                </span>
                             </td>
                             <td>{entry.user_name}</td>
                             <td>{formatDate(entry.timestamp)}</td>

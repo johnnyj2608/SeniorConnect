@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 const SearchInput = ({ value, onChange }) => {
   return (
-    <input className="member-search"
+    <input
       type="text"
       placeholder={'Search ID or Name'}
       value={value}

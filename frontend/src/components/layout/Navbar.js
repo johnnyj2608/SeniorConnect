@@ -49,22 +49,23 @@ const Navbar = () => {
   return (
     <div className="app-header">
       <h1>Senior Connect</h1>
+      <span>
+        <button
+          className="navbar-toggle"
+          ref={toggleRef}
+          onClick={() => setNavbarOpen((prev) => !prev)}
+        >
+          <MenuIcon />
+        </button>
 
-      <button
-        className="navbar-toggle"
-        ref={toggleRef}
-        onClick={() => setNavbarOpen((prev) => !prev)}
-      >
-        <MenuIcon />
-      </button>
-
-      <div className={`nav-links ${navbarOpen ? 'open' : ''}`} ref={navRef}>
-        {navLinks.map(({ path, label }) => (
-          <button key={path} onClick={() => handleNavigate(path)}>
-            <span className="button-text">{label}</span>
-          </button>
-        ))}
-      </div>
+        <div className={`nav-links ${navbarOpen ? 'open' : ''}`} ref={navRef}>
+          {navLinks.map(({ path, label }) => (
+            <button key={path} onClick={() => handleNavigate(path)}>
+              <span className="button-text">{label}</span>
+            </button>
+          ))}
+        </div>
+      </span>
     </div>
   );
 };

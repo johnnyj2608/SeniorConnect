@@ -14,7 +14,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="home-grid">
+      <div className="home-content content-margins">
         <div className="home-main-panel">
           <StatsCard />
           <AbsencesCard />

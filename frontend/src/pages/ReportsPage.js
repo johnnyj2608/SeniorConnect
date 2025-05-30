@@ -149,7 +149,7 @@ const ReportsPage = () => {
                 </div>
             </div>
             
-            <div className="report-results">
+            <div className="reports-content content-margins">
                 {report.length > 0 && getReportContent()}
             </div>
         </>

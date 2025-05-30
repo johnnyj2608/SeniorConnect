@@ -18,7 +18,7 @@ const FileItem = ({ file }) => {
             data-tooltip={tooltipText}
             >
             <FileIcon className="file-icon" />
-            <p className={`file-name ${isExpired ? 'file-name-expired' : ''}`}>
+            <p className={`file-name ${isExpired ? 'file-expired' : ''}`}>
                 {file.name}
             </p>
         </div>

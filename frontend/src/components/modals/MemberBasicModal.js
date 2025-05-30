@@ -139,7 +139,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
-                <label htmlFor="image-upload" className="image-upload">
+                <label htmlFor="image-upload" className="action-button thin">
                     Choose Photo
                 </label>
                 <input
@@ -151,7 +151,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 />
             </div>
 
-            <div className="member-detail">
+            <div className="member-detail stack">
                 <label>Birth Date *</label>
                 <input
                     type="date"
@@ -160,7 +160,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 />
             </div>
 
-            <div className="member-detail">
+            <div className="member-detail stack">
                 <label>Gender *</label>
                 <div className="radio-group">
                     <label>Male</label>
@@ -182,7 +182,7 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
                 </div>
             </div>
 
-            <div className="member-detail">
+            <div className="member-detail stack">
                 <label>Language</label>
                 <select 
                     value={data?.language || 0} 

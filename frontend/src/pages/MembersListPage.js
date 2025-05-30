@@ -83,6 +83,8 @@ const MembersListPage = () => {
 		return acc;
 	}, {});
 
+  const totalFiltered = Object.values(filteredMembers).flat().length;
+
 	return (
 		<>
 			<div className="page-header">
@@ -129,12 +131,12 @@ const MembersListPage = () => {
 					</div>
 
 					<p className="members-count">
-						{/* {totalFilteredMembers} {totalFilteredMembers === 1 ? 'result' : 'results'} */}
+						{totalFiltered} {totalFiltered === 1 ? 'result' : 'results'}
 					</p>
 				</div>
 			</div>
 
-			<div className="members-list-content">
+			<div className="members-list-content content-margins">
 				{Object.entries(filteredMembers).map(([mltcName, memberList]) => (
 				<div key={mltcName}>
 					<h3 className="section-title">{mltcName}</h3>
