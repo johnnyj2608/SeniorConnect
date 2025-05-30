@@ -124,7 +124,7 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
       <button
-        className={`action-button ${status ? 'caution' : ''}`}
+        className="action-button"
         onClick={handleStatus}
       >
         {status ? 'Deactivate' : 'Activate'}

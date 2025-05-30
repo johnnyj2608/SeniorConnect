@@ -122,7 +122,7 @@ const MembersListPage = () => {
 								<Switch
 								checked={showInactive}
 								onChange={() => setShowInactive(!showInactive)}
-								onColor="#76A9FA"
+								onColor="#6366F1"
 								/>
 							</div>
 						</div>

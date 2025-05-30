@@ -23,7 +23,7 @@ const colorAbsence = (status) => {
         case 'Upcoming':
             return (
             <>
-                <span className="orange">Upcoming</span>
+                <span className="yellow">Upcoming</span>
             </>
             );
         default:
@@ -48,7 +48,7 @@ const colorEnrollment = (status, old_mltc, new_mltc) => {
         case 'Transfer':
             return (
             <>
-                <span className="orange">Transferred:</span> {old_mltc} → {new_mltc}
+                <span className="yellow">Transferred:</span> {old_mltc} → {new_mltc}
             </>
             );
         default:
@@ -73,7 +73,7 @@ const colorAudit = (status) => {
         case 'Update':
             return (
             <>
-                <span className="orange">Update</span>
+                <span className="yellow">Update</span>
             </>
             );
         default:
