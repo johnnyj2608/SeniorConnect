@@ -31,9 +31,24 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: item.contact_type,
                 };
             case 'absences':
-                return { 
-                    heading: item.absence_type || 'Unknown', 
-                    subheading: item.status,
+                const today = new Date();
+                const start = item.start_date ? new Date(item.start_date) : null;
+                const end = item.end_date ? new Date(item.end_date) : null;
+                let status = '';
+
+                if (!start) {
+                    status = '';
+                } else if (start > today) {
+                    status = 'Upcoming';
+                } else if (end && end < today) {
+                    status = 'Completed';
+                } else if (start <= today && (!end || end >= today)) {
+                    status = 'Ongoing';
+                }
+
+                return {
+                    heading: item.absence_type || 'Unknown',
+                    subheading: status,
                 };
             case 'files':
                 return { 

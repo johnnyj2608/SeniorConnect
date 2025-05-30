@@ -5,7 +5,6 @@ from django.utils import timezone
 
 class AbsenceSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
 
     class Meta:
         model = Absence
@@ -21,21 +20,6 @@ class AbsenceSerializer(serializers.ModelSerializer):
         if member:
             return f"{member.sadc_member_id}. {member.last_name}, {member.first_name}"
         return None
-    
-    def get_status(self, obj):
-        today = timezone.now().date()
-        start = obj.start_date
-        end = obj.end_date
-
-        if not start:
-            return ''
-        elif start > today:
-            return 'Upcoming'
-        elif end and end < today:
-            return 'Completed'
-        elif start <= today and (end is None or end >= today):
-            return 'Ongoing'
-        return ''
 
     def validate(self, data):
         start = data.get('start_date')

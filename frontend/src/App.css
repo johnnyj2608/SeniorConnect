@@ -828,10 +828,19 @@ body.modal-open {
 }
 
 .schedule-container {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
   justify-content: center;
+  width: 100%;
+}
+
+.schedule-container label:nth-child(7) {
+  grid-column: span 2;
+  justify-self: center;
+}
+
+.schedule-container > label {
+  width: auto;
 }
 
 .modal-checkbox-heading {

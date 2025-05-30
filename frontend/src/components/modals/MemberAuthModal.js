@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { sortSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
+const daysOfWeek = [
+    "Monday",
+    "Thursday",
+    "Tuesday",
+    "Friday",
+    "Wednesday",
+    "Saturday",
+    "Sunday"
+];
+
 const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) => {
     const [mltcOptions, setMltcOptions] = useState([]);
     const current = data[activeTab] || {};
@@ -36,16 +46,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
 
         handleChange('schedule')({ target: { value: sortedSchedule } });
     };
-
-    const daysOfWeek = [
-        { label: "Monday", value: "Monday" },
-        { label: "Thursday", value: "Thursday" },
-        { label: "Tuesday", value: "Tuesday" },
-        { label: "Friday", value: "Friday" },
-        { label: "Wednesday", value: "Wednesday" },
-        { label: "Saturday", value: "Saturday" },
-        { label: "Sunday", value: "Sunday" },
-    ];
 
     const disabled = data.filter(tab => !tab.deleted).length <= 0
 
@@ -106,17 +106,17 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                 <label>Schedule</label>
                 <div className="schedule-container">
                     {daysOfWeek.map(day => (
-                        <label key={day.value}>
-                            <input
-                                type="checkbox"
-                                value={day.value}
-                                checked={disabled ? false : current.schedule?.includes(day.value) || false}
-                                onChange={handleScheduleChange(day.value)}
-                                disabled={disabled}
-                            />
-                            {day.label}
-                        </label>
-                    ))}
+                    <label key={day}>
+                        <input
+                            type="checkbox"
+                            value={day}
+                            checked={disabled ? false : current.schedule?.includes(day) || false}
+                            onChange={handleScheduleChange(day)}
+                            disabled={disabled}
+                        />
+                        {day}
+                    </label>
+                ))}
                 </div>
             </div>
             <div className="member-detail">

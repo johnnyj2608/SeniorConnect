@@ -1,42 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
 import viewFile from '../../utils/viewFile';
+import useDragAndDrop from '../../hooks/useDragDrop';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const current = data[activeTab] || {};
-    const [isDragging, setIsDragging] = useState(false);
+    const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            const fakeEvent = { target: { files: [file] } };
-            handleChange('file')(fakeEvent);
-        }
+    const onDropFile = (file) => {
+        const fakeEvent = { target: { files: [file] } };
+        handleChange('file')(fakeEvent);
     };
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = () => {
-        setIsDragging(false);
-    };
-
-    const disabled = data.filter(tab => !tab.deleted).length <= 0
+    const { isDragging, dragProps } = useDragAndDrop(onDropFile);
 
     return (
-        <div
-            className={`file-drop ${isDragging ? 'drag-over' : ''}`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-        >
+        <div className={`file-drop ${isDragging ? 'drag-over' : ''}`} {...dragProps}>
             <div className={`file-content ${isDragging ? 'dimmed' : ''}`}>
-
                 <div className="member-detail">
                     <label>Name *</label>
                     <input
@@ -101,7 +81,6 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                     >
                         View File
                     </button>
-
                 </div>
             </div>
 
