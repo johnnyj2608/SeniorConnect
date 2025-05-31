@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
@@ -22,7 +23,7 @@ class AuditLog(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     timestamp = models.DateTimeField(auto_now_add=True)
-    changes = models.JSONField(null=True, blank=True)
+    changes = models.JSONField(null=True, blank=True, encoder=DjangoJSONEncoder)
     member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL, related_name='audit_logs')
     object_display = models.CharField(max_length=255, blank=True, null=True)
 

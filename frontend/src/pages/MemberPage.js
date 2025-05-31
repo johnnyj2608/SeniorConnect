@@ -103,8 +103,12 @@ const MemberPage = () => {
       <div className="member-row">
         <MemberInfoCard data={memberData?.info} onEdit={handleModalOpen} />
         <MemberAuthCard id={id} data={memberData?.auth} onEdit={handleModalOpen} />
+      </div>
+      <div className="member-row">
         <MemberContactsCard data={memberData?.contacts} onEdit={handleModalOpen} />
         <MemberAbsencesCard data={memberData?.absences} onEdit={handleModalOpen} />
+      </div>
+      <div className="member-row">
         <MemberFilesCard data={memberData?.files} onEdit={handleModalOpen} />
       </div>
       <div className="member-row">

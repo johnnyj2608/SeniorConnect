@@ -24,6 +24,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return { 
                     heading: item.mltc || 'Unknown', 
                     subheading: status,
+                    inactive: status === 'Expired',
                 };
             case 'contacts':
                 return { 
@@ -47,6 +48,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return {
                     heading: item.absence_type || 'Unknown',
                     subheading: status,
+                    inactive: status === 'Completed',
                 };
             case 'files':
                 return { 
@@ -66,7 +68,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
 
     const { heading, subheading, inactive: inactive } = getTabLabel(type, tab, index); 
     const isActive = activeTab === index;
-    const isExpired = subheading === 'Expired' || inactive;
+    const isExpired = inactive;
     const isEdited = tab.edited === true;
 
     return (

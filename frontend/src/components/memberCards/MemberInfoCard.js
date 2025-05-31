@@ -12,7 +12,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
 
   return (
 		<div className="half-card">
-			<h2>Details</h2>
+			<h2>Info</h2>
 			<div className="card-container">
 				<EditButton onClick={handleEdit} />
 				<DetailRow label="Member ID" value={info.sadc_member_id} />
