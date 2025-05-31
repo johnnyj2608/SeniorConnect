@@ -1,31 +1,12 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { memo } from 'react';
 import EditButton from '../buttons/EditButton';
 import FileItem from '../items/FileItem';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberFilesCard = ({ id, onEdit }) => {
-    const [files, setFiles] = useState([]);
-
-    useEffect(() => {
-        if (id === 'new') return;
-
-        const getFilesByMember = async () => {
-            try {
-                const response = await fetchWithRefresh(`/core/files/member/${id}`);
-                if (!response.ok) return;
-
-                const data = await response.json();
-                setFiles(data);
-            } catch (error) {
-                console.error('Failed to fetch files by member:', error);
-            }
-        };
-
-        getFilesByMember();
-    }, [id]);
+const MemberFilesCard = ({ data, onEdit }) => {
+    const files = data || [];
 
     const handleEdit = () => {
-        onEdit('files', files, setFiles);
+        onEdit('files', files);
     };
 
     return (
@@ -42,8 +23,8 @@ const MemberFilesCard = ({ id, onEdit }) => {
                 ) : (
                     <p>No files uploaded</p>
                 )}
+            </div>
         </div>
-    </div>
     );
 };
 

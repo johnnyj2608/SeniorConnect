@@ -10,6 +10,7 @@ from ..utils.member_utils import (
     getActiveMemberStats,
     getUpcomingBirthdays,
     toggleMemberStatus,
+    getMemberDetailFull,
 )
 
 @api_view(['GET', 'POST'])
@@ -52,3 +53,8 @@ def getMembersStats(request):
 def getMembersBirthdays(request):
     if request.method == 'GET':
         return getUpcomingBirthdays(request)
+    
+@api_view(['GET'])
+def getMemberFull(request, pk):
+    if request.method == 'GET':
+        return getMemberDetailFull(request, pk)

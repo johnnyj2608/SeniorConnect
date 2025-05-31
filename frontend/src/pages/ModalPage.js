@@ -23,7 +23,7 @@ const ModalPage = ({ data, onClose }) => {
 
     const getModalContent = () => {
         switch (type) {
-            case 'basic':
+            case 'info':
                 return <MemberInfoModal data={localData} handleChange={handleChange} />;
             case 'authorizations':
                 return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} handleActiveToggle={handleActiveToggle} />;
@@ -43,7 +43,7 @@ const ModalPage = ({ data, onClose }) => {
     const add_tab = useMemo(() => ({ add: true }), []);
 
     const showDeleteButton =
-        type !== 'basic' &&
+        type !== 'info' &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin;
 
@@ -51,15 +51,15 @@ const ModalPage = ({ data, onClose }) => {
         <div className="modal">
             <div className="modal-body">
                 <div className="modal-main">
-                    {type === 'basic' && (
-                        <div className="modal-tabs modal-tabs-basic">
+                    {type === 'info' && (
+                        <div className="modal-tabs modal-tabs-info">
                             <MemberInfoSideModal data={localData} handleChange={handleChange} />
                         </div>
                     )}
                     <div className="modal-content">
                         {getModalContent()}
                     </div>
-                    {type !== 'basic' && (
+                    {type !== 'info' && (
                         <div className="modal-tabs">
                             <ModalTabs
                                 key="new-tab"

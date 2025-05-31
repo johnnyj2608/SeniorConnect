@@ -21,7 +21,7 @@ function useModal(data, onClose) {
         Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
     ), [data]);
 
-    const [localData, setLocalData] = useState(type === 'basic' ? { ...data.data } : originalData);
+    const [localData, setLocalData] = useState(type === 'info' ? { ...data.data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
     const newTab = useMemo(() => getNewTab(type, localData, id), [type, localData, id]);
@@ -38,7 +38,7 @@ function useModal(data, onClose) {
         const newValue = files?.[0] ?? (field.includes('date') && value === '' ? null : value);
 
         setLocalData((prevData) => {
-            if (type !== 'basic') {
+            if (type !== 'info') {
                 const currentTab = prevData[activeTab];
                 const updatedTab = {
                     ...currentTab,
@@ -104,22 +104,28 @@ function useModal(data, onClose) {
 
     const updateState = (savedData) => {
         if (!data?.setData) return;
-
-        switch (type) {
-            case 'authorizations':
-                const activeAuthIndex = getActiveAuthIndex(savedData);
-                data.setData(savedData[activeAuthIndex]);
-                break;
-            case 'basic':
-            case 'contacts':
-            case 'absences':
-            case 'files':
-                data.setData(savedData);
-                break;
-            default:
+      
+        data.setData(prev => {
+            if (!prev) return prev;
+        
+            switch (type) {
+                case 'info':
+                    return { ...prev, info: savedData };
+                case 'contacts':
+                    return { ...prev, contacts: savedData };
+                case 'absences':
+                    return { ...prev, absences: savedData };
+                case 'files':
+                    return { ...prev, files: savedData };
+                case 'authorizations':
+                    const activeAuthIndex = getActiveAuthIndex(savedData);
+                    const activeAuth = savedData[activeAuthIndex];
+                    return { ...prev, auth: activeAuth };
+                default:
                 console.error("Unknown update type:", type);
-                return;
-        }
+                return prev;
+            }
+        });
     };
 
     const handleSave = async (updatedData) => {
@@ -128,7 +134,7 @@ function useModal(data, onClose) {
         let dependentFields = [];
 
         switch (type) {
-            case 'basic':
+            case 'info':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
                 if (!validateRequiredFields(updatedData, requiredFields)) return;
                 if (!validateInputLength(10, updatedData.phone)) return;

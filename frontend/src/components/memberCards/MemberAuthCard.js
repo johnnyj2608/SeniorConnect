@@ -1,36 +1,19 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { memo } from 'react';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberAuthCard = ({ id, onEdit }) => {
-    const [auth, setAuth] = useState(null);
-
-    useEffect(() => {
-			if (id === 'new') return;
-
-			const getActiveAuthByMember = async () => {
-				try {
-					const response = await fetchWithRefresh(`/core/members/${id}/auth/`);
-					if (!response.ok) return;
-						const data = await response.json();
-						setAuth(data);
-					} catch (error) {
-						console.error('Failed to fetch active auth by member:', error);
-					}
-			};
-
-			getActiveAuthByMember();
-		}, [id]);
+const MemberAuthCard = ({ id, data, onEdit }) => {
+    const auth = data || [];
 
     const handleEdit = async () => {
         try {
             const response = await fetchWithRefresh(`/core/auths/member/${id}`);
             if (!response.ok) return;
 
-            const data = await response.json();
-            onEdit('authorizations', data, setAuth);
+            const auths = await response.json();
+            onEdit('authorizations', auths);
         } catch (error) {
             console.error('Failed to fetch auths for edit:', error);
         }

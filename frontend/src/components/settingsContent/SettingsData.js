@@ -44,10 +44,7 @@ const SettingsData = () => {
         </button>
 
         {modalOpen && (
-          <ModalPage
-            data={modalData}
-            onClose={handleModalClose}
-          />
+          <ModalPage data={modalData} onClose={handleModalClose} />
         )}
       </div>
     </>

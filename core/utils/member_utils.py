@@ -13,9 +13,16 @@ from ..serializers.member_serializers import (
     MemberListSerializer,
     MemberBirthdaySerializer
 )
+from ..serializers.absence_serializers import Absence, AbsenceSerializer
 from ..serializers.authorization_serializers import AuthorizationSerializer
+from ..serializers.contact_serializers import Contact, ContactSerializer
+from ..serializers.file_serializers import File, FileSerializer
 from django.utils.text import slugify
-from core.utils.supabase import *
+from core.utils.supabase import (
+    upload_file_to_supabase,
+    delete_file_from_supabase,
+    delete_folder_from_supabase
+)
 from .handle_serializer import handle_serializer
 
 def getMemberList(request):
@@ -198,3 +205,18 @@ def toggleMemberStatus(request, pk):
     member.active = not member.active
     member.save()
     return Response({"active": member.active}, status=status.HTTP_200_OK)
+
+def getMemberDetailFull(request, pk):
+    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
+
+    absences = Absence.objects.filter(member=pk)
+    contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)
+    files = File.objects.filter(member=pk)
+
+    return Response({
+        'info': MemberSerializer(member).data,
+        'auth': AuthorizationSerializer(member.active_auth).data if member.active_auth else None,
+        'absences': AbsenceSerializer(absences, many=True).data,
+        'contacts': ContactSerializer(contacts, many=True).data,
+        'files': FileSerializer(files, many=True).data
+    }, status=status.HTTP_200_OK)

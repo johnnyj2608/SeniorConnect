@@ -15,6 +15,7 @@ urlpatterns = [
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
     path('members/birthdays/', member_views.getMembersBirthdays, name="members_birthdays"),
     path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
+    path('members/<str:pk>/full/', member_views.getMemberFull, name="member_full"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),
     

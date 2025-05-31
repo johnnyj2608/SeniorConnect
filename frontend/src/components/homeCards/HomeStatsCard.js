@@ -48,14 +48,13 @@ const HomeStatsCard = () => {
       <h2>Members</h2>
       <div className="card-container">
         <div className="stats-container">
-          <h3 className="stats-count">{stats ? `${stats.active_count}` : '...'}</h3>
-          <p className="stats-change ">
+          <h3 className="stats-count">{stats ? stats.active_count : '...'}</h3>
+          <p className="stats-change">
             {colorStats(stats?.active_count, change?.Overall ?? 0)}
           </p>
           <DropdownButton 
             showDetails={showDetails} 
             toggleDetails={toggleDetails} 
-            className="dark"
           />
           {showDetails && stats?.mltc_count && (
           <div className="stats-mltcs">
