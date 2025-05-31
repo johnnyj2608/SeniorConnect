@@ -82,6 +82,19 @@ const formatPhoto = (photo) => {
   return "/default-profile.jpg";
 };
 
+function formatStatus(startDateStr, endDateStr) {
+  const today = new Date();
+  const start = startDateStr ? new Date(startDateStr) : null;
+  const end = endDateStr ? new Date(endDateStr) : null;
+
+  if (!start) return '';
+  if (start > today) return 'Upcoming';
+  if (end && end < today) return 'Completed';
+  if (start <= today && (!end || end >= today)) return 'Ongoing';
+
+  return '';
+}
+
 const normalizeField = (str) => {
   if (!str) return '';
   return str.toLowerCase().replace(/\s+/g, '_');
@@ -95,5 +108,6 @@ export {
   sortSchedule,
   formatSSN,
   formatPhoto,
+  formatStatus,
   normalizeField,
 };

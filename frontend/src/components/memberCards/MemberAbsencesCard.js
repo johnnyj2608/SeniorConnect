@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
-import { formatDate } from '../../utils/formatUtils';
+import { formatDate, formatStatus } from '../../utils/formatUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {
   	const absences = data || [];
@@ -31,6 +31,7 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						<DetailRow label="Absence Type" value={abs.absence_type} />
 						<DetailRow label="Start Date" value={formatDate(abs.start_date)} />
 						<DetailRow label="End Date" value={formatDate(abs.end_date)} />
+						<DetailRow label="Status" value={formatStatus(abs.start_date, abs.end_date)} />
 						{abs.note && <DetailRow label="Note" value={abs.note} />}
 					</li>
 					))}
