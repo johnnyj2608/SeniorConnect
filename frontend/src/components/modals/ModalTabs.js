@@ -31,10 +31,8 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: item.contact_type,
                 };
             case 'absences':
-                const today = new Date();
                 const start = item.start_date ? new Date(item.start_date) : null;
                 const end = item.end_date ? new Date(item.end_date) : null;
-                let status = '';
 
                 if (!start) {
                     status = '';

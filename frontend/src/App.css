@@ -290,10 +290,8 @@ input[type="number"]::-webkit-inner-spin-button {
   Content
 -------------- */
 
-.content-margins {
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-bottom: 3%;
+.content-padding {
+  padding: 2% 5%;
 }
 
 .page-header {
@@ -302,6 +300,7 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: var(--color-content);
   width: 100%;
   z-index: 99;
+  padding-top: 10px;
   padding-bottom: 10px;
 }
 
@@ -324,7 +323,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .section-title {
   font-size: 25px;
-  padding-top: 20px;
   padding-left: 20px;
   padding-bottom: 5px;
   border-bottom: 1px solid var(--color-text);
@@ -414,6 +412,7 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   border-radius: 8px;
   white-space: nowrap;
+  transition: all 0.2s ease-in-out;
 }
 
 .action-button.thin {
@@ -446,7 +445,6 @@ input[type="number"]::-webkit-inner-spin-button {
 .home-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  margin-top: 1rem;
 }
 
 .home-main-panel {
@@ -462,6 +460,7 @@ input[type="number"]::-webkit-inner-spin-button {
   transition: transform 0.2s ease;
   cursor: pointer;
   border-radius: 4px;
+  gap: 1rem;
 }
 
 .home-item:hover {
@@ -595,8 +594,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .floating-button {
   font-size: 48px;
   position: fixed;
-  bottom: 24px;
-  right: 16px;
+  bottom: 25px;
+  right: 50px;
   background: var(--color-main);
   border: none;
   width: 60px;
@@ -607,6 +606,11 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: center;
   cursor: pointer;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.floating-button:hover {
+  background-color: var(--color-main-dark);
 }
 
 /* --------------
@@ -707,8 +711,6 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 0 20px;
-  margin-bottom: 10px;
 }
 
 .photo-container {
@@ -843,8 +845,11 @@ body.modal-open {
   width: auto;
 }
 
-.modal-checkbox-heading {
+.modal-header {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  padding: 5px 10px;
 }
 
 .modal-checkbox-heading > h3 {
@@ -1117,7 +1122,7 @@ body.modal-open {
 }
 
 .pagination-page {
-  padding: 3px;
+  padding: 4px !important;
   border-radius: 4px;
   border: none;
   text-align: center;
@@ -1153,7 +1158,6 @@ body.modal-open {
 .reports-content {
   overflow-x: auto;
   overscroll-behavior: auto;
-  margin-top: 20px;
 }
 
 .report-table {
@@ -1173,6 +1177,7 @@ body.modal-open {
 }
 
 .report-table th {
+  padding-top: 0;
   background-color: var(--color-background);
 }
 
@@ -1226,6 +1231,7 @@ body.modal-open {
   font-size: 25px;
   padding: 12.5px 10px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .settings-nav-item > span {

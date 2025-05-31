@@ -14,11 +14,10 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="home-content content-margins">
+      <div className="home-content content-padding">
         <div className="home-main-panel">
           <StatsCard />
           <AbsencesCard />
-          
           <SnapshotsCard />
         </div>
         <div className="home-side-panel">

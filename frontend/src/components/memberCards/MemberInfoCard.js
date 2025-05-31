@@ -4,7 +4,7 @@ import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
+const MemberInfoCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
   const [member, setMember] = useState(null);
 
     useEffect(() => {
@@ -64,4 +64,4 @@ const MemberDetailsCard = ({ id, onEdit, onPhotoUpdate, onStatusUpdate }) => {
   );
 };
 
-export default memo(MemberDetailsCard);
+export default memo(MemberInfoCard);

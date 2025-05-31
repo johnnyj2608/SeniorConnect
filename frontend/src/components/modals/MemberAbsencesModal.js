@@ -13,7 +13,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
 
     return (
         <>
-            <div className="member-detail modal-checkbox-heading">
+            <div className="modal-header">
             <h3>Edit Absences</h3>
                 <label>
                     <input

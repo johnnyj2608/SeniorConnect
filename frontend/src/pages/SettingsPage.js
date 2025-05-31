@@ -61,7 +61,7 @@ const SettingsPage = () => {
                 </div>
             </div>
 
-            <div className="settings-body content-margins">
+            <div className="settings-body content-padding">
                 <div className="settings-nav">
                 {sections.map((section) => (
                     <SettingsItem

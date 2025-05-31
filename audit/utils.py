@@ -46,7 +46,10 @@ def getRecentAudits(request):
     recent_audits = (
         AuditLog.objects
         .select_related('user', 'content_type', 'member')
-        .filter(timestamp__gte=seven_days_ago)
+        .filter(
+            timestamp__gte=seven_days_ago,
+            member__isnull=False
+        )
         .annotate(date=TruncDate('timestamp'))
         .order_by('-timestamp')[:20]
     )

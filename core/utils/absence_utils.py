@@ -60,11 +60,15 @@ def getUpcomingAbsences(request):
     in_7_days = today + timedelta(days=7)
 
     leaving = Absence.objects.filter(
-        start_date__range=(today, in_7_days)
+        start_date__range=(today, in_7_days),
+        member__isnull=False
     ).select_related('member')[:20]
 
     returning = (
-        Absence.objects.filter(end_date__range=(today, in_7_days))
+        Absence.objects.filter(
+            end_date__range=(today, in_7_days),
+            member__isnull=False
+        )
         .exclude(pk__in=leaving.values_list('pk', flat=True))
         .select_related('member')[:20]
     )

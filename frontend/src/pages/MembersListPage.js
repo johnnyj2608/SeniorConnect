@@ -6,6 +6,7 @@ import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import { useLocation } from 'react-router-dom';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
+import useFilteredMembers from '../hooks/useFilteredMembers';
 
 const MembersListPage = () => {
 	const location = useLocation();
@@ -21,17 +22,14 @@ const MembersListPage = () => {
 	const getMembers = async () => {
 		const params = new URLSearchParams();
 		if (mltcFilter) params.append('filter', mltcFilter);
-		if (showInactive) {
-			params.append('show_inactive', 'true');
-		}
-		const url = `/core/members?${params.toString()}`;
+		if (showInactive) params.append('show_inactive', 'true');
 
 		try {
-			const response = await fetchWithRefresh(url);
-			if (!response.ok) return;
-
-			const data = await response.json();
-			setMembers(data);
+			const response = await fetchWithRefresh(`/core/members?${params.toString()}`);
+			if (response.ok) {
+				const data = await response.json();
+				setMembers(data);
+			}
 		} catch (error) {
 			console.error(error);
 		}
@@ -40,9 +38,7 @@ const MembersListPage = () => {
 	const getMltcOptions = async () => {
 		try {
 			const response = await fetchWithRefresh('/core/mltcs/');
-			if (!response.ok) {
-				throw new Error('Failed to fetch MLTC options');
-			}
+			if (!response.ok) throw new Error('Failed to fetch MLTC options');
 			const data = await response.json();
 			setMltcOptions(data);
 		} catch (error) {
@@ -65,49 +61,26 @@ const MembersListPage = () => {
 		}
 	}, [mltcQueryParam, mltcFilter]);
 
-	const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-	const filteredMembers = Object.entries(members).reduce((acc, [mltcName, memberList]) => {
-		const filteredList = memberList.filter(member => {
-			const searchableFields = [
-				member.sadc_member_id,
-				member.first_name,
-				member.last_name,
-			].map(field => (field ? field.toString().toLowerCase() : ''));
-
-			return normalizedSearchQuery === '' || searchableFields.some(field => field.includes(normalizedSearchQuery));
-		});
-
-		if (filteredList.length > 0) {
-			acc[mltcName] = filteredList;
-		}
-		return acc;
-	}, {});
-
-  const totalFiltered = Object.values(filteredMembers).flat().length;
+	const { filteredMembers, totalFiltered } = useFilteredMembers({ members, searchQuery });
 
 	return (
 		<>
 			<div className="page-header">
 				<div className="page-title-row">
 					<h2 className="page-title">&#9782; Members</h2>
-					<h2>
-						<DownloadButton members={members} />
-					</h2>
+					<DownloadButton members={members} />
 				</div>
 
 				<div className="filter-row">
 					<div className="filter-content">
 						<div className="filter-option">
 							<label>MLTC Filter</label>
-							<select
-								value={mltcFilter}
-								onChange={(e) => setMltcFilter(e.target.value)}
-							>
+							<select value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)}>
 								<option value="">Select an option</option>
 								{mltcOptions.map((option) => (
-								<option key={option.name} value={option.name}>
-									{option.name}
-								</option>
+									<option key={option.name} value={option.name}>
+										{option.name}
+									</option>
 								))}
 								<option value="Unknown">Unknown</option>
 							</select>
@@ -122,9 +95,9 @@ const MembersListPage = () => {
 							<label>Inactive</label>
 							<div className="switch-container">
 								<Switch
-								checked={showInactive}
-								onChange={() => setShowInactive(!showInactive)}
-								onColor="#6366F1"
+									checked={showInactive}
+									onChange={() => setShowInactive(!showInactive)}
+									onColor="#6366F1"
 								/>
 							</div>
 						</div>
@@ -136,16 +109,16 @@ const MembersListPage = () => {
 				</div>
 			</div>
 
-			<div className="members-list-content content-margins">
+			<div className="members-list-content content-padding">
 				{Object.entries(filteredMembers).map(([mltcName, memberList]) => (
-				<div key={mltcName}>
-					<h3 className="section-title">{mltcName}</h3>
-					<div className="members-list">
-					{memberList.map((member) => (
-						<ListItem key={member.id} member={member} />
-					))}
+					<div key={mltcName}>
+						<h3 className="section-title">{mltcName}</h3>
+						<div className="members-list">
+							{memberList.map((member) => (
+								<ListItem key={member.id} member={member} />
+							))}
+						</div>
 					</div>
-				</div>
 				))}
 			</div>
 

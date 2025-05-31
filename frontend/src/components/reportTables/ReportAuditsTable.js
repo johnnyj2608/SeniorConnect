@@ -57,7 +57,9 @@ const ReportAuditsTable = ({ report }) => {
                         {isExpanded && entry.changes && (
                         <tr>
                             <td colSpan={5}>
-                            <pre>{entry.changes}</pre>
+                                <span className="modal-main">
+                                    ↪<pre>{' '+entry.changes}</pre>
+                                </span>
                             </td>
                         </tr>
                         )}

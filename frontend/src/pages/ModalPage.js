@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { MemberBasicModal, MemberSideBasicModal } from '../components/modals/MemberBasicModal';
+import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
 import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
@@ -24,7 +24,7 @@ const ModalPage = ({ data, onClose }) => {
     const getModalContent = () => {
         switch (type) {
             case 'basic':
-                return <MemberBasicModal data={localData} handleChange={handleChange} />;
+                return <MemberInfoModal data={localData} handleChange={handleChange} />;
             case 'authorizations':
                 return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} handleActiveToggle={handleActiveToggle} />;
             case 'contacts':
@@ -42,7 +42,7 @@ const ModalPage = ({ data, onClose }) => {
 
     const add_tab = useMemo(() => ({ add: true }), []);
 
-    const showDeleteButton = 
+    const showDeleteButton =
         type !== 'basic' &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin;
@@ -53,7 +53,7 @@ const ModalPage = ({ data, onClose }) => {
                 <div className="modal-main">
                     {type === 'basic' && (
                         <div className="modal-tabs modal-tabs-basic">
-                            <MemberSideBasicModal data={localData} handleChange={handleChange} />
+                            <MemberInfoSideModal data={localData} handleChange={handleChange} />
                         </div>
                     )}
                     <div className="modal-content">
@@ -61,20 +61,20 @@ const ModalPage = ({ data, onClose }) => {
                     </div>
                     {type !== 'basic' && (
                         <div className="modal-tabs">
-                            <ModalTabs 
-                                key="new-tab" 
-                                index={-1} 
-                                handleTabClick={handleAdd} 
-                                tab={add_tab} 
+                            <ModalTabs
+                                key="new-tab"
+                                index={-1}
+                                handleTabClick={handleAdd}
+                                tab={add_tab}
                             />
                             {localData.map((tab, index) => (
-                                <ModalTabs 
-                                    key={index} 
-                                    index={index} 
-                                    activeTab={activeTab} 
-                                    handleTabClick={setActiveTab} 
-                                    type={type} 
-                                    tab={tab} 
+                                <ModalTabs
+                                    key={index}
+                                    index={index}
+                                    activeTab={activeTab}
+                                    handleTabClick={setActiveTab}
+                                    type={type}
+                                    tab={tab}
                                 />
                             ))}
                         </div>
@@ -83,8 +83,8 @@ const ModalPage = ({ data, onClose }) => {
                 <div className="modal-buttons-container">
                     <button className="action-button" onClick={() => onClose()}>Cancel</button>
                     {showDeleteButton && (
-                        <button 
-                            className="action-button destructive" 
+                        <button
+                            className="action-button destructive"
                             onClick={() => handleDelete(activeTab)}>
                             Delete
                         </button>

@@ -17,7 +17,7 @@ class AuditLogSerializer(serializers.ModelSerializer):
         changes = data.get('changes')
         if changes and isinstance(changes, dict):
             lines = []
-            if instance.object_display: lines.append('↪ '+instance.object_display)
+            if instance.object_display: lines.append(instance.object_display)
             for field, change in changes.items():
                 formatted_field = ' '.join(word.capitalize() for word in field.split('_'))
                 old = change.get('old')

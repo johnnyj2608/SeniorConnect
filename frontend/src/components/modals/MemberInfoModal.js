@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberBasicModal = ({ data, handleChange }) => {
+const MemberInfoModal = ({ data, handleChange }) => {
     return (
         <>
-            <h3>Edit Details</h3>
+            <div className="modal-header">
+                <h3>Edit Info</h3>
+            </div>
             <div className="member-detail">
                 <label>Member ID *</label>
                 <input
@@ -111,7 +113,7 @@ const MemberBasicModal = ({ data, handleChange }) => {
     );
 };
 
-const MemberSideBasicModal = ({ data, handleChange }) => {
+const MemberInfoSideModal = ({ data, handleChange }) => {
     const [languageOptions, setLanguageOptions] = useState([]);
 
     useEffect(() => {
@@ -199,4 +201,4 @@ const MemberSideBasicModal = ({ data, handleChange }) => {
     );
 };
 
-export { MemberBasicModal, MemberSideBasicModal };
+export { MemberInfoModal, MemberInfoSideModal };

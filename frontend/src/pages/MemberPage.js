@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
-import MemberDetailsCard from '../components/memberCards/MemberDetailsCard';
+import MemberInfoCard from '../components/memberCards/MemberInfoCard';
 import MemberAuthCard from '../components/memberCards/MemberAuthCard';
 import MemberContactsCard from '../components/memberCards/MemberContactsCard';
 import MemberAbsencesCard from '../components/memberCards/MemberAbsencesCard';
@@ -94,13 +94,13 @@ const MemberPage = () => {
   }, [id]);
 
   return (
-    <div className="member">
+    <div className="member content-padding">
       <MemberStatusBanner status={status} />
       <div className="member-row">
         <MemberPhotoCard photo={photo} /> 
       </div>
       <div className="member-row">
-        <MemberDetailsCard id={id}
+        <MemberInfoCard id={id}
           onEdit={handleModalOpen}
           onPhotoUpdate={handlePhotoUpdate}
           onStatusUpdate={handleStatusUpdate}

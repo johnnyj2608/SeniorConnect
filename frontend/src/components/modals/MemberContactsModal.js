@@ -31,7 +31,9 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
 
     return (
         <>
-            <h3>Edit Contacts</h3>
+            <div className="modal-header">
+                <h3>Edit Contacts</h3>
+            </div>
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <select 

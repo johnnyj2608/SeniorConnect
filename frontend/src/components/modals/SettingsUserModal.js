@@ -7,7 +7,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
 
     return (
         <>
-            <div className="member-detail modal-checkbox-heading">
+            <div className="modal-header">
                 <h3>Edit Users</h3>
                 {!adminUser && (
                     <label>

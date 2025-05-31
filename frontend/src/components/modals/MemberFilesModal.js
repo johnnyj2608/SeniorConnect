@@ -17,6 +17,10 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     return (
         <div className={`file-drop ${isDragging ? 'drag-over' : ''}`} {...dragProps}>
             <div className={`file-content ${isDragging ? 'dimmed' : ''}`}>
+                <div className="modal-header">
+                    <h3>Edit Files</h3>
+                </div>
+
                 <div className="member-detail">
                     <label>Name *</label>
                     <input
