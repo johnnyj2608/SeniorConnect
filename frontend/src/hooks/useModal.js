@@ -11,6 +11,7 @@ import {
     validateDateRange,
     validateInputLength,
     validateMedicaid,
+    confirmMltcDeletion,
  } from '../utils/validateUtils';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 
@@ -72,15 +73,17 @@ function useModal(data, onClose) {
     const handleAdd = useCallback(() => {
         setLocalData((prevData) => {
             const updatedData = [...prevData];
-            const activeAuthIndex = getActiveAuthIndex(updatedData);
-            const activeAuth = updatedData[activeAuthIndex];
-            if (activeAuth) {
-                const updatedTab = { ...activeAuth, active: false };
-                const isEdited = compareTabs(
-                    updatedTab,
-                    updatedTab.id === 'new' ? newTab : originalData[activeAuthIndex - newTabsCount]
-                );
-                updatedData[activeAuthIndex] = { ...updatedTab, edited: isEdited };
+            if (type === 'authorizations') {
+                const activeAuthIndex = getActiveAuthIndex(updatedData);
+                const activeAuth = updatedData[activeAuthIndex];
+                if (activeAuth) {
+                    const updatedTab = { ...activeAuth, active: false };
+                    const isEdited = compareTabs(
+                        updatedTab,
+                        updatedTab.id === 'new' ? newTab : originalData[activeAuthIndex - newTabsCount]
+                    );
+                    updatedData[activeAuthIndex] = { ...updatedTab, edited: isEdited };
+                }
             }
             updatedData.unshift(newTab);
             return updatedData;
@@ -209,9 +212,10 @@ function useModal(data, onClose) {
 
                 savedData = await saveDataTabs(updatedData, 'users', 'user');
                 break;
-            case 'users':
+            case 'mltcs':
                 requiredFields = ['name'];
                 if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!confirmMltcDeletion(updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'mltcs');
                 break;

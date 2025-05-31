@@ -6,6 +6,9 @@ class MLTC(models.Model):
     dx_codes = models.JSONField(default=list)
     active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['active',  'name']
+
     def __str__(self):
         return self.name
 

@@ -53,6 +53,7 @@ input:not([type="radio"]):not([type="checkbox"]) {
 
 input[type="checkbox"] {
   margin-right: 2px;
+  accent-color: var(--color-main);
 }
 
 select {
@@ -594,8 +595,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .floating-button {
   font-size: 48px;
   position: fixed;
-  bottom: 25px;
-  right: 50px;
+  bottom: 30px;
+  right: 60px;
   background: var(--color-main);
   border: none;
   width: 60px;
@@ -753,7 +754,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .member-detail {
   display: flex;
-  align-items: center;
   padding: 3px 5px;
 }
 
@@ -784,6 +784,12 @@ input[type="number"]::-webkit-inner-spin-button {
   border-bottom: 2px solid var(--color-danger);
   border-radius: 4px;
   z-index: 99;
+}
+
+.absence-item:not(:last-child) {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-text);
 }
 
 /* --------------
@@ -840,6 +846,17 @@ body.modal-open {
   border-top: 1px solid var(--color-text);
 }
 
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.modal-checkbox-heading > h3 {
+  white-space: nowrap;
+}
+
 .schedule-container {
   display: grid;
   grid-template-columns: repeat(2, auto);
@@ -856,16 +873,61 @@ body.modal-open {
   width: auto;
 }
 
-.modal-header {
+.dx-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 10px;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
 }
 
-.modal-checkbox-heading > h3 {
-  white-space: nowrap;
+.dx-container span {
+  cursor: pointer;
+  align-self: flex-start;
 }
+
+.dx-container span:hover {
+  color: var(--color-main);
+  text-decoration: underline;
+}
+
+.codes-container { 
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.codes-container > * {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.codes-container > :last-child {
+  margin-bottom: 5px;
+}
+
+.codes-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--color-white);
+  background-color: var(--color-danger);
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.codes-container button:hover {
+  background-color: var(--color-danger-hover);
+}
+
+/* --------------
+  Modal Tabs
+-------------- */
 
 .modal-tabs {
   width: 30%;
@@ -931,16 +993,6 @@ body.modal-open {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* --------------
-  Member Absences
--------------- */
-
-.absence-item:not(:last-child) {
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-text);
 }
 
 /* --------------

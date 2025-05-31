@@ -86,10 +86,19 @@ const validateMedicaid = (data) => {
     return true;
 };
 
+const confirmMltcDeletion = (items) => {
+    const deletedItems = items.filter(item => item.deleted);
+    if (deletedItems.length === 0) return true;
+
+    const names = deletedItems.map(item => item.name);
+    const message = `Are you sure you want to delete the following MLTC${names.length > 1 ? 's' : ''}?\n- ${names.join('\n- ')}`;
+    return window.confirm(message);
+};
 
 export {
     validateRequiredFields,
     validateDateRange,
     validateInputLength,
     validateMedicaid,
+    confirmMltcDeletion,
 };

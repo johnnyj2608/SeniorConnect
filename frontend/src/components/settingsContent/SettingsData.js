@@ -22,7 +22,7 @@ const SettingsData = () => {
       console.error('Error fetching users:', error);
       alert('Could not load users. Please try again.');
     }
-  }, [user]);
+  }, []);
 
   const handleUsersModal = useCallback(async () => {
     if (!user?.is_org_admin) return;

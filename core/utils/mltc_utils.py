@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import MLTC
 from ..serializers.authorization_serializers import MLTCSerializer
+import json
 from .handle_serializer import handle_serializer
 
 def getMLTCList(request):
@@ -16,7 +17,11 @@ def getMLTCDetail(request, pk):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createMLTC(request):
-    data = request.data
+    data = request.data.copy()
+    
+    dx_codes = data.get('dx_codes', '').split(',')
+    data['dx_codes'] = json.dumps([code for code in dx_codes if code != ''])
+
     serializer = MLTCSerializer(data=data)
     return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
 

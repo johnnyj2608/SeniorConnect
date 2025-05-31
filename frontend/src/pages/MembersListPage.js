@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ListItem from '../components/items/ListItem';
 import AddButton from '../components/buttons/AddButton';
 import DownloadButton from '../components/buttons/DownloadButton';
@@ -19,7 +19,8 @@ const MembersListPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [showInactive, setShowInactive] = useState(false);
 
-	const getMembers = async () => {
+	// Wrap getMembers in useCallback
+	const getMembers = useCallback(async () => {
 		const params = new URLSearchParams();
 		if (mltcFilter) params.append('filter', mltcFilter);
 		if (showInactive) params.append('show_inactive', 'true');
@@ -33,9 +34,9 @@ const MembersListPage = () => {
 		} catch (error) {
 			console.error(error);
 		}
-	};
+	}, [mltcFilter, showInactive]);
 
-	const getMltcOptions = async () => {
+	const getMltcOptions = useCallback(async () => {
 		try {
 			const response = await fetchWithRefresh('/core/mltcs/');
 			if (!response.ok) throw new Error('Failed to fetch MLTC options');
@@ -44,16 +45,16 @@ const MembersListPage = () => {
 		} catch (error) {
 			console.error(error);
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		getMltcOptions();
 		getMembers();
-	}, []);
+	}, [getMltcOptions, getMembers]);
 
 	useEffect(() => {
 		getMembers();
-	}, [mltcFilter, showInactive]);
+	}, [getMembers]);
 
 	useEffect(() => {
 		if (mltcQueryParam && mltcFilter !== mltcQueryParam) {

@@ -164,6 +164,7 @@ const getNewTab = (type, localData, id) => {
             return {
                 id: 'new',
                 name: '',
+                dx_codes: [],
                 active: true,
                 edited: true,
             };

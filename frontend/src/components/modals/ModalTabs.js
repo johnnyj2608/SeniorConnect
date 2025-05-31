@@ -71,7 +71,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
         }
     };
 
-    const { heading, subheading, inactive: inactive } = getTabLabel(type, tab, index); 
+    const { heading, subheading, inactive } = getTabLabel(type, tab, index); 
     const isActive = activeTab === index;
     const isExpired = inactive;
     const isEdited = tab.edited === true;
