@@ -61,6 +61,11 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: item.is_org_admin ? 'Admin' : 'Staff',
                     inactive: item.is_active === false,
                 };
+            case 'mltcs':
+                return { 
+                    heading: item.name || 'Unknown', 
+                    inactive: item.active === false,
+                };
             default:
                 return { heading: 'Unknown', subheading: '' };
         }

@@ -5,6 +5,7 @@ import MemberContactsModal from '../components/modals/MemberContactsModal';
 import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
 import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
+import SettingsMltcModal from '../components/modals/SettingsMltcModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import useModal from '../hooks/useModal';
 
@@ -35,6 +36,8 @@ const ModalPage = ({ data, onClose }) => {
                 return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'users':
                 return <SettingsUserModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+            case 'mltcs':
+                return <SettingsMltcModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             default:
                 return null;
         }

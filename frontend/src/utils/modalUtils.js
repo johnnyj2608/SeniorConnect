@@ -160,6 +160,14 @@ const getNewTab = (type, localData, id) => {
                 edited: true,
             };
         }
+        case 'mltcs': {
+            return {
+                id: 'new',
+                name: '',
+                active: true,
+                edited: true,
+            };
+        }
         default:
             return null;
     }

@@ -9,19 +9,20 @@ import useFilteredReports from '../hooks/useFilteredReports';
 const reportTypes = [
     'Absences', 
     'Audit Log', 
-    'Enrollments'];
+    'Enrollments',
+];
 
 const reportFilters = {
     Absences: [
         'Ongoing',
-         'Upcoming',
-          'Completed'
-        ],
+        'Upcoming',
+        'Completed'
+    ],
     Enrollments: [
         'Enrollment',
-         'Transfer',
-          'Disenrollment'
-        ],
+        'Transfer',
+        'Disenrollment'
+    ],
     'Audit Log': [
         'Create', 
         'Update', 
@@ -30,7 +31,7 @@ const reportFilters = {
 };
 
 const ReportsPage = () => {
-    const [reportType, setReportType] = useState('');
+    const [reportType, setReportType] = useState('Absences');
     const [reportFilter, setReportFilter] = useState('');
 
     const {

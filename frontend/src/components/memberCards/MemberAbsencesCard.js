@@ -31,7 +31,6 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						<DetailRow label="Absence Type" value={abs.absence_type} />
 						<DetailRow label="Start Date" value={formatDate(abs.start_date)} />
 						<DetailRow label="End Date" value={formatDate(abs.end_date)} />
-						<DetailRow label="Status" value={abs.status} />
 						{abs.note && <DetailRow label="Note" value={abs.note} />}
 					</li>
 					))}

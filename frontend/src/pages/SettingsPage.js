@@ -67,6 +67,7 @@ const SettingsPage = () => {
                     <SettingsItem
                         key={section.id}
                         label={section.label}
+                        isNav={true}
                         isActive={active === section.id}
                         onClick={() => handleScrollToSection(section.id)}
                     />

@@ -2,6 +2,7 @@ import React, { useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
+import SettingsItem from '../items/SettingsItem'
 
 const SettingsAccount = () => {
   const { setUser } = useContext(AuthContext);
@@ -32,13 +33,8 @@ const SettingsAccount = () => {
     <>
       <h3 className="section-title">Account</h3>
       <div className="section-main">
-        <button className="action-button" onClick={handleResetPassword}>
-          Reset Password
-        </button>
-
-        <button className="action-button destructive" onClick={handleLogout}>
-            Log Out
-        </button>
+        <SettingsItem label="Reset Password" onClick={handleResetPassword} />
+        <SettingsItem label="Log Out" onClick={handleLogout} />
       </div>
     </>
   );

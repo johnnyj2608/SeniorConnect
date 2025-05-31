@@ -20,6 +20,7 @@ urlpatterns = [
     path('members/', member_views.getMembers, name="members"),
     
     # MLTC related paths
+    path('mltcs/<str:pk>/', mltc_views.getMLTC, name="mltc"),
     path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
     
     # Language related paths

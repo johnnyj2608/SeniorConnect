@@ -4,6 +4,7 @@ import datetime
 class MLTC(models.Model):
     name = models.CharField(max_length=255, unique=True)
     dx_codes = models.JSONField(default=list)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

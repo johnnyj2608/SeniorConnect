@@ -659,6 +659,16 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 15px;
 }
 
+.members-list-content > * {
+  background-color: var(--color-content);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.members-list-content > *:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
 .members-list-item {
   display: flex;
   flex-direction: column;
@@ -1222,44 +1232,55 @@ body.modal-open {
   position: sticky;
   top: 100px;
   width: 25%;
+  background-color: var(--color-content);
+  padding: 1rem;
+  border-radius: 8px;
 }
 
-.settings-nav-item {
+.settings-item {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 25px;
-  padding: 12.5px 10px;
+  font-size: 20px;
+  padding: 0.5rem;
   cursor: pointer;
   border-radius: 8px;
 }
 
-.settings-nav-item > span {
+.settings-item.nav {
+  font-size: 25px;
+  padding: 10px;
+}
+
+.settings-item > span {
   transition: transform 0.2s ease;
 }
 
-.settings-nav-item:hover > span {
+.settings-item:hover > span {
   transform: scale(1.05);
 }
 
-.settings-nav-item svg {
+.settings-item svg {
   width: 30px;
   height: 30px;
-  fill: var(--color-gray);
+  fill: var(--color-white);
 }
 
-.settings-nav-item.active {
+.settings-item.active {
   color: var(--color-white);
-  background-color: var(--color-gray);
+  background-color: var(--color-main);
 }
 
-.settings-nav-item.active svg {
+.settings-item.active svg {
   fill: var(--color-white);
 }
 
 .settings-content {
-  width: 70%;
+  width: 72.5%;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: var(--color-content);
 }
 
 .section-main {
