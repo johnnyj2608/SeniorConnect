@@ -63,6 +63,9 @@ def log_create_update(sender, instance, created, **kwargs):
             if old_value != new_value:
                 changes[field_name] = {'old': old_value, 'new': new_value}
 
+        if sender == Authorization and changes.keys() == {'active'}:
+            return
+
     AuditLog.objects.create(
         user=user,
         content_type=content_type,
