@@ -7,9 +7,10 @@ const SettingsGeneral = () => {
   const { user, setUser } = useContext(AuthContext);
 
   const toggleDarkMode = async () => {
+    const updatedDarkMode = !user.preferences?.dark_mode;
     const updatedPreferences = {
       ...user.preferences,
-      dark_mode: !user.preferences?.dark_mode,
+      dark_mode: updatedDarkMode,
     };
     
     try {
@@ -22,6 +23,7 @@ const SettingsGeneral = () => {
       if (response.ok) {
         const updatedUser = await response.json();
         setUser(updatedUser);
+        localStorage.setItem("dark_mode", updatedDarkMode);
       } else {
         console.error("Failed to update preferences", await response.text());
       }

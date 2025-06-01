@@ -23,7 +23,7 @@ function Main() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 
-  const isDarkMode = user?.preferences?.dark_mode ?? false;
+  const isDarkMode = user?.preferences?.dark_mode ?? localStorage.getItem("dark_mode") === "true";
 
   return (
     <div className={`container ${isDarkMode ? "dark" : ""}`}>
