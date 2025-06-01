@@ -6,7 +6,6 @@ from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
 from core.utils.supabase import *
 from django.utils.text import slugify
-from .handle_serializer import handle_serializer
 
 def getFileList(request):
     files = File.objects.select_related('member').all()
@@ -42,12 +41,16 @@ def createFile(request):
                 data['file'] = public_url
 
             serializer = FileSerializer(data=data)
-            response = handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
-
-            if response.status_code >= 400:
-                raise Exception("Serializer validation failed.")
-
-            return response
+            
+            try:
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                print(e)
+                return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
         if public_url:
@@ -80,12 +83,15 @@ def updateFile(request, pk):
                 data['file'] = public_url
 
             serializer = FileSerializer(instance=file, data=data)
-            response = handle_serializer(serializer, success_status=status.HTTP_200_OK)
-
-            if response.status_code >= 400:
-                raise Exception("Serializer validation failed.")
-
-            return response
+            try:
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                print(e)
+                return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
         if public_url:

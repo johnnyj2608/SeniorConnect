@@ -4,7 +4,6 @@ from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializers import ContactSerializer
-from .handle_serializer import handle_serializer
 
 def getContactList(request):
     contacts = Contact.objects.prefetch_related('members').all()
@@ -39,7 +38,16 @@ def updateContact(request, pk, member_id):
     contact._acting_member = member
 
     serializer = ContactSerializer(instance=contact, data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteContact(request, pk, member_id):
     contact = get_object_or_404(Contact, id=pk)

@@ -4,8 +4,10 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { useContext } from "react";
 
 import './App.css';
+import { AuthContext } from "./context/AuthContext";
 import PrivateRoute from './components/routes/PrivateRoute';
 import ScrollUp from './components/routes/ScrollUp';
 import Navbar from './components/layout/Navbar';
@@ -17,11 +19,14 @@ import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
 
 function Main() {
+  const { user } = useContext(AuthContext);
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 
+  const isDarkMode = user?.preferences?.dark_mode ?? false;
+
   return (
-    <div className="container dark">
+    <div className={`container ${isDarkMode ? "dark" : ""}`}>
       <div className="app">
         {!isLoginPage && <Navbar />}
         <div className="app-content">

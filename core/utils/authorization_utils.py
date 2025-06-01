@@ -5,7 +5,6 @@ from ..models.authorization_model import Authorization
 from ..models.member_model import Member
 from ..serializers.authorization_serializers import AuthorizationSerializer
 import json
-from .handle_serializer import handle_serializer
 
 def getAuthorizationList(request):
     authorizations = Authorization.objects.select_related('mltc', 'member').all()
@@ -29,7 +28,16 @@ def createAuthorization(request):
             data['active'] = False
   
     serializer = AuthorizationSerializer(data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
+
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateAuthorization(request, pk):
     data = request.data.copy()
@@ -41,7 +49,16 @@ def updateAuthorization(request, pk):
 
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(instance=authorization, data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteAuthorization(request, pk):
     authorization = get_object_or_404(Authorization, id=pk)

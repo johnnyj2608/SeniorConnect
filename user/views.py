@@ -8,6 +8,7 @@ from .utils import (
     deleteUser,
     getUserList,
     createUser,
+    patchUser,
     getAuthUser,
     handleLogin,
     handleLogout,
@@ -25,7 +26,7 @@ def getUsers(request):
         return createUser(request)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def getUser(request, pk):
 
     if request.method == 'GET':
@@ -36,6 +37,9 @@ def getUser(request, pk):
 
     if request.method == 'DELETE':
         return deleteUser(request, pk)
+    
+    if request.method == 'PATCH':
+        return patchUser(request, pk)
 
 @api_view(['GET'])
 def getAuthenticatedUser(request):

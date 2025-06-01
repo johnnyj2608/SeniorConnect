@@ -7,7 +7,6 @@ from django.utils import timezone
 from rest_framework.generics import get_object_or_404
 from .models import AuditLog
 from .serializers import AuditLogSerializer
-from core.utils import handle_serializer
 from rest_framework.pagination import PageNumberPagination
 
 def getAuditList(request):
@@ -28,13 +27,31 @@ def getAuditDetail(request, pk):
 def createAudit(request):
     data = request.data
     serializer = AuditLogSerializer(data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateAudit(request, pk):
     data = request.data
     audit = get_object_or_404(AuditLog, id=pk)
     serializer = AuditLogSerializer(instance=audit, data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteAudit(request, pk):
     audit = get_object_or_404(AuditLog, id=pk)

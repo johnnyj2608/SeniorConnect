@@ -7,7 +7,6 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from ..models.absence_model import Absence
 from ..serializers.absence_serializers import AbsenceSerializer, AbsenceUpcomingSerializer
-from .handle_serializer import handle_serializer
 
 def getAbsenceList(request):
     absences = Absence.objects.select_related('member').all()
@@ -37,13 +36,31 @@ def getAbsenceDetail(request, pk):
 def createAbsence(request):
     data = request.data
     serializer = AbsenceSerializer(data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
+
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateAbsence(request, pk):
     data = request.data
     absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
     serializer = AbsenceSerializer(instance=absence, data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
+
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteAbsence(request, pk):
     absence = get_object_or_404(Absence, id=pk)

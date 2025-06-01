@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 
 def getUserList(request):
+    current_user = request.user
+    if not (current_user.is_org_admin):
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -21,19 +24,21 @@ def getUserDetail(request, pk):
     return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
 def createUser(request):
+    current_user = request.user
+    if not (current_user.is_org_admin):
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     data = request.data
     serializer = UserSerializer(data=data, context={'request': request})
-    if serializer.is_valid():
-        try:
+
+    try:
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e)
-            return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
@@ -42,17 +47,16 @@ def updateUser(request, pk):
 
     data = request.data
     serializer = UserSerializer(instance=user, data=data)
-    if serializer.is_valid():
-        try:
+
+    try:
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        print("Serializer error:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
@@ -64,6 +68,24 @@ def deleteUser(request, pk):
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+def patchUser(request, pk):
+    current_user = request.user
+    user = get_object_or_404(User, id=pk)
+    if not (current_user.is_org_admin or current_user.id == user.id):
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    data = request.data
+    serializer = UserSerializer(user, data=data, partial=True)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def getAuthUser(request):
     user = request.user

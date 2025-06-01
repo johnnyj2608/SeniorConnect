@@ -7,7 +7,6 @@ from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..models.authorization_model import Enrollment
 from ..serializers.authorization_serializers import EnrollmentSerializer
-from .handle_serializer import handle_serializer
 
 def getEnrollmentList(request):
     enrollments = Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc').all()
@@ -50,13 +49,31 @@ def createEnrollment(request):
 
     data['member'] = member.id
     serializer = EnrollmentSerializer(data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_201_CREATED)
+
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateEnrollment(request, pk):
     data = request.data
     enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
     serializer = EnrollmentSerializer(instance=enrollment, data=data)
-    return handle_serializer(serializer, success_status=status.HTTP_200_OK)
+    
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteEnrollment(request, pk):
     enrollment = get_object_or_404(Enrollment, id=pk)

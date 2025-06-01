@@ -207,7 +207,7 @@ function useModal(data, onClose) {
                 break;
 
             case 'users':
-                requiredFields = ['name', 'email', 'role_type'];
+                requiredFields = ['name', 'email'];
                 if (!validateRequiredFields(updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'users', 'user');

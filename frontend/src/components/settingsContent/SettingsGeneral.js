@@ -1,18 +1,34 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import SettingsItem from '../items/SettingsItem'
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const SettingsGeneral = () => {
-  const { user } = useContext(AuthContext);
-  const [preferences, setPreferences] = useState(user?.preferences || {});
+  const { user, setUser } = useContext(AuthContext);
 
   const toggleDarkMode = async () => {
-    const newPreferences = { ...preferences, dark_mode: !preferences.dark_mode };
-    setPreferences(newPreferences);
+    const updatedPreferences = {
+      ...user.preferences,
+      dark_mode: !user.preferences?.dark_mode,
+    };
     
-    // update backend, update context, etc.
+    try {
+      const response = await fetchWithRefresh(`/user/users/${user.id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferences: updatedPreferences }),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser(updatedUser);
+      } else {
+        console.error("Failed to update preferences", await response.text());
+      }
+    } catch (error) {
+      console.error("Error updating preferences:", error);
+    }
   };
-  console.log(preferences)
   
   return (
     <>
