@@ -741,6 +741,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .members-list-photo {
   width: 100%;
   height: 200px;
+  border-bottom: 1px solid  var(--color-border);
 }
 
 .members-list-details {

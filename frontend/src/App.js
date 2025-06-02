@@ -23,7 +23,15 @@ function Main() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 
-  const isDarkMode = user?.preferences?.dark_mode ?? localStorage.getItem("dark_mode") === "true";
+  const localDarkMode = localStorage.getItem("dark_mode");
+  const backendDarkMode = user?.preferences?.dark_mode;
+  if (localDarkMode === null && typeof backendDarkMode === "boolean") {
+    localStorage.setItem("dark_mode", String(backendDarkMode));
+  }
+  const isDarkMode =
+    typeof backendDarkMode === "boolean"
+      ? backendDarkMode
+      : localDarkMode === "true";
 
   return (
     <div className={`container${isDarkMode ? " dark" : ""}`}>
