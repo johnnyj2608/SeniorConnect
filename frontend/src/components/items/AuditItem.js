@@ -6,12 +6,12 @@ const AuditItem = ({ audit }) => {
     <li>
       <Link to={`/member/${audit.member}`} className="home-item">
         <span className="home-item-title">
-          <p>{audit.member_name}</p>
-          <p>— {audit.model_name}</p>
+          <p className="home-item-primary">{audit.member_name}</p>
+          <p className="home-item-sub">— {audit.model_name}</p>
         </span>
         <span className="home-item-title">
-          <p>{audit.action_type}d by</p>
-          <p>{audit.user_name}</p> 
+          <p className="home-item-primary">{audit.action_type}d by</p>
+          <p className="home-item-sub">{audit.user_name}</p> 
         </span>
       </Link>
     </li>

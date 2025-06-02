@@ -12,8 +12,8 @@ const AbsenceItem = ({ absence }) => {
     <li>
       <Link to={`/member/${absence.member}`} className="home-item">
         <span className="home-item-title">
-          <p>{absence.member_name}</p>
-          <p> — {absence.absence_type}</p>
+          <p className="home-item-primary">{absence.member_name}</p>
+          <p className="home-item-sub"> — {absence.absence_type}</p>
         </span>
         <span className="home-item-detail nowrap">{renderDaysUntil(absence.days_until)}</span>
       </Link>

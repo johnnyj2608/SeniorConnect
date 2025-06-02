@@ -12,10 +12,10 @@ const BirthdayItem = ({ birthday }) => {
     <li>
       <Link to={`/member/${birthday.id}`} className="home-item">
         <span className="home-item-title">
-          <p>
+          <p className="home-item-primary">
             {birthday.sadc_member_id}. {birthday.last_name}, {birthday.first_name}
           </p>
-          <p>{' — Turning '}{birthday.age_turning}</p>
+          <p className="home-item-sub">{' — Turning '}{birthday.age_turning}</p>
         </span>
         <span className="home-item-detail">{renderBirthdayMessage(birthday.days_until)}</span>
       </Link>

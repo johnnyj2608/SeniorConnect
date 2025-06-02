@@ -73,6 +73,7 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  cursor: pointer;
 
   background-image: url('./assets/dropdown.svg');
   background-repeat: no-repeat;
@@ -166,6 +167,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .app-header button:hover .button-text, .navbar-toggle:hover svg {
   color: var(--color-white);
+  fill: var(--color-white);
   transform: scale(1.05);
 }
 
@@ -492,19 +494,23 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 1rem;
 }
 
-.home-item:hover {
-  transform: scale(1.01);
-  color: var(--color-white);
-  background-color: var(--color-main)
-}
-
 .home-item-title {
   display: flex;
   flex-direction: column;
 }
 
-.home-item-title p:last-child {
+.home-item-sub {
   color: var(--color-text-sub);
+}
+
+.home-item:hover{
+  transform: scale(1.01);
+  color: var(--color-white);
+  background-color: var(--color-main)
+}
+
+.home-item:hover .home-item-sub {
+  color: var(--color-white);
 }
 
 .home-item-detail {
