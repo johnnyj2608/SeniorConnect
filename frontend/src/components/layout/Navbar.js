@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as MenuIcon } from '../../assets/menu.svg';
 
 const navLinks = [
-  { path: '/', label: 'Home' },
-  { path: '/members', label: 'Members' },
-  { path: '/reports', label: 'Reports' },
-  { path: '/settings', label: 'Settings' },
+  { path: '/', label: 'home' },
+  { path: '/members', label: 'members' },
+  { path: '/reports', label: 'reports' },
+  { path: '/settings', label: 'settings' },
 ];
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [navbarOpen, setNavbarOpen] = useState(false);
 
@@ -61,7 +63,7 @@ const Navbar = () => {
         <div className={`nav-links${navbarOpen ? ' open' : ''}`} ref={navRef}>
           {navLinks.map(({ path, label }) => (
             <button key={path} onClick={() => handleNavigate(path)}>
-              <span className="button-text">{label}</span>
+              <span className="button-text">{t(`general.${label}`)}</span>
             </button>
           ))}
         </div>

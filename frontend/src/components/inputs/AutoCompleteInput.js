@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import useDebounce from '../../hooks/useDebounce';
 import { formatPhone, normalizeField } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
+  const { t } = useTranslation();
   const [searchResults, setSearchResults] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState(true);
   const debouncedValue = useDebounce(value, 500);
@@ -21,7 +23,7 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
         if (!response.ok) return [];
         return await response.json();
       } catch (error) {
-        console.error('Error fetching names:', error);
+        console.error(error);
         return [];
       }
     };
@@ -44,7 +46,7 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  
+
   return (
     <div className="search-dropdown-container" ref={searchRef}>
       <input
@@ -54,7 +56,7 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
           setSelectedSuggestion(false);
           onChange(e);
         }}
-        placeholder="Required"
+        placeholder={t('general.required')}
         autoComplete="off"
         disabled={disabled}
       />

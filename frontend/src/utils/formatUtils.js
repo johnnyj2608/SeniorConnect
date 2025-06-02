@@ -24,7 +24,7 @@ const formatGender = (gender) => {
   } else if (gender === 'F') {
     return 'Female';
   } else {
-    return 'Unknown';
+    return 'unknown';
   }
 };
 
@@ -88,9 +88,9 @@ function formatStatus(startDateStr, endDateStr) {
   const end = endDateStr ? new Date(endDateStr) : null;
 
   if (!start) return '';
-  if (start > today) return 'Upcoming';
-  if (end && end < today) return 'Completed';
-  if (start <= today && (!end || end >= today)) return 'Ongoing';
+  if (start > today) return 'upcoming';
+  if (end && end < today) return 'completed';
+  if (start <= today && (!end || end >= today)) return 'ongoing';
 
   return '';
 }

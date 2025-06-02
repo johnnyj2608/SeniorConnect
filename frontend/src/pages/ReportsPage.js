@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next'
 import RefreshButton from '../components/buttons/RefreshButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
@@ -7,31 +8,32 @@ import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollments
 import useFilteredReports from '../hooks/useFilteredReports';
 
 const reportTypes = [
-    'Absences', 
-    'Audit Log', 
-    'Enrollments',
+    'absences', 
+    'audit_log', 
+    'enrollments',
 ];
 
 const reportFilters = {
-    Absences: [
-        'Ongoing',
-        'Upcoming',
-        'Completed'
+    absences: [
+        'ongoing',
+        'upcoming',
+        'completed'
     ],
-    Enrollments: [
-        'Enrollment',
-        'Transfer',
-        'Disenrollment'
+    enrollments: [
+        'enrollment',
+        'transfer',
+        'disenrollment'
     ],
-    'Audit Log': [
-        'Create', 
-        'Update', 
-        'Delete'
+    'audit_log': [
+        'create', 
+        'update', 
+        'delete'
     ],
 };
 
 const ReportsPage = () => {
-    const [reportType, setReportType] = useState('Absences');
+    const { t } = useTranslation();
+    const [reportType, setReportType] = useState('absences');
     const [reportFilter, setReportFilter] = useState('');
 
     const {
@@ -44,11 +46,11 @@ const ReportsPage = () => {
 
     const getReportContent = () => {
         switch (reportType) {
-            case 'Absences':
+            case 'absences':
                 return <ReportAbsencesTable key={currentPage} report={report} />;
-            case 'Enrollments':
+            case 'enrollments':
                 return <ReportEnrollmentsTable key={currentPage} report={report} />;
-            case 'Audit Log':
+            case 'audit_log':
                 return <ReportAuditsTable key={currentPage} report={report} />;
             default:
                 return null;
@@ -59,38 +61,38 @@ const ReportsPage = () => {
         <>
             <div className="page-header">
                 <div className="page-title-row">
-                    <h2 className="page-title">&#9782; Reports</h2>
+                    <h2 className="page-title">&#9782; {t('general.reports')}</h2>
                     <RefreshButton onClick={fetchReport} />
                 </div>
                 <div className="filter-row">
                     <div className="filter-content">
                         <div className="filter-option">
-                            <label>Report Type</label>
+                            <label>{t('reports.report_type')}</label>
                             <select
                                 required
                                 value={reportType}
                                 onChange={(e) => setReportType(e.target.value)}
                             >
-                                <option value="">Select an option</option>
+                                <option value="">{t('general.select_an_option')}</option>
                                 {reportTypes.map((type) => (
                                     <option key={type} value={type}>
-                                        {type}
+                                        {t(`reports.${type}.label`)}
                                     </option>
                                 ))}
                             </select>
                         </div>
 
                         <div className="filter-option">
-                            <label>Status Filter</label>
+                            <label>{t('reports.status_filter')}</label>
                             <select
                                 required
                                 value={reportFilter}
                                 onChange={(e) => setReportFilter(e.target.value)}
                             >
-                                <option value="">Select an option</option>
+                                <option value="">{t('general.select_an_option')}</option>
                                 {reportFilters[reportType]?.map((filterOption) => (
                                     <option key={filterOption} value={filterOption}>
-                                        {filterOption}
+                                        {t(`reports.${reportType}.${filterOption}`)}
                                     </option>
                                 ))}
                             </select>
@@ -103,7 +105,7 @@ const ReportsPage = () => {
                         />
                     </div>
                     <p className="members-count">
-                        {report.length} {report.length === 1 ? 'result' : 'results'}
+                        {report.length} {report.length === 1 ? t('general.result') : t('general.results')}
                     </p>
                 </div>
             </div>

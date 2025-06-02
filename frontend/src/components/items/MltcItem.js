@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 import { colorStats } from '../../utils/colorUtils';
 
 const MltcItem = ({ item, change }) => {
-  const mltcName = item.name || 'Unknown';
-  const netChange = change ? change[mltcName] ?? 0 : 0;
+  const netChange = change ? change[item.name] ?? 0 : 0;
 
   return (
     <Link
-      to={`/members?mltc=${encodeURIComponent(mltcName)}`}
+      to={`/members?mltc=${encodeURIComponent(item.name)}`}
       className="stats-mltc"
     >
-      <h4>{mltcName}</h4>
+      <h4>{item.name}</h4>
       <p>{item.count}</p>
       <p>{colorStats(item.count, netChange)}</p>
     </Link>

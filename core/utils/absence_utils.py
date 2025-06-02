@@ -13,14 +13,14 @@ def getAbsenceList(request):
     filter_param = request.GET.get('filter')
     now = timezone.now().date()
 
-    if filter_param == 'Ongoing':
+    if filter_param == 'ongoing':
         absences = absences.filter(
             Q(start_date__lte=now, end_date__isnull=True) |
             Q(start_date__lte=now, end_date__gte=now)
         )
-    elif filter_param == 'Upcoming':
+    elif filter_param == 'upcoming':
         absences = absences.filter(start_date__gt=now)
-    elif filter_param == 'Completed':
+    elif filter_param == 'completed':
         absences = absences.filter(end_date__lt=now)
 
     paginator = PageNumberPagination()

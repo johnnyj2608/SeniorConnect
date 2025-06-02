@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next'
 import ListItem from '../components/items/ListItem';
 import AddButton from '../components/buttons/AddButton';
 import DownloadButton from '../components/buttons/DownloadButton';
@@ -9,6 +10,7 @@ import fetchWithRefresh from '../utils/fetchWithRefresh';
 import useFilteredMembers from '../hooks/useFilteredMembers';
 
 const MembersListPage = () => {
+	const { t } = useTranslation();
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
 	const mltcQueryParam = queryParams.get('mltc');
@@ -19,7 +21,6 @@ const MembersListPage = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [showInactive, setShowInactive] = useState(false);
 
-	// Wrap getMembers in useCallback
 	const getMembers = useCallback(async () => {
 		const params = new URLSearchParams();
 		if (mltcFilter) params.append('filter', mltcFilter);
@@ -68,36 +69,36 @@ const MembersListPage = () => {
 		<>
 			<div className="page-header">
 				<div className="page-title-row">
-					<h2 className="page-title">&#9782; Members</h2>
+					<h2 className="page-title">&#9782; {t('general.members')}</h2>
 					<DownloadButton members={members} />
 				</div>
 
 				<div className="filter-row">
 					<div className="filter-content">
 						<div className="filter-option">
-							<label>MLTC Filter</label>
+							<label>{t('members.mltc_filter')}</label>
 							<select 
 								required 
 								value={mltcFilter} 
 								onChange={(e) => setMltcFilter(e.target.value)}
 							>
-								<option value="">Select an option</option>
+								<option value="">{t('general.select_an_option')}</option>
 								{mltcOptions.map((option) => (
 									<option key={option.name} value={option.name}>
 										{option.name}
 									</option>
 								))}
-								<option value="Unknown">Unknown</option>
+								<option value="unknown">{t('members.unknown')}</option>
 							</select>
 						</div>
 
 						<div className="filter-option">
-							<label>Search Members</label>
+							<label>{t('members.search_members')}</label>
 							<SearchInput value={searchQuery} onChange={setSearchQuery} />
 						</div>
 
 						<div className="filter-option">
-							<label>Inactive</label>
+							<label>{t('members.inactive')}</label>
 							<div className="switch-container">
 								<Switch
 									checked={showInactive}
@@ -109,7 +110,7 @@ const MembersListPage = () => {
 					</div>
 
 					<p className="members-count">
-						{totalFiltered} {totalFiltered === 1 ? 'result' : 'results'}
+						{totalFiltered} {totalFiltered === 1 ? t('general.result') : t('general.results')}
 					</p>
 				</div>
 			</div>
@@ -117,7 +118,9 @@ const MembersListPage = () => {
 			<div className="members-list-content content-padding">
 				{Object.entries(filteredMembers).map(([mltcName, memberList]) => (
 					<div key={mltcName}>
-						<h3 className="section-title">{mltcName}</h3>
+						<h3 className="section-title">
+							{mltcName === 'unknown' ? t('members.unknown') : mltcName}
+						</h3>
 						<div className="members-list">
 							{memberList.map((member) => (
 								<ListItem key={member.id} member={member} />

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuditItem from '../items/AuditItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { formatDate } from '../../utils/formatUtils';
 
 const HomeAuditLogsCard = () => {
+  const { t } = useTranslation();
   const [auditLogs, setAuditLogs] = useState([]);
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const HomeAuditLogsCard = () => {
         const data = await response.json();
         setAuditLogs(data);
       } catch (error) {
-        console.log('Failed to fetch audit logs:', error);
+        console.log(error);
       }
     };
 
@@ -24,10 +26,10 @@ const HomeAuditLogsCard = () => {
 
   return (
     <div className="full-card">
-      <h2>Audit Log</h2>
+      <h2>{t('home.audit_log')}</h2>
       <div className="card-container">
         {auditLogs.length === 0 ? (
-          <p>No recent audits.</p>
+          <p>{t('home.no_recent_audits')}</p>
         ) : (
           auditLogs.map(({ date, audits }) => (
             <div key={date} className="audit-group">

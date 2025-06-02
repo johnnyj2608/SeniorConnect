@@ -1,9 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
-import SettingsItem from '../items/SettingsItem'
+import SettingsItem from '../items/SettingsItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const SettingsGeneral = () => {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(AuthContext);
 
   const toggleDarkMode = async () => {
@@ -23,25 +25,25 @@ const SettingsGeneral = () => {
       if (response.ok) {
         const updatedUser = await response.json();
         setUser(updatedUser);
-        localStorage.setItem("dark_mode", updatedDarkMode);
+        localStorage.setItem('dark_mode', updatedDarkMode);
       } else {
-        console.error("Failed to update preferences", await response.text());
+        console.error(await response.text());
       }
     } catch (error) {
-      console.error("Error updating preferences:", error);
+      console.error(error);
     }
   };
   
   return (
     <>
-      <h3 className="section-title">General</h3>
+      <h3 className="section-title">{t('settings.general.label')}</h3>
       <div className="section-main">
-        <SettingsItem label="Notification" onClick={()=>console.log("Notification")} />
-        <SettingsItem label="Dark Mode" onClick={toggleDarkMode} />
-        <SettingsItem label="Language" onClick={()=>console.log("Language")} />
+        <SettingsItem label={t('settings.general.notification')} onClick={() => console.log('Notification')} />
+        <SettingsItem label={t('settings.general.dark_mode')} onClick={toggleDarkMode} />
+        <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SettingsGeneral
+export default SettingsGeneral;

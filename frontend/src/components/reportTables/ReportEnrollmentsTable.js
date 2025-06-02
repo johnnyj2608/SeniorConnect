@@ -1,16 +1,18 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
 import { colorEnrollment } from '../../utils/colorUtils';
 
 const ReportEnrollmentsTable = ({ report }) => {
+    const { t } = useTranslation();
 
     return (
         <table className="report-table">
         <thead>
             <tr>
-                <th>Member</th>
-                <th>Status</th>
-                <th>Date</th>
+                <th>{t('reports.table.member')}</th>
+                <th>{t('reports.table.status')}</th>
+                <th>{t('reports.table.date')}</th>
             </tr>
         </thead>
         <tbody>
@@ -24,7 +26,7 @@ const ReportEnrollmentsTable = ({ report }) => {
                                 {entry.member_name}
                              </Link>
                         </td>
-                        <td>{colorEnrollment(change_type, old_mltc, new_mltc)}</td>
+                        <td>{colorEnrollment(change_type, old_mltc, new_mltc, t)}</td>
                         <td>{formatDate(entry.change_date)}</td>
                     </tr>
                 );

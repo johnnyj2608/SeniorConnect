@@ -5,13 +5,19 @@
         "reports": "Reports",
         "settings": "Settings",
         "select_an_option": "Select an option",
+        "result": "Result",
         "results": "Results",
+        "yes": "Yes",
+        "no": "No",
         "male": "Male",
         "female": "Female",
         "edit": "Edit",
         "note": "Note",
+        "email": "Email",
         "password": "Password",
+        "log_in": "Log In",
         "required": "Required",
+        "loading": "Loading",
         "buttons": {
             "save": "Save",
             "cancel": "Cancel",
@@ -57,6 +63,7 @@
     },
     "model": {
         "mltc": "MLTC",
+        "member": "Member",
         "authorization": "Authorization",
         "absence": "Absence",
         "contact": "Contact",
@@ -86,7 +93,7 @@
         "no_upcoming_birthdays": "No upcoming birthdays",
         "tomorrow": "Tomorrow",
         "today": "Today",
-        "turning_years_old": "Turning {{count}} years old",
+        "turning_years_old": "Turning {{count}}",
         "audit_log": "Audit Log",
         "no_recent_audits": "No recent audits",
         "create": "Created by {{user}}",
@@ -186,9 +193,9 @@
         },
         "enrollments": {
             "label": "Enrollments",
-            "enrolled": "Enrolled",
-            "transferred": "Transferred",
-            "disenrolled": "Disenrolled"
+            "enrollment": "Enrollment",
+            "transfer": "Transfer",
+            "disenrollment": "Disenrollment"
         },
         "table": {
             "member": "Member",
@@ -199,7 +206,8 @@
             "called": "Called",
             "change": "Change",
             "action": "Action",
-            "date": "Date"
+            "date": "Date",
+            "user": "User"
         }
     },
     "settings": {
@@ -223,7 +231,8 @@
         "account": {
             "label": "Account",
             "reset_password": "Reset Password",
-            "log_out": "Log Out"
+            "log_out": "Log Out",
+            "password_reset_instructions": "Password instructions was sent to your email"
         }
     },
     "errors": {

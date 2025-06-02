@@ -1,20 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsData from '../components/settingsContent/SettingsData';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
 import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
-import SettingsItem from '../components/items/SettingsItem'
+import SettingsItem from '../components/items/SettingsItem';
 
 const sections = [
-    { label: 'General', component: <SettingsGeneral />, id: 'settings-general' },
-    { label: 'Data', component: <SettingsData />, id: 'settings-data' },
-    { label: 'Snapshots', component: <SettingsSnapshots />, id: 'settings-snapshots' },
-    { label: 'Support', component: <SettingsSupport />, id: 'settings-support' },
-    { label: 'Account', component: <SettingsAccount />, id: 'settings-account' },
+    { label: 'settings.general.label', component: <SettingsGeneral />, id: 'settings-general' },
+    { label: 'settings.data.label', component: <SettingsData />, id: 'settings-data' },
+    { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots' },
+    { label: 'settings.support.label', component: <SettingsSupport />, id: 'settings-support' },
+    { label: 'settings.account.label', component: <SettingsAccount />, id: 'settings-account' },
 ];
 
 const SettingsPage = () => {
+    const { t } = useTranslation();
     const [active, setActive] = useState(sections[0].id);
     const observer = useRef(null);
 
@@ -57,7 +59,7 @@ const SettingsPage = () => {
         <>
             <div className="page-header">
                 <div className="page-title-row">
-                    <h2 className="page-title">&#9782; Settings</h2>
+                    <h2 className="page-title">&#9782; {t('general.settings')}</h2>
                 </div>
             </div>
 
@@ -66,7 +68,7 @@ const SettingsPage = () => {
                 {sections.map((section) => (
                     <SettingsItem
                         key={section.id}
-                        label={section.label}
+                        label={t(section.label)}
                         isNav={true}
                         isActive={active === section.id}
                         onClick={() => handleScrollToSection(section.id)}
@@ -83,7 +85,7 @@ const SettingsPage = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default SettingsPage
+export default SettingsPage;

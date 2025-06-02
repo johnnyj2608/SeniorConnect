@@ -1,17 +1,20 @@
-import React from 'react'
-import SettingsItem from '../items/SettingsItem'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import SettingsItem from '../items/SettingsItem';
 
 const SettingsSupport = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <h3 className="section-title">Support</h3>
+      <h3 className="section-title">{t('settings.support.label')}</h3>
       <div className="section-main">
-        <SettingsItem label="Terms of Service" onClick={()=>console.log("Terms of Service")} />
-        <SettingsItem label="Privacy Policy" onClick={()=>console.log("Privacy Policy")} />
-        <SettingsItem label="Help Center" onClick={()=>console.log("Help Center")} />
+        <SettingsItem label={t('settings.support.terms_of_service')} onClick={() => console.log('Terms of Service')} />
+        <SettingsItem label={t('settings.support.privacy_policy')} onClick={() => console.log('Privacy Policy')} />
+        <SettingsItem label={t('settings.support.help_center')} onClick={() => console.log('Help Center')} />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SettingsSupport
+export default SettingsSupport;

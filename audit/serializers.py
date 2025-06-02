@@ -44,5 +44,5 @@ class AuditLogSerializer(serializers.ModelSerializer):
     def get_model_name(self, obj):
         if obj.content_type:
             model = obj.content_type.model
-            return model.capitalize()
+            return model
         return None

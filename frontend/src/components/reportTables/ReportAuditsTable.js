@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import DropdownButton from '../buttons/DropdownButton';
 import { formatDate } from '../../utils/formatUtils';
 import { colorAudit } from '../../utils/colorUtils';
 
 const ReportAuditsTable = ({ report }) => {
+    const { t } = useTranslation();
     const [expandedRows, setExpandedRows] = useState({});
 
     const toggleDetails = (id) => {
@@ -18,17 +20,17 @@ const ReportAuditsTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th>Member</th>
-                <th>Change</th>
-                <th>Action</th>
-                <th>User</th>
-                <th>Date</th>
+                <th>{t('reports.table.member')}</th>
+                <th>{t('reports.table.change')}</th>
+                <th>{t('reports.table.action')}</th>
+                <th>{t('reports.table.user')}</th>
+                <th>{t('reports.table.date')}</th>
             </tr>
         </thead>
         <tbody>
             {report.map((entry) => {
                 const isExpanded = !!expandedRows[entry.id];
-                const showDropdown = entry.action_type === 'Update' && entry.changes && Object.keys(entry.changes).length > 0;
+                const showDropdown = entry.action_type === 'update' && entry.changes && Object.keys(entry.changes).length > 0;
 
                 return (
                     <Fragment key={entry.id}>
@@ -38,10 +40,10 @@ const ReportAuditsTable = ({ report }) => {
                                 {entry.member_name}
                                 </Link>
                             </td>
-                            <td>{entry.model_name}</td>
+                            <td>{t(`model.${entry.model_name}`, { defaultValue: '' })}</td>
                             <td>
                                 <span className="report-dropdown">
-                                    {colorAudit(entry.action_type)}{' '}
+                                    {colorAudit(entry.action_type, t)}{' '}
                                     {showDropdown && (
                                     <DropdownButton
                                         showDetails={isExpanded}

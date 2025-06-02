@@ -22,41 +22,41 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 }
 
                 return { 
-                    heading: item.mltc || 'Unknown', 
+                    heading: item.mltc || 'unknown', 
                     subheading: status,
                     inactive: status === 'Expired',
                 };
             case 'contacts':
                 return { 
-                    heading: item.name || 'Unknown', 
+                    heading: item.name || 'unknown', 
                     subheading: item.contact_type,
                 };
             case 'absences':
                 
 
                 return {
-                    heading: item.absence_type || 'Unknown',
+                    heading: item.absence_type || 'unknown',
                     subheading: formatStatus(item.start_date, item.end_date),
                     inactive: status === 'Completed',
                 };
             case 'files':
                 return { 
-                    heading: item.name || 'Unknown', 
+                    heading: item.name || 'unknown', 
                     subheading: formatDate(item.completion_date) || '',
                 };
             case 'users':
                 return { 
-                    heading: item.name || 'Unknown', 
+                    heading: item.name || 'unknown', 
                     subheading: item.is_org_admin ? 'Admin' : 'Staff',
                     inactive: item.is_active === false,
                 };
             case 'mltcs':
                 return { 
-                    heading: item.name || 'Unknown', 
+                    heading: item.name || 'unknown', 
                     inactive: item.active === false,
                 };
             default:
-                return { heading: 'Unknown', subheading: '' };
+                return { heading: 'unknown', subheading: '' };
         }
     };
 

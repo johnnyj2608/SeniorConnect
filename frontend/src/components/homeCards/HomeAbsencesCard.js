@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import AbsenceItem from '../items/AbsenceItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeAbsenceCard = () => {
+  const { t } = useTranslation();
   const [leaving, setLeaving] = useState([]);
   const [returning, setReturning] = useState([]);
 
@@ -16,7 +18,7 @@ const HomeAbsenceCard = () => {
         setLeaving(data.leaving);
         setReturning(data.returning);
       } catch (error) {
-        console.log('Failed to fetch absences:', error);
+        console.log(error);
       }
     };
 
@@ -25,11 +27,11 @@ const HomeAbsenceCard = () => {
 
   return (
     <div className="full-card">
-      <h2>Absences</h2>
+      <h2>{t('snapshots.absences')}</h2>
       <div className="card-container">
         <div className="absence-container">
           <div className="absence-list">
-            <h3>Leaving Soon</h3>
+            <h3>{t('home.leaving_soon')}</h3>
             <ul>
               {leaving.map(absence => (
                 <AbsenceItem key={absence.member} absence={absence} />
@@ -37,7 +39,7 @@ const HomeAbsenceCard = () => {
             </ul>
           </div>
           <div className="absence-list">
-            <h3>Returning Soon</h3>
+            <h3>{t('home.returning_soon')}</h3>
             <ul>
               {returning.map(absence => (
                 <AbsenceItem key={absence.member} absence={absence} />

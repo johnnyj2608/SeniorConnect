@@ -12,11 +12,11 @@ const useFilteredReports = (reportType, reportFilter) => {
         let endpoint;
         let api = 'core';
 
-        if (reportType === 'Absences') {
+        if (reportType === 'absences') {
             endpoint = 'absences';
-        } else if (reportType === 'Enrollments') {
+        } else if (reportType === 'enrollments') {
             endpoint = 'enrollments';
-        } else if (reportType === 'Audit Log') {
+        } else if (reportType === 'audit_log') {
             endpoint = 'audits';
             api = 'audit';
         } else {
@@ -36,7 +36,7 @@ const useFilteredReports = (reportType, reportFilter) => {
             setReport(data.results);
             setTotalPages(Math.ceil(data.count / 20));
         } catch (error) {
-            console.error('Failed to fetch report:', error);
+            console.error(error);
         }
     }, [reportType, reportFilter, currentPage]);
 

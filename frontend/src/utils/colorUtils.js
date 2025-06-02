@@ -1,81 +1,55 @@
-const colorBoolean = (status) => {
-    if (status) {
-        return <span className="green">Yes</span>
-    } else {
-        return <span className="red">No</span>
+const colorBoolean = (status, t) => {
+    return status
+        ? <span className="green">{t('general.yes')}</span>
+        : <span className="red">{t('general.no')}</span>;
+};
+
+const colorAbsence = (status, t) => {
+    switch (status) {
+        case 'ongoing':
+            return <span className="green">{t('reports.absences.ongoing')}</span>;
+        case 'completed':
+            return <span>{t('reports.absences.completed')}</span>;
+        case 'upcoming':
+            return <span className="yellow">{t('reports.absences.upcoming')}</span>;
+        default:
+            return null;
     }
 };
 
-const colorAbsence = (status) => {
+const colorEnrollment = (status, old_mltc, new_mltc, t) => {
     switch (status) {
-        case 'Ongoing':
+        case 'enrollment':
             return (
-            <>
-                <span className="green">Ongoing</span>
-            </>
+                <>
+                    <span className="green">{t('reports.enrollments.enrollment')}:</span> {new_mltc}
+                </>
             );
-        case 'Completed':
+        case 'disenrollment':
             return (
-            <>
-                <span>Completed</span>
-            </>
+                <>
+                    <span className="red">{t('reports.enrollments.disenrollment')}:</span> {old_mltc}
+                </>
             );
-        case 'Upcoming':
+        case 'transfer':
             return (
-            <>
-                <span className="yellow">Upcoming</span>
-            </>
+                <>
+                    <span className="yellow">{t('reports.enrollments.transfer')}:</span> {old_mltc} → {new_mltc}
+                </>
             );
         default:
             return null;
     }
 };
 
-const colorEnrollment = (status, old_mltc, new_mltc) => {
+const colorAudit = (status, t) => {
     switch (status) {
-        case 'Enrollment':
-            return (
-            <>
-                <span className="green">Enrolled:</span> {new_mltc}
-            </>
-            );
-        case 'Disenrollment':
-            return (
-            <>
-                <span className="red">Disenrolled:</span> {old_mltc}
-            </>
-            );
-        case 'Transfer':
-            return (
-            <>
-                <span className="yellow">Transferred:</span> {old_mltc} → {new_mltc}
-            </>
-            );
-        default:
-            return null;
-    }
-};
-
-const colorAudit = (status) => {
-    switch (status) {
-        case 'Create':
-            return (
-            <>
-                <span className="green">Create</span>
-            </>
-            );
-        case 'Delete':
-            return (
-            <>
-                <span className="red">Delete</span>
-            </>
-            );
-        case 'Update':
-            return (
-            <>
-                <span className="yellow">Update</span>
-            </>
-            );
+        case 'create':
+            return <span className="green">{t('reports.audit_log.create')}</span>;
+        case 'delete':
+            return <span className="red">{t('reports.audit_log.delete')}</span>;
+        case 'update':
+            return <span className="yellow">{t('reports.audit_log.update')}</span>;
         default:
             return null;
     }
@@ -83,7 +57,6 @@ const colorAudit = (status) => {
 
 const colorStats = (count, change) => {
     let percentChange;
-
     if (count - change === 0) {
         percentChange = count * 100;
     } else {

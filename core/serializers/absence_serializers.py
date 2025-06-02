@@ -26,7 +26,6 @@ class AbsenceSerializer(serializers.ModelSerializer):
         return data
     
 class AbsenceUpcomingSerializer(serializers.ModelSerializer):
-    absence_type = serializers.SerializerMethodField()
     member_name = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     days_until = serializers.SerializerMethodField()
@@ -41,9 +40,6 @@ class AbsenceUpcomingSerializer(serializers.ModelSerializer):
             'status',
             'days_until',
         ]
-
-    def get_absence_type(self, obj):
-        return obj.get_absence_type_display()
 
     def get_member_name(self, obj):
         member = obj.member

@@ -1,16 +1,17 @@
 import React, { useContext, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import ModalPage from '../../pages/ModalPage';
-import SettingsItem from '../items/SettingsItem'
+import SettingsItem from '../items/SettingsItem';
 
 const SettingsData = () => {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
 
   const handleMLTCModal = useCallback(async () => {
-
     try {
       const response = await fetchWithRefresh(`/core/mltcs`);
       if (!response.ok) return;
@@ -19,10 +20,10 @@ const SettingsData = () => {
       setModalData({ type: 'mltcs', data });
       setModalOpen(true);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      alert('Could not load users. Please try again.');
+      console.error('Error fetching MLTC data:', error);
+      alert(t('settings.data.error_load', 'Could not load data. Please try again.'));
     }
-  }, []);
+  }, [t]);
 
   const handleUsersModal = useCallback(async () => {
     if (!user?.is_org_admin) return;
@@ -35,10 +36,9 @@ const SettingsData = () => {
       setModalData({ type: 'users', data });
       setModalOpen(true);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      alert('Could not load users. Please try again.');
+      console.error(error);
     }
-  }, [user]);
+  }, [user, t]);
 
   const handleModalClose = useCallback(() => {
     setModalOpen(false);
@@ -47,12 +47,12 @@ const SettingsData = () => {
 
   return (
     <>
-      <h3 className="section-title">Data</h3>
+      <h3 className="section-title">{t('settings.data.label')}</h3>
       <div className="section-main">
-        <SettingsItem label="MLTC" onClick={handleMLTCModal} />
-        <SettingsItem label="Language" onClick={handleMLTCModal} />
-        <SettingsItem label="Upload" onClick={handleMLTCModal} />
-        <SettingsItem label="User Management" onClick={handleUsersModal} />
+        <SettingsItem label={t('model.mltc')} onClick={handleMLTCModal} />
+        <SettingsItem label={t('settings.general.language')} onClick={handleMLTCModal} />
+        <SettingsItem label={t('settings.data.upload')} onClick={handleMLTCModal} />
+        <SettingsItem label={t('settings.data.user_management')} onClick={handleUsersModal} />
 
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />

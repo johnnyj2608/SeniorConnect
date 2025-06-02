@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import PasswordField from '../components/inputs/PasswordField'
 import { AuthContext } from '../context/AuthContext'
 
 const LoginPage = () => {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const { user, setUser, loading } = useContext(AuthContext)
 
@@ -57,7 +59,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"
-                    placeholder="Email"
+                    placeholder={t('general.email')}
                     value={email}
                     onChange={handleChange('email')}
                     required
@@ -67,7 +69,7 @@ const LoginPage = () => {
                     onChange={handleChange('password')}
                 />
                 <button className="login-submit" type="submit">
-                    Log In
+                    {t('general.log_in')}
                 </button>
             </form>
         </div>

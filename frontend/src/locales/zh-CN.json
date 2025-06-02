@@ -5,13 +5,19 @@
         "reports": "报告",
         "settings": "设置",
         "select_an_option": "请选择一个选项",
+        "result": "结果",
         "results": "结果",
+        "yes": "有",
+        "no": "没有",
         "male": "男",
         "female": "女",
         "edit": "编辑",
         "note": "备注",
+        "email": "电邮",
         "password": "密码",
+        "log_in": "登录",
         "required": "必填",
+        "loading": "加载中",
         "buttons": {
             "save": "保存",
             "cancel": "取消",
@@ -56,7 +62,8 @@
         }
     },
     "model": {
-        "mltc": "MLTC",
+        "mltc": "老人中心保险",
+        "member": "成员",
         "authorization": "授权",
         "absence": "缺勤",
         "contact": "联系人",
@@ -82,7 +89,7 @@
     "home": {
         "leaving_soon": "即将离开",
         "returning_soon": "即将返回",
-        "days": "{{count}} 天",
+        "days": "{{count}}天",
         "no_upcoming_birthdays": "暂无即将到来的生日",
         "tomorrow": "明天",
         "today": "今天",
@@ -94,7 +101,7 @@
         "delete": "由 {{user}} 删除"
     },
     "members": {
-        "mltc_filter": "MLTC 筛选器",
+        "mltc_filter": "老人中心保险",
         "unknown": "未知",
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
@@ -119,7 +126,7 @@
         "authorization": {
             "label": "授权",
             "member_id": "成员编号",
-            "mltc": "MLTC",
+            "mltc": "老人中心保险",
             "auth_id": "授权编号",
             "schedule": "时间表",
             "start_date": "开始日期",
@@ -186,9 +193,9 @@
         },
         "enrollments": {
             "label": "入学情况",
-            "enrolled": "已入学",
-            "transferred": "已转学",
-            "disenrolled": "已退学"
+            "enrollment": "已入学",
+            "transfer": "已转学",
+            "disenrollment": "已退学"
         },
         "table": {
             "member": "成员",
@@ -199,7 +206,8 @@
             "called": "已通知",
             "change": "变更",
             "action": "操作",
-            "date": "日期"
+            "date": "日期",
+            "user": "用户"
         }
     },
     "settings": {
@@ -223,7 +231,8 @@
         "account": {
             "label": "账户",
             "reset_password": "重置密码",
-            "log_out": "退出登录"
+            "log_out": "退出登录",
+            "password_reset_instructions": "密码说明已发送至您的邮箱"
         }
     },
     "errors": {

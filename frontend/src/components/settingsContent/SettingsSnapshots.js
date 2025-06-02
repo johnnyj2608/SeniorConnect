@@ -1,19 +1,22 @@
-import React from 'react'
-import SettingsItem from '../items/SettingsItem'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import SettingsItem from '../items/SettingsItem';
 
 const SettingsSnapshots = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <h3 className="section-title">Snapshots</h3>
+      <h3 className="section-title">{t('snapshots.label')}</h3>
       <div className="section-main">
-        <SettingsItem label="Members" onClick={()=>console.log("Members")} />
-        <SettingsItem label="Birthdays" onClick={()=>console.log("Birthdays")} />
-        <SettingsItem label="Absences" onClick={()=>console.log("Absences")} />
-        <SettingsItem label="Enrollment" onClick={()=>console.log("Enrollment")} />
-          {/* Dropdown to show year, then month */}
+        <SettingsItem label={t('snapshots.members')} onClick={() => console.log('Members')} />
+        <SettingsItem label={t('snapshots.birthdays')} onClick={() => console.log('Birthdays')} />
+        <SettingsItem label={t('snapshots.absences')} onClick={() => console.log('Absences')} />
+        <SettingsItem label={t('snapshots.enrollment')} onClick={() => console.log('Enrollment')} />
+        {/* Dropdown to show year, then month */}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SettingsSnapshots
+export default SettingsSnapshots;

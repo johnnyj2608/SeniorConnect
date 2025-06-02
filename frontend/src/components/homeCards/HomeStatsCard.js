@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import DropdownButton from '../buttons/DropdownButton';
 import MltcItem from '../items/MltcItem';
 import { colorStats } from '../../utils/colorUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const HomeStatsCard = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [change, setChange] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -30,7 +32,7 @@ const HomeStatsCard = () => {
         const data = await response.json();
         setChange(data);
       } catch (error) {
-        console.log('Failed to fetch change stats:', error);
+        console.log(error);
       }
     };
 
@@ -45,7 +47,7 @@ const HomeStatsCard = () => {
 
   return (
     <div className="full-card">
-      <h2>Members</h2>
+      <h2>{t('snapshots.members')}</h2>
       <div className="card-container">
         <div className="stats-container">
           <h3 className="stats-count">{stats ? stats.active_count : '...'}</h3>
@@ -60,7 +62,7 @@ const HomeStatsCard = () => {
           <div className="stats-mltcs">
             {stats.mltc_count.map(item => (
               <MltcItem
-                key={item.name || 'Unknown'}
+                key={item.name || 'unknown'}
                 item={item}
                 change={change}
               />

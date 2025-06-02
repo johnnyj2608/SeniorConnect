@@ -29,12 +29,7 @@ const sendRequest = async (url, method, data) => {
     const formData = new FormData();
     for (const key in data) {
         if (excludedKeys.has(key)) continue;
-
         let value = data[key];
-
-        if (key.includes('type') && typeof value === 'string') {
-            value = normalizeField(value)
-        }
 
         if (value === null) {
             formData.append(key, '');

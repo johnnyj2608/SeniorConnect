@@ -1,10 +1,12 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatStatus } from '../../utils/formatUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {
-  	const absences = data || [];
+	const { t } = useTranslation();
+	const absences = data || [];
 
 	const handleEdit = () => {
 		onEdit('absences', absences);
@@ -19,25 +21,37 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 		return endDate >= today;
 	});
 
-	return (
+  	return (
 		<div className="half-card">
-			<h2>Absences</h2>
+			<h2>{t('member.absences.label')}</h2>
 			<div className="card-container">
 				<EditButton onClick={handleEdit} />
 				{activeAbsences.length > 0 ? (
 				<ul className="absence-list">
 					{activeAbsences.map((abs, idx) => (
 					<li key={idx} className="absence-item">
-						<DetailRow label="Absence Type" value={abs.absence_type} />
-						<DetailRow label="Start Date" value={formatDate(abs.start_date)} />
-						<DetailRow label="End Date" value={formatDate(abs.end_date)} />
-						<DetailRow label="Status" value={formatStatus(abs.start_date, abs.end_date)} />
-						{abs.note && <DetailRow label="Note" value={abs.note} />}
+						<DetailRow
+						label={t('member.absences.label')}
+						value={t(`member.absences.${abs.absence_type}`, abs.absence_type)}
+						/>
+						<DetailRow
+						label={t('reports.table.start_date')}
+						value={formatDate(abs.start_date)}
+						/>
+						<DetailRow
+						label={t('reports.table.end_date')}
+						value={formatDate(abs.end_date)}
+						/>
+						<DetailRow
+						label={t('reports.table.status')}
+						value={formatStatus(abs.start_date, abs.end_date)}
+						/>
+						{abs.note && <DetailRow label={t('general.note')} value={abs.note} />}
 					</li>
 					))}
 				</ul>
 				) : (
-				<p>No active absences</p>
+				<p>{t('member.absences.no_active_absences')}</p>
 				)}
 			</div>
 		</div>

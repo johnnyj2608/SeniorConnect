@@ -125,7 +125,7 @@ function useModal(data, onClose) {
                     const activeAuth = savedData[activeAuthIndex];
                     return { ...prev, auth: activeAuth };
                 default:
-                console.error("Unknown update type:", type);
+                    console.error("Unknown update type:", type);
                 return prev;
             }
         });
