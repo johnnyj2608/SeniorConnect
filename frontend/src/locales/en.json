@@ -1,0 +1,225 @@
+    {
+    "general": {
+        "home": "Home",
+        "members": "Members",
+        "reports": "Reports",
+        "settings": "Settings",
+        "select_an_option": "Select an option",
+        "results": "Results",
+        "male": "Male",
+        "female": "Female",
+        "edit": "Edit",
+        "note": "Note",
+        "buttons": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "activate": "Activate",
+            "deactivate": "Deactivate",
+            "choose_photo": "Choose Photo",
+            "choose_file": "Choose File",
+            "view_file": "View File"
+        },
+        "days_of_week": {
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        },
+        "days_of_week_short": {
+            "mon": "Mon",
+            "tue": "Tue",
+            "wed": "Wed",
+            "thu": "Thu",
+            "fri": "Fri",
+            "sat": "Sat",
+            "sun": "Sun"
+        },
+        "months": {
+            "january": "January",
+            "february": "February",
+            "march": "March",
+            "april": "April",
+            "may": "May",
+            "june": "June",
+            "july": "July",
+            "august": "August",
+            "september": "September",
+            "october": "October",
+            "november": "November",
+            "december": "December"
+        }
+    },
+    "model": {
+        "mltc": "MLTC",
+        "authorization": "Authorization",
+        "absence": "Absence",
+        "contact": "Contact",
+        "file": "File",
+        "user": "User"
+    },
+    "status": {
+        "label": "Status",
+        "active": "Active",
+        "future": "Future",
+        "expired": "Expired"
+    },
+    "snapshots": {
+        "label": "Snapshots",
+        "members": "Members",
+        "absences": "Absences",
+        "birthdays": "Birthdays",
+        "enrollment": "Enrollment",
+        "month_snapshot_ready": "{{month}} snapshot is ready to view",
+        "see_archived": "See archived reports in settings"
+    },
+    "home": {
+        "leaving_soon": "Leaving Soon",
+        "returning_soon": "Returning Soon",
+        "days": "{{count}} days",
+        "no_upcoming_birthdays": "No upcoming birthdays",
+        "tomorrow": "Tomorrow",
+        "today": "Today",
+        "turning_years_old": "Turning {{count}} years old",
+        "audit_log": "Audit Log",
+        "no_recent_audits": "No recent audits",
+        "updated_by": "Updated by",
+        "created_by": "Created by",
+        "deleted_by": "Deleted by"
+    },
+    "members": {
+        "mltc_filter": "MLTC Filter",
+        "unknown": "Unknown",
+        "search_members": "Search Members",
+        "search_id_or_name": "Search ID or Name",
+        "inactive": "Inactive"
+    },
+    "member": {
+        "info": {
+            "label": "Info",
+            "member_id": "Member ID",
+            "last_name": "Last Name",
+            "first_name": "First Name",
+            "birth_date": "Birth Date",
+            "gender": "Gender",
+            "phone": "Phone",
+            "address": "Address",
+            "email": "Email",
+            "medicaid": "Medicaid",
+            "ssn": "SSN",
+            "language": "Language",
+            "enrollment": "Enrollment"
+        },
+        "authorization": {
+            "label": "Authorization",
+            "member_id": "Member ID",
+            "mltc": "MLTC",
+            "auth_id": "Authorization ID",
+            "schedule": "Schedule",
+            "start_date": "Start Date",
+            "end_date": "End Date",
+            "dx_code": "DX Code",
+            "sdc_code": "SDC Code",
+            "trans_code": "Trans Code"
+        },
+        "contacts": {
+           "label": "Contacts",
+            "contact_type": {
+                "emergency_contact": "Emergency Contact",
+                "primary_care_provider": "Primary Care Provider",
+                "pharmacy": "Pharmacy",
+                "home_aid": "Home Aid",
+                "home_care": "Home Care",
+                "other": "Other"
+            },
+            "relationship": {
+                "husband": "Husband",
+                "wife": "Wife",
+                "son": "Son",
+                "daughter": "Daughter",
+                "brother": "Brother",
+                "sister": "Sister",
+                "friend": "Friend",
+                "father": "Father",
+                "mother": "Mother",
+                "other": "Other"
+            }
+        },
+        "absences": {
+            "label": "Absences",
+            "vacation": "Vacation",
+            "hospital": "Hospital",
+            "personal": "Personal",
+            "other": "Other",
+            "called": "Called"
+        },
+        "files": {
+            "upload_file": "Upload File",
+            "no_file_chosen": "No File Chosen",
+            "file_chosen": "File Chosen",
+            "completed": "Completed",
+            "expiration": "Expiration",
+            "no_files_uploaded": "No files uploaded"
+        }
+    },
+    "reports": {
+        "report_type": "Report Type",
+        "status_filter": "Status Filter",
+        "absences": {
+            "label": "Absences",
+            "ongoing": "Ongoing",
+            "upcoming": "Upcoming",
+            "completed": "Completed"
+        },
+        "audit_log": {
+            "label": "Audit Log",
+            "create": "Create",
+            "update": "Update",
+            "delete": "Delete"
+        },
+        "enrollments": {
+            "label": "Enrollments",
+            "enrolled": "Enrolled",
+            "transferred": "Transferred",
+            "disenrolled": "Disenrolled"
+        },
+        "table": {
+            "member": "Member",
+            "status": "Status",
+            "start_date": "Start Date",
+            "end_date": "End Date",
+            "reason": "Reason",
+            "called": "Called",
+            "change": "Change",
+            "action": "Action",
+            "date": "Date"
+        }
+    },
+    "settings": {
+        "general": {
+            "label": "General",
+            "language": "Language",
+            "dark_mode": "Dark Mode",
+            "notification": "Notification"
+        },
+        "data": {
+            "label": "Data",
+            "upload": "Upload",
+            "user_management": "User Management"
+        },
+        "support": {
+            "label": "Support",
+            "help_center": "Help Center",
+            "terms_of_service": "Terms of Service",
+            "privacy_policy": "Privacy Policy"
+        },
+        "account": {
+            "label": "Account",
+            "reset_password": "Reset Password",
+            "log_out": "Log Out"
+        }
+    }
+}
