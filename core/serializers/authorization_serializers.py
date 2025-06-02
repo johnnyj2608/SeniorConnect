@@ -42,11 +42,6 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         exclude = ['created_at']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['change_type'] = instance.get_change_type_display()
-        return data
-
     def get_member_name(self, obj):
         member = obj.member
         if member:

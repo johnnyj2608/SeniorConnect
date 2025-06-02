@@ -1,0 +1,232 @@
+{
+    "general": {
+        "home": "首页",
+        "members": "成员",
+        "reports": "报告",
+        "settings": "设置",
+        "select_an_option": "请选择一个选项",
+        "results": "结果",
+        "male": "男",
+        "female": "女",
+        "edit": "编辑",
+        "note": "备注",
+        "password": "密码",
+        "required": "必填",
+        "buttons": {
+            "save": "保存",
+            "cancel": "取消",
+            "delete": "删除",
+            "activate": "激活",
+            "deactivate": "停用",
+            "choose_photo": "选择照片",
+            "choose_file": "选择文件",
+            "view_file": "查看文件"
+        },
+        "days_of_week": {
+            "monday": "星期一",
+            "tuesday": "星期二",
+            "wednesday": "星期三",
+            "thursday": "星期四",
+            "friday": "星期五",
+            "saturday": "星期六",
+            "sunday": "星期日"
+        },
+        "days_of_week_short": {
+            "mon": "一",
+            "tue": "二",
+            "wed": "三",
+            "thu": "四",
+            "fri": "五",
+            "sat": "六",
+            "sun": "日"
+        },
+        "months": {
+            "january": "一月",
+            "february": "二月",
+            "march": "三月",
+            "april": "四月",
+            "may": "五月",
+            "june": "六月",
+            "july": "七月",
+            "august": "八月",
+            "september": "九月",
+            "october": "十月",
+            "november": "十一月",
+            "december": "十二月"
+        }
+    },
+    "model": {
+        "mltc": "MLTC",
+        "authorization": "授权",
+        "absence": "缺勤",
+        "contact": "联系人",
+        "file": "文件",
+        "user": "用户"
+    },
+    "status": {
+        "label": "状态",
+        "active": "活跃",
+        "future": "未来",
+        "expired": "已过期",
+        "member_is_inactive": "成员处于非活跃状态"
+    },
+    "snapshots": {
+        "label": "快照",
+        "members": "成员",
+        "absences": "缺勤",
+        "birthdays": "生日",
+        "enrollment": "注册",
+        "month_snapshot_ready": "{{month}} 的快照已准备好查看",
+        "see_archived": "在设置中查看归档报告"
+    },
+    "home": {
+        "leaving_soon": "即将离开",
+        "returning_soon": "即将返回",
+        "days": "{{count}} 天",
+        "no_upcoming_birthdays": "暂无即将到来的生日",
+        "tomorrow": "明天",
+        "today": "今天",
+        "turning_years_old": "将满 {{count}} 岁",
+        "audit_log": "审计日志",
+        "no_recent_audits": "最近无审计记录",
+        "create": "由 {{user}} 创建",
+        "update": "由 {{user}} 更新",
+        "delete": "由 {{user}} 删除"
+    },
+    "members": {
+        "mltc_filter": "MLTC 筛选器",
+        "unknown": "未知",
+        "search_members": "搜索成员",
+        "search_id_or_name": "搜索编号或姓名",
+        "inactive": "未激活"
+    },
+    "member": {
+        "info": {
+            "label": "信息",
+            "member_id": "成员编号",
+            "last_name": "姓",
+            "first_name": "名",
+            "birth_date": "出生日期",
+            "gender": "性别",
+            "phone": "电话",
+            "address": "地址",
+            "email": "电子邮件",
+            "medicaid": "医疗补助",
+            "ssn": "社会安全号码",
+            "language": "语言",
+            "enrollment": "注册"
+        },
+        "authorization": {
+            "label": "授权",
+            "member_id": "成员编号",
+            "mltc": "MLTC",
+            "auth_id": "授权编号",
+            "schedule": "时间表",
+            "start_date": "开始日期",
+            "end_date": "结束日期",
+            "dx_code": "诊断代码",
+            "sdc_code": "SDC 代码",
+            "trans_code": "运输代码"
+        },
+        "contacts": {
+            "label": "联系人",
+            "contact_type": {
+                "emergency_contact": "紧急联系人",
+                "primary_care_provider": "初级保健提供者",
+                "pharmacy": "药房",
+                "home_aid": "家庭助理",
+                "home_care": "家庭护理",
+                "other": "其他"
+            },
+            "relationship": {
+                "husband": "丈夫",
+                "wife": "妻子",
+                "son": "儿子",
+                "daughter": "女儿",
+                "brother": "兄弟",
+                "sister": "姐妹",
+                "friend": "朋友",
+                "father": "父亲",
+                "mother": "母亲",
+                "other": "其他"
+            }
+        },
+        "absences": {
+            "label": "缺勤",
+            "vacation": "休假",
+            "hospital": "住院",
+            "personal": "个人",
+            "other": "其他",
+            "called": "已通知",
+            "no_active_absences": "无有效缺勤"
+        },
+        "files": {
+            "upload_file": "上传文件",
+            "no_file_chosen": "未选择文件",
+            "file_chosen": "已选择文件",
+            "completed": "已完成",
+            "expiration": "过期时间",
+            "no_files_uploaded": "未上传任何文件"
+        }
+    },
+    "reports": {
+        "report_type": "报告类型",
+        "status_filter": "状态筛选",
+        "absences": {
+            "label": "缺勤",
+            "ongoing": "进行中",
+            "upcoming": "即将到来",
+            "completed": "已完成"
+        },
+        "audit_log": {
+            "label": "审计日志",
+            "create": "创建",
+            "update": "更新",
+            "delete": "删除"
+        },
+        "enrollments": {
+            "label": "入学情况",
+            "enrolled": "已入学",
+            "transferred": "已转学",
+            "disenrolled": "已退学"
+        },
+        "table": {
+            "member": "成员",
+            "status": "状态",
+            "start_date": "开始日期",
+            "end_date": "结束日期",
+            "reason": "原因",
+            "called": "已通知",
+            "change": "变更",
+            "action": "操作",
+            "date": "日期"
+        }
+    },
+    "settings": {
+        "general": {
+            "label": "常规",
+            "language": "语言",
+            "dark_mode": "夜间模式",
+            "notification": "通知"
+        },
+        "data": {
+            "label": "数据",
+            "upload": "上传",
+            "user_management": "用户管理"
+        },
+        "support": {
+            "label": "支持",
+            "help_center": "帮助中心",
+            "terms_of_service": "服务条款",
+            "privacy_policy": "隐私政策"
+        },
+        "account": {
+            "label": "账户",
+            "reset_password": "重置密码",
+            "log_out": "退出登录"
+        }
+    },
+    "errors": {
+        "unknown_type": "未知类型"
+    }
+}

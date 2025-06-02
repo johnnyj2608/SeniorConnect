@@ -27,7 +27,7 @@ from core.utils.supabase import (
 def getMemberList(request):
     members = Member.objects.select_related('active_auth', 'active_auth__mltc')
     filter_param = request.GET.get('filter')
-    if filter_param == "Unknown":
+    if filter_param == "unknown":
         members = members.filter(active_auth__mltc__isnull=True)
     elif filter_param:
         members = members.filter(active_auth__mltc__name__iexact=filter_param)
@@ -41,7 +41,7 @@ def getMemberList(request):
 
     data = defaultdict(list)
     for member_data in serializer.data:
-        mltc_name = member_data['mltc'] if member_data['mltc'] else "Unknown"
+        mltc_name = member_data['mltc'] if member_data['mltc'] else "unknown"
         data[mltc_name].append(member_data)
 
     return Response(data, status=status.HTTP_200_OK)

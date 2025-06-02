@@ -7,6 +7,7 @@ import {
 import { useContext } from "react";
 
 import './App.css';
+import './i18n';
 import { AuthContext } from "./context/AuthContext";
 import PrivateRoute from './components/routes/PrivateRoute';
 import ScrollUp from './components/routes/ScrollUp';

@@ -10,6 +10,8 @@
         "female": "Female",
         "edit": "Edit",
         "note": "Note",
+        "password": "Password",
+        "required": "Required",
         "buttons": {
             "save": "Save",
             "cancel": "Cancel",
@@ -65,7 +67,8 @@
         "label": "Status",
         "active": "Active",
         "future": "Future",
-        "expired": "Expired"
+        "expired": "Expired",
+        "member_is_inactive": "Member is inactive"
     },
     "snapshots": {
         "label": "Snapshots",
@@ -86,9 +89,9 @@
         "turning_years_old": "Turning {{count}} years old",
         "audit_log": "Audit Log",
         "no_recent_audits": "No recent audits",
-        "updated_by": "Updated by",
-        "created_by": "Created by",
-        "deleted_by": "Deleted by"
+        "create": "Created by {{user}}",
+        "update": "Updated by {{user}}",
+        "delete": "Deleted by {{user}}"
     },
     "members": {
         "mltc_filter": "MLTC Filter",
@@ -154,7 +157,8 @@
             "hospital": "Hospital",
             "personal": "Personal",
             "other": "Other",
-            "called": "Called"
+            "called": "Called",
+            "no_active_absences": "No active absences"
         },
         "files": {
             "upload_file": "Upload File",
@@ -221,5 +225,8 @@
             "reset_password": "Reset Password",
             "log_out": "Log Out"
         }
+    },
+    "errors": {
+        "unknown_type": "Unknown type"
     }
 }

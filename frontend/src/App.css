@@ -846,6 +846,7 @@ input[type="number"]::-webkit-inner-spin-button {
   border-bottom: 2px solid var(--color-danger);
   border-radius: 4px;
   z-index: 99;
+  text-transform: capitalize;
 }
 
 .absence-item:not(:last-child) {

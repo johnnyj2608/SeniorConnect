@@ -12,7 +12,6 @@ class AuditLogSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['action_type'] = instance.get_action_type_display()
 
         changes = data.get('changes')
         if changes and isinstance(changes, dict):

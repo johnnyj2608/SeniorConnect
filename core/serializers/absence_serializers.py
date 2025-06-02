@@ -10,11 +10,6 @@ class AbsenceSerializer(serializers.ModelSerializer):
         model = Absence
         exclude = ['created_at', 'updated_at']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['absence_type'] = instance.get_absence_type_display()
-        return data
-
     def get_member_name(self, obj):
         member = obj.member
         if member:
