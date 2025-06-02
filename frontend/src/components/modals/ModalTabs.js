@@ -76,7 +76,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             </button>
         ) : (
             <button
-                className={`tab-button ${isActive ? 'active' : ''} ${isEdited ? 'edited' : ''} ${isExpired ? 'expired' : ''}`} 
+                className={`tab-button${isActive ? ' active' : ''}${isEdited ? ' edited' : ''}${isExpired ? ' expired' : ''}`} 
                 onClick={() => handleTabClick(index)}
             >
                 <div className="tab-label">

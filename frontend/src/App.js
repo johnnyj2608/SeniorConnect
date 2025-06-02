@@ -26,7 +26,7 @@ function Main() {
   const isDarkMode = user?.preferences?.dark_mode ?? localStorage.getItem("dark_mode") === "true";
 
   return (
-    <div className={`container ${isDarkMode ? "dark" : ""}`}>
+    <div className={`container${isDarkMode ? " dark" : ""}`}>
       <div className="app">
         {!isLoginPage && <Navbar />}
         <div className="app-content">

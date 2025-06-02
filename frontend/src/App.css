@@ -5,6 +5,11 @@
 -------------- */
 
 :root {
+  --color-background: #F3F2EE;
+  --color-content: #FFFFFF;
+  --color-text: #191919;
+  --color-border: #DFDED9;
+
   --color-main: #6366F1;
   --color-main-light: #9699ff;
   --color-main-dark: #4F46E5;
@@ -48,7 +53,7 @@ input:not([type="radio"]):not([type="checkbox"]) {
   color: var(--color-black);
   padding: 6px;
   border-radius: 4px;
-  border: none;
+  border: 1px solid var(--color-border);
 }
 
 input[type="checkbox"] {
@@ -60,7 +65,7 @@ select {
   color: var(--color-black);
   font-size: 13px;
   min-width: 150px;
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 7px;
   appearance: none;
@@ -130,7 +135,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .app-header h1 {
-  color: var(--color-text);
+  color: var(--color-main);
   padding-left: 20px;
   margin-left: 5%;
 }
@@ -150,6 +155,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .app-header button:hover .button-text, .navbar-toggle:hover svg {
+  color: var(--color-white);
   transform: scale(1.05);
 }
 
@@ -225,7 +231,8 @@ input[type="number"]::-webkit-inner-spin-button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
 }
 
 .login-container form {
@@ -235,6 +242,10 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 20px;
   padding: 40px;
   color: var(--color-background)
+}
+
+.login-container h1 {
+  color: var(--color-main);
 }
 
 .login-container input {
@@ -274,6 +285,11 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   display: flex;
   align-items: center;
+  transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+  fill: var(--color-main);
 }
 
 .eye-open {
@@ -303,6 +319,7 @@ input[type="number"]::-webkit-inner-spin-button {
   z-index: 99;
   padding-top: 10px;
   padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .page-header > * {
@@ -336,6 +353,7 @@ input[type="number"]::-webkit-inner-spin-button {
   padding: 15px 10px;
   border-radius: 10px;
   position: relative;
+  border: 1px solid var(--color-border);
 }
 
 .card-container h3 {
@@ -458,7 +476,7 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   justify-content: space-between;
   padding: 5px;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
   border-radius: 4px;
   gap: 1rem;
@@ -466,6 +484,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .home-item:hover {
   transform: scale(1.01);
+  color: var(--color-white);
   background-color: var(--color-main)
 }
 
@@ -492,7 +511,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .stats-mltc {
-  background: var(--color-gray);
+  background: var(--color-content);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 1rem;
   width: 250px;
@@ -663,7 +683,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .members-list-content > * {
   background-color: var(--color-content);
   border-radius: 8px;
-  padding: 10px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
 }
 
 .members-list-content > *:not(:last-child) {
@@ -674,6 +695,7 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
   border: 1px solid  var(--color-text);
+  border-radius: 8px;
   background: var(--color-content);
   width: 250px;
   height: 350px;
@@ -682,7 +704,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .members-list-item:hover {
-  background-color: var(--color-main);
   cursor: pointer;
   transform: scale(1.03);
   transition: all 0.2s ease;
@@ -745,6 +766,7 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 350px;
   border-radius: 8px;
   margin-top: 20px;
+  border: 1px solid var(--color-border);
 }
 
 .preview-photo {
@@ -817,6 +839,7 @@ body.modal-open {
   display: flex;
   flex-direction: column;
   background-color: var(--color-content);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   width: 100%;
   max-width: 625px;
@@ -828,7 +851,7 @@ body.modal-open {
 }
 
 .modal-main > *:not(:first-child) {
-  border-left: 1px solid var(--color-text);
+  border-left: 1px solid var(--color-border);
 }
 
 .modal-content {
@@ -843,7 +866,7 @@ body.modal-open {
   display: flex;
   height: 70px;
   justify-content: space-between;
-  border-top: 1px solid var(--color-text);
+  border-top: 1px solid var(--color-border);
 }
 
 .modal-header {
@@ -948,7 +971,7 @@ body.modal-open {
   justify-content: center;
   color: white;
   background-color: var(--color-main);
-  border: 1px solid var(--color-white);
+  border: 1px solid var(--color-border);
   border-radius: 0 12px 12px 0;
   cursor: pointer;
   font-weight: bold;
@@ -973,7 +996,7 @@ body.modal-open {
 }
 
 .tab-button.expired {
-  background-color: var(--color-dark-gray);
+  background-color: var(--color-gray-dark);
   opacity: 0.6;
 }
 
@@ -1187,7 +1210,7 @@ body.modal-open {
 .pagination-page {
   padding: 4px !important;
   border-radius: 4px;
-  border: none;
+  border: 1px solid var(--color-border) !important;
   text-align: center;
   min-width: 35px !important;
   margin-right: 5px;
@@ -1230,7 +1253,7 @@ body.modal-open {
 
 .report-table tr {
   font-size: 20px;
-  border-bottom: 1px solid var(--color-text)
+  border-bottom: 1px solid var(--color-border);
 }
 
 .report-table th, .report-table td {
@@ -1245,7 +1268,7 @@ body.modal-open {
 }
 
 .report-table tbody {
-  border: 1px solid var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .report-link:hover {
@@ -1287,6 +1310,7 @@ body.modal-open {
   background-color: var(--color-content);
   padding: 1rem;
   border-radius: 8px;
+  border: 1px solid var(--color-border);
 }
 
 .settings-item {
@@ -1298,6 +1322,7 @@ body.modal-open {
   padding: 0.5rem;
   cursor: pointer;
   border-radius: 8px;
+  transition: all 0.2s ease
 }
 
 .settings-item.nav {
@@ -1316,7 +1341,7 @@ body.modal-open {
 .settings-item svg {
   width: 30px;
   height: 30px;
-  fill: var(--color-white);
+  fill: var(--color-text);
 }
 
 .settings-item.active {
@@ -1333,6 +1358,7 @@ body.modal-open {
   border-radius: 8px;
   padding: 1rem;
   background-color: var(--color-content);
+  border: 1px solid var(--color-border);
 }
 
 .section-main {
