@@ -187,14 +187,16 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             <div className="member-detail stack">
                 <label>Language</label>
                 <select 
+                    required
                     value={data?.language || 0} 
-                    onChange={handleChange('language')}>
-                <option value="">Select an option</option>
-                {languageOptions.map((option) => (
-                    <option key={option} value={option}>
-                        {option}
-                    </option>
-                ))}
+                    onChange={handleChange('language')}
+                >
+                    <option value="">Select an option</option>
+                    {languageOptions.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
                 </select>
             </div>
         </>

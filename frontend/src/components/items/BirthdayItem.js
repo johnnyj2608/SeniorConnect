@@ -11,11 +11,13 @@ const BirthdayItem = ({ birthday }) => {
   return (
     <li>
       <Link to={`/member/${birthday.id}`} className="home-item">
-        <span>
-          {birthday.sadc_member_id}. {birthday.last_name}, {birthday.first_name}
-          {' — Turning '}<strong>{birthday.age_turning}</strong>
+        <span className="home-item-title">
+          <p>
+            {birthday.sadc_member_id}. {birthday.last_name}, {birthday.first_name}
+          </p>
+          <p>{' — Turning '}{birthday.age_turning}</p>
         </span>
-        <span>{renderBirthdayMessage(birthday.days_until)}</span>
+        <span className="home-item-detail">{renderBirthdayMessage(birthday.days_until)}</span>
       </Link>
     </li>
   );

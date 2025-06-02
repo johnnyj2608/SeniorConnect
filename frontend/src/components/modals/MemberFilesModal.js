@@ -27,6 +27,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         type="text"
                         value={disabled ? '' : current.name || ''}
                         onChange={handleChange('name')}
+                        placeholder="Required"
                         autoComplete="off"
                         disabled={disabled}
                     />

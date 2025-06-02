@@ -67,6 +67,7 @@ const ReportsPage = () => {
                         <div className="filter-option">
                             <label>Report Type</label>
                             <select
+                                required
                                 value={reportType}
                                 onChange={(e) => setReportType(e.target.value)}
                             >
@@ -82,6 +83,7 @@ const ReportsPage = () => {
                         <div className="filter-option">
                             <label>Status Filter</label>
                             <select
+                                required
                                 value={reportFilter}
                                 onChange={(e) => setReportFilter(e.target.value)}
                             >

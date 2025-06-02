@@ -37,6 +37,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             <div className="member-detail">
                 <label>Contact Type *</label>
                 <select 
+                    required
                     value={disabled ? '' : current.contact_type || ''} 
                     onChange={(e) => {
                         handleChange('contact_type')(e);
@@ -44,13 +45,14 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                         handleChange('name')({ target: { value: '' } });
                         handleChange('phone')({ target: { value: '' } });
                     }}
-                    disabled={disabled}>
-                <option value="">Select an option</option>
-                {contactTypes.map((type) => (
-                    <option key={type} value={type}>
-                        {type}
-                    </option>
-                ))}
+                    disabled={disabled}
+                >
+                    <option value="">Select an option</option>
+                    {contactTypes.map((type) => (
+                        <option key={type} value={type}>
+                            {type}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -58,15 +60,17 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                 <div className="member-detail">
                     <label>Relationship *</label>
                     <select 
+                        required
                         value={disabled ? '' : current.relationship_type || ''} 
                         onChange={handleChange('relationship_type')}
-                        disabled={disableFields}>
-                    <option value="">Select an option</option>
-                    {relationshipTypes.map((type) => (
-                        <option key={type} value={type}>
-                            {type}
-                        </option>
-                    ))}
+                        disabled={disableFields}
+                    >
+                        <option value="">Select an option</option>
+                        {relationshipTypes.map((type) => (
+                            <option key={type} value={type}>
+                                {type}
+                            </option>
+                        ))}
                     </select>
                 </div>
             )}

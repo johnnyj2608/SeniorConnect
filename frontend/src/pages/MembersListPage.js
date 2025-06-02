@@ -76,7 +76,11 @@ const MembersListPage = () => {
 					<div className="filter-content">
 						<div className="filter-option">
 							<label>MLTC Filter</label>
-							<select value={mltcFilter} onChange={(e) => setMltcFilter(e.target.value)}>
+							<select 
+								required 
+								value={mltcFilter} 
+								onChange={(e) => setMltcFilter(e.target.value)}
+							>
 								<option value="">Select an option</option>
 								{mltcOptions.map((option) => (
 									<option key={option.name} value={option.name}>

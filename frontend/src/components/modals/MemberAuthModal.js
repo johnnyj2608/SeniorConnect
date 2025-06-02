@@ -77,18 +77,20 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             <div className="member-detail">
                 <label>MLTC *</label>
                 <select 
+                    required
                     value={disabled ? '' : current.mltc || ''} 
                     onChange={(e) => {
                         handleChange('mltc')(e);
                         handleChange('dx_code')({target: { value: '' }});
                     }}
-                    disabled={disabled}>
-                <option value="">Select an option</option>
-                {mltcOptions.map((option) => (
-                    <option key={option.name} value={option.name}>
-                        {option.name}
-                    </option>
-                ))}
+                    disabled={disabled}
+                >
+                    <option value="">Select an option</option>
+                    {mltcOptions.map((option) => (
+                        <option key={option.name} value={option.name}>
+                            {option.name}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className="member-detail">
@@ -140,15 +142,17 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             <div className="member-detail">
                 <label>DX Code</label>
                 <select 
+                    required 
                     value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
                     onChange={handleChange('dx_code')}
-                    disabled={disabled}>
-                <option value="">Select an option</option>
-                {dx_codes.map((option) => (
-                    <option key={option} value={option}>
-                        {option}
-                    </option>
-                ))}
+                    disabled={disabled}
+                >
+                    <option value="">Select an option</option>
+                    {dx_codes.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className="member-detail">

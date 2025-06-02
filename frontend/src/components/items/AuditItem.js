@@ -5,11 +5,13 @@ const AuditItem = ({ audit }) => {
   return (
     <li>
       <Link to={`/member/${audit.member}`} className="home-item">
-        <span>
-            {audit.member_name} — {audit.model_name}
+        <span className="home-item-title">
+          <p>{audit.member_name}</p>
+          <p>— {audit.model_name}</p>
         </span>
-        <span>  
-            {audit.action_type}d by <strong>{audit.user_name}</strong>
+        <span className="home-item-title">
+          <p>{audit.action_type}d by</p>
+          <p>{audit.user_name}</p> 
         </span>
       </Link>
     </li>

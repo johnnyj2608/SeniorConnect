@@ -28,15 +28,17 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             <div className="member-detail">
                 <label>Absence Type *</label>
                 <select 
+                    required
                     value={disabled ? '' : current.absence_type || ''} 
                     onChange={handleChange('absence_type')} 
-                    disabled={disabled}>
-                <option value="">Select an option</option>
-                {absenceTypes.map((type) => (
-                    <option key={type} value={type}>
-                        {type}
-                    </option>
-                ))}
+                    disabled={disabled}
+                >
+                    <option value="">Select an option</option>
+                    {absenceTypes.map((type) => (
+                        <option key={type} value={type}>
+                            {type}
+                        </option>
+                    ))}
                 </select>
             </div>
 

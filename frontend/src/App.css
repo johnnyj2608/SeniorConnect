@@ -8,14 +8,15 @@
   --color-background: #F3F2EE;
   --color-content: #FFFFFF;
   --color-text: #191919;
-  --color-border: #DFDED9;
+  --color-text-sub: rgb(0 0 0 / .6);
+  --color-border: rgb(140 140 140 / .25);
 
   --color-main: #6366F1;
   --color-main-light: #9699ff;
   --color-main-dark: #4F46E5;
   --color-black: #000;
   --color-white: #FFF;
-  --color-gray: #808080;
+  --color-gray: #808080;;
   --color-gray-light: #F1F1F1;
   --color-gray-dark: #6F6F6F;
   --color-red: #EF4444;
@@ -28,7 +29,8 @@
 .dark {
   --color-background: #0F0F0F;
   --color-content: #1D2226;
-  --color-text: #E9E9EA;
+  --color-text: #E9E9E9;
+  --color-text-sub: rgb(255 255 255 / .6);
 }
 
 * {
@@ -78,6 +80,10 @@ select {
   background-size: 20px 20px;
 }
 
+select:invalid {
+  color: var(--color-gray);
+}
+
 ul, li {
   list-style: none;
   padding: 0;
@@ -92,6 +98,10 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.radio-group label {
+  color: var(--color-text) !important;
 }
 
 .nowrap {
@@ -203,7 +213,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .spinner {
   width: 100px;
   height: 100px;
-  border: 6px solid #ccc;
+  border: 6px solid var(--color-border);
   border-top: 6px solid var(--color-main);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -334,7 +344,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .page-title {
-  color: var(--color-text);
+  color: var(--color-text-sub);
   font-size: 24px;
   font-weight: 600;
 }
@@ -343,7 +353,7 @@ input[type="number"]::-webkit-inner-spin-button {
   font-size: 25px;
   padding-left: 20px;
   padding-bottom: 5px;
-  border-bottom: 1px solid var(--color-text);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .card-container {
@@ -389,7 +399,7 @@ input[type="number"]::-webkit-inner-spin-button {
   z-index: 1;
   background: none;
   border: none;
-  fill: var(--color-text);
+  fill: var(--color-text-sub);
   transition: all 0.2s ease;
 }
 
@@ -488,6 +498,20 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: var(--color-main)
 }
 
+.home-item-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-item-title p:last-child {
+  color: var(--color-text-sub);
+}
+
+.home-item-detail {
+  display: flex;
+  align-items: center;
+}
+
 .stats-container {
   text-align: center;
   justify-content: center;
@@ -546,10 +570,15 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .absence-list > h3 {
   padding: 0 5px;
+  color: var(--color-text-sub)
 }
 
 .audit-group {
   margin-bottom: 20px;
+}
+
+.audit-group > h3 {
+  color: var(--color-text-sub)
 }
 
 /* --------------
@@ -594,7 +623,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .members-count {
   font-size: 20px;
-  color: var(--color-text);
+  color: var(--color-text-sub);
   white-space: nowrap;
   margin-top: 1.6rem;
 }
@@ -694,7 +723,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .members-list-item {
   display: flex;
   flex-direction: column;
-  border: 1px solid  var(--color-text);
+  border: 1px solid  var(--color-border);
   border-radius: 8px;
   background: var(--color-content);
   width: 250px;
@@ -716,6 +745,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .members-list-details {
   padding: 5px 10px;
+}
+
+.members-list-details p {
+  color: var(--color-text-sub);
 }
 
 .members-list-details > * {
@@ -750,7 +783,6 @@ input[type="number"]::-webkit-inner-spin-button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .photo-container > label {
@@ -782,6 +814,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .member-detail label {
   width: 130px;
   padding: 5px;
+  color: var(--color-text-sub);
 }
 
 .member-detail input,
@@ -811,7 +844,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .absence-item:not(:last-child) {
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-text);
+  border-bottom: 1px solid var(--color-border);
 }
 
 /* --------------
@@ -840,7 +873,7 @@ body.modal-open {
   flex-direction: column;
   background-color: var(--color-content);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   width: 100%;
   max-width: 625px;
   overflow-y: hidden;
@@ -961,7 +994,7 @@ body.modal-open {
 
 .member-detail.stack {
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
@@ -1272,7 +1305,7 @@ body.modal-open {
 }
 
 .report-link:hover {
-  color: var(--color-main-light);
+  color: var(--color-main);
   text-decoration: underline;
 }
 
@@ -1341,7 +1374,7 @@ body.modal-open {
 .settings-item svg {
   width: 30px;
   height: 30px;
-  fill: var(--color-text);
+  fill: var(--color-text-sub);
 }
 
 .settings-item.active {
