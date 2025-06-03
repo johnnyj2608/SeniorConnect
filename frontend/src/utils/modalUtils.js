@@ -1,5 +1,4 @@
 import fetchWithRefresh from './fetchWithRefresh';
-import { normalizeField } from './formatUtils';
 
 const compareTabs = (updatedTab, originalTab) => {
     const stripEdited = ({ edited, ...rest }) => rest;

@@ -38,7 +38,7 @@ const SettingsData = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [user, t]);
+  }, [user]);
 
   const handleModalClose = useCallback(() => {
     setModalOpen(false);
@@ -50,9 +50,9 @@ const SettingsData = () => {
       <h3 className="section-title">{t('settings.data.label')}</h3>
       <div className="section-main">
         <SettingsItem label={t('model.mltc')} onClick={handleMLTCModal} />
-        <SettingsItem label={t('settings.general.language')} onClick={handleMLTCModal} />
-        <SettingsItem label={t('settings.data.upload')} onClick={handleMLTCModal} />
-        <SettingsItem label={t('settings.data.user_management')} onClick={handleUsersModal} />
+        <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
+        <SettingsItem label={t('settings.data.upload')} onClick={() => console.log('Upload')} />
+        <SettingsItem label={t('settings.data.users.label')} onClick={handleUsersModal} />
 
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />

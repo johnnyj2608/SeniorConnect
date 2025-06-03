@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
+import { colorAbsence } from '../../utils/colorUtils';
 import { formatDate, formatStatus } from '../../utils/formatUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {
@@ -44,14 +45,14 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						/>
 						<DetailRow
 						label={t('reports.table.status')}
-						value={formatStatus(abs.start_date, abs.end_date)}
+						value={colorAbsence(formatStatus(abs.start_date, abs.end_date), t)}
 						/>
 						{abs.note && <DetailRow label={t('general.note')} value={abs.note} />}
 					</li>
 					))}
 				</ul>
 				) : (
-				<p>{t('member.absences.no_active_absences')}</p>
+				<p>{t('member.absences.no_absences')}</p>
 				)}
 			</div>
 		</div>

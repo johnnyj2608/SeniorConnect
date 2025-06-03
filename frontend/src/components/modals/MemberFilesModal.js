@@ -1,9 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
 import viewFile from '../../utils/viewFile';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
+    const { t } = useTranslation();
+    
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
@@ -18,11 +21,11 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         <div className={`file-drop ${isDragging ? 'drag-over' : ''}`} {...dragProps}>
             <div className={`file-content ${isDragging ? 'dimmed' : ''}`}>
                 <div className="modal-header">
-                    <h3>Edit Files</h3>
+                    <h3>{t('general.edit')}{t('member.files.label')}</h3>
                 </div>
 
                 <div className="member-detail">
-                    <label>Name *</label>
+                    <label>{t('member.files.name')} *</label>
                     <input
                         type="text"
                         value={disabled ? '' : current.name || ''}
@@ -34,18 +37,18 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 </div>
 
                 <div className="member-detail">
-                    <label>Upload File *</label>
+                    <label>{t('member.files.upload_file')} *</label>
                     <div className="file-container">
                         <button
                             className="action-button thin"
                             onClick={() => document.getElementById('hiddenFileInput').click()}
                             disabled={disabled}
                         >
-                            Choose File
+                            {t('general.buttons.choose_file')}
                         </button>
                         {!disabled && (
                             <span className={`uploaded-file-name ${!current.file ? 'file-expired' : ''}`}>
-                                {current.file ? 'File chosen' : 'No file chosen'}
+                                {current.file ? t('member.files.file_chosen') : t('member.files.no_file_chosen')}
                             </span>
                         )}
                         <input
@@ -59,7 +62,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 </div>
 
                 <div className="member-detail">
-                    <label>Completed</label>
+                    <label>{t('member.files.completed')}</label>
                     <input
                         type="date"
                         value={disabled ? '' : current.completion_date || ''}
@@ -69,7 +72,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                 </div>
 
                 <div className="member-detail">
-                    <label>Expiration</label>
+                    <label>{t('member.files.expiration')}</label>
                     <input
                         type="date"
                         value={disabled ? '' : current.expiration_date || ''}
@@ -84,7 +87,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         onClick={() => viewFile(current.file)}
                         disabled={disabled || !current.file}
                     >
-                        View File
+                        {t('general.buttons.view_file')}
                     </button>
                 </div>
             </div>
@@ -92,7 +95,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
             {isDragging && (
                 <div className="upload-overlay">
                     <Upload className="upload-icon pulse" />
-                    <p>Drop file to upload</p>
+                    <p>{t('member.files.drop_to_upload')}</p>
                 </div>
             )}
         </div>

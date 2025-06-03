@@ -819,7 +819,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .member-detail label {
-  width: 130px;
+  width: 135px;
   padding: 5px;
   color: var(--color-text-sub);
 }
@@ -835,8 +835,10 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .inactive-banner {
-  position: sticky;
+  position: fixed;
   top: 55px;
+  left: 0;
+  right: 0;
   background-color: #ffe0e0;
   color: var(--color-danger);
   text-align: center;
@@ -846,7 +848,7 @@ input[type="number"]::-webkit-inner-spin-button {
   border-bottom: 2px solid var(--color-danger);
   border-radius: 4px;
   z-index: 99;
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 
 .absence-item:not(:last-child) {

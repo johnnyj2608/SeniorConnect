@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
     const items = Array.isArray(data)
         ? data.filter(item => item.edited && !item.deleted)
@@ -10,7 +12,7 @@ const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
 
             if (isEmpty) {
                 acc.add(field);
-            } else if (field === 'phone' && !validateInputLength(10, value)) {
+            } else if (field === 'phone' && !validateInputLength(10, value, 'Phone')) {
                 acc.add(field);
             }
         });
@@ -29,7 +31,7 @@ const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
     }, new Set());
 
     if (missingFields.size > 0) {
-        alert(`Please fill in the required fields: ${[...missingFields].join(', ')}`);
+        alert(t('validation.required_fields', { fields: [...missingFields].join(', ') }));
         return false;
     }
 
@@ -49,28 +51,26 @@ const validateDateRange = (data) => {
     }, new Set());
 
     if (invalidDates.size > 0) {
-        alert('Invalid dates: End date cannot be before start date.');
+        alert(t('validation.invalid_dates'));
         return false;
     }
 
     return true;
 };
 
-// Phone (10) && SSN (9)
-const validateInputLength = (length, data, type='Phone') => {
+const validateInputLength = (length, data, type = 'Phone') => {
     if (data === null || data === undefined || String(data).trim() === '') {
         return true;
     }
 
     const str = String(data).trim();
     if (str.length !== length) {
-        alert(`${type} must be exactly ${length} characters long.`);
+        alert(t('validation.exact_length', { type, length }));
         return false;
     }
 
     return true;
 };
-
 
 const validateMedicaid = (data) => {
     if (data === null || data === undefined || String(data).trim() === '') {
@@ -79,7 +79,7 @@ const validateMedicaid = (data) => {
 
     const medicaidPattern = /^[a-zA-Z]{2}\d{5}[a-zA-Z]$/;
     if (!medicaidPattern.test(data.trim())) {
-        alert('Medicaid ID must be in the format XX12345X (2 letters, 5 digits, 1 letter).');
+        alert(t('validation.invalid_medicaid'));
         return false;
     }
 
@@ -91,7 +91,10 @@ const confirmMltcDeletion = (items) => {
     if (deletedItems.length === 0) return true;
 
     const names = deletedItems.map(item => item.name);
-    const message = `Are you sure you want to delete the following MLTC${names.length > 1 ? 's' : ''}?\n- ${names.join('\n- ')}`;
+    const message = t('validation.confirm_deletion', {
+        plural: names.length > 1 ? 's' : '',
+        names: names.join('\n- ')
+    });
     return window.confirm(message);
 };
 

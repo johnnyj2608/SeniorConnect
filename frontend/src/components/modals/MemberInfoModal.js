@@ -1,48 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const MemberInfoModal = ({ data, handleChange }) => {
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="modal-header">
-                <h3>Edit Info</h3>
+                <h3>{t('general.edit')}{t('member.info.label')}</h3>
             </div>
+
             <div className="member-detail">
-                <label>Member ID *</label>
+                <label>{t('member.info.member_id')} *</label>
                 <input
                     type="number"
                     value={data.sadc_member_id || ''}
                     onChange={handleChange('sadc_member_id')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                 />
             </div>
 
             <div className="member-detail">
-                <label>Last Name *</label>
+                <label>{t('member.info.last_name')} *</label>
                 <input
                     type="text"
                     value={data.last_name || ''}
                     onChange={handleChange('last_name')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                 />
             </div>
 
             <div className="member-detail">
-                <label>First Name *</label>
+                <label>{t('member.info.first_name')} *</label>
                 <input
                     type="text"
                     value={data.first_name || ''}
                     onChange={handleChange('first_name')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                 />
             </div>
 
             <div className="member-detail">
-                <label>Phone</label>
+                <label>{t('member.info.phone')}</label>
                 <input
                     type="number"
                     value={data.phone || ''}
@@ -52,7 +56,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Address</label>
+                <label>{t('member.info.address')}</label>
                 <input
                     type="text"
                     value={data.address || ''}
@@ -62,7 +66,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Email</label>
+                <label>{t('member.info.email')}</label>
                 <input
                     type="text"
                     value={data.email || ''}
@@ -72,7 +76,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Medicaid</label>
+                <label>{t('member.info.medicaid')}</label>
                 <input
                     type="text"
                     value={data.medicaid?.toUpperCase() || ''}
@@ -80,9 +84,9 @@ const MemberInfoModal = ({ data, handleChange }) => {
                     autoComplete="off"
                 />
             </div>
-            
+
             <div className="member-detail">
-                <label>SSN</label>
+                <label>{t('member.info.ssn')}</label>
                 <input
                     type="number"
                     value={data.ssn || ''}
@@ -92,7 +96,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Enrollment</label>
+                <label>{t('member.info.enrollment')}</label>
                 <input
                     type="date"
                     value={data.enrollment_date || ''}
@@ -101,7 +105,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>Note</label>
+                <label>{t('general.note')}</label>
                 <input
                     type="text"
                     value={data.note || ''}
@@ -114,6 +118,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
 };
 
 const MemberInfoSideModal = ({ data, handleChange }) => {
+    const { t } = useTranslation();
     const [languageOptions, setLanguageOptions] = useState([]);
 
     useEffect(() => {
@@ -137,12 +142,12 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             <div className="photo-container">
                 <img
                     src={formatPhoto(data.photo)}
-                    alt={data.first_name ? `${data.first_name} ${data.last_name}` : "Member"} 
+                    alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
                 <label htmlFor="image-upload" className="action-button thin">
-                    Choose Photo
+                    {t('general.buttons.choose_photo')}
                 </label>
                 <input
                     id="image-upload"
@@ -154,7 +159,7 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail stack">
-                <label>Birth Date *</label>
+                <label>{t('member.info.birth_date')} *</label>
                 <input
                     type="date"
                     value={data.birth_date || ''}
@@ -163,9 +168,9 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail stack">
-                <label>Gender *</label>
+                <label>{t('member.info.gender')} *</label>
                 <div className="radio-group">
-                    <label>Male</label>
+                    <label>{t('general.male')}</label>
                     <input
                         type="radio"
                         name="gender"
@@ -173,7 +178,7 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                         checked={data.gender === 'M'}
                         onChange={handleChange('gender')}
                     />
-                    <label>Female</label>
+                    <label>{t('general.female')}</label>
                     <input
                         type="radio"
                         name="gender"
@@ -185,13 +190,13 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail stack">
-                <label>Language</label>
-                <select 
+                <label>{t('member.info.language')}</label>
+                <select
                     required
-                    value={data?.language || 0} 
+                    value={data?.language || ''}
                     onChange={handleChange('language')}
                 >
-                    <option value="">Select an option</option>
+                    <option value="">{t('general.select_an_option')}</option>
                     {languageOptions.map((option) => (
                         <option key={option} value={option}>
                             {option}

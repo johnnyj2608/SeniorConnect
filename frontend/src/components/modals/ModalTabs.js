@@ -1,8 +1,12 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { formatDate, formatStatus } from '../../utils/formatUtils';
+import { colorAbsence } from '../../utils/colorUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
+    const { t } = useTranslation();
+    
     if (tab.deleted) {
         return;
     } 
@@ -14,49 +18,48 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
         switch (type) {
             case 'authorizations':
                 if (item.active === true) {
-                    status = 'Active';
+                    status = t('status.active');
                 } else if (item.start_date && new Date(item.start_date) > today) {
-                    status = 'Future';
+                    status = t('status.future');
                 } else {
-                    status = 'Expired';
+                    status = t('status.expired');
                 }
 
                 return { 
-                    heading: item.mltc || 'unknown', 
+                    heading: item.mltc || t('members.unknown'),
                     subheading: status,
-                    inactive: status === 'Expired',
+                    inactive: status === t('status.expired'),
                 };
             case 'contacts':
                 return { 
-                    heading: item.name || 'unknown', 
-                    subheading: item.contact_type,
+                    heading: item.name || t('members.unknown'),
+                    subheading: t(`member.contacts.contact_type.${item.contact_type}`, '')
                 };
             case 'absences':
-                
-
+                status = formatStatus(item.start_date, item.end_date)
                 return {
-                    heading: item.absence_type || 'unknown',
-                    subheading: formatStatus(item.start_date, item.end_date),
-                    inactive: status === 'Completed',
+                    heading: t(`member.absences.${item.absence_type}`, t('members.unknown')),
+                    subheading: colorAbsence(status, t),
+                    inactive: status === 'completed',
                 };
             case 'files':
                 return { 
-                    heading: item.name || 'unknown', 
+                    heading: item.name || t('members.unknown'),
                     subheading: formatDate(item.completion_date) || '',
                 };
             case 'users':
                 return { 
-                    heading: item.name || 'unknown', 
-                    subheading: item.is_org_admin ? 'Admin' : 'Staff',
+                    heading: item.name || t('members.unknown'),
+                    subheading: item.is_org_admin ? t('settings.data.users.admin') : t('settings.data.users.staff'),
                     inactive: item.is_active === false,
                 };
             case 'mltcs':
                 return { 
-                    heading: item.name || 'unknown', 
+                    heading: item.name || t('members.unknown'),
                     inactive: item.active === false,
                 };
             default:
-                return { heading: 'unknown', subheading: '' };
+                return { heading: t('members.unknown'), subheading: '' };
         }
     };
 

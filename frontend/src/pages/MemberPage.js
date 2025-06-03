@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
 import MemberInfoCard from '../components/memberCards/MemberInfoCard';
@@ -11,6 +12,7 @@ import MemberStatusBanner from '../components/layout/StatusBanner';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
 const MemberPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -30,7 +32,7 @@ const MemberPage = () => {
           const data = await response.json();
           setMemberData(data);
         } catch (error) {
-          console.error('Failed to fetch member data:', error);
+          console.error(error);
         }
       };
 
@@ -39,7 +41,8 @@ const MemberPage = () => {
   }, [id]);
 
   const handleDelete = async () => {
-    const isConfirmed = window.confirm('Are you sure you want to delete this member?');
+    const action = t('general.buttons.delete');
+    const isConfirmed = window.confirm(t('member.confirm_update', { action: action.toLowerCase() }));
     if (!isConfirmed) return;
 
     try {
@@ -52,14 +55,16 @@ const MemberPage = () => {
         navigate('/members');
       }
     } catch (error) {
-      console.error('Failed to delete member:', error);
+      console.error(error);
     }
   };
 
   const handleStatus = async () => {
-    const isConfirmed = window.confirm(
-      `Are you sure you want to ${memberData.member.status ? 'deactivate' : 'activate'} this member?`
-    );
+    const action = memberData?.member?.status
+      ? t('general.buttons.deactivate')
+      : t('general.buttons.activate');
+
+    const isConfirmed = window.confirm(t('member.confirm_update', { action: action.toLowerCase() }));
     if (!isConfirmed) return;
 
     try {
@@ -72,11 +77,11 @@ const MemberPage = () => {
         const updated = await response.json();
         setMemberData(prev => ({
           ...prev,
-          member: { ...prev.member, status: updated.active },
+          info: { ...prev.info, active: updated.active },
         }));
       }
     } catch (error) {
-      console.error('Failed to toggle status for member:', error);
+      console.error(error);
     }
   };
 
@@ -113,10 +118,12 @@ const MemberPage = () => {
       </div>
       <div className="member-row">
         <button className="action-button" onClick={handleStatus}>
-          {memberData?.info?.active ? 'Deactivate' : 'Activate'}
+          {memberData?.info?.active
+            ? t('general.buttons.deactivate')
+            : t('general.buttons.activate')}
         </button>
         <button className="action-button destructive" onClick={handleDelete}>
-          Delete
+          {t('general.buttons.delete')}
         </button>
       </div>
       {modalOpen && (

@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import FileItem from '../items/FileItem';
 
 const MemberFilesCard = ({ data, onEdit }) => {
+    const { t } = useTranslation();
     const files = data || [];
 
     const handleEdit = () => {
@@ -11,7 +13,7 @@ const MemberFilesCard = ({ data, onEdit }) => {
 
     return (
         <div className="full-card">
-            <h2>Files</h2>
+            <h2>{t('member.files.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
                 {files.length > 0 ? (
@@ -21,7 +23,7 @@ const MemberFilesCard = ({ data, onEdit }) => {
                         ))}
                     </div>
                 ) : (
-                    <p>No files uploaded</p>
+                    <p>{t('member.files.no_files')}</p>
                 )}
             </div>
         </div>

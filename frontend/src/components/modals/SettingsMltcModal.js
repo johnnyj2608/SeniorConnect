@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
+    const { t } = useTranslation();
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
@@ -26,7 +28,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
     return (
         <>
             <div className="modal-header">
-                <h3>Edit Mltcs</h3>
+                <h3>{t('general.edit')}{t('settings.data.mltc.label')}</h3>
                 <label>
                     <input
                         type="checkbox"
@@ -34,11 +36,11 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
                         onChange={(e) => handleChange('active')({ target: { value: e.target.checked } })}
                         disabled={disabled}
                     />
-                    Active
+                    {t('status.active')}
                 </label>
             </div>
             <div className="member-detail">
-                <label>Name *</label>
+                <label>{t('settings.data.mltc.name')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.name || ''}
@@ -49,12 +51,12 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>DX Codes</label>
+                <label>{t('settings.data.mltc.dx_codes')}</label>
                 <div className="dx-container">
                     <div className="codes-container">
                         {current.dx_codes?.map((code, index) => (
                             <div key={index}>
-                                <input key={index}
+                                <input
                                     type="text"
                                     value={code}
                                     onChange={handleDxCodeChange(index)}
@@ -65,7 +67,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
                         ))}
                     </div>
                     {!disabled && (
-                        <span onClick={addDxCode}>Click to add more</span>
+                        <span onClick={addDxCode}>{t('settings.data.mltc.click_to_add_more')}</span>
                     )}
                 </div>
             </div>

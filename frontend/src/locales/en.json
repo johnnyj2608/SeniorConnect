@@ -11,7 +11,7 @@
         "no": "No",
         "male": "Male",
         "female": "Female",
-        "edit": "Edit",
+        "edit": "Edit ",
         "note": "Note",
         "email": "Email",
         "password": "Password",
@@ -96,9 +96,9 @@
         "turning_years_old": "Turning {{count}}",
         "audit_log": "Audit Log",
         "no_recent_audits": "No recent audits",
-        "create": "Created by {{user}}",
-        "update": "Updated by {{user}}",
-        "delete": "Deleted by {{user}}"
+        "create": "Created by",
+        "update": "Updated by",
+        "delete": "Deleted by"
     },
     "members": {
         "mltc_filter": "MLTC Filter",
@@ -108,6 +108,7 @@
         "inactive": "Inactive"
     },
     "member": {
+        "confirm_update": "Are you sure you want to {{action}} this member?",
         "info": {
             "label": "Info",
             "member_id": "Member ID",
@@ -127,17 +128,20 @@
             "label": "Authorization",
             "member_id": "Member ID",
             "mltc": "MLTC",
-            "auth_id": "Authorization ID",
+            "auth_id": "Auth ID",
             "schedule": "Schedule",
             "start_date": "Start Date",
             "end_date": "End Date",
             "dx_code": "DX Code",
             "sdc_code": "SDC Code",
-            "trans_code": "Trans Code"
+            "trans_code": "Trans Code",
+            "no_authorization": "No authorization available"
         },
         "contacts": {
-           "label": "Contacts",
+            "label": "Contacts",
+            "name": "Name",
             "contact_type": {
+                "label": "Contact Type",
                 "emergency_contact": "Emergency Contact",
                 "primary_care_provider": "Primary Care Provider",
                 "pharmacy": "Pharmacy",
@@ -146,6 +150,7 @@
                 "other": "Other"
             },
             "relationship": {
+                "label": "Relationship",
                 "husband": "Husband",
                 "wife": "Wife",
                 "son": "Son",
@@ -156,7 +161,8 @@
                 "father": "Father",
                 "mother": "Mother",
                 "other": "Other"
-            }
+            },
+            "no_contacts": "No contacts available"
         },
         "absences": {
             "label": "Absences",
@@ -165,15 +171,18 @@
             "personal": "Personal",
             "other": "Other",
             "called": "Called",
-            "no_active_absences": "No active absences"
+            "no_absences": "No active absences"
         },
         "files": {
+            "label": "Files",
+            "name": "Name",
             "upload_file": "Upload File",
             "no_file_chosen": "No File Chosen",
             "file_chosen": "File Chosen",
             "completed": "Completed",
             "expiration": "Expiration",
-            "no_files_uploaded": "No files uploaded"
+            "drop_to_upload": "Drop file to upload",
+            "no_files": "No files uploaded"
         }
     },
     "reports": {
@@ -220,7 +229,19 @@
         "data": {
             "label": "Data",
             "upload": "Upload",
-            "user_management": "User Management"
+            "users": {
+                "label": "Users",
+                "name": "Name",
+                "email": "Email",
+                "admin": "Admin",
+                "staff": "Staff"
+            },
+            "mltc": {
+                "label": "MLTC",
+                "name": "Name",
+                "dx_codes": "DX Codes",
+                "click_to_add_more": "Click to add more"
+            }
         },
         "support": {
             "label": "Support",
@@ -234,6 +255,13 @@
             "log_out": "Log Out",
             "password_reset_instructions": "Password instructions was sent to your email"
         }
+    },
+    "alerts": {
+        "required_fields": "Please fill in the required fields: {{fields}}",
+        "invalid_dates": "Invalid dates: End date cannot be before start date.",
+        "exact_length": "{{type}} must be exactly {{length}} characters long.",
+        "invalid_medicaid": "Medicaid ID must be in the format XX12345X (2 letters, 5 digits, 1 letter).",
+        "confirm_deletion": "Are you sure you want to delete the following MLTC{{plural}}?\n- {{names}}"
     },
     "errors": {
         "unknown_type": "Unknown type"

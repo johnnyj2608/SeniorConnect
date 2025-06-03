@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
@@ -10,6 +11,7 @@ import ModalTabs from '../components/modals/ModalTabs';
 import useModal from '../hooks/useModal';
 
 const ModalPage = ({ data, onClose }) => {
+    const { t } = useTranslation();
     const {
         type,
         localData,
@@ -84,15 +86,19 @@ const ModalPage = ({ data, onClose }) => {
                     )}
                 </div>
                 <div className="modal-buttons-container">
-                    <button className="action-button" onClick={() => onClose()}>Cancel</button>
+                    <button className="action-button" onClick={() => onClose()}>
+                        {t('general.buttons.cancel')}
+                    </button>
                     {showDeleteButton && (
                         <button
                             className="action-button destructive"
                             onClick={() => handleDelete(activeTab)}>
-                            Delete
+                            {t('general.buttons.delete')}
                         </button>
                     )}
-                    <button className="action-button" onClick={() => handleSave(localData)}>Save</button>
+                    <button className="action-button" onClick={() => handleSave(localData)}>
+                        {t('general.buttons.save')}
+                    </button>
                 </div>
             </div>
         </div>

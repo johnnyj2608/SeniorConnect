@@ -1,49 +1,54 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const absenceTypes = [
-    'Vacation', 
-    'Hospital', 
-    'Personal', 
-    'Other'
+    'vacation', 
+    'hospital', 
+    'personal', 
+    'other'
 ];
 
 const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
+    const { t } = useTranslation();
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
     return (
         <>
             <div className="modal-header">
-            <h3>Edit Absences</h3>
+                <h3>{t('general.edit')}{t('member.absences.label')}</h3>
                 <label>
                     <input
-                       type="checkbox"
-                            checked={disabled ? false : current.called === true}
-                            onChange={(e) => handleChange('called')({ target: { value: e.target.checked } })}
-                            disabled={disabled}
+                        type="checkbox"
+                        checked={disabled ? false : current.called === true}
+                        onChange={(e) =>
+                            handleChange('called')({ target: { value: e.target.checked } })
+                        }
+                        disabled={disabled}
                     />
-                Called
+                    {t('member.absences.called')}
                 </label>
             </div>
+
             <div className="member-detail">
-                <label>Absence Type *</label>
-                <select 
+                <label>{t('member.absences.label')} *</label>
+                <select
                     required
-                    value={disabled ? '' : current.absence_type || ''} 
-                    onChange={handleChange('absence_type')} 
+                    value={disabled ? '' : current.absence_type || ''}
+                    onChange={handleChange('absence_type')}
                     disabled={disabled}
                 >
-                    <option value="">Select an option</option>
+                    <option value="">{t('general.select_an_option')}</option>
                     {absenceTypes.map((type) => (
                         <option key={type} value={type}>
-                            {type}
+                            {t(`member.absences.${type}`)}
                         </option>
                     ))}
                 </select>
             </div>
 
             <div className="member-detail">
-                <label>Start Date *</label>
+                <label>{t('member.authorization.start_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.start_date || ''}
@@ -53,7 +58,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>End Date</label>
+                <label>{t('member.authorization.end_date')}</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.end_date || ''}
@@ -63,7 +68,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>Note</label>
+                <label>{t('general.note')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.note || ''}
@@ -75,5 +80,5 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
         </>
     );
 };
-
+    
 export default MemberAbsencesModal;

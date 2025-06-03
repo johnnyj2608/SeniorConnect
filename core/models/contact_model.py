@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 class Contact(models.Model):
     
     EMERGENCY = 'emergency_contact'
-    PRIMARY_PROVIDER = 'primary_provider'
+    PRIMARY_PROVIDER = 'primary_care_provider'
     PHARMACY = 'pharmacy'
     HOME_AID = 'home_aid'
     HOME_CARE = 'home_care'

@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const daysOfWeek = [
-    "Monday",
-    "Thursday",
-    "Tuesday",
-    "Friday",
-    "Wednesday",
-    "Saturday",
-    "Sunday"
+    'monday',
+    'thursday',
+    'tuesday',
+    'friday',
+    'wednesday',
+    'saturday',
+    'sunday'
 ];
 
 const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) => {
+    const { t } = useTranslation();
     const [mltcOptions, setMltcOptions] = useState([]);
     const current = data[activeTab] || {};
+    const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
     useEffect(() => {
         const getMltcOptions = async () => {
@@ -47,45 +50,45 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
         handleChange('schedule')({ target: { value: sortedSchedule } });
     };
 
-    const disabled = data.filter(tab => !tab.deleted).length <= 0
-
     return (
         <>
             <div className="modal-header">
-            <h3>Edit Authorization</h3>
+                <h3>{t('general.edit')}{t('member.authorization.label')}</h3>
                 <label>
                     <input
                         type="checkbox"
-                        checked={disabled ? false : current.active === true }
+                        checked={disabled ? false : current.active === true}
                         onChange={(e) => handleActiveToggle(e.target.checked)}
                         disabled={disabled}
                     />
-                Active
+                    {t('status.active')}
                 </label>
             </div>
+
             <div className="member-detail">
-                <label>Member ID *</label>
+                <label>{t('member.authorization.member_id')} *</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.mltc_member_id || ''}
                     onChange={handleChange('mltc_member_id')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                     disabled={disabled}
                 />
             </div>
+
             <div className="member-detail">
-                <label>MLTC *</label>
-                <select 
+                <label>{t('member.authorization.mltc')} *</label>
+                <select
                     required
-                    value={disabled ? '' : current.mltc || ''} 
+                    value={disabled ? '' : current.mltc || ''}
                     onChange={(e) => {
                         handleChange('mltc')(e);
-                        handleChange('dx_code')({target: { value: '' }});
+                        handleChange('dx_code')({ target: { value: '' } });
                     }}
                     disabled={disabled}
                 >
-                    <option value="">Select an option</option>
+                    <option value="">{t('general.select_an_option')}</option>
                     {mltcOptions.map((option) => (
                         <option key={option.name} value={option.name}>
                             {option.name}
@@ -93,36 +96,39 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     ))}
                 </select>
             </div>
+
             <div className="member-detail">
-                <label>Auth ID *</label>
+                <label>{t('member.authorization.auth_id')} *</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.mltc_auth_id || ''}
                     onChange={handleChange('mltc_auth_id')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                     disabled={disabled}
                 />
             </div>
+
             <div className="member-detail">
-                <label>Schedule</label>
+                <label>{t('member.authorization.schedule')}</label>
                 <div className="schedule-container">
-                    {daysOfWeek.map(day => (
-                    <label key={day}>
-                        <input
-                            type="checkbox"
-                            value={day}
-                            checked={disabled ? false : current.schedule?.includes(day) || false}
-                            onChange={handleScheduleChange(day)}
-                            disabled={disabled}
-                        />
-                        {day}
-                    </label>
-                ))}
+                    {daysOfWeek.map((day) => (
+                        <label key={day}>
+                            <input
+                                type="checkbox"
+                                value={day}
+                                checked={disabled ? false : current.schedule?.includes(day) || false}
+                                onChange={handleScheduleChange(day)}
+                                disabled={disabled}
+                            />
+                            {t(`general.days_of_week.${day}`)}
+                        </label>
+                    ))}
                 </div>
             </div>
+
             <div className="member-detail">
-                <label>Start Date *</label>
+                <label>{t('member.authorization.start_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.start_date || ''}
@@ -130,8 +136,9 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     disabled={disabled}
                 />
             </div>
+
             <div className="member-detail">
-                <label>End Date *</label>
+                <label>{t('member.authorization.end_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.end_date || ''}
@@ -139,15 +146,16 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     disabled={disabled}
                 />
             </div>
+
             <div className="member-detail">
-                <label>DX Code</label>
-                <select 
-                    required 
+                <label>{t('member.authorization.dx_code')}</label>
+                <select
+                    required
                     value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
                     onChange={handleChange('dx_code')}
                     disabled={disabled}
                 >
-                    <option value="">Select an option</option>
+                    <option value="">{t('general.select_an_option')}</option>
                     {dx_codes.map((option) => (
                         <option key={option} value={option}>
                             {option}
@@ -155,8 +163,9 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     ))}
                 </select>
             </div>
+
             <div className="member-detail">
-                <label>SDC Code</label>
+                <label>{t('member.authorization.sdc_code')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.sdc_code || ''}
@@ -165,8 +174,9 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     disabled={disabled}
                 />
             </div>
+
             <div className="member-detail">
-                <label>Trans Code</label>
+                <label>{t('member.authorization.trans_code')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.trans_code || ''}

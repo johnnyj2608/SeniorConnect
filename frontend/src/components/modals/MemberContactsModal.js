@@ -1,41 +1,44 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AutoCompleteInput from '../inputs/AutoCompleteInput';
 
 const contactTypes = [
-    'Emergency Contact',
-    'Primary Care Provider',
-    'Pharmacy',
-    'Home Aid',
-    'Home Care',
-    'Other',
+    'emergency_contact',
+    'primary_care_provider',
+    'pharmacy',
+    'home_aid',
+    'home_care',
+    'other',
 ];
 
 const relationshipTypes = [
-    'Husband',
-    'Wife',
-    'Son',
-    'Daughter',
-    'Brother',
-    'Sister',
-    'Friend',
-    'Father',
-    'Mother',
-    'Other',
+    'husband',
+    'wife',
+    'son',
+    'daughter',
+    'brother',
+    'sister',
+    'friend',
+    'father',
+    'mother',
+    'other',
 ];
 
 const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
+    const { t } = useTranslation();
+
     const current = data[activeTab] || {};
- 
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disableFields = disabled || !current.contact_type;
 
     return (
         <>
             <div className="modal-header">
-                <h3>Edit Contacts</h3>
+                <h3>{t('general.edit')}{t('member.contacts.label')}</h3>
             </div>
+
             <div className="member-detail">
-                <label>Contact Type *</label>
+                <label>{t('member.contacts.contact_type.label')} *</label>
                 <select 
                     required
                     value={disabled ? '' : current.contact_type || ''} 
@@ -47,28 +50,28 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                     }}
                     disabled={disabled}
                 >
-                    <option value="">Select an option</option>
-                    {contactTypes.map((type) => (
+                    <option value="">{t('general.select_an_option')}</option>
+                    {contactTypes.map(type => (
                         <option key={type} value={type}>
-                            {type}
+                            {t(`member.contacts.contact_type.${type}`)}
                         </option>
                     ))}
                 </select>
             </div>
 
-            {current.contact_type === 'Emergency Contact' && (
+            {current.contact_type === 'emergency_contact' && (
                 <div className="member-detail">
-                    <label>Relationship *</label>
+                    <label>{t('member.contacts.relationship.label')} *</label>
                     <select 
                         required
                         value={disabled ? '' : current.relationship_type || ''} 
                         onChange={handleChange('relationship_type')}
                         disabled={disableFields}
                     >
-                        <option value="">Select an option</option>
-                        {relationshipTypes.map((type) => (
+                        <option value="">{t('general.select_an_option')}</option>
+                        {relationshipTypes.map(type => (
                             <option key={type} value={type}>
-                                {type}
+                                {t(`member.contacts.relationship.${type}`)}
                             </option>
                         ))}
                     </select>
@@ -76,7 +79,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             )}
 
             <div className="member-detail">
-                <label>Name *</label>
+                <label>{t('member.contacts.name')} *</label>
                 <AutoCompleteInput
                     value={disableFields ? '' : current.name}
                     contactType={disableFields ? '' : current.contact_type}
@@ -92,12 +95,12 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             </div>
 
             <div className="member-detail">
-                <label>Phone *</label>
+                <label>{t('member.info.phone')} *</label>
                 <input
                     type="number"
                     value={disableFields ? '' : current.phone || ''}
                     onChange={handleChange('phone')}
-                    placeholder="Required"
+                    placeholder={t('general.required')}
                     autoComplete="off"
                     disabled={disableFields}
                 />

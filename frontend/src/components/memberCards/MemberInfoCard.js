@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
 
 const MemberInfoCard = ({ data, onEdit }) => {
+  const { t } = useTranslation();
   const info = data || [];
 
   const handleEdit = () => {
@@ -11,26 +13,26 @@ const MemberInfoCard = ({ data, onEdit }) => {
   };
 
   return (
-		<div className="half-card">
-			<h2>Info</h2>
-			<div className="card-container">
-				<EditButton onClick={handleEdit} />
-				<DetailRow label="Member ID" value={info.sadc_member_id} />
-				<DetailRow label="Last Name" value={info.last_name} />
-				<DetailRow label="First Name" value={info.first_name} />
-				<DetailRow label="Birth Date" value={formatDate(info.birth_date)} />
-				<DetailRow label="Gender" value={formatGender(info.gender)} />
-				<DetailRow label="Phone" value={formatPhone(info.phone)} />
-				<DetailRow label="Address" value={info.address} />
-				<DetailRow label="Email" value={info.email} />
-				<DetailRow label="Medicaid" value={info.medicaid?.toUpperCase()} />
-				<DetailRow label="SSN" value={formatSSN(info.ssn)} />
-				<DetailRow label="Language" value={info.language} />
-				<DetailRow label="Enrollment" value={formatDate(info.enrollment_date)} />
-				{info.note && <DetailRow label="Note" value={info.note} />}
-			</div>
-		</div>
-	);
+    <div className="half-card">
+      <h2>{t('member.info.label', 'Info')}</h2>
+      <div className="card-container">
+        <EditButton onClick={handleEdit} />
+        <DetailRow label={t('member.info.member_id')} value={info.sadc_member_id} />
+        <DetailRow label={t('member.info.last_name')} value={info.last_name} />
+        <DetailRow label={t('member.info.first_name')} value={info.first_name} />
+        <DetailRow label={t('member.info.birth_date')} value={formatDate(info.birth_date)} />
+        <DetailRow label={t('member.info.gender')} value={formatGender(info.gender)} />
+        {info.phone && <DetailRow label={t('member.info.phone')} value={formatPhone(info.phone)} />}
+        {info.address && <DetailRow label={t('member.info.address')} value={info.address} />}
+        {info.email && <DetailRow label={t('member.info.email')} value={info.email} />}
+        {info.medicaid && <DetailRow label={t('member.info.medicaid')} value={info.medicaid.toUpperCase()} />}
+        {info.ssn && <DetailRow label={t('member.info.ssn')} value={formatSSN(info.ssn)} />}
+        {info.language && <DetailRow label={t('member.info.language')} value={info.language} />}
+        {info.enrollment_date && <DetailRow label={t('member.info.enrollment')} value={formatDate(info.enrollment_date)} />}
+        {info.note && <DetailRow label={t('general.note')} value={info.note} />}
+      </div>
+    </div>
+  );
 };
 
 export default memo(MemberInfoCard);
