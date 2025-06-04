@@ -1365,7 +1365,6 @@ body.modal-open {
   justify-content: space-between;
   font-size: 20px;
   padding: 0.5rem;
-  cursor: pointer;
   border-radius: 8px;
   transition: all 0.2s ease
 }
@@ -1379,7 +1378,11 @@ body.modal-open {
   transition: transform 0.2s ease;
 }
 
-.settings-item:hover > span {
+.settings-item.clickable {
+  cursor: pointer;
+}
+
+.settings-item.clickable:hover > span {
   transform: scale(1.05);
 }
 
