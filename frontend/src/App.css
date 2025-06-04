@@ -151,48 +151,46 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-left: 5%;
 }
 
-.app-header button {
+.app-header > span {
+  margin-right: 5%;
+}
+
+.navbar-toggle,
+.nav-links button {
   font-size: 20px;
-  border: 0;
+  background: none;
+  border: none;
   cursor: pointer;
   padding: 15px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: var(--color-text);
   background-color: var(--color-content);
   z-index: 1000;
+  transition: transform 0.2s ease;
 }
 
-.app-header button:hover {
-  background-color: var(--color-main);
+.navbar-toggle {
+  display: none;
 }
 
-.app-header button:hover .button-text, .navbar-toggle:hover svg {
-  color: var(--color-white);
-  fill: var(--color-white);
-  transform: scale(1.05);
-}
-
-.app-header button > svg {
+.navbar-toggle svg {
   fill: var(--color-text);
   height: 25px;
   width: 25px;
 }
 
-.app-header > span {
-  margin-right: 5%;
+.navbar-toggle:hover {
+  background-color: var(--color-main);
+  transform: scale(1.05);
 }
 
-.navbar-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.navbar-toggle:hover svg {
+  fill: var(--color-white);
 }
 
-.navbar-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.nav-links button:hover {
+  background-color: var(--color-main);
+  color: var(--color-white);
+  transform: scale(1.05);
 }
 
 .app-content {

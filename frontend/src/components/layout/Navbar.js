@@ -63,7 +63,7 @@ const Navbar = () => {
         <div className={`nav-links${navbarOpen ? ' open' : ''}`} ref={navRef}>
           {navLinks.map(({ path, label }) => (
             <button key={path} onClick={() => handleNavigate(path)}>
-              <span className="button-text">{t(`general.${label}`)}</span>
+              {t(`general.${label}`)}
             </button>
           ))}
         </div>
