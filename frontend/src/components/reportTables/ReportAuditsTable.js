@@ -20,11 +20,11 @@ const ReportAuditsTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th>{t('reports.table.member')}</th>
-                <th>{t('reports.table.change')}</th>
-                <th>{t('reports.table.action')}</th>
-                <th>{t('reports.table.user')}</th>
-                <th>{t('reports.table.date')}</th>
+                <th style={{ width: '30%' }}>{t('reports.table.member')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.change')}</th>
+                <th style={{ width: '20%' }}>{t('reports.table.action')}</th>
+                <th style={{ width: '20%' }}>{t('reports.table.user')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.date')}</th>
             </tr>
         </thead>
         <tbody>

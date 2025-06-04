@@ -10,12 +10,12 @@ const ReportAbsencesTable = ({ report }) => {
         <table className="report-table">
         <thead>
             <tr>
-                <th>{t('reports.table.member')}</th>
-                <th>{t('reports.table.start_date')}</th>
-                <th>{t('reports.table.end_date')}</th>
-                <th>{t('reports.table.reason')}</th>
-                <th>{t('reports.table.status')}</th>
-                <th>{t('reports.table.called')}</th>
+                <th style={{ width: '30%' }}>{t('reports.table.member')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.start_date')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.end_date')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.reason')}</th>
+                <th style={{ width: '15%' }}>{t('reports.table.status')}</th>
+                <th style={{ width: '10%' }}>{t('reports.table.called')}</th>
             </tr>
         </thead>
         <tbody>

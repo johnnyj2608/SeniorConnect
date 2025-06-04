@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
 import RefreshButton from '../components/buttons/RefreshButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
@@ -56,6 +56,10 @@ const ReportsPage = () => {
                 return null;
         }
     };
+
+    useEffect(() => {
+        setReportFilter('');
+    }, [reportType]);
 
     return (
         <>
