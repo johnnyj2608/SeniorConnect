@@ -41,6 +41,8 @@ const SettingsGeneral = () => {
         <SettingsItem label={t('settings.general.notification')} onClick={() => console.log('Notification')} />
         <SettingsItem label={t('settings.general.dark_mode')} onClick={toggleDarkMode} />
         <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
+        <SettingsItem label={t('settings.general.member_names')} onClick={() => console.log('Member Names')} />
+        {/* Choose preference of display alt name over actual name */}
       </div>
     </>
   );

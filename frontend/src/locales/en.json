@@ -114,6 +114,7 @@
             "member_id": "Member ID",
             "last_name": "Last Name",
             "first_name": "First Name",
+            "alt_name": "Nickname",
             "birth_date": "Birth Date",
             "gender": "Gender",
             "phone": "Phone",
@@ -224,7 +225,8 @@
             "label": "General",
             "language": "Language",
             "dark_mode": "Dark Mode",
-            "notification": "Notification"
+            "notification": "Notification",
+            "member_names": "Member Names"
         },
         "data": {
             "label": "Data",

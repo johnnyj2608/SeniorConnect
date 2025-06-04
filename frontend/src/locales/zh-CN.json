@@ -114,6 +114,7 @@
             "member_id": "成员编号",
             "last_name": "姓",
             "first_name": "名",
+            "alt_name": "中文名",
             "birth_date": "出生日期",
             "gender": "性别",
             "phone": "电话",
@@ -224,7 +225,8 @@
             "label": "常规",
             "language": "语言",
             "dark_mode": "夜间模式",
-            "notification": "通知"
+            "notification": "通知",
+            "member_names": "会员名称"
         },
         "data": {
             "label": "数据",

@@ -20,6 +20,7 @@ class Member(models.Model):
     photo = models.URLField(null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
     last_name = models.CharField(max_length=255, null=False, blank=False)
+    alt_name = models.CharField(max_length=255, null=True, blank=True)
     birth_date = models.DateField(null=False, blank=False)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=False, blank=False)
     address = models.CharField(max_length=255, null=True, blank=True)

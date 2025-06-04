@@ -800,6 +800,10 @@ input[type="number"]::-webkit-inner-spin-button {
   display: none;
 }
 
+.photo-container > h2 {
+  color: var(--color-text-sub);
+}
+
 .member-photo {
   width: 400px;
   height: 350px;

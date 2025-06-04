@@ -46,6 +46,16 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
+                <label>{t('member.info.alt_name')}</label>
+                <input
+                    type="text"
+                    value={data.alt_name || ''}
+                    onChange={handleChange('alt_name')}
+                    autoComplete="off"
+                />
+            </div>
+
+            <div className="member-detail">
                 <label>{t('member.info.phone')}</label>
                 <input
                     type="number"

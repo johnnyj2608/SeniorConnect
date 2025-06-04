@@ -4,7 +4,7 @@ import { formatPhoto } from '../../utils/formatUtils';
 const MemberPhotoCard = ({ data }) => {
     const info = data || [];
 
-    const name = `${info?.first_name || ''} ${info?.last_name || ''}`.trim();
+    const name = `${info?.last_name || ''}, ${info?.first_name || ''}`.trim();
 
     return (
         <div className="photo-container">
@@ -18,6 +18,7 @@ const MemberPhotoCard = ({ data }) => {
                 }}
             />
             <h1>{name ? name : '...'}</h1>
+            {info.alt_name && <h2>{info.alt_name}</h2>}
         </div>
     );
 };
