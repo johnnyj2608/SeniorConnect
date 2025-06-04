@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
-import { colorAbsence } from '../../utils/colorUtils';
 import { formatDate, formatStatus } from '../../utils/formatUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {

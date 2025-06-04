@@ -280,5 +280,9 @@
     },
     "errors": {
         "unknown_type": "Unknown type"
+    },
+    "language": {
+        "english": "English",
+        "chinese": "Chinese"
     }
 }

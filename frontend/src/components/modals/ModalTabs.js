@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { formatDate, formatStatus } from '../../utils/formatUtils';
-import { colorAbsence } from '../../utils/colorUtils';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     const { t } = useTranslation();

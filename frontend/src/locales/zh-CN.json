@@ -280,5 +280,9 @@
     },
     "errors": {
         "unknown_type": "未知类型"
+    },
+    "language": {
+        "english": "英文",
+        "chinese": "中文"
     }
 }

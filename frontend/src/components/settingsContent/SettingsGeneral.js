@@ -6,27 +6,30 @@ import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import Switch from 'react-switch';
 
 const SettingsGeneral = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, setUser } = useContext(AuthContext);
 
-  const toggleDarkMode = async () => {
-    const updatedDarkMode = !user.preferences?.dark_mode;
+  const updatePreference = async (key, value) => {
     const updatedPreferences = {
       ...user.preferences,
-      dark_mode: updatedDarkMode,
+      [key]: value,
     };
-    
+  
     try {
       const response = await fetchWithRefresh(`/user/users/${user.id}/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences: updatedPreferences }),
       });
-
+  
       if (response.ok) {
         const updatedUser = await response.json();
         setUser(updatedUser);
-        localStorage.setItem('dark_mode', updatedDarkMode);
+        localStorage.setItem(key, JSON.stringify(value));
+        
+        if (key === 'language') {
+          i18n.changeLanguage(value);
+        }
       } else {
         console.error(await response.text());
       }
@@ -34,14 +37,23 @@ const SettingsGeneral = () => {
       console.error(error);
     }
   };
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !user.preferences?.dark_mode;
+    updatePreference('dark_mode', newDarkMode);
+  };
   
+  const handleLanguageChange = (e) => {
+    updatePreference('language', e.target.value);
+  };
 
   return (
     <>
       <h3 className="section-title">{t('settings.general.label')}</h3>
       <div className="section-main">
         <SettingsItem label={t('settings.general.notification')} onClick={() => console.log('Notification')} />
-        <SettingsItem label={t('settings.general.dark_mode')} 
+        <SettingsItem 
+          label={t('settings.general.dark_mode')} 
           component={
             <Switch
               checked={user.preferences?.dark_mode}
@@ -50,7 +62,18 @@ const SettingsGeneral = () => {
             />
           } 
         />
-        <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
+        <SettingsItem
+          label={t('settings.general.language')}
+          component={
+            <select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+            >
+              <option value="en">{t('language.english')}</option>
+              <option value="zh-CN">{t('language.chinese')}</option>
+            </select>
+          }
+        />
         <SettingsItem label={t('settings.general.member_names')} onClick={() => console.log('Member Names')} />
         {/* Choose preference of display alt name over actual name */}
       </div>

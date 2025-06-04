@@ -4,11 +4,12 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { useContext } from "react";
 
 import './App.css';
 import './i18n';
-import { AuthContext } from "./context/AuthContext";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import usePreferences from './hooks/usePreferences';
 import PrivateRoute from './components/routes/PrivateRoute';
 import ScrollUp from './components/routes/ScrollUp';
 import Navbar from './components/layout/Navbar';
@@ -20,19 +21,19 @@ import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
 
 function Main() {
-  const { user } = useContext(AuthContext);
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 
-  const localDarkMode = localStorage.getItem("dark_mode");
-  const backendDarkMode = user?.preferences?.dark_mode;
-  if (localDarkMode === null && typeof backendDarkMode === "boolean") {
-    localStorage.setItem("dark_mode", String(backendDarkMode));
-  }
-  const isDarkMode =
-    typeof backendDarkMode === "boolean"
-      ? backendDarkMode
-      : localDarkMode === "true";
+  const isDarkMode = usePreferences("dark_mode");
+  const language = usePreferences("language", "en");
+
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (language && i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n]);
 
   return (
     <div className={`container${isDarkMode ? " dark" : ""}`}>
