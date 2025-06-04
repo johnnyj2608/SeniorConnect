@@ -39,7 +39,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 status = formatStatus(item.start_date, item.end_date)
                 return {
                     heading: t(`member.absences.${item.absence_type}`, t('members.unknown')),
-                    subheading: colorAbsence(status, t),
+                    subheading: t(`reports.absences.${status}`),
                     inactive: status === 'completed',
                 };
             case 'files':

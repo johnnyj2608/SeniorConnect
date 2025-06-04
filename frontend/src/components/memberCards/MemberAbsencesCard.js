@@ -45,7 +45,7 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						/>
 						<DetailRow
 						label={t('reports.table.status')}
-						value={colorAbsence(formatStatus(abs.start_date, abs.end_date), t)}
+						value={t(`reports.absences.${formatStatus(abs.start_date, abs.end_date)}`)}
 						/>
 						{abs.note && <DetailRow label={t('general.note')} value={abs.note} />}
 					</li>
