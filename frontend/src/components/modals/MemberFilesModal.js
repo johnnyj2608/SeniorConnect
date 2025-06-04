@@ -13,6 +13,10 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
     const onDropFile = (file) => {
         const fakeEvent = { target: { files: [file] } };
         handleChange('file')(fakeEvent);
+
+        if (!current.name) {
+            handleChange('name')({ target: { value: file.name } });
+        }
     };
 
     const { isDragging, dragProps } = useDragAndDrop(onDropFile);
