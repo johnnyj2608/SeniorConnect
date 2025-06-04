@@ -123,7 +123,8 @@
             "medicaid": "Medicaid",
             "ssn": "SSN",
             "language": "Language",
-            "enrollment": "Enrollment"
+            "enrollment": "Enrollment",
+            "no_info": "No information available"
         },
         "authorization": {
             "label": "Authorization",

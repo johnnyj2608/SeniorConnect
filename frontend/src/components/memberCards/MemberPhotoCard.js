@@ -17,8 +17,14 @@ const MemberPhotoCard = ({ data }) => {
                 e.target.src = '/default-profile.jpg';
                 }}
             />
-            <h1>{name ? name : '...'}</h1>
-            {info.alt_name && <h2>{info.alt_name}</h2>}
+            {Object.keys(info).length === 0 ? (
+                <h1>...</h1>
+            ) : (
+            <>
+                <h1>{`${info?.last_name}, ${info?.first_name}`}</h1>
+                {info.alt_name && <h2>{info.alt_name}</h2>}
+            </>
+            )}
         </div>
     );
 };
