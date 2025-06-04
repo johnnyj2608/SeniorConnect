@@ -4,8 +4,6 @@ import { formatPhoto } from '../../utils/formatUtils';
 const MemberPhotoCard = ({ data }) => {
     const info = data || [];
 
-    const name = `${info?.last_name || ''}, ${info?.first_name || ''}`.trim();
-
     return (
         <div className="photo-container">
             <img

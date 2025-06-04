@@ -34,5 +34,5 @@ class Absence(models.Model):
 
     def __str__(self):
         start = self.start_date.strftime('%m/%d/%Y') if self.start_date else ''
-        end = f" to {self.end_date.strftime('%m/%d/%Y')}" if self.end_date else ''
-        return f"{self.get_absence_type_display()} from {start}{end}"
+        end = f" — {self.end_date.strftime('%m/%d/%Y')}" if self.end_date else ''
+        return f"{self.absence_type}: {start}{end}"

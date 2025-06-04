@@ -98,7 +98,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.auth_id')} *</label>
+                <label>{t('member.authorization.mltc_auth_id')} *</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.mltc_auth_id || ''}

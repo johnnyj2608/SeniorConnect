@@ -13,7 +13,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
             </div>
 
             <div className="member-detail">
-                <label>{t('member.info.member_id')} *</label>
+                <label>{t('member.info.sadc_member_id')} *</label>
                 <input
                     type="number"
                     value={data.sadc_member_id || ''}

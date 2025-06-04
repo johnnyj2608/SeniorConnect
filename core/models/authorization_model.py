@@ -33,7 +33,7 @@ class Authorization(models.Model):
     def __str__(self):
         start = self.start_date.strftime('%m/%d/%Y')
         end = self.end_date.strftime('%m/%d/%Y')
-        return f"{self.mltc} Auth from {start} to {end}"
+        return f"{self.mltc}: {start} — {end}"
 
 class Enrollment(models.Model):
     ENROLLMENT = 'enrollment'

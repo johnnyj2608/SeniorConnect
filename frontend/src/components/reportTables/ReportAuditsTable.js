@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import DropdownButton from '../buttons/DropdownButton';
 import { formatDate } from '../../utils/formatUtils';
 import { colorAudit } from '../../utils/colorUtils';
+import ReportAuditsExpanded from './ReportAuditsExpanded';
 
 const ReportAuditsTable = ({ report }) => {
     const { t } = useTranslation();
@@ -30,7 +31,7 @@ const ReportAuditsTable = ({ report }) => {
         <tbody>
             {report.map((entry) => {
                 const isExpanded = !!expandedRows[entry.id];
-                const showDropdown = entry.action_type === 'update' && entry.changes && Object.keys(entry.changes).length > 0;
+                const showDropdown = entry.action_type === 'update' && Object.keys(entry.changes).length > 0;
 
                 return (
                     <Fragment key={entry.id}>
@@ -56,15 +57,7 @@ const ReportAuditsTable = ({ report }) => {
                             <td>{formatDate(entry.timestamp)}</td>
                         </tr>
 
-                        {isExpanded && entry.changes && (
-                        <tr>
-                            <td colSpan={5}>
-                                <span className="modal-main">
-                                    ↪<pre>{' '+entry.changes}</pre>
-                                </span>
-                            </td>
-                        </tr>
-                        )}
+                        {isExpanded && entry.changes && <ReportAuditsExpanded entry={entry} />}
                     </Fragment>
                 );
             })}

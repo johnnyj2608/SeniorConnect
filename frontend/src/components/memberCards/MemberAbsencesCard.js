@@ -32,20 +32,20 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 					{activeAbsences.map((abs, idx) => (
 					<li key={idx} className="absence-item">
 						<DetailRow
-						label={t('member.absences.label')}
-						value={t(`member.absences.${abs.absence_type}`, abs.absence_type)}
+							label={t('member.absences.label')}
+							value={t(`member.absences.${abs.absence_type}`, abs.absence_type)}
 						/>
 						<DetailRow
-						label={t('reports.table.start_date')}
-						value={formatDate(abs.start_date)}
+							label={t('member.absences.start_date')}
+							value={formatDate(abs.start_date)}
 						/>
 						<DetailRow
-						label={t('reports.table.end_date')}
-						value={formatDate(abs.end_date)}
+							label={t('member.absences.end_date')}
+							value={formatDate(abs.end_date)}
 						/>
 						<DetailRow
-						label={t('reports.table.status')}
-						value={t(`reports.absences.${formatStatus(abs.start_date, abs.end_date)}`)}
+							label={t('member.absences.status')}
+							value={t(`member.absences.${formatStatus(abs.start_date, abs.end_date)}`)}
 						/>
 						{abs.note && <DetailRow label={t('general.note')} value={abs.note} />}
 					</li>

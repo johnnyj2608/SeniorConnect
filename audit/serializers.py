@@ -8,25 +8,7 @@ class AuditLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuditLog
-        exclude = ['user', 'content_type', 'object_id', 'object_display']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-
-        changes = data.get('changes')
-        if changes and isinstance(changes, dict):
-            lines = []
-            if instance.object_display: lines.append(instance.object_display)
-            for field, change in changes.items():
-                formatted_field = ' '.join(word.capitalize() for word in field.split('_'))
-                old = change.get('old')
-                new = change.get('new')
-                lines.append(f"• {formatted_field}: {old} → {new}")
-            data['changes'] = '\n'.join(lines)
-        else:
-            data['changes'] = ''
-
-        return data
+        exclude = ['user', 'content_type', 'object_id']
 
     def get_member_name(self, obj):
         member = obj.member

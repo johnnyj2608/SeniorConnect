@@ -65,9 +65,13 @@
         "mltc": "老人中心保险",
         "member": "成员",
         "authorization": "授权",
+        "authorization_str": "{{mltc}}: {{start}} — {{end}}",
         "absence": "缺勤",
+        "absence_str": "{{absence_type}}: {{start}} — {{end}}",
         "contact": "联系人",
+        "contact_str": "{{contact_type}}: {{name}}",
         "file": "文件",
+        "file_str": "文件: {{name}}",
         "user": "用户"
     },
     "status": {
@@ -111,7 +115,7 @@
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",
         "info": {
             "label": "信息",
-            "member_id": "成员编号",
+            "sadc_member_id": "成员编号",
             "last_name": "姓",
             "first_name": "名",
             "alt_name": "中文名",
@@ -124,19 +128,21 @@
             "ssn": "社会安全号码",
             "language": "语言",
             "enrollment": "注册",
+            "active": "活跃",
             "no_info": "无可用信息"
         },
         "authorization": {
             "label": "授权",
-            "member_id": "成员编号",
+            "mltc_member_id": "成员编号",
             "mltc": "老人中心保险",
-            "auth_id": "授权编号",
+            "mltc_auth_id": "授权编号",
             "schedule": "时间表",
             "start_date": "开始日期",
             "end_date": "结束日期",
             "dx_code": "诊断代码",
             "sdc_code": "SDC 代码",
             "trans_code": "运输代码",
+            "active": "活跃",
             "no_authorization": "没有可用的授权"
         },
         "contacts": {
@@ -168,6 +174,12 @@
         },
         "absences": {
             "label": "缺勤",
+            "start_date": "开始日期",
+            "end_date": "结束日期",
+            "status": "状态",
+            "ongoing": "进行中",
+            "upcoming": "即将到来",
+            "completed": "已完成",
             "vacation": "休假",
             "hospital": "住院",
             "personal": "个人",

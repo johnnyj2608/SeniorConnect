@@ -48,7 +48,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.start_date')} *</label>
+                <label>{t('member.absences.start_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.start_date || ''}
@@ -58,7 +58,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.end_date')}</label>
+                <label>{t('member.absences.end_date')}</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.end_date || ''}

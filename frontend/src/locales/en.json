@@ -65,9 +65,13 @@
         "mltc": "MLTC",
         "member": "Member",
         "authorization": "Authorization",
+        "authorization_str": "{{mltc}}: {{start}} — {{end}}",
         "absence": "Absence",
+        "absence_str": "{{absence_type}}: {{start}} — {{end}}",
         "contact": "Contact",
+        "contact_str": "{{contact_type}}: {{name}}",
         "file": "File",
+        "file_str": "File: {{name}}",
         "user": "User"
     },
     "status": {
@@ -111,7 +115,7 @@
         "confirm_update": "Are you sure you want to {{action}} this member?",
         "info": {
             "label": "Info",
-            "member_id": "Member ID",
+            "sadc_member_id": "Member ID",
             "last_name": "Last Name",
             "first_name": "First Name",
             "alt_name": "Nickname",
@@ -124,19 +128,21 @@
             "ssn": "SSN",
             "language": "Language",
             "enrollment": "Enrollment",
+            "active": "Active",
             "no_info": "No information available"
         },
         "authorization": {
             "label": "Authorization",
-            "member_id": "Member ID",
+            "mltc_member_id": "Member ID",
             "mltc": "MLTC",
-            "auth_id": "Auth ID",
+            "mltc_auth_id": "Auth ID",
             "schedule": "Schedule",
             "start_date": "Start Date",
             "end_date": "End Date",
             "dx_code": "DX Code",
             "sdc_code": "SDC Code",
             "trans_code": "Trans Code",
+            "active": "Active",
             "no_authorization": "No authorization available"
         },
         "contacts": {
@@ -168,11 +174,17 @@
         },
         "absences": {
             "label": "Absences",
+            "start_date": "Start Date",
+            "end_date": "End Date",
+            "status": "Status",
             "vacation": "Vacation",
             "hospital": "Hospital",
             "personal": "Personal",
             "other": "Other",
             "called": "Called",
+            "ongoing": "Ongoing",
+            "upcoming": "Upcoming",
+            "completed": "Completed",
             "no_absences": "No active absences"
         },
         "files": {

@@ -100,6 +100,89 @@ const normalizeField = (str) => {
   return str.toLowerCase().replace(/\s+/g, '_');
 };
 
+const formatObjectDisplay = (entry, t) => {
+  const model = entry.model_name;
+
+  if (model === 'absence') {
+    // Expected format: "vacation: 05/01/2024 — 05/05/2024"
+    const parts = entry.object_display.split(/:|—/); 
+    const absenceType = parts[0]?.trim();
+    const start = parts[1]?.trim();
+    const end = parts[2]?.trim();
+
+    return (
+      <>
+        <strong>
+          {t('model.absence_str', {
+            absence_type: t(`member.absences.${absenceType}`),
+            start,
+            end,
+          })}
+        </strong>
+        <br />
+      </>
+    );
+  }
+
+  if (model === 'authorization') {
+    // Example: "MLTC: 05/01/2024 — 07/01/2024"
+    const parts = entry.object_display.split(/:|—/); 
+    const mltc = parts[0]?.trim();
+    const start = parts[1]?.trim();
+    const end = parts[2]?.trim();
+
+    return (
+      <>
+        <strong>
+          {t('model.authorization_str', {
+            mltc,
+            start,
+            end,
+          })}
+        </strong>
+        <br />
+      </>
+    );
+  }
+
+  if (model === 'contact') {
+    // Example: "pharmacy: name"
+    const parts = entry.object_display.split(':');
+    const contactType = parts[0]?.trim();
+    const name = parts[1]?.trim(); 
+
+    return (
+      <>
+        <strong>
+          {t('model.contact_str', {
+            contact_type: t(`member.contacts.contact_type.${contactType}`),
+            name,
+          })}
+        </strong>
+        <br />
+      </>
+      
+    );
+  }
+
+  if (model === 'file') {
+    // Example: "File: insurance.pdf"
+    const parts = entry.object_display.split(':');
+    const name = parts[1]?.trim();
+  
+    return (
+      <>
+        <strong>
+          {t('model.file_str', { name })}
+        </strong>
+        <br />
+      </>
+    );
+  }
+
+  return null;
+}
+
 export {
   formatDate,
   formatPhone,
@@ -110,4 +193,5 @@ export {
   formatPhoto,
   formatStatus,
   normalizeField,
+  formatObjectDisplay,
 };

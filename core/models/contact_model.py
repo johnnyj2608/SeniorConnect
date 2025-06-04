@@ -67,4 +67,4 @@ class Contact(models.Model):
             raise ValidationError("relationship_type can only be set for emergency contacts.")
 
     def __str__(self):
-        return f"{self.name}: {self.get_contact_type_display()} — {self.phone}"
+        return f"{self.contact_type}: {self.name}"

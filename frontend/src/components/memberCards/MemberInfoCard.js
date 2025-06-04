@@ -21,7 +21,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
 				) : (
 				<>
 					<EditButton onClick={handleEdit} />
-					<DetailRow label={t('member.info.member_id')} value={info.sadc_member_id} />
+					<DetailRow label={t('member.info.sadc_member_id')} value={info.sadc_member_id} />
 					<DetailRow label={t('member.info.last_name')} value={info.last_name} />
 					<DetailRow label={t('member.info.first_name')} value={info.first_name} />
 					{info.alt_name && <DetailRow label={t('member.info.alt_name')} value={info.alt_name} />}
