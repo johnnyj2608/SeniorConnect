@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
+import DetailListRow from '../layout/DetailListRow';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
@@ -32,11 +33,11 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                     <>
                         <DetailRow label={t('member.authorizations.mltc_member_id')} value={auth.mltc_member_id} />
                         <DetailRow label={t('member.authorizations.mltc')} value={auth.mltc} />
-                        <DetailRow label={t('member.authorizations.mltc_auth_id')} value={auth.mltc_auth_id} />
-                        <DetailRow label={t('member.authorizations.schedule')} value={formatSchedule(auth.schedule)} />
                         <DetailRow label={t('member.authorizations.start_date')} value={formatDate(auth.start_date)} />
                         <DetailRow label={t('member.authorizations.end_date')} value={formatDate(auth.end_date)} />
                         <DetailRow label={t('member.authorizations.dx_code')} value={auth.dx_code} />
+                        <DetailListRow label={t('member.authorizations.schedule')} value={formatSchedule(auth.schedule)} />
+                        <DetailRow label={t('member.authorizations.mltc_auth_id')} value={auth.mltc_auth_id} />
                         <DetailRow label={t('member.authorizations.sdc_code')} value={auth.sdc_code} />
                         <DetailRow label={t('member.authorizations.trans_code')} value={auth.trans_code} />
                     </>
