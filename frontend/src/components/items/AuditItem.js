@@ -10,11 +10,11 @@ const AuditItem = ({ audit }) => {
       <Link to={`/member/${audit.member}`} className="home-item">
         <span className="home-item-primary">
           <p>{audit.member_name}</p>
-          <p>— {t(`model.${audit.model_name}`)}</p>
+          <p>— {audit.user_name}</p>
         </span>
         <span className="home-item-secondary">
-          <p>{t(`home.${audit.action_type}`, { user: audit.user_name })}</p>
-          <p>{audit.user_name}</p> 
+          <p>{t(`home.${audit.action_type}`)}</p>
+          <p>{t(`model.${audit.model_name}`)}</p>
         </span>
       </Link>
     </li>

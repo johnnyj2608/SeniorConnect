@@ -101,9 +101,9 @@
         "turning_years_old": "将满 {{count}} 岁",
         "audit_log": "审计日志",
         "no_recent_audits": "最近无审计记录",
-        "create": "创建者",
-        "update": "更新者",
-        "delete": "删除者",
+        "create": "已创建",
+        "update": "已更新",
+        "delete": "已删除",
         "no_upcoming_assessments": "没有即将进行的评估"
     },
     "members": {

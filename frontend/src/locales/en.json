@@ -101,9 +101,9 @@
         "turning_years_old": "Turning {{count}}",
         "audit_log": "Audit Log",
         "no_recent_audits": "No recent audits",
-        "create": "Created by",
-        "update": "Updated by",
-        "delete": "Deleted by",
+        "create": "Created",
+        "update": "Updated",
+        "delete": "Deleted",
         "no_upcoming_assessments": "No upcoming assessments"
     },
     "members": {
