@@ -14,15 +14,13 @@ const BirthdayItem = ({ birthday }) => {
   return (
     <li>
       <Link to={`/member/${birthday.id}`} className="home-item">
-        <span className="home-item-title">
-          <p className="home-item-primary">
-            {birthday.sadc_member_id}. {birthday.last_name}, {birthday.first_name}
-          </p>
-          <p className="home-item-sub">
-            — {t('home.turning_years_old', { count: birthday.age_turning })}
-          </p>
+        <span className="home-item-primary">
+          <p>{birthday.sadc_member_id}. {birthday.last_name}, {birthday.first_name}</p>
+          <p>— {t('home.turning_years_old', { count: birthday.age_turning })}</p>
         </span>
-        <span className="home-item-detail">{renderBirthdayMessage(birthday.days_until)}</span>
+        <span className="home-item-secondary">
+          <p className="nowrap">{renderBirthdayMessage(birthday.days_until)}</p>
+        </span>
       </Link>
     </li>
   );

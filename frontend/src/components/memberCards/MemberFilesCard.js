@@ -12,7 +12,7 @@ const MemberFilesCard = ({ data, onEdit }) => {
     };
 
     return (
-        <div className="full-card">
+        <div className="card-full">
             <h2>{t('member.files.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />

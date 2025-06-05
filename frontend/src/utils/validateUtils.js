@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
+const validateRequiredFields = (translationPath, data, requiredFields, dependentFields = []) => {
     const items = Array.isArray(data)
         ? data.filter(item => item.edited && !item.deleted)
         : [data];
@@ -31,7 +31,11 @@ const validateRequiredFields = (data, requiredFields, dependentFields = []) => {
     }, new Set());
 
     if (missingFields.size > 0) {
-        alert(t('validation.required_fields', { fields: [...missingFields].join(', ') }));
+        const translatedFields = [...missingFields].map(fieldKey =>
+            t(`${translationPath}.${fieldKey}`)
+        );
+
+        alert(t('alerts.required_fields', { fields: translatedFields.join(', ') }));
         return false;
     }
 
@@ -51,7 +55,7 @@ const validateDateRange = (data) => {
     }, new Set());
 
     if (invalidDates.size > 0) {
-        alert(t('validation.invalid_dates'));
+        alert(t('alerts.invalid_dates'));
         return false;
     }
 
@@ -65,7 +69,7 @@ const validateInputLength = (length, data, type = 'Phone') => {
 
     const str = String(data).trim();
     if (str.length !== length) {
-        alert(t('validation.exact_length', { type, length }));
+        alert(t('alerts.exact_length', { type, length }));
         return false;
     }
 
@@ -79,7 +83,7 @@ const validateMedicaid = (data) => {
 
     const medicaidPattern = /^[a-zA-Z]{2}\d{5}[a-zA-Z]$/;
     if (!medicaidPattern.test(data.trim())) {
-        alert(t('validation.invalid_medicaid'));
+        alert(t('alerts.invalid_medicaid'));
         return false;
     }
 
@@ -91,7 +95,7 @@ const confirmMltcDeletion = (items) => {
     if (deletedItems.length === 0) return true;
 
     const names = deletedItems.map(item => item.name);
-    const message = t('validation.confirm_deletion', {
+    const message = t('alerts.confirm_deletion', {
         plural: names.length > 1 ? 's' : '',
         names: names.join('\n- ')
     });

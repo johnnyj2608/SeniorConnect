@@ -57,6 +57,8 @@ def log_create_update(sender, instance, created, **kwargs):
             old_value = original.get(field_name)
             new_value = getattr(instance, field_name)
 
+            print(old_value, new_value)
+
             if old_value in [None, ''] and new_value in [None, '']:
                 continue
 

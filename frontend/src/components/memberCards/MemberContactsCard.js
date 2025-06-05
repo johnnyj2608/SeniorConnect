@@ -12,7 +12,7 @@ const MemberContactsCard = ({ data, onEdit }) => {
     };
 
     return (
-        <div className="half-card">
+        <div className="card-400">
             <h2>{t('member.contacts.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
@@ -22,7 +22,7 @@ const MemberContactsCard = ({ data, onEdit }) => {
                     contacts.map((contact) => (
                         <ContactDetail
                             key={contact.id}
-                            label={t(`member.contacts.contact_type.${contact.contact_type}`)}
+                            label={t(`member.contacts.${contact.contact_type}`)}
                             contact={contact}
                         />
                     ))

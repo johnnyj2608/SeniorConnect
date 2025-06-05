@@ -26,7 +26,7 @@ const HomeAbsenceCard = () => {
   }, []);
 
   return (
-    <div className="full-card">
+    <div className="card-full">
       <h2>{t('snapshots.absences')}</h2>
       <div className="card-container">
         <div className="absence-container">

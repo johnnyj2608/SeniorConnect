@@ -16,13 +16,15 @@ from .utils import (
 )
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAdminUser])
 def getUsers(request):
 
     if request.method == 'GET':
         return getUserList(request)
 
     if request.method == 'POST':
+        permission = IsAdminUser()
+        if not permission.has_permission(request, None):
+            return Response({'detail': 'Admin access required.'}, status=403)
         return createUser(request)
 
 
@@ -36,6 +38,9 @@ def getUser(request, pk):
         return updateUser(request, pk)
 
     if request.method == 'DELETE':
+        permission = IsAdminUser()
+        if not permission.has_permission(request, None):
+            return Response({'detail': 'Admin access required.'}, status=403)
         return deleteUser(request, pk)
     
     if request.method == 'PATCH':

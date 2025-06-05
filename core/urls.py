@@ -43,9 +43,11 @@ urlpatterns = [
     path('contacts/', contact_views.getContacts, name="contacts"),
 
     # Absence related paths
+    path('assessments/upcoming/', absence_views.getAssessmentUpcoming, name="assessments_upcoming"),
     path('absences/upcoming/', absence_views.getAbsencesUpcoming, name="absences_upcoming"),
     path('absences/member/<str:pk>/', absence_views.getAbsencesByMember, name="absence_by_member"),
     path('absences/<str:pk>/', absence_views.getAbsence, name="absence"),
+    path('assessments/', absence_views.getAssessments, name="assessments"),
     path('absences/', absence_views.getAbsences, name="absences"),
 
     # File related paths

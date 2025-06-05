@@ -14,13 +14,13 @@ const AbsenceItem = ({ absence }) => {
   return (
     <li>
       <Link to={`/member/${absence.member}`} className="home-item">
-        <span className="home-item-title">
-          <p className="home-item-primary">{absence.member_name}</p>
-          <p className="home-item-sub">
-            — {t(`member.absences.${absence.absence_type}`)}
-          </p>
+        <span className="home-item-primary">
+          <p>{absence.member_name}</p>
+          <p>— {t(`member.absences.${absence.absence_type}`)}</p>
         </span>
-        <span className="home-item-detail nowrap">{renderDaysUntil(absence.days_until)}</span>
+        <span className="home-item-secondary">
+          <p className="nowrap">{renderDaysUntil(absence.days_until)}</p>
+        </span>
       </Link>
     </li>
   );

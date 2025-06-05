@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next'
 import RefreshButton from '../components/buttons/RefreshButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
+import ReportAssessmentsTable from '../components/reportTables/ReportAssessmentsTable';
 import ReportAuditsTable from '../components/reportTables/ReportAuditsTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
 import useFilteredReports from '../hooks/useFilteredReports';
 
 const reportTypes = [
     'absences', 
+    'assessments',
     'audit_log', 
     'enrollments',
 ];
@@ -18,6 +20,9 @@ const reportFilters = {
         'ongoing',
         'upcoming',
         'completed'
+    ],
+    assessments: [
+        
     ],
     enrollments: [
         'enrollment',
@@ -52,6 +57,8 @@ const ReportsPage = () => {
                 return <ReportEnrollmentsTable key={currentPage} report={report} />;
             case 'audit_log':
                 return <ReportAuditsTable key={currentPage} report={report} />;
+            case 'assessments':
+                return <ReportAssessmentsTable key={currentPage} report={report} />;
             default:
                 return null;
         }

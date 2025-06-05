@@ -31,6 +31,8 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disableFields = disabled || !current.contact_type;
 
+    const isEmergencyContact = current.contact_type === 'emergency_contact';
+
     return (
         <>
             <div className="modal-header">
@@ -38,7 +40,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             </div>
 
             <div className="member-detail">
-                <label>{t('member.contacts.contact_type.label')} *</label>
+                <label>{t('member.contacts.label')} *</label>
                 <select 
                     required
                     value={disabled ? '' : current.contact_type || ''} 
@@ -53,13 +55,13 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                     <option value="">{t('general.select_an_option')}</option>
                     {contactTypes.map(type => (
                         <option key={type} value={type}>
-                            {t(`member.contacts.contact_type.${type}`)}
+                            {t(`member.contacts.${type}`)}
                         </option>
                     ))}
                 </select>
             </div>
 
-            {current.contact_type === 'emergency_contact' && (
+            {isEmergencyContact && (
                 <div className="member-detail">
                     <label>{t('member.contacts.relationship.label')} *</label>
                     <select 

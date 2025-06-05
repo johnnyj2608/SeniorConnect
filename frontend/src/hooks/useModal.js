@@ -139,7 +139,7 @@ function useModal(data, onClose) {
         switch (type) {
             case 'info':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
                 if (!validateInputLength(10, updatedData.phone)) return;
                 if (!validateInputLength(9, updatedData.ssn, 'SSN')) return;
                 if (!validateMedicaid(updatedData.medicaid)) return;
@@ -151,7 +151,7 @@ function useModal(data, onClose) {
 
             case 'authorizations':
                 requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!validateRequiredFields('member.authorizations', updatedData, requiredFields)) return;
                 if (!validateDateRange(updatedData)) return;
 
                 try {
@@ -185,15 +185,19 @@ function useModal(data, onClose) {
 
             case 'contacts':
                 requiredFields = ['contact_type', 'name', 'phone'];
-                dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency' }];
-                if (!validateRequiredFields(updatedData, requiredFields, dependentFields)) return;
+                dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency_contact' }];
+                if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
                 break;
 
             case 'absences':
                 requiredFields = ['absence_type', 'start_date'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                dependentFields = [
+                    { field: 'time', dependsOn: 'absence_type', value: 'assessment' },
+                    { field: 'user', dependsOn: 'absence_type', value: 'assessment' }
+                ];
+                if (!validateRequiredFields('member.absences', updatedData, requiredFields, dependentFields)) return;
                 if (!validateDateRange(updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'absences');
@@ -201,20 +205,20 @@ function useModal(data, onClose) {
 
             case 'files':
                 requiredFields = ['name', 'file'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'files');
                 break;
 
             case 'users':
                 requiredFields = ['name', 'email'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!validateRequiredFields('settings.data.users', updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'users', 'user');
                 break;
             case 'mltcs':
                 requiredFields = ['name'];
-                if (!validateRequiredFields(updatedData, requiredFields)) return;
+                if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'mltcs');

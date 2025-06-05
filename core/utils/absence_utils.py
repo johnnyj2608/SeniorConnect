@@ -6,10 +6,19 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from ..models.absence_model import Absence
-from ..serializers.absence_serializers import AbsenceSerializer, AbsenceUpcomingSerializer
+from ..serializers.absence_serializers import (
+    AbsenceSerializer, 
+    AbsenceUpcomingSerializer, 
+    AssessmentSerializer
+)
 
 def getAbsenceList(request):
-    absences = Absence.objects.select_related('member').all()
+    absences = (
+        Absence.objects
+        .select_related('member')
+        .exclude(absence_type='assessment')
+        .all()
+    )
     filter_param = request.GET.get('filter')
     now = timezone.now().date()
 
@@ -76,16 +85,21 @@ def getUpcomingAbsences(request):
     today = timezone.now().date()
     in_7_days = today + timedelta(days=7)
 
-    leaving = Absence.objects.filter(
-        start_date__range=(today, in_7_days),
-        member__isnull=False
-    ).select_related('member')[:20]
+    leaving = (
+        Absence.objects.filter(
+            start_date__range=(today, in_7_days),
+            member__isnull=False
+        )
+        .exclude(absence_type='assessment')
+        .select_related('member')[:20]
+    )
 
     returning = (
         Absence.objects.filter(
             end_date__range=(today, in_7_days),
             member__isnull=False
         )
+        .exclude(absence_type='assessment')
         .exclude(pk__in=leaving.values_list('pk', flat=True))
         .select_related('member')[:20]
     )
@@ -97,3 +111,32 @@ def getUpcomingAbsences(request):
         "leaving": leaving_serialized,
         "returning": returning_serialized,
     }, status=status.HTTP_200_OK)
+
+def getAssessmentList(request):
+    assessments = (
+        Absence.objects
+        .filter(absence_type='assessment')
+        .select_related('member')
+    )
+
+    paginator = PageNumberPagination()
+    result_page = paginator.paginate_queryset(assessments, request)
+    serializer = AssessmentSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+def getUpcomingAssessments(request):
+    today = timezone.now().date()
+    in_7_days = today + timedelta(days=7)
+
+    assessments = (
+        Absence.objects
+        .filter(
+            absence_type='assessment',
+            start_date__range=(today, in_7_days),
+            member__isnull=False
+        )
+        .select_related('member')[:20]
+    )
+
+    serializer = AssessmentSerializer(assessments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

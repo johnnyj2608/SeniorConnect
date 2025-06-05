@@ -46,7 +46,7 @@ const HomeStatsCard = () => {
   };
 
   return (
-    <div className="full-card">
+    <div className="card-full">
       <h2>{t('snapshots.members')}</h2>
       <div className="card-container">
         <div className="stats-container">

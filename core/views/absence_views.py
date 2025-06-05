@@ -8,6 +8,8 @@ from ..utils.absence_utils import (
     createAbsence,
     getAbsenceListByMember,
     getUpcomingAbsences,
+    getAssessmentList,
+    getUpcomingAssessments,
 )
 
 @api_view(['GET', 'POST'])
@@ -41,3 +43,13 @@ def getAbsencesByMember(request, pk):
 def getAbsencesUpcoming(request):
     if request.method == 'GET':
         return getUpcomingAbsences(request)
+    
+@api_view(['GET'])
+def getAssessments(request):
+    if request.method == 'GET':
+        return getAssessmentList(request)
+    
+@api_view(['GET'])
+def getAssessmentUpcoming(request):
+    if request.method == 'GET':
+        return getUpcomingAssessments(request)

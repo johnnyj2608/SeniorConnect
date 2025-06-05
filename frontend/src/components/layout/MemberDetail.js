@@ -1,13 +1,14 @@
-import React from 'react'
+import React from 'react';
 
 const DetailRow = ({ label, value }) => {
+    if (value == null || value === '') return null;
+
     return (
         <div className="member-detail">
             <label>{label}:</label>
-            <span>{value || 'N/A'}</span>
+            <span>{value}</span>
         </div>
     );   
 };
 
-
-export default DetailRow
+export default DetailRow;

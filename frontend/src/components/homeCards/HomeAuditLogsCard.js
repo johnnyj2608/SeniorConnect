@@ -25,7 +25,7 @@ const HomeAuditLogsCard = () => {
   }, []);
 
   return (
-    <div className="full-card">
+    <div className="card-full">
       <h2>{t('home.audit_log')}</h2>
       <div className="card-container">
         {auditLogs.length === 0 ? (

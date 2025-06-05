@@ -24,7 +24,7 @@ const HomeBirthdayCard = () => {
   }, []);
 
   return (
-    <div className="full-card">
+    <div className="card-full">
       <h2>{t('snapshots.birthdays')}</h2>
       <div className="card-container">
         {birthdays.length === 0 ? (

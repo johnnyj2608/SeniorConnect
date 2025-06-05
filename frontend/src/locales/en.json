@@ -87,6 +87,7 @@
         "absences": "Absences",
         "birthdays": "Birthdays",
         "enrollment": "Enrollment",
+        "assessments": "Assessments",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
         "see_archived": "See archived reports in settings"
     },
@@ -102,7 +103,8 @@
         "no_recent_audits": "No recent audits",
         "create": "Created by",
         "update": "Updated by",
-        "delete": "Deleted by"
+        "delete": "Deleted by",
+        "no_upcoming_assessments": "No upcoming assessments"
     },
     "members": {
         "mltc_filter": "MLTC Filter",
@@ -131,7 +133,7 @@
             "active": "Active",
             "no_info": "No information available"
         },
-        "authorization": {
+        "authorizations": {
             "label": "Authorization",
             "mltc_member_id": "Member ID",
             "mltc": "MLTC",
@@ -148,38 +150,38 @@
         "contacts": {
             "label": "Contacts",
             "name": "Name",
-            "contact_type": {
-                "label": "Contact Type",
-                "emergency_contact": "Emergency Contact",
-                "primary_care_provider": "Primary Care Provider",
-                "pharmacy": "Pharmacy",
-                "home_aid": "Home Aid",
-                "home_care": "Home Care",
-                "other": "Other"
-            },
-            "relationship": {
-                "label": "Relationship",
-                "husband": "Husband",
-                "wife": "Wife",
-                "son": "Son",
-                "daughter": "Daughter",
-                "brother": "Brother",
-                "sister": "Sister",
-                "friend": "Friend",
-                "father": "Father",
-                "mother": "Mother",
-                "other": "Other"
-            },
+            "contact_type": "Contact Type",
+            "emergency_contact": "Emergency Contact",
+            "primary_care_provider": "Primary Care Provider",
+            "pharmacy": "Pharmacy",
+            "home_aid": "Home Aid",
+            "home_care": "Home Care",
+            "relationship": "Relationship",
+            "husband": "Husband",
+            "wife": "Wife",
+            "son": "Son",
+            "daughter": "Daughter",
+            "brother": "Brother",
+            "sister": "Sister",
+            "friend": "Friend",
+            "father": "Father",
+            "mother": "Mother",
+            "other": "Other",
             "no_contacts": "No contacts available"
         },
         "absences": {
             "label": "Absences",
+            "absence_type": "Absence Type",
             "start_date": "Start Date",
             "end_date": "End Date",
             "status": "Status",
             "vacation": "Vacation",
             "hospital": "Hospital",
             "personal": "Personal",
+            "assessment": "Assessment",
+            "date": "Date",
+            "time": "Time",
+            "user": "Staff",
             "other": "Other",
             "called": "Called",
             "ongoing": "Ongoing",
@@ -220,6 +222,9 @@
             "transfer": "Transfer",
             "disenrollment": "Disenrollment"
         },
+        "assessments": {
+            "label": "Assessments"
+        },
         "table": {
             "member": "Member",
             "status": "Status",
@@ -230,7 +235,8 @@
             "change": "Change",
             "action": "Action",
             "date": "Date",
-            "user": "User"
+            "user": "Staff",
+            "time": "Time"
         }
     },
     "settings": {

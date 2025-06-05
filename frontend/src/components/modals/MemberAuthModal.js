@@ -53,7 +53,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
     return (
         <>
             <div className="modal-header">
-                <h3>{t('general.edit')}{t('member.authorization.label')}</h3>
+                <h3>{t('general.edit')}{t('member.authorizations.label')}</h3>
                 <label>
                     <input
                         type="checkbox"
@@ -66,7 +66,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.member_id')} *</label>
+                <label>{t('member.authorizations.mltc_member_id')} *</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.mltc_member_id || ''}
@@ -78,7 +78,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.mltc')} *</label>
+                <label>{t('member.authorizations.mltc')} *</label>
                 <select
                     required
                     value={disabled ? '' : current.mltc || ''}
@@ -98,7 +98,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.mltc_auth_id')} *</label>
+                <label>{t('member.authorizations.mltc_auth_id')} *</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.mltc_auth_id || ''}
@@ -110,7 +110,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.schedule')}</label>
+                <label>{t('member.authorizations.schedule')}</label>
                 <div className="schedule-container">
                     {daysOfWeek.map((day) => (
                         <label key={day}>
@@ -128,7 +128,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.start_date')} *</label>
+                <label>{t('member.authorizations.start_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.start_date || ''}
@@ -138,7 +138,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.end_date')} *</label>
+                <label>{t('member.authorizations.end_date')} *</label>
                 <input
                     type="date"
                     value={disabled ? '' : current.end_date || ''}
@@ -148,7 +148,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.dx_code')}</label>
+                <label>{t('member.authorizations.dx_code')}</label>
                 <select
                     required
                     value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
@@ -165,7 +165,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.sdc_code')}</label>
+                <label>{t('member.authorizations.sdc_code')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.sdc_code || ''}
@@ -176,7 +176,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorization.trans_code')}</label>
+                <label>{t('member.authorizations.trans_code')}</label>
                 <input
                     type="text"
                     value={disabled ? '' : current.trans_code || ''}

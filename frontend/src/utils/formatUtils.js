@@ -12,6 +12,20 @@ const formatDate = (date) => {
       timeZone: 'UTC',
   });
 };
+
+const formatTime = (time) => {
+  if (!time) return null;
+
+  const isoString = `1970-01-01T${time}Z`;
+  const d = new Date(isoString);
+
+  return d.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'UTC',
+  });
+};
   
 const formatPhone = (phone) => {
   if (!phone) return phone;
@@ -185,6 +199,7 @@ const formatObjectDisplay = (entry, t) => {
 
 export {
   formatDate,
+  formatTime,
   formatPhone,
   formatGender,
   formatSchedule,
