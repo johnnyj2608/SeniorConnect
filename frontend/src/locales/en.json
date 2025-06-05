@@ -65,11 +65,8 @@
         "mltc": "MLTC",
         "member": "Member",
         "authorization": "Authorization",
-        "authorization_str": "{{mltc}}: {{start}} — {{end}}",
         "absence": "Absence",
-        "absence_str": "{{absence_type}}: {{start}} — {{end}}",
         "contact": "Contact",
-        "contact_str": "{{contact_type}}: {{name}}",
         "file": "File",
         "file_str": "File: {{name}}",
         "user": "User"

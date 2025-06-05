@@ -57,7 +57,16 @@ def log_create_update(sender, instance, created, **kwargs):
             old_value = original.get(field_name)
             new_value = getattr(instance, field_name)
 
-            print(old_value, new_value)
+            if field.is_relation and hasattr(field, 'related_model'):
+                if old_value and hasattr(old_value, 'name'):
+                    old_value = old_value.name
+                elif old_value:
+                    old_value = str(old_value)
+
+                if new_value and hasattr(new_value, 'name'):
+                    new_value = new_value.name
+                elif new_value:
+                    new_value = str(new_value)
 
             if old_value in [None, ''] and new_value in [None, '']:
                 continue

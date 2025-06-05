@@ -65,11 +65,8 @@
         "mltc": "老人中心保险",
         "member": "成员",
         "authorization": "授权",
-        "authorization_str": "{{mltc}}: {{start}} — {{end}}",
         "absence": "缺勤",
-        "absence_str": "{{absence_type}}: {{start}} — {{end}}",
         "contact": "联系人",
-        "contact_str": "{{contact_type}}: {{name}}",
         "file": "文件",
         "file_str": "文件: {{name}}",
         "user": "用户"

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatObjectDisplay } from '../../utils/formatUtils';
+import { formatObjectDisplay, formatDate, formatTime } from '../../utils/formatUtils';
 
 const ReportAuditsExpanded = ({ entry }) => {
     const { t } = useTranslation();
@@ -26,9 +26,20 @@ const ReportAuditsExpanded = ({ entry }) => {
                     {Object.entries(entry.changes).map(([field, { old, new: newVal }], i) => {
                         const label = t(`member.${baseKey}.${field}`);
         
+                        const formatChange = (val) => {
+                            if (!val) return '—';
+                        
+                            const isTimeString = (v) => /^\d{2}:\d{2}:\d{2}$/.test(v);
+                            const date = new Date(val);
+
+                            if (!isNaN(date) && val.length === 10) return formatDate(date);
+                            if (isTimeString(val)) return formatTime(val); 
+                            return translateBool(val);
+                        };
+                            
                         return (
                             <Fragment key={i}>
-                                — {label}: {translateBool(old)} → {translateBool(newVal)}
+                                — {label}: {formatChange(old)} → {formatChange(newVal)}
                                 <br />
                             </Fragment>
                         );

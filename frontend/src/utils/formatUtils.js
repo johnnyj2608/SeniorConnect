@@ -127,11 +127,8 @@ const formatObjectDisplay = (entry, t) => {
     return (
       <>
         <strong>
-          {t('model.absence_str', {
-            absence_type: t(`member.absences.${absenceType}`),
-            start,
-            end,
-          })}
+            {t(`member.absences.${absenceType}`)}: {start}
+            {end && <> — {end}</>}
         </strong>
         <br />
       </>
@@ -148,11 +145,7 @@ const formatObjectDisplay = (entry, t) => {
     return (
       <>
         <strong>
-          {t('model.authorization_str', {
-            mltc,
-            start,
-            end,
-          })}
+          {mltc}: {start} — {end}
         </strong>
         <br />
       </>
@@ -168,10 +161,7 @@ const formatObjectDisplay = (entry, t) => {
     return (
       <>
         <strong>
-          {t('model.contact_str', {
-            contact_type: t(`member.contacts.contact_type.${contactType}`),
-            name,
-          })}
+          {t(`member.contacts.contact_type.${contactType}`)}: {name}
         </strong>
         <br />
       </>
