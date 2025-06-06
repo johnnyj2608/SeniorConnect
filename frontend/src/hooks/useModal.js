@@ -120,10 +120,11 @@ function useModal(data, onClose) {
                     return { ...prev, absences: savedData };
                 case 'files':
                     return { ...prev, files: savedData };
-                case 'authorizations':
+                case 'authorizations': {
                     const activeAuthIndex = getActiveAuthIndex(savedData);
-                    const activeAuth = savedData[activeAuthIndex];
-                    return { ...prev, auth: activeAuth };
+                    if (activeAuthIndex === -1) return { ...prev, auth: null }; 
+                    return { ...prev, auth: savedData[activeAuthIndex] };
+                }
                 default:
                     console.error("Unknown update type:", type);
                 return prev;
@@ -150,7 +151,7 @@ function useModal(data, onClose) {
                 break;
 
             case 'authorizations':
-                requiredFields = ['mltc_member_id', 'mltc', 'mltc_auth_id', 'start_date', 'end_date'];
+                requiredFields = ['mltc_member_id', 'mltc', 'start_date', 'end_date'];
                 if (!validateRequiredFields('member.authorizations', updatedData, requiredFields)) return;
                 if (!validateDateRange(updatedData)) return;
 
@@ -178,10 +179,10 @@ function useModal(data, onClose) {
                         active_auth: activeAuth ? activeAuth.id : null,
                         change_date: activeAuth ? activeAuth.start_date : null,
                     });
-                    } catch (error) {
-                        console.error('Error during auth fetch or enrollment update:', error);
-                    }
-                    break;
+                } catch (error) {
+                    console.error('Error during auth fetch or enrollment update:', error);
+                }
+                break;
 
             case 'contacts':
                 requiredFields = ['contact_type', 'name', 'phone'];

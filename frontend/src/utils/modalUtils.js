@@ -6,6 +6,7 @@ const compareTabs = (updatedTab, originalTab) => {
 };
 
 const getActiveAuthIndex = (data) => {
+    if (data === null) return -1;
     const activeIndex = data.findIndex(tab => tab.active === true);
     return activeIndex;
 };
@@ -34,7 +35,7 @@ const sendRequest = async (url, method, data) => {
             formData.append(key, '');
         } else if (key === 'members') {
             value.forEach(member => formData.append(key, member));
-        } else if ((Array.isArray(value) || typeof value === 'object') && data.id !== 'new') {
+        } else if (Array.isArray(value) || typeof value === 'object') {
             formData.append(key, JSON.stringify(value));
         } else {
             formData.append(key, value);
@@ -95,18 +96,30 @@ const getNewTab = (type, localData, id) => {
     switch (type) {
         case 'authorizations': {
             const activeAuthIndex = getActiveAuthIndex(localData);
+            const activeAuth = localData[activeAuthIndex];
             return {
                 id: 'new',
                 member: id,
-                mltc_member_id: localData[activeAuthIndex]?.mltc_member_id || '',
-                mltc: localData[activeAuthIndex]?.mltc || '',
-                mltc_auth_id: '',
-                schedule: localData[activeAuthIndex]?.schedule || [],
+                mltc_member_id: activeAuth?.mltc_member_id || '',
+                mltc: activeAuth?.mltc || '',
                 start_date: '',
                 end_date: '',
-                dx_code: localData[activeAuthIndex]?.dx_code || '',
-                sdc_code: localData[activeAuthIndex]?.sdc_code || '',
-                trans_code: localData[activeAuthIndex]?.trans_code || '',
+                schedule: activeAuth?.schedule || [],
+                dx_code: activeAuth?.dx_code || '',
+                services: [
+                    activeAuth?.services?.find(s => s.service === 'sdc') || {
+                        service:       'sdc',
+                        auth_id:       '',
+                        service_code:  '',
+                        service_units: '',
+                    },
+                    activeAuth?.services?.find(s => s.service === 'transportation') || {
+                        service:       'transportation',
+                        auth_id:       '',
+                        service_code:  '',
+                        service_units: '',
+                    },
+                ],
                 active: true,
                 edited: true,
             };

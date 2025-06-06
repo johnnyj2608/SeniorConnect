@@ -19,14 +19,17 @@ def getAuthorizationDetail(request, pk):
 def createAuthorization(request):
     data = request.data.copy()
     
-    schedule = data.get('schedule', '').split(',')
-    data['schedule'] = json.dumps(schedule)
+    schedule = data.getlist('schedule', [])
+    data['schedule'] = schedule[0]
+
+    services = data.getlist('services', [])
+    data['services']= json.dumps(services[0])
 
     member_id = data.get('member')
     member = Member.objects.get(id=member_id)
     if not member.active:
             data['active'] = False
-  
+
     serializer = AuthorizationSerializer(data=data)
 
     try:

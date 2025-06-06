@@ -66,18 +66,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorizations.mltc_member_id')} *</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.mltc_member_id || ''}
-                    onChange={handleChange('mltc_member_id')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
-
-            <div className="member-detail">
                 <label>{t('member.authorizations.mltc')} *</label>
                 <select
                     required
@@ -98,33 +86,15 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorizations.mltc_auth_id')} *</label>
+                <label>{t('member.authorizations.mltc_member_id')} *</label>
                 <input
                     type="text"
-                    value={disabled ? '' : current.mltc_auth_id || ''}
-                    onChange={handleChange('mltc_auth_id')}
+                    value={disabled ? '' : current.mltc_member_id || ''}
+                    onChange={handleChange('mltc_member_id')}
                     placeholder={t('general.required')}
                     autoComplete="off"
                     disabled={disabled}
                 />
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.schedule')}</label>
-                <div className="schedule-container">
-                    {daysOfWeek.map((day) => (
-                        <label key={day}>
-                            <input
-                                type="checkbox"
-                                value={day}
-                                checked={disabled ? false : current.schedule?.includes(day) || false}
-                                onChange={handleScheduleChange(day)}
-                                disabled={disabled}
-                            />
-                            {t(`general.days_of_week.${day}`)}
-                        </label>
-                    ))}
-                </div>
             </div>
 
             <div className="member-detail">
@@ -148,6 +118,24 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
+                <label>{t('member.authorizations.schedule')}</label>
+                <div className="schedule-container">
+                    {daysOfWeek.map((day) => (
+                        <label key={day}>
+                            <input
+                                type="checkbox"
+                                value={day}
+                                checked={disabled ? false : current.schedule?.includes(day) || false}
+                                onChange={handleScheduleChange(day)}
+                                disabled={disabled}
+                            />
+                            {t(`general.days_of_week.${day}`)}
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            <div className="member-detail">
                 <label>{t('member.authorizations.dx_code')}</label>
                 <select
                     required
@@ -164,28 +152,88 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                 </select>
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.sdc_code')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.sdc_code || ''}
-                    onChange={handleChange('sdc_code')}
-                    autoComplete="off"
+            <AuthorizationServicesTabs
+                services={current.services}
+                disabled={disabled}
+                handleChange={handleChange}
+            />
+        </>
+    );
+};
+
+const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
+    const { t } = useTranslation();
+
+    const [activeTab, setActiveTab] = useState('SDC');
+
+    const serviceLabels = ['SDC', 'Transport'];
+
+    const handleServiceChange = (index, field) => (event) => {
+        const updatedService = {
+            ...(services?.[index] || {}),
+            [field]: event.target.value,
+        };
+
+        const updatedServices = [...(services || [])];
+        updatedServices[index] = updatedService;
+
+        handleChange('services')({ target: { value: updatedServices } });
+    };
+
+    return (
+        <div className="member-box">
+            <div className="member-box-label">
+                {serviceLabels.map((label) => (
+                <button
+                    key={label}
+                    type="button"
+                    onClick={() => setActiveTab(label)}
+                    className={`member-box-tab ${activeTab === label ? 'active' : ''}`}
                     disabled={disabled}
-                />
+                >
+                    {label}
+                </button>
+                ))}
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.trans_code')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.trans_code || ''}
-                    onChange={handleChange('trans_code')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
+            <div className="member-box-list">
+                {serviceLabels.map((label, index) =>
+                    activeTab === label ? (
+                        <div className="modal-box-panel" key={label}>
+                            <div className="member-detail">
+                                <label>{t('member.authorizations.auth_id')}</label>
+                                <input
+                                    type="text"
+                                    value={services?.[index]?.auth_id || ''}
+                                    onChange={handleServiceChange(index, 'auth_id')}
+                                    disabled={disabled}
+                                />
+                            </div>
+
+                            <div className="member-detail">
+                                <label>{t('member.authorizations.service_code')}</label>
+                                <input
+                                    type="text"
+                                    value={services?.[index]?.service_code || ''}
+                                    onChange={handleServiceChange(index, 'service_code')}
+                                    disabled={disabled}
+                                />
+                            </div>
+
+                            <div className="member-detail">
+                                <label>{t('member.authorizations.service_units')}</label>
+                                <input
+                                    type="number"
+                                    value={services?.[index]?.service_units || ''}
+                                    onChange={handleServiceChange(index, 'service_units')}
+                                    disabled={disabled}
+                                />
+                            </div>
+                        </div>
+                    ) : null
+                )}
             </div>
-        </>
+        </div>
     );
 };
 

@@ -1,13 +1,24 @@
 from rest_framework import serializers
-from ..models.authorization_model import Authorization, MLTC, Enrollment
+from ..models.authorization_model import (
+    MLTC, 
+    Authorization, 
+    AuthorizationService, 
+    Enrollment
+)
 
 class MLTCSerializer(serializers.ModelSerializer):
     class Meta:
         model = MLTC
         fields = '__all__'
 
+class AuthorizationServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthorizationService
+        exclude = ['created_at', 'updated_at', 'authorization']
+
 class AuthorizationSerializer(serializers.ModelSerializer):
     mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
+    services = AuthorizationServiceSerializer(many=True)
 
     class Meta:
         model = Authorization
@@ -22,6 +33,7 @@ class AuthorizationSerializer(serializers.ModelSerializer):
         
         return data
     
+
 class EnrollmentSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()
 

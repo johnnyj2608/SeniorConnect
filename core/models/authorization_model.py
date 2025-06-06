@@ -13,16 +13,14 @@ class MLTC(models.Model):
         return self.name
 
 class Authorization(models.Model):
-    mltc_auth_id = models.CharField(max_length=255, null=False, blank=False)
-    mltc_member_id = models.CharField(max_length=255, null=False, blank=False)
     mltc = models.ForeignKey('MLTC', null=True, blank=False, on_delete=models.SET_NULL)
     member = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
-    schedule = models.JSONField(default=list)
-    dx_code = models.CharField(max_length=255, choices=[], null=True, blank=True)
-    sdc_code = models.CharField(max_length=255, null=True, blank=True)
-    trans_code = models.CharField(max_length=255, null=True, blank=True)
+    mltc_member_id = models.CharField(max_length=255, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
+    dx_code = models.CharField(max_length=255, choices=[], null=True, blank=True)
+    schedule = models.JSONField(default=list)
+
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
@@ -34,6 +32,30 @@ class Authorization(models.Model):
         start = self.start_date.strftime('%m/%d/%Y')
         end = self.end_date.strftime('%m/%d/%Y')
         return f"{self.mltc}: {start} — {end}"
+    
+class AuthorizationService(models.Model):
+    SDC = 'sdc'
+    TRANSPORTATION = 'transportation'
+
+    SERVICE_TYPES = [
+        (SDC, 'SDC'),
+        (TRANSPORTATION, 'Transportation'),
+    ]
+
+    authorization = models.ForeignKey('Authorization', related_name='services', on_delete=models.CASCADE)
+    service = models.CharField(max_length=20, choices=SERVICE_TYPES)
+    auth_id = models.CharField(max_length=255, null=True, blank=False)
+    service_code = models.CharField(max_length=255, null=True, blank=True)
+    service_units = models.IntegerField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False)
+
+    class Meta:
+        unique_together = ('authorization', 'service')
+
+    def __str__(self):
+        return f"{self.service} for {self.authorization}"
 
 class Enrollment(models.Model):
     ENROLLMENT = 'enrollment'

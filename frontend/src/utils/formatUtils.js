@@ -44,13 +44,13 @@ const formatGender = (gender) => {
 
 const formatSchedule = (schedule, digits = false) => {
   const dayMap = {
-    "Monday": digits ? "1" : "Mon",
-    "Tuesday": digits ? "2" : "Tue",
-    "Wednesday": digits ? "3" : "Wed",
-    "Thursday": digits ? "4" : "Thu",
-    "Friday": digits ? "5" : "Fri",
-    "Saturday": digits ? "6" : "Sat",
-    "Sunday": digits ? "7" : "Sun"
+    "monday": digits ? "1" : "Mon",
+    "tuesday": digits ? "2" : "Tue",
+    "wednesday": digits ? "3" : "Wed",
+    "thursday": digits ? "4" : "Thu",
+    "friday": digits ? "5" : "Fri",
+    "saturday": digits ? "6" : "Sat",
+    "sunday": digits ? "7" : "Sun"
   };
 
   if (typeof schedule === "string") {
@@ -71,8 +71,8 @@ const sortSchedule = (schedule) => {
   const daySet = new Set(schedule.filter(day => day !== ''));
 
   const daysOfWeek = [
-    "Monday", "Tuesday", "Wednesday", "Thursday", 
-    "Friday", "Saturday", "Sunday"
+    "monday", "tuesday", "wednesday", "thursday", 
+    "friday", "saturday", "sunday"
   ];
 
   return daysOfWeek.filter(day => daySet.has(day));
