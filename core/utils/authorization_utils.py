@@ -1,9 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from ..models.authorization_model import Authorization
+from ..models.authorization_model import Authorization, AuthorizationService
 from ..models.member_model import Member
 from ..serializers.authorization_serializers import AuthorizationSerializer
+from django.db import transaction
 import json
 
 def getAuthorizationList(request):
@@ -19,25 +20,29 @@ def getAuthorizationDetail(request, pk):
 def createAuthorization(request):
     data = request.data.copy()
     
-    schedule = data.getlist('schedule', [])
-    data['schedule'] = schedule[0]
-
-    services = data.getlist('services', [])
-    data['services']= json.dumps(services[0])
+    data['schedule'] = data.getlist('schedule', [])[0]
+    services = json.loads(data.pop('services', [])[0])
 
     member_id = data.get('member')
     member = Member.objects.get(id=member_id)
     if not member.active:
             data['active'] = False
 
-    serializer = AuthorizationSerializer(data=data)
-
     try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        with transaction.atomic():
+            serializer = AuthorizationSerializer(data=data)
+
+            if serializer.is_valid():
+                authorization = serializer.save()
+
+                for service_data in services:
+                    AuthorizationService.objects.create(authorization=authorization, **service_data)
+
+                response_serializer = AuthorizationSerializer(authorization)
+                return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
