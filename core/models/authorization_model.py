@@ -20,6 +20,9 @@ class Authorization(models.Model):
     end_date = models.DateField(null=False, blank=False)
     dx_code = models.CharField(max_length=255, choices=[], null=True, blank=True)
     schedule = models.JSONField(default=list)
+    cm_name = models.CharField(max_length=255, null=True, blank=True)
+    cm_phone = models.CharField(max_length=10, null=True, blank=True)
+    file = models.URLField(null=True, blank=True)
 
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
@@ -32,7 +35,7 @@ class Authorization(models.Model):
         start = self.start_date.strftime('%m/%d/%Y')
         end = self.end_date.strftime('%m/%d/%Y')
         return f"{self.mltc}: {start} — {end}"
-    
+
 class AuthorizationService(models.Model):
     SDC = 'sdc'
     TRANSPORTATION = 'transportation'

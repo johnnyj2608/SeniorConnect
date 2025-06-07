@@ -143,6 +143,8 @@
             "auth_id": "Auth ID",
             "service_code": "Service Code",
             "service_units": "Service Units",
+            "care_manager": "Care Manager",
+            "phone": "Phone",
             "active": "Active",
             "no_authorization": "No authorization available"
         },

@@ -1,15 +1,15 @@
 import React from 'react'
 import { formatPhone } from '../../utils/formatUtils';
 
-const ContactDetail = ({ label, contact }) => {
+const ContactDetail = ({ label, name, phone }) => {
     return (
         <div className="member-detail">
             <label>{label}:</label>
             <span className="member-detail-contacts">
-                {contact ? (
+                {(name || phone) ? (
                     <>
-                        <div>{contact.name}</div>
-                        <div>{formatPhone(contact.phone)}</div>
+                        <div>{name}</div>
+                        <div>{formatPhone(phone)}</div>
                     </>
                 ) : (
                     'N/A'

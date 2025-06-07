@@ -143,6 +143,8 @@
             "auth_id": "授权号",
             "service_code": "服务代码",
             "service_units": "服务单元",
+            "care_manager": "护理经理",
+            "phone": "电话",
             "active": "活跃",
             "no_authorization": "没有可用的授权"
         },

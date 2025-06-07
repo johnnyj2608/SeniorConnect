@@ -119,6 +119,9 @@ const getNewTab = (type, localData, id) => {
                             service_units: 0,
                         },
                 ],
+                cm_name: activeAuth?.cm_name || '',
+                cm_phone: activeAuth?.cm_phone || '',
+                file: '',
                 active: true,
                 edited: true,
             };

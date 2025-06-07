@@ -23,7 +23,8 @@ const MemberContactsCard = ({ data, onEdit }) => {
                         <ContactDetail
                             key={contact.id}
                             label={t(`member.contacts.${contact.contact_type}`)}
-                            contact={contact}
+                            name={contact.name}
+                            phone={contact.phone}
                         />
                     ))
                 )}
