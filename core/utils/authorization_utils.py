@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import Authorization, AuthorizationService
 from ..models.member_model import Member
-from ..serializers.authorization_serializers import AuthorizationSerializer
+from ..serializers.authorization_serializers import AuthorizationSerializer, AuthorizationWithServiceSerializer
 from django.db import transaction
 import json
 
@@ -36,6 +36,13 @@ def createAuthorization(request):
                 authorization = serializer.save()
 
                 for service_data in services:
+                    auth_id = service_data.get('auth_id')
+                    service_code = service_data.get('service_code')
+                    service_units = service_data.get('service_units')
+
+                    if not auth_id and not service_code and not service_units:
+                        continue
+
                     AuthorizationService.objects.create(authorization=authorization, **service_data)
 
                 response_serializer = AuthorizationSerializer(authorization)
@@ -77,8 +84,9 @@ def getAuthorizationListByMember(request, member_pk):
     authorizations = (
         Authorization.objects
         .select_related('mltc', 'member')
+        .prefetch_related('services')
         .filter(member=member_pk)
         .order_by('-active', '-start_date')
     )
-    serializer = AuthorizationSerializer(authorizations, many=True)
+    serializer = AuthorizationWithServiceSerializer(authorizations, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

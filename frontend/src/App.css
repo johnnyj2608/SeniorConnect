@@ -842,7 +842,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .member-detail label {
   width: 150px;
-  padding: 5px;
   color: var(--color-text-sub);
   align-items: center;
 }
@@ -878,6 +877,7 @@ input[type="number"]::-webkit-inner-spin-button {
   position: absolute;
   top: 5px;
   padding: 0 5px;
+  color: var(--color-text-sub);
   background-color: var(--color-content);
 }
 

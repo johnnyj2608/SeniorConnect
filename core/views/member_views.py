@@ -6,7 +6,6 @@ from ..utils.member_utils import (
     deleteMember,
     getMemberList,
     createMember,
-    getActiveAuth,
     getActiveMemberStats,
     getUpcomingBirthdays,
     toggleMemberStatus,
@@ -37,12 +36,6 @@ def getMember(request, pk):
     
     if request.method == 'PATCH':
         return toggleMemberStatus(request, pk)
-    
-@api_view(['GET'])
-def getMemberAuth(request, pk):
-
-    if request.method == 'GET':
-        return getActiveAuth(request, pk)
     
 @api_view(['GET'])
 def getMembersStats(request):

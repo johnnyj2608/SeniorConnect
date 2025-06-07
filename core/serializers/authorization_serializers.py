@@ -31,6 +31,14 @@ class AuthorizationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("End date cannot be before start date.")
         
         return data
+    
+class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
+    mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
+    services = AuthorizationServiceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Authorization
+        exclude = ['created_at', 'updated_at']
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()

@@ -14,7 +14,7 @@ from ..serializers.member_serializers import (
     MemberBirthdaySerializer
 )
 from ..serializers.absence_serializers import Absence, AbsenceSerializer
-from ..serializers.authorization_serializers import AuthorizationSerializer
+from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
 from django.utils.text import slugify
@@ -136,13 +136,6 @@ def updateMember(request, pk):
         if public_url:
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-def getActiveAuth(request, pk):
-    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
-    if member.active_auth:
-        serializer = AuthorizationSerializer(member.active_auth)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response({}, status=status.HTTP_200_OK)
 
 def deleteMember(request, pk):
     member = get_object_or_404(Member, id=pk)
@@ -213,7 +206,7 @@ def getMemberDetailFull(request, pk):
 
     return Response({
         'info': MemberSerializer(member).data,
-        'auth': AuthorizationSerializer(member.active_auth).data if member.active_auth else None,
+        'auth': AuthorizationWithServiceSerializer(member.active_auth).data if member.active_auth else None,
         'absences': AbsenceSerializer(absences, many=True).data,
         'contacts': ContactSerializer(contacts, many=True).data,
         'files': FileSerializer(files, many=True).data
