@@ -58,8 +58,9 @@ input:not([type="radio"]):not([type="checkbox"]) {
   border: 1px solid var(--color-border);
 }
 
-input[type="checkbox"] {
-  margin-right: 2px;
+input[type="checkbox"], 
+input[type="radio"] {
+  margin-right: 5px;
   accent-color: var(--color-main);
 }
 
@@ -1121,6 +1122,11 @@ body.modal-open {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-bottom: 5px;
+}
+
+.member-detail.stack label {
+  padding-bottom: 3px;
 }
 
 .tab-button {

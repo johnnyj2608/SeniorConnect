@@ -14,8 +14,10 @@ import {
     confirmMltcDeletion,
  } from '../utils/validateUtils';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
+import { useTranslation } from 'react-i18next';
 
 function useModal(data, onClose) {
+    const { t } = useTranslation();
     const id = data.id;
     const type = data.type;
     const originalData = useMemo(() => (
@@ -141,9 +143,9 @@ function useModal(data, onClose) {
             case 'info':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
                 if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
-                if (!validateInputLength(10, updatedData)) return;
-                if (!validateInputLength(9, updatedData, 'SSN')) return;
-                if (!validateMedicaid(updatedData)) return;
+                if (!validateInputLength(10, updatedData.phone, t('member.info.phone'))) return;
+                if (!validateInputLength(9, updatedData.ssn, t('member.info.ssn'))) return;
+                if (!validateMedicaid(updatedData.medicaid)) return;
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
