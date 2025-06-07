@@ -34,11 +34,30 @@ class AuthorizationSerializer(serializers.ModelSerializer):
     
 class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
     mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
-    services = AuthorizationServiceSerializer(many=True, read_only=True)
+    services = serializers.SerializerMethodField()
 
     class Meta:
         model = Authorization
         exclude = ['created_at', 'updated_at']
+
+    def get_services(self, obj):
+        service_types = [AuthorizationService.SDC, AuthorizationService.TRANSPORTATION]
+        existing_services = {s.service_type: s for s in obj.services.all()}
+        result = []
+
+        for stype in service_types:
+            service = existing_services.get(stype)
+            if service:
+                result.append(AuthorizationServiceSerializer(service).data)
+            else:
+                result.append({
+                    "service_type": stype,
+                    "auth_id": "",
+                    "service_code": "",
+                    "service_units": ""
+                })
+
+        return result
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()

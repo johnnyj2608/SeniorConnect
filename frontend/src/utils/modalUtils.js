@@ -108,15 +108,15 @@ const getNewTab = (type, localData, id) => {
                 dx_code: activeAuth?.dx_code || '',
                 services: [
                     activeAuth?.services?.find(s => s.service === 'sdc') || {
-                        service:       'sdc',
-                        auth_id:       '',
+                        service_type: 'sdc',
+                        auth_id: '',
                         service_code:  '',
                         service_units: 0,
                     },
                     activeAuth?.services?.find(s => s.service === 'transportation') || {
-                        service:       'transportation',
-                        auth_id:       '',
-                        service_code:  '',
+                        service_type: 'transportation',
+                        auth_id: '',
+                        service_code: '',
                         service_units: 0,
                     },
                 ],

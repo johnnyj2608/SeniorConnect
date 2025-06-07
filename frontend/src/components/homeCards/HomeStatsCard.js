@@ -20,7 +20,7 @@ const HomeStatsCard = () => {
         const data = await response.json();
         setStats(data);
       } catch (error) {
-        console.log('Failed to fetch stats:', error);
+        console.log(error);
       }
     };
 

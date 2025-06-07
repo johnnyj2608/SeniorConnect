@@ -38,18 +38,18 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                         <DetailRow label={t('member.authorizations.dx_code')} value={auth.dx_code} />
                         <DetailListRow label={t('member.authorizations.schedule')} value={formatSchedule(auth.schedule)} />
                         
-                        {auth.services.length > 0 ? (
-                            auth.services.map((service) => (
-                                <div key={service.id} className="member-box">
-                                    <label className="member-box-label">{t(`member.authorizations.${service.service}`)}</label>
+                        {auth.services
+                            .filter(service => service.auth_id && service.service_code && service.service_units)
+                            .map((service, index) => (
+                                <div key={index} className="member-box">
+                                    <label className="member-box-label">{t(`member.authorizations.${service.service_type}`)}</label>
                                     <div className="member-box-list card-full">
-                                        <DetailRow label={t('member.authorizations.auth_id')} value={service.auth_id || '-'} />
-                                        <DetailRow label={t('member.authorizations.service_code')} value={service.service_code || '-'} />
-                                        <DetailRow label={t('member.authorizations.service_units')} value={service.service_units || '-'} />
+                                        <DetailRow label={t('member.authorizations.auth_id')} value={service.auth_id} />
+                                        <DetailRow label={t('member.authorizations.service_code')} value={service.service_code} />
+                                        <DetailRow label={t('member.authorizations.service_units')} value={service.service_units} />
                                     </div>
                                 </div>
-                            ))
-                        ) : null}
+                        ))}
                     </>
                 )}
             </div>

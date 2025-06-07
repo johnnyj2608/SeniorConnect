@@ -136,6 +136,13 @@ def updateMember(request, pk):
         if public_url:
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+def getActiveAuth(request, pk):
+    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
+    if member.active_auth:
+        serializer = AuthorizationWithServiceSerializer(member.active_auth)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({}, status=status.HTTP_200_OK)
 
 def deleteMember(request, pk):
     member = get_object_or_404(Member, id=pk)
@@ -197,7 +204,7 @@ def toggleMemberStatus(request, pk):
     member.save()
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
-def getMemberDetailFull(request, pk):
+def getMemberProfile(request, pk):
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
 
     absences = Absence.objects.filter(member=pk)

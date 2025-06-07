@@ -6,10 +6,11 @@ from ..utils.member_utils import (
     deleteMember,
     getMemberList,
     createMember,
+    getActiveAuth,
     getActiveMemberStats,
     getUpcomingBirthdays,
     toggleMemberStatus,
-    getMemberDetailFull,
+    getMemberProfile,
 )
 
 @api_view(['GET', 'POST'])
@@ -38,6 +39,12 @@ def getMember(request, pk):
         return toggleMemberStatus(request, pk)
     
 @api_view(['GET'])
+def getMemberAuth(request, pk):
+
+    if request.method == 'GET':
+        return getActiveAuth(request, pk)
+    
+@api_view(['GET'])
 def getMembersStats(request):
     if request.method == 'GET':
         return getActiveMemberStats(request)
@@ -50,4 +57,4 @@ def getMembersBirthdays(request):
 @api_view(['GET'])
 def getMemberFull(request, pk):
     if request.method == 'GET':
-        return getMemberDetailFull(request, pk)
+        return getMemberProfile(request, pk)

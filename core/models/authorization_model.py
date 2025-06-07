@@ -43,7 +43,7 @@ class AuthorizationService(models.Model):
     ]
 
     authorization = models.ForeignKey('Authorization', related_name='services', on_delete=models.CASCADE)
-    service = models.CharField(max_length=20, choices=SERVICE_TYPES)
+    service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
     auth_id = models.CharField(max_length=255, null=True, blank=False)
     service_code = models.CharField(max_length=255, null=True, blank=True)
     service_units = models.IntegerField(null=True, blank=True)
@@ -52,10 +52,10 @@ class AuthorizationService(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=False)
 
     class Meta:
-        unique_together = ('authorization', 'service')
+        unique_together = ('authorization', 'service_type')
 
     def __str__(self):
-        return f"{self.service} for {self.authorization}"
+        return f"{self.service_type} for {self.authorization}"
 
 class Enrollment(models.Model):
     ENROLLMENT = 'enrollment'

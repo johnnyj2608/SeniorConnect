@@ -1038,6 +1038,7 @@ body.modal-open {
   width: 100%;
   padding-top: 5px;
   padding-bottom: 5px;
+  gap: 5px;
 }
 
 .schedule-container label:nth-child(7) {
