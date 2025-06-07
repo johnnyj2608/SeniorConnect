@@ -149,6 +149,7 @@
         "contacts": {
             "label": "Contacts",
             "name": "Name",
+            "phone": "Phone",
             "contact_type": "Contact Type",
             "emergency_contact": "Emergency Contact",
             "primary_care_provider": "Primary Care Provider",

@@ -149,6 +149,7 @@
         "contacts": {
             "label": "联系人",
             "name": "名称",
+            "phone": "电话",
             "contact_type": "接触式",
             "emergency_contact": "紧急联系人",
             "primary_care_provider": "初级保健提供者",

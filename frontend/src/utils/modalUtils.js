@@ -67,12 +67,7 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
                 }
             }
             const response = await sendRequest(dataEndpoint, dataMethod, item);
-    
-            if (item.id === 'new' && response.id) {
-                item.id = response.id;
-            }
-    
-            return item;
+            return response
         }),
         ...deletedData.map(async (item) => {
             let dataEndpoint = `/${api}/${endpoint}/${item.id}/`;
@@ -86,7 +81,7 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
     ]));
     
     const savedData = dataArray
-        .filter(data => !(data.deleted))
+        .filter(data => !data.deleted && data.id !== 'new')
         .map(data => processedData.find(updated => updated.id === data.id) || data)
         .concat(processedData.filter(updated => !dataArray.some(data => data.id === updated.id)));
     return savedData
@@ -107,18 +102,22 @@ const getNewTab = (type, localData, id) => {
                 schedule: activeAuth?.schedule || [],
                 dx_code: activeAuth?.dx_code || '',
                 services: [
-                    activeAuth?.services?.find(s => s.service === 'sdc') || {
-                        service_type: 'sdc',
-                        auth_id: '',
-                        service_code:  '',
-                        service_units: 0,
-                    },
-                    activeAuth?.services?.find(s => s.service === 'transportation') || {
-                        service_type: 'transportation',
-                        auth_id: '',
-                        service_code: '',
-                        service_units: 0,
-                    },
+                    activeAuth?.services?.find(s => s.service_type === 'sdc')
+                        ? { ...activeAuth.services.find(s => s.service_type === 'sdc'), auth_id: '' }
+                        : {
+                            service_type: 'sdc',
+                            auth_id: '',
+                            service_code: '',
+                            service_units: 0,
+                        },
+                    activeAuth?.services?.find(s => s.service_type === 'transportation')
+                        ? { ...activeAuth.services.find(s => s.service_type === 'transportation'), auth_id: '' }
+                        : {
+                            service_type: 'transportation',
+                            auth_id: '',
+                            service_code: '',
+                            service_units: 0,
+                        },
                 ],
                 active: true,
                 edited: true,

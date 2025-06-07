@@ -20,7 +20,7 @@ const SettingsData = () => {
       setModalData({ type: 'mltcs', data });
       setModalOpen(true);
     } catch (error) {
-      console.error('Error fetching MLTC data:', error);
+      console.error(error);
       alert(t('settings.data.error_load', 'Could not load data. Please try again.'));
     }
   }, [t]);

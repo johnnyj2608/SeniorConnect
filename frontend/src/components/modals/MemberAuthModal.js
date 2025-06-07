@@ -19,6 +19,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
+    console.log(current);
+
     useEffect(() => {
         const getMltcOptions = async () => {
             try {
@@ -28,7 +30,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                 const data = await response.json();
                 setMltcOptions(data);
             } catch (error) {
-                console.error('Failed to fetch MLTC options:', error);
+                console.error(error);
             }
         };
 

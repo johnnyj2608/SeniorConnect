@@ -10,11 +10,7 @@ const validateRequiredFields = (translationPath, data, requiredFields, dependent
             const value = item[field];
             const isEmpty = typeof value === 'string' ? value.trim() === '' : value == null;
 
-            if (isEmpty) {
-                acc.add(field);
-            } else if (field === 'phone' && !validateInputLength(10, value, 'Phone')) {
-                acc.add(field);
-            }
+            if (isEmpty) acc.add(field);
         });
 
         dependentFields.forEach(({ field, dependsOn, value }) => {

@@ -23,7 +23,7 @@ const DownloadButton = ({ membersByMltc  }) => {
       saveAs(blob, fileName);
 
     } catch (error) {
-      console.error("Error downloading members:", error);
+      console.error(error);
     }
   };
 

@@ -141,9 +141,9 @@ function useModal(data, onClose) {
             case 'info':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
                 if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
-                if (!validateInputLength(10, updatedData.phone)) return;
-                if (!validateInputLength(9, updatedData.ssn, 'SSN')) return;
-                if (!validateMedicaid(updatedData.medicaid)) return;
+                if (!validateInputLength(10, updatedData)) return;
+                if (!validateInputLength(9, updatedData, 'SSN')) return;
+                if (!validateMedicaid(updatedData)) return;
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
@@ -188,6 +188,7 @@ function useModal(data, onClose) {
                 requiredFields = ['contact_type', 'name', 'phone'];
                 dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency_contact' }];
                 if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
+                if (!validateInputLength(10, updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
                 break;

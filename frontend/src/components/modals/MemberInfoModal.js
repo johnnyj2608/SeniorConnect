@@ -140,7 +140,7 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                 const data = await response.json();
                 setLanguageOptions(data);
             } catch (error) {
-                console.error('Failed to fetch language options:', error);
+                console.error(error);
             }
         };
 

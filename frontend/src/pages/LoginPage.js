@@ -46,7 +46,7 @@ const LoginPage = () => {
             setUser(data.user)
             navigate('/')
         } catch (error) {
-            console.error('Login error:', error)
+            console.error(error)
             alert('Invalid credentials')
         }
     }

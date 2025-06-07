@@ -39,9 +39,9 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                         <DetailListRow label={t('member.authorizations.schedule')} value={formatSchedule(auth.schedule)} />
                         
                         {auth.services
-                            .filter(service => service.auth_id && service.service_code && service.service_units)
-                            .map((service, index) => (
-                                <div key={index} className="member-box">
+                            .filter(service => service.id)
+                            .map((service) => (
+                                <div key={service.id} className="member-box">
                                     <label className="member-box-label">{t(`member.authorizations.${service.service_type}`)}</label>
                                     <div className="member-box-list card-full">
                                         <DetailRow label={t('member.authorizations.auth_id')} value={service.auth_id} />
