@@ -35,7 +35,7 @@ const sendRequest = async (url, method, data) => {
             formData.append(key, '');
         } else if (key === 'members') {
             value.forEach(member => formData.append(key, member));
-        } else if (Array.isArray(value) || typeof value === 'object') {
+        } else if ((Array.isArray(value) || typeof value === 'object') && !(value instanceof File)) {
             formData.append(key, JSON.stringify(value));
         } else {
             formData.append(key, value);
