@@ -194,11 +194,10 @@
         "files": {
             "label": "Files",
             "name": "Name",
-            "upload_file": "Upload File",
+            "file": "File",
             "no_file_chosen": "No File Chosen",
             "file_chosen": "File Chosen",
-            "completed": "Completed",
-            "expiration": "Expiration",
+            "date": "Date",
             "drop_to_upload": "Drop file to upload",
             "no_files": "No files uploaded"
         }

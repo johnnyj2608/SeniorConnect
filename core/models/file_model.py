@@ -13,9 +13,8 @@ def member_file_path(instance, filename):
 class File(models.Model):
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='files')
     name = models.CharField(max_length=100) 
+    date = models.DateField()
     file = models.URLField()
-    completion_date = models.DateField(null=True, blank=True)
-    expiration_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
 

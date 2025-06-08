@@ -154,8 +154,7 @@ const getNewTab = (type, localData, id) => {
                 member: id,
                 name: '',
                 file: '',
-                completion_date: '',
-                expiration_date: '',
+                date: '',
                 edited: true,
             };
         }

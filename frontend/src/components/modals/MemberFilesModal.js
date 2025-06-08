@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
-import viewFile from '../../utils/viewFile';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
 const MemberFilesModal = ({ data, handleChange, activeTab }) => {
@@ -14,9 +13,10 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
         const fakeEvent = { target: { files: [file] } };
         handleChange('file')(fakeEvent);
 
-        if (!current.name) {
-            handleChange('name')({ target: { value: file.name } });
-        }
+        handleChange('name')({ target: { value: file.name } });
+        
+        const today = new Date().toISOString().split('T')[0];
+        handleChange('date')({ target: { value: today } });
     };
 
     const { isDragging, dragProps } = useDragAndDrop(onDropFile);
@@ -39,9 +39,20 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         disabled={disabled}
                     />
                 </div>
+            </div>
 
-                <div className="member-detail">
-                    <label>{t('member.files.upload_file')} *</label>
+            <div className="member-detail">
+                <label>{t('member.files.date')} *</label>
+                <input
+                    type="date"
+                    value={disabled ? '' : current.date || ''}
+                    onChange={handleChange('date')}
+                    disabled={disabled}
+                />
+            </div>
+
+            <div className="member-detail">
+                    <label>{t('member.files.file')} *</label>
                     <div className="file-container">
                         <button
                             className="action-button thin"
@@ -64,37 +75,6 @@ const MemberFilesModal = ({ data, handleChange, activeTab }) => {
                         />
                     </div>
                 </div>
-
-                <div className="member-detail">
-                    <label>{t('member.files.completed')}</label>
-                    <input
-                        type="date"
-                        value={disabled ? '' : current.completion_date || ''}
-                        onChange={handleChange('completion_date')}
-                        disabled={disabled}
-                    />
-                </div>
-
-                <div className="member-detail">
-                    <label>{t('member.files.expiration')}</label>
-                    <input
-                        type="date"
-                        value={disabled ? '' : current.expiration_date || ''}
-                        onChange={handleChange('expiration_date')}
-                        disabled={disabled}
-                    />
-                </div>
-
-                <div className="file-footer">
-                    <button
-                        className="action-button thin"
-                        onClick={() => viewFile(current.file)}
-                        disabled={disabled || !current.file}
-                    >
-                        {t('general.buttons.view_file')}
-                    </button>
-                </div>
-            </div>
 
             {isDragging && (
                 <div className="upload-overlay">

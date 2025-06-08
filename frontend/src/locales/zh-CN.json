@@ -194,11 +194,10 @@
         "files": {
             "label": "文件",
             "name": "名称",
-            "upload_file": "上传文件",
+            "file": "文件",
             "no_file_chosen": "未选择文件",
             "file_chosen": "已选择文件",
-            "completed": "已完成",
-            "expiration": "过期时间",
+            "date": "日期",
             "drop_to_upload": "拖放文件进行上传",
             "no_files": "未上传任何文件"
         }

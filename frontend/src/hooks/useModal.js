@@ -208,7 +208,7 @@ function useModal(data, onClose) {
                 break;
 
             case 'files':
-                requiredFields = ['name', 'file'];
+                requiredFields = ['name', 'date', 'file'];
                 if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'files');

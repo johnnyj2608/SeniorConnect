@@ -49,7 +49,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'files':
                 return { 
                     heading: item.name || t('members.unknown'),
-                    subheading: formatDate(item.completion_date) || '',
+                    subheading: formatDate(item.date) || '',
                 };
             case 'users':
                 return { 

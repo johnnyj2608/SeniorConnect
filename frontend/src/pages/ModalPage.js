@@ -70,6 +70,7 @@ const ModalPage = ({ data, onClose }) => {
                                 key="new-tab"
                                 index={-1}
                                 handleTabClick={handleAdd}
+                                type={type}
                                 tab={add_tab}
                             />
                             {localData.map((tab, index) => (
