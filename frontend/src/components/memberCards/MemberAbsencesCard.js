@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { act, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';
@@ -14,12 +14,13 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
-	const activeAbsences = absences.filter(abs => {
+	let activeAbsences = absences.filter(abs => {
 		if (!abs.end_date) return true;
 		const [year, month, day] = abs.end_date.split('-');
 		const endDate = new Date(year, month - 1, day);
 		return endDate >= today;
 	});
+	activeAbsences = activeAbsences.reverse();
 
   	return (
 		<div className="card-400">

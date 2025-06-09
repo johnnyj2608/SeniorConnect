@@ -35,16 +35,18 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: t(`member.contacts.${item.contact_type}`, '')
                 };
             case 'absences':
+                let inactive;
                 if (item.absence_type === 'assessment') {
                     status = formatDate(item.start_date)
                 } else {
                     status = formatStatus(item.start_date, item.end_date);
+                    inactive = status === 'completed';
                     status = status ? t(`member.absences.${status}`) : '';
                 }
                 return {
                     heading: t(`member.absences.${item.absence_type}`, t('members.unknown')),
                     subheading: status,
-                    inactive: status === 'completed',
+                    inactive: inactive,
                 };
             case 'files':
                 return { 
