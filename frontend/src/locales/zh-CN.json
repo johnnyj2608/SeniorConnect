@@ -26,7 +26,10 @@
             "deactivate": "停用",
             "choose_photo": "选择照片",
             "choose_file": "选择文件",
-            "view_file": "查看文件"
+            "view_file": "查看文件",
+            "upload": "上传",
+            "view": "查看",
+            "clear": "清除"
         },
         "days_of_week": {
             "monday": "星期一",

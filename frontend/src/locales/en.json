@@ -26,7 +26,10 @@
             "deactivate": "Deactivate",
             "choose_photo": "Choose Photo",
             "choose_file": "Choose File",
-            "view_file": "View File"
+            "view_file": "View File",
+            "upload": "Upload",
+            "view": "View",
+            "clear": "Clear"
         },
         "days_of_week": {
             "monday": "Monday",

@@ -121,7 +121,7 @@ const getNewTab = (type, localData, id) => {
                 ],
                 cm_name: activeAuth?.cm_name || '',
                 cm_phone: activeAuth?.cm_phone || '',
-                file: [],
+                file: '',
                 active: true,
                 edited: true,
             };
@@ -153,7 +153,7 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 member: id,
                 name: '',
-                file: [],
+                file: '',
                 date: '',
                 edited: true,
             };

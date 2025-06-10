@@ -1,4 +1,4 @@
-import React, { act, memo } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import DetailRow from '../layout/MemberDetail';

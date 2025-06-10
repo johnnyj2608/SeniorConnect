@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
-import viewFile from '../../utils/viewFile';
+import FileUpload from '../inputs/FileUpload';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
 const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
@@ -55,50 +55,14 @@ const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
                     />
                 </div>
 
-                <div className="member-box">
-                    <div className="member-box-label">
-                        {t('member.files.file')} *
-                    </div>
-                    <div className="member-box-list">
-                        <div className="file-container">
-                            <div className="file-container-buttons">
-                                <button 
-                                    className="action-button thin"
-                                    onClick={() => document.getElementById('hiddenFileInput').click()}
-                                    disabled={disabled}
-                                >
-                                    Upload
-                                </button>
-                                <button 
-                                    className="action-button thin"
-                                    onClick={() => viewFile(current.file)}
-                                    disabled={disabled || !current?.file}
-                                >
-                                    View
-                                </button>
-                                <button 
-                                    className="action-button thin destructive"
-                                    onClick={() => handleChange('file')({ target: { files: [] } })}
-                                    disabled={disabled || !current?.file}
-                                >
-                                    Clear
-                                </button>
-                            </div>
-                            <p className="file-container-subtitle">
-                                {t('member.files.drop_to_upload')}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <FileUpload 
+                    current={current}
+                    handleChange={handleChange}
+                    disabled={disabled}
+                    required={true}
+                    autoFill={true}
+                />
             </div>
-
-            <input
-                id="hiddenFileInput"
-                type="file"
-                accept="*/*"
-                onChange={handleChange('file')}
-                style={{ display: 'none' }}
-            />
 
             {isDragging && (
                 <div className="upload-overlay">
