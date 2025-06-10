@@ -10,6 +10,10 @@ from ..serializers.authorization_serializers import (
 )
 from django.db import transaction
 import json
+from core.utils.supabase import (
+    upload_file_to_supabase,
+    delete_file_from_supabase,
+)
 
 def getAuthorizationList(request):
     authorizations = Authorization.objects.select_related('mltc', 'member').all()
@@ -23,6 +27,11 @@ def getAuthorizationDetail(request, pk):
 
 def createAuthorization(request):
     data = request.data.copy()
+    public_url = None
+
+    file = request.FILES.get('file')
+    if 'file' in data:
+        del data['file']
     
     data['schedule'] = data.getlist('schedule', [])[0]
     services = json.loads(data.pop('services', [])[0])
@@ -38,6 +47,21 @@ def createAuthorization(request):
 
             if serializer.is_valid():
                 authorization = serializer.save()
+
+                if file:
+                    new_path = f"{member_id}/auths/{authorization.id}"
+
+                    public_url, error = upload_file_to_supabase(
+                    file, 
+                    new_path,
+                    authorization.file,
+                )
+                
+                if error:
+                    raise Exception(f"Photo upload failed: {error}")
+                
+                authorization.file = public_url
+                authorization.save()
 
                 for service_data in services:
                     auth_id = service_data.get('auth_id')
@@ -56,10 +80,13 @@ def createAuthorization(request):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
+        if public_url:
+            delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateAuthorization(request, pk):
     data = request.data.copy()
+    public_url = None
 
     services = json.loads(data.pop('services', [])[0])
 
@@ -69,10 +96,27 @@ def updateAuthorization(request, pk):
             data['active'] = False
 
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
-    serializer = AuthorizationSerializer(instance=authorization, data=data)
+    
     
     try:
         with transaction.atomic():
+
+            if 'file' in request.FILES:
+                file = request.FILES['file']
+                new_path = f"{member_id}/auths/{authorization.id}"
+
+                public_url, error = upload_file_to_supabase(
+                    file, 
+                    new_path,
+                    authorization.file,
+                )
+
+                if error:
+                    raise Exception(f"Photo upload failed: {error}")
+                
+                data['file'] = public_url
+
+            serializer = AuthorizationSerializer(instance=authorization, data=data)
             if serializer.is_valid():
                 authorization = serializer.save()
 
@@ -103,6 +147,8 @@ def updateAuthorization(request, pk):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
+        if public_url:
+            delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteAuthorization(request, pk):

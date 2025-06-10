@@ -6,6 +6,7 @@ import ListDetail from '../layout/ListDetail';
 import ContactDetail from '../layout/ContactDetail';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
+import viewFile from '../../utils/viewFile';
 
 const MemberAuthCard = ({ id, data, onEdit }) => {
     const { t } = useTranslation();
@@ -56,6 +57,15 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                             name={auth.cm_name}
                             phone={auth.cm_phone}
                         />
+
+                        {auth.file && (
+                            <button 
+                                className="action-button thin long"
+                                onClick={() => viewFile(auth.file)}
+                            >
+                                {t('member.authorizations.view_auth')}
+                            </button>
+                        )}
                     </>
                 )}
             </div>

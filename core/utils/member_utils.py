@@ -64,8 +64,7 @@ def createMember(request):
             serializer = MemberSerializer(data=data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            member = serializer.instance
+            member = serializer.save()
             
             if photo:
                 first_name = request.data.get("first_name")
@@ -122,17 +121,14 @@ def updateMember(request, pk):
                 data['photo'] = public_url
 
             serializer = MemberSerializer(instance=member, data=data)
-            try:
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as e:
-                print(e)
-                return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
+        print(e)
         if public_url:
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

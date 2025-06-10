@@ -145,6 +145,8 @@
             "service_units": "Service Units",
             "care_manager": "Care Manager",
             "phone": "Phone",
+            "file": "File",
+            "view_auth": "View Authorization",
             "active": "Active",
             "no_authorization": "No authorization available"
         },

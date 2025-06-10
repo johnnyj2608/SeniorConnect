@@ -472,6 +472,10 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 5px 0;
 }
 
+.action-button.long {
+  width: 100%;
+}
+
 .action-button:disabled {
   opacity: 0.3;
   pointer-events: none;

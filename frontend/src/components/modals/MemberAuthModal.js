@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
+import viewFile from '../../utils/viewFile';
 
 const daysOfWeek = [
     'monday',
@@ -174,7 +175,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
             </div>
 
             <div className="member-detail">
-                <label>↪ {t('member.authorizations.phone')}</label>
+                <label>&nbsp;↪ {t('member.authorizations.phone')}</label>
                 <input
                     type="number"
                     value={disabled ? '' : current.cm_phone || ''}
@@ -183,6 +184,50 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
                     disabled={disabled}
                 />
             </div>
+
+            <div className="member-box">
+                <div className="member-box-label">
+                    {t('member.authorizations.file')} *
+                </div>
+                <div className="member-box-list">
+                    <div className="file-container">
+                        <div className="file-container-buttons">
+                            <button 
+                                className="action-button thin"
+                                onClick={() => document.getElementById('hiddenFileInput').click()}
+                                disabled={disabled}
+                            >
+                                Upload
+                            </button>
+                            <button 
+                                className="action-button thin"
+                                onClick={() => viewFile(current.file)}
+                                disabled={disabled || !current?.file}
+                            >
+                                View
+                            </button>
+                            <button 
+                                className="action-button thin destructive"
+                                onClick={() => handleChange('file')({ target: { files: [] } })}
+                                disabled={disabled || !current?.file}
+                            >
+                                Clear
+                            </button>
+                        </div>
+                        <p className="file-container-subtitle">
+                            {t('member.files.drop_to_upload')}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <input
+                id="hiddenFileInput"
+                type="file"
+                accept="*/*"
+                onChange={handleChange('file')}
+                style={{ display: 'none' }}
+            />
         </>
     );
 };
