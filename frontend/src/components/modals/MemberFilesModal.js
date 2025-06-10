@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import DragOverlay from '../layout/DragOverlay';
 import FileUpload from '../inputs/FileUpload';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
-const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
+const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd, dragStatus }) => {
     const { t } = useTranslation();
     
     const current = data[activeTab] || {};
@@ -26,45 +25,48 @@ const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
 
     const { isDragging, dragProps } = useDragAndDrop(onDropFile);
 
+    useEffect(() => {
+        if (dragStatus) dragStatus(isDragging);
+        return () => {
+            if (dragStatus) dragStatus(false);
+        };
+    }, [isDragging, dragStatus]);
+
     return (
-        <div className={`file-drop${isDragging ? ' drag-over' : ''}`} {...dragProps}>
-            <div className={`file-content${isDragging ? ' dimmed' : ''}`}>
-                <div className="modal-header">
-                    <h3>{t('general.edit')}{t('member.files.label')}</h3>
-                </div>
+        <div {...dragProps}>
+            <div className="modal-header">
+                <h3>{t('general.edit')}{t('member.files.label')}</h3>
+            </div>
 
-                <div className="member-detail">
-                    <label>{t('member.files.name')} *</label>
-                    <input
-                        type="text"
-                        value={disabled ? '' : current.name || ''}
-                        onChange={handleChange('name')}
-                        placeholder="Required"
-                        autoComplete="off"
-                        disabled={disabled}
-                    />
-                </div>
-
-                <div className="member-detail">
-                    <label>{t('member.files.date')} *</label>
-                    <input
-                        type="date"
-                        value={disabled ? '' : current.date || ''}
-                        onChange={handleChange('date')}
-                        disabled={disabled}
-                    />
-                </div>
-
-                <FileUpload 
-                    current={current}
-                    handleChange={handleChange}
+            <div className="member-detail">
+                <label>{t('member.files.name')} *</label>
+                <input
+                    type="text"
+                    value={disabled ? '' : current.name || ''}
+                    onChange={handleChange('name')}
+                    placeholder="Required"
+                    autoComplete="off"
                     disabled={disabled}
-                    required={true}
-                    autoFill={true}
                 />
             </div>
 
-            {isDragging && <DragOverlay />}
+            <div className="member-detail">
+                <label>{t('member.files.date')} *</label>
+                <input
+                    type="date"
+                    value={disabled ? '' : current.date || ''}
+                    onChange={handleChange('date')}
+                    disabled={disabled}
+                />
+            </div>
+
+            <FileUpload 
+                current={current}
+                handleChange={handleChange}
+                disabled={disabled}
+                required={true}
+                autoFill={true}
+            />
         </div>
     );
 };

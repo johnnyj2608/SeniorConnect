@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react'; // ← Added useState
 import { useTranslation } from 'react-i18next';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
@@ -8,10 +8,12 @@ import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
 import ModalTabs from '../components/modals/ModalTabs';
+import DragOverlay from '../components/layout/DragOverlay';
 import useModal from '../hooks/useModal';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
+
     const {
         type,
         localData,
@@ -24,18 +26,49 @@ const ModalPage = ({ data, onClose }) => {
         setActiveTab
     } = useModal(data, onClose);
 
+    const [dragging, setDragging] = useState(false);
+
     const getModalContent = () => {
         switch (type) {
             case 'info':
                 return <MemberInfoModal data={localData} handleChange={handleChange} />;
             case 'authorizations':
-                return <MemberAuthModal data={localData} handleChange={handleChange} activeTab={activeTab} handleActiveToggle={handleActiveToggle} />;
+                return (
+                    <MemberAuthModal
+                        data={localData}
+                        handleChange={handleChange}
+                        activeTab={activeTab}
+                        handleActiveToggle={handleActiveToggle}
+                         dragStatus={setDragging}
+                    />
+                );
             case 'contacts':
-                return <MemberContactsModal data={localData} handleChange={handleChange} activeTab={activeTab} memberID={data.id} />;
+                return (
+                    <MemberContactsModal
+                        data={localData}
+                        handleChange={handleChange}
+                        activeTab={activeTab}
+                        memberID={data.id}
+                    />
+                );
             case 'absences':
-                return <MemberAbsencesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return (
+                    <MemberAbsencesModal
+                        data={localData}
+                        handleChange={handleChange}
+                        activeTab={activeTab}
+                    />
+                );
             case 'files':
-                return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} handleAdd={handleAdd} />;
+                return (
+                    <MemberFilesModal
+                        data={localData}
+                        handleChange={handleChange}
+                        activeTab={activeTab}
+                        handleAdd={handleAdd}
+                        dragStatus={setDragging}
+                    />
+                );
             case 'users':
                 return <SettingsUserModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'mltcs':
@@ -63,6 +96,7 @@ const ModalPage = ({ data, onClose }) => {
                     )}
                     <div className="modal-content">
                         {getModalContent()}
+                        {(type === 'files' || type === 'authorizations') && dragging && <DragOverlay />}
                     </div>
                     {type !== 'info' && (
                         <div className="modal-tabs">
