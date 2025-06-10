@@ -3,20 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as Upload } from '../../assets/upload.svg';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
-const MemberFilesModal = ({ data, handleChange, activeTab }) => {
+const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
     const { t } = useTranslation();
     
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
-    const onDropFile = (file) => {
-        const fakeEvent = { target: { files: [file] } };
-        handleChange('file')(fakeEvent);
-
-        handleChange('name')({ target: { value: file.name } });
-        
+    const onDropFile = (files) => {
         const today = new Date().toISOString().split('T')[0];
-        handleChange('date')({ target: { value: today } });
+
+        files.forEach((file, index) => {
+            if (Object.keys(current).length === 0 || index !== 0) {
+                handleAdd();
+            }
+            const fakeEvent = { target: { files: [file] } };
+            handleChange('file')(fakeEvent);
+            handleChange('name')({ target: { value: file.name } });
+            handleChange('date')({ target: { value: today } });
+        });
     };
 
     const { isDragging, dragProps } = useDragAndDrop(onDropFile);

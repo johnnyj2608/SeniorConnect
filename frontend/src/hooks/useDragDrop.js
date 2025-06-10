@@ -40,9 +40,9 @@ const useDragDrop = (onDropFile) => {
         dragCounter.current = 0;
         setIsDragging(false);
 
-        const file = e.dataTransfer.files[0];
-        if (file && onDropFile) {
-            onDropFile(file);
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0 && onDropFile) {
+            onDropFile(files);
         }
     };
 

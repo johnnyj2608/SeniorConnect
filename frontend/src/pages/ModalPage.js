@@ -35,7 +35,7 @@ const ModalPage = ({ data, onClose }) => {
             case 'absences':
                 return <MemberAbsencesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'files':
-                return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return <MemberFilesModal data={localData} handleChange={handleChange} activeTab={activeTab} handleAdd={handleAdd} />;
             case 'users':
                 return <SettingsUserModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
             case 'mltcs':
