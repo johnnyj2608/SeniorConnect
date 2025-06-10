@@ -153,7 +153,7 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 member: id,
                 name: '',
-                file: '',
+                file: [],
                 date: '',
                 edited: true,
             };

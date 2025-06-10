@@ -1239,10 +1239,24 @@ body.modal-open {
 
 .file-container {
   display: flex;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-direction: column;
+}
+
+.file-container-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.file-container-buttons button {
+  width: 80px;
+}
+
+.file-container-subtitle {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  color: var(--color-text-sub);
 }
 
 .file-drop {
@@ -1256,6 +1270,10 @@ body.modal-open {
 .file-drop.drag-over {
   background-color: var(--color-gray-light);
   border-color: var(--color-main);
+}
+
+.file-drop.drag-over .file-content .member-box-label {
+  background-color: transparent;
 }
 
 .upload-overlay {
