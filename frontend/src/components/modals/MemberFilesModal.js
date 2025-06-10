@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as Upload } from '../../assets/upload.svg';
+import DragOverlay from '../layout/DragOverlay';
 import FileUpload from '../inputs/FileUpload';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
@@ -64,12 +64,7 @@ const MemberFilesModal = ({ data, handleChange, activeTab, handleAdd }) => {
                 />
             </div>
 
-            {isDragging && (
-                <div className="upload-overlay">
-                    <Upload className="upload-icon pulse" />
-                    <p>{t('member.files.drop_to_upload')}</p>
-                </div>
-            )}
+            {isDragging && <DragOverlay />}
         </div>
     );
 };

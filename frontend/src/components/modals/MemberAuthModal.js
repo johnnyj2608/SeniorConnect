@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
+import DragOverlay from '../layout/DragOverlay';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import FileUpload from '../inputs/FileUpload';
+import useDragAndDrop from '../../hooks/useDragDrop';
 
 const daysOfWeek = [
     'monday',
@@ -51,146 +53,160 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle }) 
         handleChange('schedule')({ target: { value: sortedSchedule } });
     };
 
+    const onDropFile = (files) => {
+        const file = files[0];
+        if (!file) return;
+
+        const fakeEvent = { target: { files: [file] } };
+        handleChange('file')(fakeEvent);
+    };
+
+    const { isDragging, dragProps } = useDragAndDrop(onDropFile);
+
     return (
-        <>
-            <div className="modal-header">
-                <h3>{t('general.edit')}{t('member.authorizations.label')}</h3>
-                <label>
+        <div className={`file-drop${isDragging ? ' drag-over' : ''}`} {...dragProps}>
+            <div className={`file-content${isDragging ? ' dimmed' : ''}`}>
+                <div className="modal-header">
+                    <h3>{t('general.edit')}{t('member.authorizations.label')}</h3>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={disabled ? false : current.active === true}
+                            onChange={(e) => handleActiveToggle(e.target.checked)}
+                            disabled={disabled}
+                        />
+                        {t('status.active')}
+                    </label>
+                </div>
+
+                <div className="member-detail">
+                    <label>{t('member.authorizations.mltc')} *</label>
+                    <select
+                        required
+                        value={disabled ? '' : current.mltc || ''}
+                        onChange={(e) => {
+                            handleChange('mltc')(e);
+                            handleChange('dx_code')({ target: { value: '' } });
+                        }}
+                        disabled={disabled}
+                    >
+                        <option value="">{t('general.select_an_option')}</option>
+                        {mltcOptions.map((option) => (
+                            <option key={option.name} value={option.name}>
+                                {option.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="member-detail">
+                    <label>{t('member.authorizations.mltc_member_id')} *</label>
                     <input
-                        type="checkbox"
-                        checked={disabled ? false : current.active === true}
-                        onChange={(e) => handleActiveToggle(e.target.checked)}
+                        type="text"
+                        value={disabled ? '' : current.mltc_member_id || ''}
+                        onChange={handleChange('mltc_member_id')}
+                        placeholder={t('general.required')}
+                        autoComplete="off"
                         disabled={disabled}
                     />
-                    {t('status.active')}
-                </label>
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.mltc')} *</label>
-                <select
-                    required
-                    value={disabled ? '' : current.mltc || ''}
-                    onChange={(e) => {
-                        handleChange('mltc')(e);
-                        handleChange('dx_code')({ target: { value: '' } });
-                    }}
-                    disabled={disabled}
-                >
-                    <option value="">{t('general.select_an_option')}</option>
-                    {mltcOptions.map((option) => (
-                        <option key={option.name} value={option.name}>
-                            {option.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.mltc_member_id')} *</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.mltc_member_id || ''}
-                    onChange={handleChange('mltc_member_id')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.start_date')} *</label>
-                <input
-                    type="date"
-                    value={disabled ? '' : current.start_date || ''}
-                    onChange={handleChange('start_date')}
-                    disabled={disabled}
-                />
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.end_date')} *</label>
-                <input
-                    type="date"
-                    value={disabled ? '' : current.end_date || ''}
-                    onChange={handleChange('end_date')}
-                    disabled={disabled}
-                />
-            </div>
-
-            <div className="member-detail">
-                <label>{t('member.authorizations.dx_code')}</label>
-                <select
-                    required
-                    value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
-                    onChange={handleChange('dx_code')}
-                    disabled={disabled}
-                >
-                    <option value="">{t('general.select_an_option')}</option>
-                    {dx_codes.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="member-box">
-                <div className="member-box-label">
-                    {t('member.authorizations.schedule')}
                 </div>
-                <div className="member-box-list">
-                    <div className="schedule-container">
-                        {daysOfWeek.map((day) => (
-                            <label key={day}>
-                                <input
-                                    type="checkbox"
-                                    value={day}
-                                    checked={disabled ? false : current.schedule?.includes(day) || false}
-                                    onChange={handleScheduleChange(day)}
-                                    disabled={disabled}
-                                />
-                                {t(`general.days_of_week.${day}`)}
-                            </label>
+
+                <div className="member-detail">
+                    <label>{t('member.authorizations.start_date')} *</label>
+                    <input
+                        type="date"
+                        value={disabled ? '' : current.start_date || ''}
+                        onChange={handleChange('start_date')}
+                        disabled={disabled}
+                    />
+                </div>
+
+                <div className="member-detail">
+                    <label>{t('member.authorizations.end_date')} *</label>
+                    <input
+                        type="date"
+                        value={disabled ? '' : current.end_date || ''}
+                        onChange={handleChange('end_date')}
+                        disabled={disabled}
+                    />
+                </div>
+
+                <div className="member-detail">
+                    <label>{t('member.authorizations.dx_code')}</label>
+                    <select
+                        required
+                        value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
+                        onChange={handleChange('dx_code')}
+                        disabled={disabled}
+                    >
+                        <option value="">{t('general.select_an_option')}</option>
+                        {dx_codes.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
                         ))}
+                    </select>
+                </div>
+
+                <div className="member-box">
+                    <div className="member-box-label">
+                        {t('member.authorizations.schedule')}
+                    </div>
+                    <div className="member-box-list">
+                        <div className="schedule-container">
+                            {daysOfWeek.map((day) => (
+                                <label key={day}>
+                                    <input
+                                        type="checkbox"
+                                        value={day}
+                                        checked={disabled ? false : current.schedule?.includes(day) || false}
+                                        onChange={handleScheduleChange(day)}
+                                        disabled={disabled}
+                                    />
+                                    {t(`general.days_of_week.${day}`)}
+                                </label>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <AuthorizationServicesTabs
-                services={current.services}
-                disabled={disabled}
-                handleChange={handleChange}
-            />
+                <AuthorizationServicesTabs
+                    services={current.services}
+                    disabled={disabled}
+                    handleChange={handleChange}
+                />
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.care_manager')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.cm_name || ''}
-                    onChange={handleChange('cm_name')}
-                    autoComplete="off"
+                <div className="member-detail">
+                    <label>{t('member.authorizations.care_manager')}</label>
+                    <input
+                        type="text"
+                        value={disabled ? '' : current.cm_name || ''}
+                        onChange={handleChange('cm_name')}
+                        autoComplete="off"
+                        disabled={disabled}
+                    />
+                </div>
+
+                <div className="member-detail">
+                    <label>&nbsp;↪ {t('member.authorizations.phone')}</label>
+                    <input
+                        type="number"
+                        value={disabled ? '' : current.cm_phone || ''}
+                        onChange={handleChange('cm_phone')}
+                        autoComplete="off"
+                        disabled={disabled}
+                    />
+                </div>
+
+                <FileUpload 
+                    current={current}
+                    handleChange={handleChange}
                     disabled={disabled}
                 />
             </div>
 
-            <div className="member-detail">
-                <label>&nbsp;↪ {t('member.authorizations.phone')}</label>
-                <input
-                    type="number"
-                    value={disabled ? '' : current.cm_phone || ''}
-                    onChange={handleChange('cm_phone')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
-
-            <FileUpload 
-                current={current}
-                handleChange={handleChange}
-                disabled={disabled}
-            />
-        </>
+            {isDragging && <DragOverlay />}
+        </div>
     );
 };
 
