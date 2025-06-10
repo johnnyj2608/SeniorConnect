@@ -77,18 +77,16 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     return (
         tab.add ? (
             <button className="tab-button sticky" onClick={handleTabClick}>
-                <div className="tab-label">
-                    <span className="add-icon">
-                        <AddIcon />
-                    </span>
-                </div>
+                <span className="add-icon">
+                    <AddIcon />
+                </span>
             </button>
         ) : (
             <button
                 className={`tab-button${isActive ? ' active' : ''}${isEdited ? ' edited' : ''}${isExpired ? ' expired' : ''}`} 
                 onClick={() => handleTabClick(index)}
             >
-                <div className="tab-label">
+                <div>
                     <div className="tab-heading">{heading}</div>
                     <div className="tab-subheading">{subheading}</div>
                 </div>

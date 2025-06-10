@@ -1182,9 +1182,9 @@ body.modal-open {
   opacity: 0.8;
 }
 
-.tab-heading,
-.uploaded-file-name {
+.tab-heading {
   margin: 3px;
+  max-width: 160px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1217,11 +1217,11 @@ body.modal-open {
 .file-item {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
   text-align: center;
-  min-width: 75px;
+  width: 100px;
   cursor: pointer;
-  padding-top: 5px;
+  padding: 5px;
 }
 
 .file-item:hover {
@@ -1234,11 +1234,20 @@ body.modal-open {
 .file-icon {
   height: 60px;
   margin-bottom: 5px;
-  fill: var(--color-text)
+  fill: var(--color-text-sub)
 }
 
-.file-expired {
-  color: var(--color-red);
+.file-item:hover .file-icon {
+  fill: var(--color-main);
+}
+
+.file-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90px;
 }
 
 .file-container {
@@ -1280,6 +1289,16 @@ body.modal-open {
   background-color: transparent;
 }
 
+.file-content {
+  position: relative;
+  transition: opacity 0.3s;
+}
+
+.file-content.dimmed {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .upload-overlay {
   position: absolute;
   top: 0;
@@ -1303,15 +1322,6 @@ body.modal-open {
   fill: var(--color-main);
   margin-bottom: 10px;
   animation: bounce 1s infinite;
-}
-
-.file-content {
-  transition: opacity 0.3s;
-}
-
-.file-content.dimmed {
-  opacity: 0.2;
-  pointer-events: none;
 }
 
 /* --------------
