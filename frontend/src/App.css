@@ -1055,7 +1055,7 @@ body.modal-open {
   white-space: nowrap;
 }
 
-.schedule-container {
+.checkbox-container {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(2, auto);
@@ -1064,12 +1064,12 @@ body.modal-open {
   gap: 5px;
 }
 
-.schedule-container label:nth-child(7) {
+.checkbox-container label:nth-child(odd):last-child {
   grid-column: span 2;
   justify-self: center;
 }
 
-.schedule-container > label {
+.checkbox-container > label {
   width: auto;
 }
 

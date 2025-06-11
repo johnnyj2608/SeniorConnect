@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import FileUpload from '../inputs/FileUpload';
+import CheckboxInput from '../inputs/CheckboxInput';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
 const daysOfWeek = [
@@ -40,15 +41,8 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
     const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes || [];
 
-    const handleScheduleChange = (day) => (event) => {
-        const { checked } = event.target;
-        const currentSchedule = current.schedule || [];
-
-        const newSchedule = checked
-            ? [...currentSchedule, day]
-            : currentSchedule.filter(d => d !== day);
+    const onScheduleChange = (newSchedule) => {
         const sortedSchedule = sortSchedule(newSchedule);
-
         handleChange('schedule')({ target: { value: sortedSchedule } });
     };
 
@@ -153,27 +147,14 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                 </select>
             </div>
 
-            <div className="member-box">
-                <div className="member-box-label">
-                    {t('member.authorizations.schedule')}
-                </div>
-                <div className="member-box-list">
-                    <div className="schedule-container">
-                        {daysOfWeek.map((day) => (
-                            <label key={day}>
-                                <input
-                                    type="checkbox"
-                                    value={day}
-                                    checked={disabled ? false : current.schedule?.includes(day) || false}
-                                    onChange={handleScheduleChange(day)}
-                                    disabled={disabled}
-                                />
-                                {t(`general.days_of_week.${day}`)}
-                            </label>
-                        ))}
-                    </div>
-                </div>
-            </div>
+            <CheckboxInput
+                label={t('member.authorizations.schedule')}
+                options={daysOfWeek}
+                selectedValues={current.schedule}
+                onChange={onScheduleChange}
+                disabled={disabled}
+                translateFn={(val) => t(`general.days_of_week.${val}`)}
+            />
 
             <AuthorizationServicesTabs
                 services={current.services}
