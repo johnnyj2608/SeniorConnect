@@ -7,6 +7,7 @@ const CheckboxInput = ({
     onChange,
     disabled = false,
     translateFn,
+    isAdmin = false,
 }) => {
     const handleCheckboxChange = (value) => (event) => {
         const checked = event.target.checked;
@@ -31,7 +32,7 @@ const CheckboxInput = ({
                                 value={id}
                                 checked={!disabled && selectedValues.includes(id)}
                                 onChange={handleCheckboxChange(id)}
-                                disabled={disabled}
+                                disabled={disabled || isAdmin}
                             />
                             {translateFn ? translateFn(name) : name}
                         </label>

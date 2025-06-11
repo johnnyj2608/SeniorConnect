@@ -55,7 +55,8 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         options={mltcOptions}
         selectedValues={current.allowed_mltcs || []}
         onChange={handleMltcChange}
-        disabled={disabled || adminUser}
+        disabled={disabled}
+        isAdmin={adminUser}
       />
     </>
   );
