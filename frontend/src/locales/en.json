@@ -287,7 +287,7 @@
     "alerts": {
         "required_fields": "Please fill in the required fields: {{fields}}",
         "invalid_dates": "Invalid dates: End date cannot be before start date.",
-        "exact_length": "{{type}} must be exactly {{length}} characters long.",
+        "exact_length": "{{translation}} must be exactly {{length}} characters long.",
         "invalid_medicaid": "Medicaid ID must be in the format XX12345X (2 letters, 5 digits, 1 letter).",
         "confirm_deletion": "Are you sure you want to delete the following MLTC{{plural}}?\n- {{names}}"
     },

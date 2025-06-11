@@ -287,7 +287,7 @@
     "alerts": {
         "required_fields": "请填写以下必填字段：{{fields}}",
         "invalid_dates": "无效日期：结束日期不能早于开始日期。",
-        "exact_length": "{{type}}必须恰好为{{length}}位字符。",
+        "exact_length": "{{translation}}必须恰好为{{length}}位字符。",
         "invalid_medicaid": "医疗补助ID格式应为 XX12345X（2个字母，5个数字，1个字母）。",
         "confirm_deletion": "您确定要删除以下MLTC{{plural}}吗？\n- {{names}}"
     },

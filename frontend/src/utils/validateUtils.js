@@ -39,33 +39,34 @@ const validateRequiredFields = (translationPath, data, requiredFields, dependent
 };
 
 const validateDateRange = (data) => {
-    const invalidDates = data.reduce((acc, item) => {
+    const hasInvalid = data.some(item => {
+        if (item.deleted) return false;
         const startDate = new Date(item.start_date);
         const endDate = item.end_date ? new Date(item.end_date) : null;
-
-        if (item.deleted !== true && endDate && endDate < startDate) {
-            acc.add('start_date - end_date');
-        }
-
-        return acc;
-    }, new Set());
-
-    if (invalidDates.size > 0) {
+        return endDate && endDate < startDate;
+    });
+  
+    if (hasInvalid) {
         alert(t('alerts.invalid_dates'));
         return false;
     }
-
+  
     return true;
 };
+  
 
-const validateInputLength = (length, data, type = 'Phone') => {
-    if (data === null || data === undefined || String(data).trim() === '') {
-        return true;
-    }
+const validateInputLength = (data, length, field, translation) => {
+    const items = Array.isArray(data)
+        ? data.filter(item => !item.deleted)
+        : [{ [field]: data }];
 
-    const str = String(data).trim();
-    if (str.length !== length) {
-        alert(t('alerts.exact_length', { type, length }));
+    const hasInvalid = items.some(item => {
+        const value = item[field];
+        return value != null && String(value).trim() !== '' && String(value).trim().length !== length;
+    });
+    
+    if (hasInvalid) {
+        alert(t('alerts.exact_length', { translation, length }));
         return false;
     }
 

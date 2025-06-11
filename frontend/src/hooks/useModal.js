@@ -143,8 +143,8 @@ function useModal(data, onClose) {
             case 'info':
                 requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
                 if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
-                if (!validateInputLength(10, updatedData.phone, t('member.info.phone'))) return;
-                if (!validateInputLength(9, updatedData.ssn, t('member.info.ssn'))) return;
+                if (!validateInputLength(updatedData.phone, 10, 'phone', t('member.info.phone'))) return;
+                if (!validateInputLength(updatedData.ssn, 9, 'ssn', t('member.info.ssn'))) return;
                 if (!validateMedicaid(updatedData.medicaid)) return;
 
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
@@ -156,6 +156,7 @@ function useModal(data, onClose) {
                 requiredFields = ['mltc_member_id', 'mltc', 'start_date', 'end_date'];
                 if (!validateRequiredFields('member.authorizations', updatedData, requiredFields)) return;
                 if (!validateDateRange(updatedData)) return;
+                if (!validateInputLength(updatedData, 10, 'cm_phone', t('member.authorizations.phone'))) return;
 
                 try {
                     const response = await fetchWithRefresh(`/core/members/${id}/auth/`);
@@ -190,7 +191,7 @@ function useModal(data, onClose) {
                 requiredFields = ['contact_type', 'name', 'phone'];
                 dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency_contact' }];
                 if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
-                if (!validateInputLength(10, updatedData)) return;
+                if (!validateInputLength(updatedData, 10, 'phone', t('member.contacts.phone'))) return;
 
                 savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
                 break;
