@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'preferences',
+            'allowed_mltcs',
             'password',
             'is_org_admin',
             'is_active',

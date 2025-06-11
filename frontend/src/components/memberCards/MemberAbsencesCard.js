@@ -53,7 +53,7 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 									/>
 									<DetailRow
 										label={t('member.absences.user')}
-										value={abs.user}
+										value={abs.user_name}
 									/>
 								</>
 							) : (

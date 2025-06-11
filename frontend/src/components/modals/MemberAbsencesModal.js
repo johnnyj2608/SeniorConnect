@@ -118,7 +118,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                     >
                         <option value="">{t('general.select_an_option')}</option>
                         {users.map((option) => (
-                            <option key={option.name} value={option.name}>
+                            <option key={option.name} value={option.id}>
                                 {option.name}
                             </option>
                         ))}

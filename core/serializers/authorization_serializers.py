@@ -19,14 +19,16 @@ class AuthorizationServiceSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMixin):
-    mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
+    mltc = serializers.PrimaryKeyRelatedField(queryset=MLTC.objects.all())
+    mltc_name = serializers.ReadOnlyField(source='mltc.name')
 
     class Meta:
         model = Authorization
         exclude = ['created_at', 'updated_at']
-    
+
 class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
-    mltc = serializers.SlugRelatedField(queryset=MLTC.objects.all(), slug_field='name')
+    mltc = serializers.PrimaryKeyRelatedField(queryset=MLTC.objects.all())
+    mltc_name = serializers.ReadOnlyField(source='mltc.name')
     services = serializers.SerializerMethodField()
 
     class Meta:
@@ -53,18 +55,19 @@ class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
         return result
 
 class EnrollmentSerializer(MemberNameSerializer):
-    old_mltc = serializers.SlugRelatedField(
-        slug_field='name',
+    old_mltc = serializers.PrimaryKeyRelatedField(
         queryset=MLTC.objects.all(),
         allow_null=True,
         required=False
     )
-    new_mltc = serializers.SlugRelatedField(
-        slug_field='name',
+    old_mltc_name = serializers.ReadOnlyField(source='old_mltc.name')
+
+    new_mltc = serializers.PrimaryKeyRelatedField(
         queryset=MLTC.objects.all(),
         allow_null=True,
         required=False
     )
+    new_mltc_name = serializers.ReadOnlyField(source='new_mltc.name')
 
     class Meta:
         model = Enrollment

@@ -25,7 +25,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 }
 
                 return { 
-                    heading: item.mltc || t('members.unknown'),
+                    heading: item.mltc_name || t('members.unknown'),
                     subheading: status,
                     inactive: status === t('status.expired'),
                 };

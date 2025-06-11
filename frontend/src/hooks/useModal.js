@@ -27,7 +27,6 @@ function useModal(data, onClose) {
     const [localData, setLocalData] = useState(type === 'info' ? { ...data.data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
-    const newTab = useMemo(() => getNewTab(type, localData, id), [type, localData, id]);
 
     useEffect(() => {
         document.body.classList.add('modal-open');
@@ -35,6 +34,34 @@ function useModal(data, onClose) {
             document.body.classList.remove('modal-open');
         };
     }, []);
+
+    const [mltcOptions, setMltcOptions] = useState([]);
+    useEffect(() => {
+        if (type === 'users' || type === 'authorizations') {
+          (async () => {
+            try {
+              const response = await fetchWithRefresh('/core/mltcs/');
+              if (!response.ok) return;
+    
+              const data = await response.json();
+              setMltcOptions(data);
+            } catch (err) {
+              console.error(err);
+            }
+          })();
+        }
+    }, [type]);
+
+    const newTab = useMemo(() => {
+        const base = getNewTab(type, localData, id);
+        if (type === 'users' || type === 'authorizations') {
+            return {
+                ...base,
+                allowed_mltcs: mltcOptions.map(opt => opt.id),
+            };
+        }
+        return base;
+    }, [type, localData, id, mltcOptions]);
 
     const handleChange = (field) => (event) => {
         const { value, files } = event.target;
@@ -248,6 +275,7 @@ function useModal(data, onClose) {
         handleDelete,
         handleSave,
         setActiveTab,
+        mltcOptions,
     };
 }
 

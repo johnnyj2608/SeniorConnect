@@ -1,12 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import CheckboxInput from '../inputs/CheckboxInput';
 
-const SettingsUserModal = ({ data, handleChange, activeTab }) => {
+const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
   const { t } = useTranslation();
 
   const current = data[activeTab] || {};
   const disabled = data.filter(tab => !tab.deleted).length <= 0;
   const adminUser = current.is_org_admin;
+
+  const handleMltcChange = (newSelected) => {
+    handleChange('allowed_mltcs')({ target: { value: newSelected } });
+  };
 
   return (
     <>
@@ -44,6 +49,14 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
           disabled={disabled || adminUser}
         />
       </div>
+
+      <CheckboxInput
+        label={t('settings.data.mltc.label')} 
+        options={mltcOptions}
+        selectedValues={current.allowed_mltcs || []}
+        onChange={handleMltcChange}
+        disabled={disabled || adminUser}
+      />
     </>
   );
 };

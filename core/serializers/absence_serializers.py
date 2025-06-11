@@ -6,12 +6,12 @@ from .member_serializers import MemberNameSerializer
 from .mixins import DateRangeValidationMixin, DaysUntilMixin
 
 class AbsenceSerializer(MemberNameSerializer, DateRangeValidationMixin):    
-    user = serializers.SlugRelatedField(
+    user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        slug_field='name',
         required=False,
         allow_null=True
     )
+    user_name = serializers.ReadOnlyField(source='user.name')
     
     class Meta:
         model = Absence

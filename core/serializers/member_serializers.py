@@ -26,12 +26,25 @@ class LanguageSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True)
     
-    language = serializers.SlugRelatedField(
-        queryset=Language.objects.all(), 
-        slug_field='name', 
+    
+class MemberSerializer(serializers.ModelSerializer):
+    active = serializers.BooleanField(required=False, default=True)
+    
+    language = serializers.PrimaryKeyRelatedField(
+        queryset=Language.objects.all(),
         allow_null=True,
         required=False
     )
+
+    mltc = serializers.PrimaryKeyRelatedField(
+        queryset=MLTC.objects.all(),
+        required=False,
+        allow_null=True
+    )
+
+    class Meta:
+        model = Member
+        exclude = ['created_at', 'updated_at']
     mltc = serializers.PrimaryKeyRelatedField(
         queryset=MLTC.objects.all(),
         required=False,

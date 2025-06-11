@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from core.models.authorization_model import MLTC
 from core.models.sadc_model import Sadc
 
 class CustomUserManager(BaseUserManager):
@@ -28,6 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
     preferences = models.JSONField(default=dict, blank=True)
+    allowed_mltcs = models.ManyToManyField(MLTC, blank=True, related_name='users')
     is_org_admin = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)

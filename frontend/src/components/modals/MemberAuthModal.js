@@ -1,44 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import FileUpload from '../inputs/FileUpload';
 import CheckboxInput from '../inputs/CheckboxInput';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
 const daysOfWeek = [
-    'monday',
-    'thursday',
-    'tuesday',
-    'friday',
-    'wednesday',
-    'saturday',
-    'sunday'
+    { id: 'monday', name: 'monday' },
+    { id: 'thursday', name: 'thursday' },
+    { id: 'tuesday', name: 'tuesday' },
+    { id: 'friday', name: 'friday' },
+    { id: 'wednesday', name: 'wednesday' },
+    { id: 'saturday', name: 'saturday' },
+    { id: 'sunday', name: 'sunday' },
 ];
 
-const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dragStatus }) => {
+const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleActiveToggle, dragStatus }) => {
     const { t } = useTranslation();
-    const [mltcOptions, setMltcOptions] = useState([]);
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
-    useEffect(() => {
-        const getMltcOptions = async () => {
-            try {
-                const response = await fetchWithRefresh('/core/mltcs/');
-                if (!response.ok) return;
-
-                const data = await response.json();
-                setMltcOptions(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getMltcOptions();
-    }, []);
-
-    const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
+    const selectedMltc = mltcOptions.find(mltc => String(mltc.id) === String(current.mltc));
     const dx_codes = selectedMltc?.dx_codes || [];
 
     const onScheduleChange = (newSchedule) => {
@@ -91,7 +73,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                 >
                     <option value="">{t('general.select_an_option')}</option>
                     {mltcOptions.map((option) => (
-                        <option key={option.name} value={option.name}>
+                        <option key={option.name} value={option.id}>
                             {option.name}
                         </option>
                     ))}

@@ -36,6 +36,7 @@ def createUser(request):
     except Exception as e:
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
@@ -54,6 +55,7 @@ def updateUser(request, pk):
     except Exception as e:
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)

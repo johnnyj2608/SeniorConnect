@@ -33,9 +33,10 @@ const sendRequest = async (url, method, data) => {
 
         if (value === null) {
             formData.append(key, '');
-        } else if (key === 'members') {
-            value.forEach(member => formData.append(key, member));
+        } else if (key === 'members' || key === 'allowed_mltcs') {  // M2M
+            value.forEach(item => formData.append(key, item));
         } else if ((Array.isArray(value) || typeof value === 'object') && !(value instanceof File)) {
+            console.log(key, value)
             formData.append(key, JSON.stringify(value));
         } else {
             formData.append(key, value);
@@ -173,6 +174,7 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 name: '',
                 dx_codes: [],
+                allowed_mltcs: [],
                 active: true,
                 edited: true,
             };

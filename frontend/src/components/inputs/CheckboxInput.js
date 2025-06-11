@@ -24,16 +24,16 @@ const CheckboxInput = ({
             {label && <div className="member-box-label">{label}</div>}
             <div className="member-box-list">
                 <div className="checkbox-container">
-                    {options.map((value) => (
-                        <label key={value}>
+                    {options.map(({ id, name }) => (
+                        <label key={id}>
                             <input
                                 type="checkbox"
-                                value={value}
-                                checked={!disabled && selectedValues.includes(value)}
-                                onChange={handleCheckboxChange(value)}
+                                value={id}
+                                checked={!disabled && selectedValues.includes(id)}
+                                onChange={handleCheckboxChange(id)}
                                 disabled={disabled}
                             />
-                            {translateFn ? translateFn(value) : value}
+                            {translateFn ? translateFn(name) : name}
                         </label>
                     ))}
                 </div>

@@ -23,7 +23,8 @@ const ModalPage = ({ data, onClose }) => {
         handleAdd,
         handleDelete,
         handleSave,
-        setActiveTab
+        setActiveTab,
+        mltcOptions,
     } = useModal(data, onClose);
 
     const [dragging, setDragging] = useState(false);
@@ -31,15 +32,21 @@ const ModalPage = ({ data, onClose }) => {
     const getModalContent = () => {
         switch (type) {
             case 'info':
-                return <MemberInfoModal data={localData} handleChange={handleChange} />;
+                return (
+                    <MemberInfoModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                    />
+                );
             case 'authorizations':
                 return (
                     <MemberAuthModal
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
+                        mltcOptions={mltcOptions}
                         handleActiveToggle={handleActiveToggle}
-                         dragStatus={setDragging}
+                        dragStatus={setDragging}
                     />
                 );
             case 'contacts':
@@ -70,9 +77,22 @@ const ModalPage = ({ data, onClose }) => {
                     />
                 );
             case 'users':
-                return <SettingsUserModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return (
+                    <SettingsUserModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                        activeTab={activeTab}
+                        mltcOptions={mltcOptions}
+                    />
+                );
             case 'mltcs':
-                return <SettingsMltcModal data={localData} handleChange={handleChange} activeTab={activeTab} />;
+                return (
+                    <SettingsMltcModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                        activeTab={activeTab} 
+                    />
+                );
             default:
                 return null;
         }
