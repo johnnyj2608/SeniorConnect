@@ -95,8 +95,10 @@ const ModalPage = ({ data, onClose }) => {
                         </div>
                     )}
                     <div className="modal-content">
-                        {getModalContent()}
-                        {(type === 'files' || type === 'authorizations') && dragging && <DragOverlay />}
+                        <DragOverlay disabled={!(type === 'files' || type === 'authorizations') || !dragging} />
+                        <div className={`modal-content-scroll${dragging ? ' no-scroll' : ''}`}>
+                            {getModalContent()}
+                        </div>
                     </div>
                     {type !== 'info' && (
                         <div className="modal-tabs">

@@ -97,7 +97,6 @@ def updateAuthorization(request, pk):
 
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     
-    
     try:
         with transaction.atomic():
 
@@ -126,7 +125,7 @@ def updateAuthorization(request, pk):
                     service_code = service_data.get('service_code')
                     service_units = service_data.get('service_units')
 
-                    if not auth_id and not service_code and not service_units:
+                    if not (auth_id or service_code or service_units):
                         if service_id:
                             AuthorizationService.objects.filter(id=service_id, authorization=authorization).delete()
                         continue
