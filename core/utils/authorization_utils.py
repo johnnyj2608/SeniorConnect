@@ -115,6 +115,10 @@ def updateAuthorization(request, pk):
                 
                 data['file'] = public_url
 
+            elif data.get('file') == '' and authorization.file:
+                delete_file_from_supabase(authorization.file)
+                data['file'] = None
+
             serializer = AuthorizationSerializer(instance=authorization, data=data)
             if serializer.is_valid():
                 authorization = serializer.save()

@@ -25,6 +25,7 @@
             "activate": "Activate",
             "deactivate": "Deactivate",
             "choose_photo": "Choose Photo",
+            "remove_photo": "Remove Photo",
             "choose_file": "Choose File",
             "view_file": "View File",
             "upload": "Upload",

@@ -156,16 +156,28 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                     className="preview-photo"
                     onError={(e) => e.target.src = "/default-profile.jpg"}
                 />
-                <label htmlFor="image-upload" className="action-button thin">
-                    {t('general.buttons.choose_photo')}
-                </label>
-                <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleChange('photo')}
-                    style={{ display: 'none' }}
-                />
+                {data.photo ? (
+                    <button
+                        type="button"
+                        className="action-button thin destructive"
+                        onClick={() => handleChange('photo')({ target: { value: '' } })}
+                    >
+                        {t('general.buttons.remove_photo')}
+                    </button>
+                ) : (
+                    <>
+                        <label htmlFor="image-upload" className="action-button thin">
+                            {t('general.buttons.choose_photo')}
+                        </label>
+                        <input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleChange('photo')}
+                            style={{ display: 'none' }}
+                        />
+                    </>
+                )}
             </div>
 
             <div className="member-detail stack">

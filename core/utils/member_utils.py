@@ -92,7 +92,7 @@ def createMember(request):
         if public_url:
             delete_folder_from_supabase(f"{member.id}/")
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 def updateMember(request, pk):
     data = request.data.copy()
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
@@ -119,6 +119,10 @@ def updateMember(request, pk):
                     raise Exception(f"Photo upload failed: {error}")
                 
                 data['photo'] = public_url
+
+            elif data.get('photo') == '' and member.photo:
+                delete_file_from_supabase(member.photo)
+                data['photo'] = None
 
             serializer = MemberSerializer(instance=member, data=data)
             if serializer.is_valid():

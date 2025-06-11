@@ -25,6 +25,7 @@
             "activate": "激活",
             "deactivate": "停用",
             "choose_photo": "选择照片",
+            "remove_photo": "删除照片",
             "choose_file": "选择文件",
             "view_file": "查看文件",
             "upload": "上传",

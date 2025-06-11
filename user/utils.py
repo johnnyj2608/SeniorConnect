@@ -8,9 +8,6 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 
 def getUserList(request):
-    current_user = request.user
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
