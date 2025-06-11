@@ -30,7 +30,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         )}
       </div>
       <div className="member-detail">
-        <label>{t('settings.data.users.name')}</label>
+        <label>{t('settings.data.users.name')} *</label>
         <input
           type="text"
           value={disabled ? '' : current.name || ''}
@@ -40,7 +40,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         />
       </div>
       <div className="member-detail">
-        <label>{t('settings.data.users.email')}</label>
+        <label>{t('settings.data.users.email')} *</label>
         <input
           type="email"
           value={disabled ? '' : current.email || ''}

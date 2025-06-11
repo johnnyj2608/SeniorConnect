@@ -51,6 +51,7 @@ def getMemberDetail(request, pk):
     serializer = MemberSerializer(member)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@transaction.atomic
 def createMember(request):
     data = request.data.copy()
     public_url = None
@@ -60,76 +61,74 @@ def createMember(request):
         del data['photo']
 
     try:
-        with transaction.atomic():
-            serializer = MemberSerializer(data=data)
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            member = serializer.save()
+        serializer = MemberSerializer(data=data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        member = serializer.save()
+        
+        if photo:
+            first_name = request.data.get("first_name")
+            last_name = request.data.get("last_name")
+            member_name = slugify(f"{first_name} {last_name}")
+            new_path = f"{member.id}/{member_name}"
+
+            public_url, error = upload_file_to_supabase(
+                photo, 
+                new_path,
+                member.photo,
+                True
+            )
             
-            if photo:
-                first_name = request.data.get("first_name")
-                last_name = request.data.get("last_name")
-                member_name = slugify(f"{first_name} {last_name}")
-                new_path = f"{member.id}/{member_name}"
+            if error:
+                raise Exception(f"Photo upload failed: {error}")
 
-                public_url, error = upload_file_to_supabase(
-                    photo, 
-                    new_path,
-                    member.photo,
-                    True
-                )
-                
-                if error:
-                    raise Exception(f"Photo upload failed: {error}")
+            member.photo = public_url
+            member.save()
 
-                member.photo = public_url
-                member.save()
-
-                serializer = MemberSerializer(member)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+            serializer = MemberSerializer(member)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
     except Exception as e:
         if public_url:
             delete_folder_from_supabase(f"{member.id}/")
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@transaction.atomic
 def updateMember(request, pk):
     data = request.data.copy()
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     public_url = None
 
     try:
-        with transaction.atomic():
+        if 'photo' in request.FILES:
+            photo = request.FILES['photo']
+            first_name = request.data.get("first_name")
+            last_name = request.data.get("last_name")
+            member_name = slugify(f"{first_name} {last_name}")
+            new_path = f"{member.id}/{member_name}"
 
-            if 'photo' in request.FILES:
-                photo = request.FILES['photo']
-                first_name = request.data.get("first_name")
-                last_name = request.data.get("last_name")
-                member_name = slugify(f"{first_name} {last_name}")
-                new_path = f"{member.id}/{member_name}"
+            public_url, error = upload_file_to_supabase(
+                photo, 
+                new_path,
+                member.photo,
+                True,
+            )
 
-                public_url, error = upload_file_to_supabase(
-                    photo, 
-                    new_path,
-                    member.photo,
-                    True,
-                )
+            if error:
+                raise Exception(f"Photo upload failed: {error}")
+            
+            data['photo'] = public_url
 
-                if error:
-                    raise Exception(f"Photo upload failed: {error}")
-                
-                data['photo'] = public_url
+        elif data.get('photo') == '' and member.photo:
+            delete_file_from_supabase(member.photo)
+            data['photo'] = None
 
-            elif data.get('photo') == '' and member.photo:
-                delete_file_from_supabase(member.photo)
-                data['photo'] = None
-
-            serializer = MemberSerializer(instance=member, data=data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = MemberSerializer(instance=member, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
         print(e)

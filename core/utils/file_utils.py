@@ -17,81 +17,81 @@ def getFileDetail(request, pk):
     serializer = FileSerializer(file)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@transaction.atomic
 def createFile(request):
     data = request.data.copy()
     public_url = None
 
     try:
-        with transaction.atomic():
-            if 'file' in request.FILES:
-                file_obj = request.FILES['file']
-                file_name = slugify(request.data.get("name"))
-                member_id = request.data.get("member")
+        if 'file' in request.FILES:
+            file_obj = request.FILES['file']
+            file_name = slugify(request.data.get("name"))
+            member_id = request.data.get("member")
 
-                new_path = f"{member_id}/files/{file_name}"
-                public_url, error = upload_file_to_supabase(
-                    file_obj, 
-                    new_path,
-                    None,
-                )
+            new_path = f"{member_id}/files/{file_name}"
+            public_url, error = upload_file_to_supabase(
+                file_obj, 
+                new_path,
+                None,
+            )
 
-                if error:
-                    raise Exception(f"File upload failed: {error}")
+            if error:
+                raise Exception(f"File upload failed: {error}")
 
-                data['file'] = public_url
+            data['file'] = public_url
 
-            serializer = FileSerializer(data=data)
-            
-            try:
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as e:
-                print(e)
-                return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        serializer = FileSerializer(data=data)
+        
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
         if public_url:
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@transaction.atomic
 def updateFile(request, pk):
     data = request.data.copy()
     file = get_object_or_404(File.objects.select_related('member'), id=pk)
     public_url = None
 
     try:
-        with transaction.atomic():
-            if 'file' in request.FILES:
-                file_obj = request.FILES['file']
-                file_name = slugify(request.data.get("name"))
-                member_id = request.data.get("member")
+        if 'file' in request.FILES:
+            file_obj = request.FILES['file']
+            file_name = slugify(request.data.get("name"))
+            member_id = request.data.get("member")
 
-                new_path = f"{member_id}/files/{file_name}"
+            new_path = f"{member_id}/files/{file_name}"
 
-                public_url, error = upload_file_to_supabase(
-                    file_obj,
-                    new_path, 
-                    file.file,
-                )
+            public_url, error = upload_file_to_supabase(
+                file_obj,
+                new_path, 
+                file.file,
+            )
 
-                if error:
-                    raise Exception(f"File upload failed: {error}")
+            if error:
+                raise Exception(f"File upload failed: {error}")
 
-                data['file'] = public_url
+            data['file'] = public_url
 
-            serializer = FileSerializer(instance=file, data=data)
-            try:
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as e:
-                print(e)
-                return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        serializer = FileSerializer(instance=file, data=data)
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
         if public_url:
