@@ -2,6 +2,21 @@ from rest_framework import serializers
 from ..models.member_model import Member, Language
 from ..models.authorization_model import MLTC
 from django.utils import timezone
+from .mixins import DaysUntilMixin
+
+class MemberNameSerializer(serializers.ModelSerializer):
+    sadc_member_id = serializers.ReadOnlyField(source='member.sadc_member_id')
+    alt_name = serializers.ReadOnlyField(source='member.alt_name')
+    member_name = serializers.SerializerMethodField()
+
+    class Meta:
+        abstract = True
+
+    def get_member_name(self, obj):
+        member = obj.member
+        if member:
+            return f"{member.last_name}, {member.first_name}"
+        return None
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,8 +43,8 @@ class MemberSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 class MemberListSerializer(serializers.ModelSerializer):
-    mltc = serializers.SerializerMethodField()
-    schedule = serializers.SerializerMethodField()
+    mltc = serializers.ReadOnlyField(source='active_auth.mltc.name')
+    schedule = serializers.ReadOnlyField(source='active_auth.schedule')
 
     class Meta:
         model = Member
@@ -39,28 +54,15 @@ class MemberListSerializer(serializers.ModelSerializer):
             'photo',
             'first_name', 
             'last_name', 
+            'alt_name',
             'birth_date', 
             'phone',
             'active',
             'mltc',
             'schedule',
         )
-        
-    def get_mltc(self, obj):
-        """Fetch the MLTC name from the active authorization."""
-        active_auth = obj.active_auth
-        if active_auth and active_auth.mltc:
-            return active_auth.mltc.name
-        return None
 
-    def get_schedule(self, obj):
-        """Fetch the schedule from the active authorization."""
-        active_auth = obj.active_auth
-        if active_auth:
-            return active_auth.schedule
-        return None
-
-class MemberBirthdaySerializer(serializers.ModelSerializer):
+class MemberBirthdaySerializer(DaysUntilMixin, serializers.ModelSerializer):
     days_until = serializers.SerializerMethodField()
     age_turning = serializers.SerializerMethodField()
 
@@ -71,21 +73,17 @@ class MemberBirthdaySerializer(serializers.ModelSerializer):
             'sadc_member_id', 
             'first_name', 
             'last_name', 
+            'alt_name',
             'days_until',
             'age_turning',
         )
 
-    def get_days_until(self, obj):
+    def get_target_date(self, obj):
         today = timezone.now().date()
-        birth_date = obj.birth_date
-
-        next_birthday = birth_date.replace(year=today.year)
-
+        next_birthday = obj.birth_date.replace(year=today.year)
         if next_birthday < today:
             next_birthday = next_birthday.replace(year=today.year + 1)
-
-        days_until = (next_birthday - today).days
-        return days_until
+        return next_birthday
     
     def get_age_turning(self, obj):
         today = timezone.now().date()

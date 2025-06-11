@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom';
 import { formatDate, formatTime } from '../../utils/formatUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const ReportAssesmentsTable = ({ report }) => {
     const { t } = useTranslation()
@@ -20,7 +21,11 @@ const ReportAssesmentsTable = ({ report }) => {
             <tr key={entry.id}>
                 <td>
                     <Link to={`/member/${entry.member}`} className="report-link">
-                        {entry.member_name}
+                        <NameDisplay
+                            sadcId={entry.sadc_member_id}
+                            memberName={entry.member_name}
+                            altName={entry.alt_name}
+                        />
                     </Link>
                 </td>
                 <td>{entry.user_name}</td>

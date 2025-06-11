@@ -38,9 +38,9 @@ const SettingsGeneral = () => {
     }
   };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !user.preferences?.dark_mode;
-    updatePreference('dark_mode', newDarkMode);
+  const togglePreference = (key) => {
+    const currentValue = user?.preferences?.[key];
+    updatePreference(key, !currentValue);
   };
   
   const handleLanguageChange = (e) => {
@@ -57,7 +57,17 @@ const SettingsGeneral = () => {
           component={
             <Switch
               checked={user.preferences?.dark_mode}
-              onChange={toggleDarkMode}
+              onChange={() => togglePreference('dark_mode')}
+              onColor="#6366F1"
+            />
+          } 
+        />
+        <SettingsItem 
+          label={t('settings.general.alt_name')} 
+          component={
+            <Switch
+              checked={user.preferences?.alt_name}
+              onChange={() => togglePreference('alt_name')}
               onColor="#6366F1"
             />
           } 
@@ -74,8 +84,6 @@ const SettingsGeneral = () => {
             </select>
           }
         />
-        <SettingsItem label={t('settings.general.member_names')} onClick={() => console.log('Member Names')} />
-        {/* Choose preference of display alt name over actual name */}
       </div>
     </>
   );

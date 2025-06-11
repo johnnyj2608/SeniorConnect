@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom';
 import { formatDate, formatStatus } from '../../utils/formatUtils';
 import { colorAbsence, colorBoolean } from '../../utils/colorUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const ReportAbsencesTable = ({ report }) => {
     const { t } = useTranslation()
@@ -23,7 +24,11 @@ const ReportAbsencesTable = ({ report }) => {
             <tr key={entry.id}>
                 <td>
                     <Link to={`/member/${entry.member}`} className="report-link">
-                        {entry.member_name}
+                        <NameDisplay
+                            sadcId={entry.sadc_member_id}
+                            memberName={entry.member_name}
+                            altName={entry.alt_name}
+                        />
                     </Link>
                 </td>
                 <td>{formatDate(entry.start_date)}</td>

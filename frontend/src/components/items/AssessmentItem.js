@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate, formatTime } from '../../utils/formatUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const AssessmentItem = ({ assessment }) => {
 
@@ -8,7 +9,13 @@ const AssessmentItem = ({ assessment }) => {
         <li>
             <Link to={`/member/${assessment.member}`} className="home-item">
                 <span className="home-item-primary">
-                    <p>{assessment.member_name}</p>
+                    <p>
+                        <NameDisplay
+                            sadcId={assessment.sadc_member_id}
+                            memberName={assessment.member_name}
+                            altName={assessment.alt_name}
+                        />
+                    </p>
                     <p>— {assessment.user_name}</p>
                 </span>
                 <span className="home-item-secondary">

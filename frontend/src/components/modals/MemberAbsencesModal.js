@@ -33,10 +33,6 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
 
         getUserOptions();
     }, []);
-    // If assessment selected, hide called and end date
-    // Rename start date to date
-    // Add time and user field
-    // Backend if assessment, start date == end date
 
     return (
         <>

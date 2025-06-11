@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import DropdownButton from '../buttons/DropdownButton';
 import { formatDate } from '../../utils/formatUtils';
 import { colorAudit } from '../../utils/colorUtils';
+import NameDisplay from '../layout/NameDisplay';
 import ReportAuditsExpanded from './ReportAuditsExpanded';
 
 const ReportAuditsTable = ({ report }) => {
@@ -38,7 +39,11 @@ const ReportAuditsTable = ({ report }) => {
                         <tr className={isExpanded ? 'expanded' : ''}>
                             <td>
                                 <Link to={`/member/${entry.member}`} className="report-link">
-                                {entry.member_name}
+                                    <NameDisplay
+                                        sadcId={entry.sadc_member_id}
+                                        memberName={entry.member_name}
+                                        altName={entry.alt_name}
+                                    />
                                 </Link>
                             </td>
                             <td>{t(`model.${entry.model_name}`, { defaultValue: '' })}</td>

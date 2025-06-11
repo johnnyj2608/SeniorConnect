@@ -252,7 +252,7 @@
             "language": "语言",
             "dark_mode": "夜间模式",
             "notification": "通知",
-            "member_names": "会员名称"
+            "alt_name": "显示中文姓名"
         },
         "data": {
             "label": "数据",

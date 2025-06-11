@@ -252,7 +252,7 @@
             "language": "Language",
             "dark_mode": "Dark Mode",
             "notification": "Notification",
-            "member_names": "Member Names"
+            "alt_name": "Display Nickname"
         },
         "data": {
             "label": "Data",

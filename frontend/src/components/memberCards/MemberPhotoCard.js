@@ -1,8 +1,16 @@
 import React, { memo } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
+import usePreferences from '../../hooks/usePreferences';
 
 const MemberPhotoCard = ({ data }) => {
     const info = data || [];
+    const useAltName = usePreferences("alt_name", false);
+
+    const altName = info.alt_name;
+    const fullName = `${info.last_name}, ${info.first_name}`;
+  
+    const primaryName = useAltName && altName ? altName : fullName;
+    const secondaryName = useAltName && altName ? fullName : altName;
 
     return (
         <div className="photo-container">
@@ -19,8 +27,8 @@ const MemberPhotoCard = ({ data }) => {
                 <h1>...</h1>
             ) : (
             <>
-                <h1>{`${info?.last_name}, ${info?.first_name}`}</h1>
-                {info.alt_name && <h2>{info.alt_name}</h2>}
+                <h1>{primaryName}</h1>
+                {secondaryName && <h2>{secondaryName}</h2>}
             </>
             )}
         </div>

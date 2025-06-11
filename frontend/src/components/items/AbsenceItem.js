@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import NameDisplay from '../layout/NameDisplay';
 
 const AbsenceItem = ({ absence }) => {
   const { t } = useTranslation();
@@ -15,7 +16,13 @@ const AbsenceItem = ({ absence }) => {
     <li>
       <Link to={`/member/${absence.member}`} className="home-item">
         <span className="home-item-primary">
-          <p>{absence.member_name}</p>
+          <p>
+            <NameDisplay
+              sadcId={absence.sadc_member_id}
+              memberName={absence.member_name}
+              altName={absence.alt_name}
+            />
+          </p>
           <p>— {t(`member.absences.${absence.absence_type}`)}</p>
         </span>
         <span className="home-item-secondary">

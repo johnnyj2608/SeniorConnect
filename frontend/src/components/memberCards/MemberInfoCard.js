@@ -16,11 +16,11 @@ const MemberInfoCard = ({ data, onEdit }) => {
 		<div className="card-400">
 		<h2>{t('member.info.label')}</h2>
 			<div className="card-container">
+			<EditButton onClick={handleEdit} />
 				{Object.keys(info).length === 0 ? (
 					<p>{t('member.info.no_info')}</p>
 				) : (
 				<>
-					<EditButton onClick={handleEdit} />
 					<DetailRow label={t('member.info.sadc_member_id')} value={info.sadc_member_id} />
 					<DetailRow label={t('member.info.last_name')} value={info.last_name} />
 					<DetailRow label={t('member.info.first_name')} value={info.first_name} />

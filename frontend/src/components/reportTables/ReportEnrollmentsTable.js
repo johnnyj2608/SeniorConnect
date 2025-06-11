@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../utils/formatUtils';
 import { colorEnrollment } from '../../utils/colorUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const ReportEnrollmentsTable = ({ report }) => {
     const { t } = useTranslation();
@@ -23,8 +24,12 @@ const ReportEnrollmentsTable = ({ report }) => {
                     <tr key={entry.id}>
                         <td>
                             <Link to={`/member/${entry.member}`} className="report-link">
-                                {entry.member_name}
-                             </Link>
+                                <NameDisplay
+                                    sadcId={entry.sadc_member_id}
+                                    memberName={entry.member_name}
+                                    altName={entry.alt_name}
+                                />
+                            </Link>
                         </td>
                         <td>{colorEnrollment(change_type, old_mltc, new_mltc, t)}</td>
                         <td>{formatDate(entry.change_date)}</td>

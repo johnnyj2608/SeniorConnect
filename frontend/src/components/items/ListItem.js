@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate, formatPhone, formatSchedule, formatPhoto } from '../../utils/formatUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const ListItem = ({ member }) => {
   return (
@@ -14,7 +15,13 @@ const ListItem = ({ member }) => {
             loading="lazy"
         />
         <div className="members-list-details">
-          <h3>{member.sadc_member_id}. {member.last_name}, {member.first_name}</h3>
+          <h3>
+            <NameDisplay
+              sadcId={member.sadc_member_id}
+              memberName={`${member.last_name}, ${member.first_name}`}
+              altName={member.alt_name}
+            />
+          </h3>
           <p>{formatDate(member.birth_date)}</p>
           {member.phone && (
               <p>{formatPhone(member.phone)}</p>
