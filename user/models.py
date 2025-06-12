@@ -29,12 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
     preferences = models.JSONField(default=dict, blank=True)
-    global_access = models.BooleanField(
-        default=True,
-        help_text="True: Can edit all members. False: Can only edit members created by self"
-    )
-
+    allowed_mltcs = models.ManyToManyField(MLTC, blank=True, related_name='users')
     is_org_admin = models.BooleanField(default=False)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)   # Access to Django Admin
 

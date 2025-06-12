@@ -1,7 +1,6 @@
 from django.db import models
 import os
 from django.utils.text import slugify
-from user.models import User
 
 def member_photo_path(instance, filename):
     """Generate file path for new member photo, overwriting existing one."""
@@ -15,6 +14,22 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+class MemberQuerySet(models.QuerySet):
+    def accessible_by(self, user):
+        if user.is_superuser or getattr(user, 'is_org_admin', False):
+            return self
+        allowed_mltcs = user.allowed_mltcs.all()
+        return self.filter(
+            models.Q(active_auth__mltc__in=allowed_mltcs) | models.Q(active_auth__isnull=True)
+        )
+
+class MemberManager(models.Manager):
+    def get_queryset(self):
+        return MemberQuerySet(self.model, using=self._db)
+
+    def accessible_by(self, user):
+        return self.get_queryset().accessible_by(user)
 
 class Member(models.Model):
     sadc_member_id = models.IntegerField(null=False, blank=False)
@@ -43,13 +58,7 @@ class Member(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
 
-    created_by = models.ForeignKey(
-        User,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='members_created'
-    )
+    objects = MemberManager()
 
     class Meta:
         ordering = ['sadc_member_id']

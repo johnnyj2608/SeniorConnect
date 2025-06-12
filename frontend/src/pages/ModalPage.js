@@ -24,6 +24,7 @@ const ModalPage = ({ data, onClose }) => {
         handleDelete,
         handleSave,
         setActiveTab,
+        mltcOptions,
     } = useModal(data, onClose);
 
     const [dragging, setDragging] = useState(false);
@@ -43,6 +44,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
+                        mltcOptions={mltcOptions}
                         handleActiveToggle={handleActiveToggle}
                         dragStatus={setDragging}
                     />
@@ -80,6 +82,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab}
+                        mltcOptions={mltcOptions}
                     />
                 );
             case 'mltcs':

@@ -4,7 +4,6 @@ import { sortSchedule } from '../../utils/formatUtils';
 import FileUpload from '../inputs/FileUpload';
 import CheckboxInput from '../inputs/CheckboxInput';
 import useDragAndDrop from '../../hooks/useDragDrop';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const daysOfWeek = [
     { id: 'monday', name: 'monday' },
@@ -16,27 +15,10 @@ const daysOfWeek = [
     { id: 'sunday', name: 'sunday' },
 ];
 
-const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dragStatus }) => {
+const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleActiveToggle, dragStatus }) => {
     const { t } = useTranslation();
-    const [mltcOptions, setMltcOptions] = useState([]);
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
-
-    useEffect(() => {
-        const getMltcOptions = async () => {
-            try {
-                const response = await fetchWithRefresh('/core/mltcs/');
-                if (!response.ok) return;
-
-                const data = await response.json();
-                setMltcOptions(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getMltcOptions();
-    }, []);
 
     const selectedMltc = mltcOptions.find(mltc => String(mltc.id) === String(current.mltc));
     const dx_codes = selectedMltc?.dx_codes || [];
@@ -151,6 +133,21 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                 </select>
             </div>
 
+            <CheckboxInput
+                label={t('member.authorizations.schedule')}
+                options={daysOfWeek}
+                selectedValues={current.schedule}
+                onChange={onScheduleChange}
+                disabled={disabled}
+                translateFn={(val) => t(`general.days_of_week.${val}`)}
+            />
+
+            <AuthorizationServicesTabs
+                services={current.services}
+                disabled={disabled}
+                handleChange={handleChange}
+            />
+
             <div className="member-detail">
                 <label>{t('member.authorizations.care_manager')}</label>
                 <input
@@ -172,21 +169,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                     disabled={disabled}
                 />
             </div>
-
-            <CheckboxInput
-                label={t('member.authorizations.schedule')}
-                options={daysOfWeek}
-                selectedValues={current.schedule}
-                onChange={onScheduleChange}
-                disabled={disabled}
-                translateFn={(val) => t(`general.days_of_week.${val}`)}
-            />
-
-            <AuthorizationServicesTabs
-                services={current.services}
-                disabled={disabled}
-                handleChange={handleChange}
-            />
 
             <FileUpload 
                 current={current}

@@ -12,25 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'preferences',
-            'global_access',
+            'allowed_mltcs',
             'password',
             'is_org_admin',
             'is_active',
         ]
-
-    def validate(self, attrs):
-        user_instance = getattr(self, 'instance', None)
-        
-        if user_instance and user_instance.is_org_admin:
-            attrs['global_access'] = True
-        
-        elif not user_instance and attrs.get('is_org_admin', False):
-            attrs['global_access'] = True
-
-        return super().validate(attrs)
     
     def create(self, validated_data):
         request = self.context.get('request')
+        allowed_mltcs = validated_data.pop('allowed_mltcs', [])
 
         validated_data['preferences'] = {
             'dark_mode': False,
@@ -42,6 +32,12 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['sadc'] = request.user.sadc
 
         user = super().create(validated_data)
+
+        if validated_data.get('is_org_admin'):
+            user.allowed_mltcs.set(MLTC.objects.all())  # Admins get all MLTCs
+        else:
+            user.allowed_mltcs.set(allowed_mltcs)
+
         if 'password' in validated_data:
             user.set_password(validated_data['password'])
             user.save()
@@ -50,10 +46,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
+        allowed_mltcs = validated_data.pop('allowed_mltcs', None)
+
         user = super().update(instance, validated_data)
+
+        if instance.is_org_admin:
+            user.allowed_mltcs.set(MLTC.objects.all())  # Admins always get all MLTCs
+        elif allowed_mltcs is not None:
+            user.allowed_mltcs.set(allowed_mltcs)
+
         if password:
             user.set_password(password)
             user.save()
+
         return user
     
     def validate_email(self, value):

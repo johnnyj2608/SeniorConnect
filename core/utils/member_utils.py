@@ -25,11 +25,8 @@ from core.utils.supabase import (
 )
 
 def getMemberList(request):
-    members = Member.objects.select_related('active_auth', 'active_auth__mltc')
-
     user = request.user
-    if not user.global_access:
-        members = members.filter(created_by=user)
+    members = Member.objects.select_related('active_auth', 'active_auth__mltc').accessible_by(user)
 
     filter_param = request.GET.get('filter')
     if filter_param == "unknown":
@@ -209,13 +206,16 @@ def toggleMemberStatus(request, pk):
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
 def getMemberProfile(request, pk):
-    member = (
-        Member.objects
-        .select_related('language', 'active_auth', 'active_auth__mltc')
-        .get(id=pk)
-    )
-
-    if not request.user.global_access and member.created_by != request.user:
+    user = request.user
+    
+    try:
+        member = (
+            Member.objects
+            .select_related('language', 'active_auth', 'active_auth__mltc')
+            .accessible_by(user)
+            .get(id=pk)
+        )
+    except Member.DoesNotExist:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     absences = Absence.objects.filter(member=pk)

@@ -33,7 +33,7 @@ const sendRequest = async (url, method, data) => {
 
         if (value === null) {
             formData.append(key, '');
-        } else if (key === 'members') {  // M2M
+        } else if (key === 'members' || key === 'allowed_mltcs') {  // M2M
             value.forEach(item => formData.append(key, item));
         } else if ((Array.isArray(value) || typeof value === 'object') && !(value instanceof File)) {
             formData.append(key, JSON.stringify(value));
@@ -163,7 +163,6 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 name: '',
                 email: '',
-                global_access: true,
                 is_active: true,
                 edited: true,
             };
