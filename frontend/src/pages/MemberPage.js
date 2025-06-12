@@ -41,6 +41,8 @@ const MemberPage = () => {
   }, [id]);
 
   const handleDelete = async () => {
+    if (!memberData) return;
+
     const action = t('general.buttons.delete');
     const isConfirmed = window.confirm(t('member.confirm_update', { action: action.toLowerCase() }));
     if (!isConfirmed) return;
@@ -60,6 +62,8 @@ const MemberPage = () => {
   };
 
   const handleStatus = async () => {
+    if (!memberData) return;
+
     const action = memberData?.member?.status
       ? t('general.buttons.deactivate')
       : t('general.buttons.activate');
@@ -95,6 +99,7 @@ const MemberPage = () => {
   };
 
   const handleModalOpen = useCallback((type, data) => {
+    if (!memberData) return;
     setModalData({ id, type, data, setData: setMemberData }); 
     setModalOpen(true);
   }, [id]);
@@ -105,27 +110,32 @@ const MemberPage = () => {
       <div className="member-row">
         <MemberPhotoCard data={memberData?.info} />
       </div>
-      <div className="member-row">
-        <MemberInfoCard data={memberData?.info} onEdit={handleModalOpen} />
-        <MemberAuthCard id={id} data={memberData?.auth} onEdit={handleModalOpen} />
-      </div>
-      <div className="member-row">
-        <MemberContactsCard data={memberData?.contacts} onEdit={handleModalOpen} />
-        <MemberAbsencesCard data={memberData?.absences} onEdit={handleModalOpen} />
-      </div>
-      <div className="member-row">
-        <MemberFilesCard data={memberData?.files} onEdit={handleModalOpen} />
-      </div>
-      <div className="member-row">
-        <button className="action-button" onClick={handleStatus}>
-          {memberData?.info?.active
-            ? t('general.buttons.deactivate')
-            : t('general.buttons.activate')}
-        </button>
-        <button className="action-button destructive" onClick={handleDelete}>
-          {t('general.buttons.delete')}
-        </button>
-      </div>
+      {memberData && (
+        <>
+          <div className="member-row">
+            <MemberInfoCard data={memberData.info} onEdit={handleModalOpen} />
+            <MemberAuthCard id={id} data={memberData.auth} onEdit={handleModalOpen} />
+          </div>
+          <div className="member-row">
+            <MemberContactsCard data={memberData.contacts} onEdit={handleModalOpen} />
+            <MemberAbsencesCard data={memberData.absences} onEdit={handleModalOpen} />
+          </div>
+          <div className="member-row">
+            <MemberFilesCard data={memberData.files} onEdit={handleModalOpen} />
+          </div>
+          <div className="member-row">
+            <button className="action-button" onClick={handleStatus}>
+              {memberData.info.active
+                ? t('general.buttons.deactivate')
+                : t('general.buttons.activate')}
+            </button>
+            <button className="action-button destructive" onClick={handleDelete}>
+              {t('general.buttons.delete')}
+            </button>
+          </div>
+        </>
+      )}
+
       {modalOpen && (
         <ModalPage data={modalData} onClose={handleCancel} />
       )}
