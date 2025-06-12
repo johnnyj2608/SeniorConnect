@@ -5,13 +5,14 @@ import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import ModalPage from '../../pages/ModalPage';
 import SettingsItem from '../items/SettingsItem';
 
-const SettingsData = () => {
+const SettingsAdmin = () => {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
 
   const handleMLTCModal = useCallback(async () => {
+    if (!user?.is_org_admin) return;
     try {
       const response = await fetchWithRefresh(`/core/mltcs`);
       if (!response.ok) return;
@@ -27,7 +28,6 @@ const SettingsData = () => {
 
   const handleUsersModal = useCallback(async () => {
     if (!user?.is_org_admin) return;
-
     try {
       const response = await fetchWithRefresh(`/user/users`);
       if (!response.ok) return;
@@ -41,20 +41,21 @@ const SettingsData = () => {
   }, [user]);
 
   const handleModalClose = useCallback(() => {
+    if (!user?.is_org_admin) return;
+
     setModalOpen(false);
     setModalData(null);
   }, []);
 
+  if (!user?.is_org_admin) return null;
+
   return (
     <>
-      <h3 className="section-title">{t('settings.data.label')}</h3>
+      <h3 className="section-title">{t('settings.admin.label')}</h3>
       <div className="section-main">
         <SettingsItem label={t('model.mltc')} onClick={handleMLTCModal} />
         <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
-        <SettingsItem label={t('settings.data.upload')} onClick={() => console.log('Upload')} />
-        {user?.is_org_admin && (
-          <SettingsItem label={t('settings.data.users.label')} onClick={handleUsersModal} />
-        )}
+        <SettingsItem label={t('settings.admin.users.label')} onClick={handleUsersModal} />
 
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />
@@ -64,4 +65,4 @@ const SettingsData = () => {
   );
 };
 
-export default SettingsData;
+export default SettingsAdmin;

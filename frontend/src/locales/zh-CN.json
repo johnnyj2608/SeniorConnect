@@ -252,13 +252,13 @@
             "language": "语言",
             "dark_mode": "夜间模式",
             "notification": "通知",
-            "alt_name": "显示中文姓名"
+            "alt_name": "显示中文姓名",
+            "upload": "上传"
         },
-        "data": {
+        "admin": {
             "label": "数据",
-            "upload": "上传",
             "users": {
-                "label": "用户",
+                "label": "行政",
                 "name": "名称",
                 "email": "电邮",
                 "admin": "管理员",

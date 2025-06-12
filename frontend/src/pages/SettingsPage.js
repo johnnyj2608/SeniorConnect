@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AuthContext } from '../context/AuthContext';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
-import SettingsData from '../components/settingsContent/SettingsData';
+import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
 import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
@@ -9,7 +10,7 @@ import SettingsItem from '../components/items/SettingsItem';
 
 const sections = [
     { label: 'settings.general.label', component: <SettingsGeneral />, id: 'settings-general' },
-    { label: 'settings.data.label', component: <SettingsData />, id: 'settings-data' },
+    { label: 'settings.admin.label', component: <SettingsAdmin />, id: 'settings-admin', adminOnly: true },
     { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots' },
     { label: 'settings.support.label', component: <SettingsSupport />, id: 'settings-support' },
     { label: 'settings.account.label', component: <SettingsAccount />, id: 'settings-account' },
@@ -17,6 +18,7 @@ const sections = [
 
 const SettingsPage = () => {
     const { t } = useTranslation();
+    const { user } = useContext(AuthContext);
     const [active, setActive] = useState(sections[0].id);
     const observer = useRef(null);
 
@@ -65,15 +67,19 @@ const SettingsPage = () => {
 
             <div className="settings-body content-padding">
                 <div className="settings-nav">
-                {sections.map((section) => (
-                    <SettingsItem
-                        key={section.id}
-                        label={t(section.label)}
-                        isNav={true}
-                        isActive={active === section.id}
-                        onClick={() => handleScrollToSection(section.id)}
-                    />
-                ))}
+                    {sections.map((section) => {
+                        if (section.adminOnly && !user?.is_org_admin) return null;
+
+                        return (
+                        <SettingsItem
+                            key={section.id}
+                            label={t(section.label)}
+                            isNav={true}
+                            isActive={active === section.id}
+                            onClick={() => handleScrollToSection(section.id)}
+                        />
+                        );
+                    })}
                 </div>
 
                 <div className="settings-content">

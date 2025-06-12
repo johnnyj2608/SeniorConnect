@@ -252,11 +252,11 @@
             "language": "Language",
             "dark_mode": "Dark Mode",
             "notification": "Notification",
-            "alt_name": "Display Nickname"
+            "alt_name": "Display Nickname",
+            "upload": "Upload"
         },
-        "data": {
-            "label": "Data",
-            "upload": "Upload",
+        "admin": {
+            "label": "Admin",
             "users": {
                 "label": "Users",
                 "name": "Name",

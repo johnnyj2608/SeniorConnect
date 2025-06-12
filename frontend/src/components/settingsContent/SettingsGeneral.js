@@ -84,6 +84,7 @@ const SettingsGeneral = () => {
             </select>
           }
         />
+        <SettingsItem label={t('settings.general.upload')} onClick={() => console.log('Upload')} />
       </div>
     </>
   );
