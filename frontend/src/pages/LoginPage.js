@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import PasswordField from '../components/inputs/PasswordField'
 import { AuthContext } from '../context/AuthContext'
+import Loader from '../components/layout/Loader'
 
 const LoginPage = () => {
     const { t } = useTranslation()
@@ -51,7 +52,7 @@ const LoginPage = () => {
         }
     }
 
-    if (loading) return <div>Loading...</div>
+    if (loading) return <Loader />
 
     return (
         <div className="login-container">
