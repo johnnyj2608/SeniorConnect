@@ -25,7 +25,9 @@ from core.utils.supabase import (
 )
 
 def getMemberList(request):
-    members = Member.objects.select_related('active_auth', 'active_auth__mltc')
+    user = request.user
+    members = Member.objects.select_related('active_auth', 'active_auth__mltc').accessible_by(user)
+
     filter_param = request.GET.get('filter')
     if filter_param == "unknown":
         members = members.filter(active_auth__mltc__isnull=True)
@@ -41,7 +43,7 @@ def getMemberList(request):
 
     data = defaultdict(list)
     for member_data in serializer.data:
-        mltc_name = member_data['mltc'] if member_data['mltc'] else "unknown"
+        mltc_name = member_data['mltc'] if member_data.get('mltc') else "unknown"
         data[mltc_name].append(member_data)
 
     return Response(data, status=status.HTTP_200_OK)
@@ -204,7 +206,18 @@ def toggleMemberStatus(request, pk):
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
 def getMemberProfile(request, pk):
-    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
+    user = request.user
+    
+    try:
+        member = (
+            Member.objects
+            .select_related('language', 'active_auth', 'active_auth__mltc')
+            .accessible_by(user)
+            .get(id=pk)
+        )
+    except Member.DoesNotExist:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
 
     absences = Absence.objects.filter(member=pk)
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)

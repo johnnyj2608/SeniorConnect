@@ -9,6 +9,11 @@ import json
 
 def getMLTCList(request):
     mltcs = MLTC.objects.all()
+    
+    user = request.user
+    if not (user.is_superuser or user.is_org_admin):
+        mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
+
     serializer = MLTCSerializer(mltcs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
