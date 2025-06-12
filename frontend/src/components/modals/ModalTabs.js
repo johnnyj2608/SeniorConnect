@@ -56,7 +56,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'users':
                 return { 
                     heading: item.name || t('members.unknown'),
-                    subheading: item.is_org_admin ? t('settings.data.users.admin') : t('settings.data.users.staff'),
+                    subheading: item.is_org_admin ? t('settings.admin.users.admin') : t('settings.admin.users.staff'),
                     inactive: item.is_active === false,
                 };
             case 'mltcs':

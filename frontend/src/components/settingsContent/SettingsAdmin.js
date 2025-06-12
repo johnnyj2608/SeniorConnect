@@ -24,7 +24,7 @@ const SettingsAdmin = () => {
       console.error(error);
       alert(t('settings.data.error_load', 'Could not load data. Please try again.'));
     }
-  }, [t]);
+  }, [t, user?.is_org_admin]);
 
   const handleUsersModal = useCallback(async () => {
     if (!user?.is_org_admin) return;
@@ -41,8 +41,6 @@ const SettingsAdmin = () => {
   }, [user]);
 
   const handleModalClose = useCallback(() => {
-    if (!user?.is_org_admin) return;
-
     setModalOpen(false);
     setModalData(null);
   }, []);

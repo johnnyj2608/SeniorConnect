@@ -99,7 +99,6 @@ const MemberPage = () => {
   };
 
   const handleModalOpen = useCallback((type, data) => {
-    if (!memberData) return;
     setModalData({ id, type, data, setData: setMemberData }); 
     setModalOpen(true);
   }, [id]);

@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from user.models import User
 from ..models.authorization_model import MLTC
 from ..serializers.authorization_serializers import MLTCSerializer
 from django.db import transaction
@@ -9,11 +8,6 @@ import json
 
 def getMLTCList(request):
     mltcs = MLTC.objects.all()
-    
-    user = request.user
-    if not (user.is_superuser or user.is_org_admin):
-        mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
-
     serializer = MLTCSerializer(mltcs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -33,12 +27,7 @@ def createMLTC(request):
     
     try:
         if serializer.is_valid():
-            mltc = serializer.save()
-
-            users = User.objects.all()
-            for user in users:
-                user.allowed_mltcs.add(mltc)
-                
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

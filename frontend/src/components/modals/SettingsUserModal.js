@@ -1,22 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import CheckboxInput from '../inputs/CheckboxInput';
 
-const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
+const SettingsUserModal = ({ data, handleChange, activeTab }) => {
   const { t } = useTranslation();
 
   const current = data[activeTab] || {};
   const disabled = data.filter(tab => !tab.deleted).length <= 0;
   const adminUser = current.is_org_admin;
 
-  const handleMltcChange = (newSelected) => {
-    handleChange('allowed_mltcs')({ target: { value: newSelected } });
-  };
-
   return (
     <>
       <div className="modal-header">
-        <h3>{t('general.edit')}{t('settings.data.users.label')}</h3>
+        <h3>{t('general.edit')}{t('settings.admin.users.label')}</h3>
         {!adminUser && (
           <label>
             <input
@@ -30,7 +25,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         )}
       </div>
       <div className="member-detail">
-        <label>{t('settings.data.users.name')} *</label>
+        <label>{t('settings.admin.users.name')} *</label>
         <input
           type="text"
           value={disabled ? '' : current.name || ''}
@@ -40,7 +35,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         />
       </div>
       <div className="member-detail">
-        <label>{t('settings.data.users.email')} *</label>
+        <label>{t('settings.admin.users.email')} *</label>
         <input
           type="email"
           value={disabled ? '' : current.email || ''}
@@ -49,15 +44,6 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
           disabled={disabled || adminUser}
         />
       </div>
-
-      <CheckboxInput
-        label={t('settings.data.mltc.label')} 
-        options={mltcOptions}
-        selectedValues={current.allowed_mltcs || []}
-        onChange={handleMltcChange}
-        disabled={disabled}
-        isAdmin={adminUser}
-      />
     </>
   );
 };

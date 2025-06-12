@@ -15,22 +15,6 @@ class Language(models.Model):
     def __str__(self):
         return self.name
 
-class MemberQuerySet(models.QuerySet):
-    def accessible_by(self, user):
-        if user.is_superuser or getattr(user, 'is_org_admin', False):
-            return self
-        allowed_mltcs = user.allowed_mltcs.all()
-        return self.filter(
-            models.Q(active_auth__mltc__in=allowed_mltcs) | models.Q(active_auth__isnull=True)
-        )
-
-class MemberManager(models.Manager):
-    def get_queryset(self):
-        return MemberQuerySet(self.model, using=self._db)
-
-    def accessible_by(self, user):
-        return self.get_queryset().accessible_by(user)
-
 class Member(models.Model):
     sadc_member_id = models.IntegerField(null=False, blank=False)
     photo = models.URLField(null=True, blank=True)
@@ -57,8 +41,6 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
-
-    objects = MemberManager()
 
     class Meta:
         ordering = ['sadc_member_id']
