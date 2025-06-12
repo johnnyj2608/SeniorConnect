@@ -45,7 +45,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
         />
       </div>
       <div className="member-detail">
-        <label>Permissions</label>
+        <label>{t('settings.admin.users.permissions')}</label>
         <div className="member-detail-checkbox">
           <label>
             <input
@@ -56,8 +56,8 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
             />
             <span>
               {current.global_access
-                ? 'Full access to all members'
-                : 'Limited access to own members'}
+                ? t('settings.admin.users.full_access')
+                : t('settings.admin.users.limited_access')}
             </span>
           </label>
         </div>

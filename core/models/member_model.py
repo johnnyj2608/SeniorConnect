@@ -1,6 +1,7 @@
 from django.db import models
 import os
 from django.utils.text import slugify
+from user.models import User
 
 def member_photo_path(instance, filename):
     """Generate file path for new member photo, overwriting existing one."""
@@ -41,6 +42,14 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
+
+    created_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='members_created'
+    )
 
     class Meta:
         ordering = ['sadc_member_id']

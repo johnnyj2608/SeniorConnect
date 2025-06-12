@@ -262,7 +262,10 @@
                 "name": "名称",
                 "email": "电邮",
                 "admin": "管理员",
-                "staff": "员工"
+                "staff": "员工",            
+                "permissions": "权限",
+                "full_access": "对成员的完全访问权限",
+                "limited_access": "对自己成员的有限访问权限"
             },
             "mltc": {
                 "label": "老人中心保险",

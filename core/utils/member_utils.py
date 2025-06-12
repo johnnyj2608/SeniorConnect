@@ -27,6 +27,10 @@ from core.utils.supabase import (
 def getMemberList(request):
     members = Member.objects.select_related('active_auth', 'active_auth__mltc')
 
+    user = request.user
+    if not user.global_access:
+        members = members.filter(created_by=user)
+
     filter_param = request.GET.get('filter')
     if filter_param == "unknown":
         members = members.filter(active_auth__mltc__isnull=True)
@@ -65,7 +69,7 @@ def createMember(request):
         serializer = MemberSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        member = serializer.save()
+        member = serializer.save(created_by=request.user)
         
         if photo:
             first_name = request.data.get("first_name")
@@ -210,6 +214,9 @@ def getMemberProfile(request, pk):
         .select_related('language', 'active_auth', 'active_auth__mltc')
         .get(id=pk)
     )
+
+    if not request.user.global_access and member.created_by != request.user:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     absences = Absence.objects.filter(member=pk)
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)

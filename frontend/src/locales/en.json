@@ -262,7 +262,10 @@
                 "name": "Name",
                 "email": "Email",
                 "admin": "Admin",
-                "staff": "Staff"
+                "staff": "Staff",
+                "permissions": "Permissions",
+                "full_access": "Full access to members",
+                "limited_access": "Limited access to own members"
             },
             "mltc": {
                 "label": "MLTC",
