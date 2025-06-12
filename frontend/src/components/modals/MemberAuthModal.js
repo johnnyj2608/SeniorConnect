@@ -151,21 +151,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                 </select>
             </div>
 
-            <CheckboxInput
-                label={t('member.authorizations.schedule')}
-                options={daysOfWeek}
-                selectedValues={current.schedule}
-                onChange={onScheduleChange}
-                disabled={disabled}
-                translateFn={(val) => t(`general.days_of_week.${val}`)}
-            />
-
-            <AuthorizationServicesTabs
-                services={current.services}
-                disabled={disabled}
-                handleChange={handleChange}
-            />
-
             <div className="member-detail">
                 <label>{t('member.authorizations.care_manager')}</label>
                 <input
@@ -187,6 +172,21 @@ const MemberAuthModal = ({ data, handleChange, activeTab, handleActiveToggle, dr
                     disabled={disabled}
                 />
             </div>
+
+            <CheckboxInput
+                label={t('member.authorizations.schedule')}
+                options={daysOfWeek}
+                selectedValues={current.schedule}
+                onChange={onScheduleChange}
+                disabled={disabled}
+                translateFn={(val) => t(`general.days_of_week.${val}`)}
+            />
+
+            <AuthorizationServicesTabs
+                services={current.services}
+                disabled={disabled}
+                handleChange={handleChange}
+            />
 
             <FileUpload 
                 current={current}

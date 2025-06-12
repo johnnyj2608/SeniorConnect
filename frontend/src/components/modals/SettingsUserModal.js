@@ -7,7 +7,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
   const current = data[activeTab] || {};
   const disabled = data.filter(tab => !tab.deleted).length <= 0;
   const adminUser = current.is_org_admin;
-
+  console.log(current)
   return (
     <>
       <div className="modal-header">
@@ -43,6 +43,24 @@ const SettingsUserModal = ({ data, handleChange, activeTab }) => {
           autoComplete="off"
           disabled={disabled || adminUser}
         />
+      </div>
+      <div className="member-detail">
+        <label>Permissions</label>
+        <div className="member-detail-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              checked={disabled ? false : current.global_access === true}
+              onChange={(e) => handleChange('global_access')({ target: { value: e.target.checked } })}
+              disabled={disabled || adminUser}
+            />
+            <span>
+              {current.global_access
+                ? 'Full access to all members'
+                : 'Limited access to own members'}
+            </span>
+          </label>
+        </div>
       </div>
     </>
   );

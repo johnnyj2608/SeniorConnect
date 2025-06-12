@@ -56,6 +56,7 @@ input:not([type="radio"]):not([type="checkbox"]) {
   padding: 6px;
   border-radius: 4px;
   border: 1px solid var(--color-border);
+  vertical-align: middle;
 }
 
 input[type="checkbox"], 
@@ -708,6 +709,10 @@ input[type="number"]::-webkit-inner-spin-button {
   min-width: 0;
 }
 
+.search-dropdown-container input {
+  flex: 1;
+}
+
 .search-dropdown {
   position: absolute;
   top: 95%;
@@ -851,18 +856,18 @@ input[type="number"]::-webkit-inner-spin-button {
   padding: 3px 5px;
 }
 
-.member-detail label {
+.member-detail > label {
   width: 150px;
   color: var(--color-text-sub);
 }
 
-.member-detail span {
+.member-detail > span {
   display: flex;
   align-items: center;
 }
 
-.member-detail input,
-.member-detail select {
+.member-detail > input,
+.member-detail > select {
   flex: 1;
 }
 
@@ -870,6 +875,23 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
   align-items: start !important;
+}
+
+.member-detail-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-sub);
+  font-size: 15px;
+  flex: 1;
+}
+
+.member-detail-checkbox > label > input {
+  transform: scale(1.5);
+}
+
+.member-detail-checkbox > label {
+  flex-grow: 1;
 }
 
 .member-box {
@@ -1049,10 +1071,11 @@ body.modal-open {
   padding: 10px;
   background-color: var(--color-content);
   z-index: 10;
+  white-space: nowrap;
 }
 
-.modal-checkbox-heading > h3 {
-  white-space: nowrap;
+.modal-header > label > input {
+  transform: scale(1.5);
 }
 
 .checkbox-container {
@@ -1100,6 +1123,10 @@ body.modal-open {
   display: flex;
   justify-content: space-between;
   gap: 5px;
+}
+
+.codes-container > * > input {
+  flex: 1;
 }
 
 .codes-container > :last-child {

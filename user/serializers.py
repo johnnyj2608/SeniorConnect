@@ -17,6 +17,17 @@ class UserSerializer(serializers.ModelSerializer):
             'is_org_admin',
             'is_active',
         ]
+
+    def validate(self, attrs):
+        user_instance = getattr(self, 'instance', None)
+        
+        if user_instance and user_instance.is_org_admin:
+            attrs['global_access'] = True
+        
+        elif not user_instance and attrs.get('is_org_admin', False):
+            attrs['global_access'] = True
+
+        return super().validate(attrs)
     
     def create(self, validated_data):
         request = self.context.get('request')
