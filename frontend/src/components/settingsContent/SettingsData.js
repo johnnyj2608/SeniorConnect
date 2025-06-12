@@ -52,7 +52,9 @@ const SettingsData = () => {
         <SettingsItem label={t('model.mltc')} onClick={handleMLTCModal} />
         <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
         <SettingsItem label={t('settings.data.upload')} onClick={() => console.log('Upload')} />
-        <SettingsItem label={t('settings.data.users.label')} onClick={handleUsersModal} />
+        {user?.is_org_admin && (
+          <SettingsItem label={t('settings.data.users.label')} onClick={handleUsersModal} />
+        )}
 
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />

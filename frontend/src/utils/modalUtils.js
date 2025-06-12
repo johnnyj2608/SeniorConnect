@@ -163,7 +163,6 @@ const getNewTab = (type, localData, id) => {
                 id: 'new',
                 name: '',
                 email: '',
-                role_type: '',
                 is_active: true,
                 edited: true,
             };

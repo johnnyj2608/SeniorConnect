@@ -22,6 +22,12 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         allowed_mltcs = validated_data.pop('allowed_mltcs', [])
 
+        validated_data['preferences'] = {
+            'dark_mode': False,
+            'alt_name': False,
+            'language': 'en'
+        }
+
         if request and hasattr(request.user, 'sadc'):
             validated_data['sadc'] = request.user.sadc
 

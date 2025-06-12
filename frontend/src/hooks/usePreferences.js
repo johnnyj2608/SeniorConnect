@@ -6,9 +6,9 @@ function usePreferences(key, defaultValue = null) {
 
   const backendValue = user?.preferences?.[key];
   const localValue = localStorage.getItem(key);
-  
+
   if (backendValue !== undefined && backendValue !== null) {
-    if (backendValue === localValue) {
+    if (backendValue !== localValue) {
       localStorage.setItem(key, JSON.stringify(backendValue));
     }
     return backendValue;
