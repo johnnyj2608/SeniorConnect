@@ -11,6 +11,8 @@ from ..utils.member_utils import (
     getUpcomingBirthdays,
     toggleMemberStatus,
     getMemberProfile,
+    restoreMember,
+    getDeletedMembers,
 )
 
 @api_view(['GET', 'POST'])
@@ -36,11 +38,15 @@ def getMember(request, pk):
         return deleteMember(request, pk=pk)
     
     if request.method == 'PATCH':
+        return restoreMember(request, pk=pk)
+    
+@api_view(['PATCH'])
+def toggleStatus(request, pk):
+    if request.method == 'PATCH':
         return toggleMemberStatus(request, pk=pk)
     
 @api_view(['GET'])
 def getMemberAuth(request, pk):
-
     if request.method == 'GET':
         return getActiveAuth(request, pk=pk)
     
@@ -58,3 +64,8 @@ def getMembersBirthdays(request):
 def getMemberFull(request, pk):
     if request.method == 'GET':
         return getMemberProfile(request, pk=pk)
+    
+@api_view(['GET'])
+def getMembersDeleted(request):
+    if request.method == 'GET':
+        return getDeletedMembers

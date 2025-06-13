@@ -72,7 +72,7 @@ const MemberPage = () => {
     if (!isConfirmed) return;
 
     try {
-      const response = await fetchWithRefresh(`/core/members/${id}/`, {
+      const response = await fetchWithRefresh(`/core/members/${id}/status/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
       });

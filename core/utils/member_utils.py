@@ -160,8 +160,25 @@ def deleteMember(request, pk):
         except Exception as e:
             print(f"Error deleting photo from Supabase: {e}")
 
-    member.delete()
+    member.soft_delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@member_access_pk
+def restoreMember(request, pk):
+    member = get_object_or_404(Member, id=pk, deleted_at__isnull=False)
+    member.restore()
+    return Response({"detail": "Member restored."}, status=status.HTTP_200_OK)
+
+@member_access_filter
+def getDeletedMembers(request):
+    members = (
+        request.accessible_members_qs.model.objects
+        .filter(deleted_at__isnull=False)
+        .filter(id__in=request.accessible_members_qs.values('id'))
+        .select_related('active_auth', 'active_auth__mltc')
+    )
+    serializer = MemberListSerializer(members, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_filter
 def getActiveMemberStats(request):
@@ -220,8 +237,7 @@ def getUpcomingBirthdays(request):
 @member_access_pk
 def toggleMemberStatus(request, pk):
     member = get_object_or_404(Member, id=pk)
-    member.active = not member.active
-    member.save()
+    member.toggle_active()
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
 @member_access_pk

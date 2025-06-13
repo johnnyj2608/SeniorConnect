@@ -1,6 +1,8 @@
 from django.db import models
 import os
 from django.utils.text import slugify
+from django.utils import timezone
+from django.db.models import Q
 
 def member_photo_path(instance, filename):
     """Generate file path for new member photo, overwriting existing one."""
@@ -17,11 +19,12 @@ class Language(models.Model):
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
+        qs = self.filter(deleted_at__isnull=True)
         if user.is_superuser or getattr(user, 'is_org_admin', False):
-            return self
+            return qs
         allowed_mltcs = user.allowed_mltcs.all()
-        return self.filter(
-            models.Q(active_auth__mltc__in=allowed_mltcs) | models.Q(active_auth__isnull=True)
+        return qs.filter(
+            Q(active_auth__mltc__in=allowed_mltcs) | Q(active_auth__isnull=True)
         )
 
 class MemberManager(models.Manager):
@@ -57,6 +60,7 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = MemberManager()
 
@@ -76,7 +80,6 @@ class Member(models.Model):
     
     @property
     def is_new(self):
-        from django.utils import timezone
         today = timezone.now().date()
         created_date = self.created_at.date() if self.created_at else None
         enrollment_date = self.enrollment_date
@@ -92,3 +95,19 @@ class Member(models.Model):
     @property
     def schedule(self):
         return self.active_auth.schedule if self.active_auth else None
+    
+    @property
+    def is_deleted(self):
+        return self.deleted_at is not None
+
+    def soft_delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
+
+    def restore(self):
+        self.deleted_at = None
+        self.save()
+
+    def toggle_active(self):
+        self.active = not self.active
+        self.save()
