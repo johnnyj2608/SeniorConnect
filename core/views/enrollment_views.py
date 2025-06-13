@@ -7,6 +7,7 @@ from ..utils.enrollment_utils import (
     getEnrollmentList,
     createEnrollment,
     getCurrentMonthEnrollmentStats,
+    getRecentEnrollments,
 )
 
 @api_view(['GET', 'POST'])
@@ -36,3 +37,8 @@ def getEnrollment(request, pk):
 def getEnrollmentStats(request):
     if request.method == 'GET':
         return getCurrentMonthEnrollmentStats(request)
+    
+@api_view(['GET'])
+def getEnrollmentRecent(request):
+    if request.method == 'GET':
+        return getRecentEnrollments(request)

@@ -32,6 +32,7 @@ urlpatterns = [
     path('auths/', authorization_views.getAuthorizations, name="auths"),
 
     # Enrollment related paths
+    path('enrollments/recent/', enrollment_views.getEnrollmentRecent, name="enrollments_recent"),
     path('enrollments/stats/', enrollment_views.getEnrollmentStats, name="enrollments_stats"),
     path('enrollments/', enrollment_views.getEnrollments, name="enrollments"),
 

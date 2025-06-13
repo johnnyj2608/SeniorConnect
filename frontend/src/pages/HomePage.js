@@ -4,6 +4,7 @@ import BirthdaysCard from '../components/homeCards/HomeBirthdaysCard'
 import AuditLogsCard from '../components/homeCards/HomeAuditLogsCard'
 import StatsCard from '../components/homeCards/HomeStatsCard'
 import AbsencesCard from '../components/homeCards/HomeAbsencesCard'
+import EnrollmentsCard from '../components/homeCards/HomeEnrollmentsCard'
 import AssessmentsCard from '../components/homeCards/HomeAssessmentsCard'
 import SnapshotsCard from '../components/homeCards/HomeSnapshotsCard'
 
@@ -22,6 +23,7 @@ const HomePage = () => {
         <div className="home-main-panel">
           <StatsCard />
           <AbsencesCard />
+          <EnrollmentsCard />
           <AssessmentsCard />
           <SnapshotsCard />
         </div>

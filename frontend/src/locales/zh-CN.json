@@ -102,6 +102,7 @@
         "turning_years_old": "将满 {{count}} 岁",
         "audit_log": "审计日志",
         "no_recent_audits": "最近无审计记录",
+        "no_recent_enrollments": "最近没有注册",
         "create": "已创建",
         "update": "已更新",
         "delete": "已删除",

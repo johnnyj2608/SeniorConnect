@@ -3,6 +3,8 @@ from django.db.models import Count, F
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..models.authorization_model import Enrollment
@@ -131,3 +133,21 @@ def getCurrentMonthEnrollmentStats(request):
 
     flat_data['Overall'] = sum(flat_data.values())
     return Response(flat_data, status=status.HTTP_200_OK)
+
+@member_access_filter
+def getRecentEnrollments(request):
+    seven_days_ago = timezone.now() - timedelta(days=7)
+    
+    recent_enrollments = (
+        Enrollment.objects
+        .select_related('member', 'old_mltc', 'new_mltc')
+        .filter(
+            change_date__gte=seven_days_ago,
+            member__isnull=False,
+            member__in=request.accessible_members_qs,
+        )
+        .order_by('-change_date')[:20]
+    )
+
+    serializer = EnrollmentSerializer(recent_enrollments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
