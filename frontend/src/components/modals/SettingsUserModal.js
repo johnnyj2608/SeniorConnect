@@ -50,6 +50,26 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         />
       </div>
 
+      <div className="member-detail">
+        <label>{t('snapshots.label')}</label>
+        <div className="member-detail-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              checked={disabled ? false : current.view_snapshots === true}
+              onChange={(e) => handleChange('view_snapshots')({ target: { value: e.target.checked } })}
+              disabled={disabled || adminUser}
+            />
+            <span>
+              {current.view_snapshots
+                ? t('settings.admin.users.can_view_snapshots')
+                : t('settings.admin.users.cant_view_snapshots')
+              }
+            </span>
+          </label>
+        </div>
+      </div>
+
       <CheckboxInput
         label={t('settings.admin.mltc.label')} 
         options={mltcOptions}

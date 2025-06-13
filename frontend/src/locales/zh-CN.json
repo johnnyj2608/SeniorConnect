@@ -263,7 +263,9 @@
                 "name": "名称",
                 "email": "电邮",
                 "admin": "管理员",
-                "staff": "员工"
+                "staff": "员工",
+                "can_view_snapshots": "可以查看快照",
+                "cant_view_snapshots": "无法查看快照"
             },
             "mltc": {
                 "label": "老人中心保险",

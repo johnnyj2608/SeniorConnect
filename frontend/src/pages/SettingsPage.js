@@ -11,7 +11,7 @@ import SettingsItem from '../components/items/SettingsItem';
 const sections = [
     { label: 'settings.general.label', component: <SettingsGeneral />, id: 'settings-general' },
     { label: 'settings.admin.label', component: <SettingsAdmin />, id: 'settings-admin', adminOnly: true },
-    { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots' },
+    { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots', snapShotOnly: true },
     { label: 'settings.support.label', component: <SettingsSupport />, id: 'settings-support' },
     { label: 'settings.account.label', component: <SettingsAccount />, id: 'settings-account' },
 ];
@@ -68,16 +68,19 @@ const SettingsPage = () => {
             <div className="settings-body content-padding">
                 <div className="settings-nav">
                     {sections.map((section) => {
-                        if (section.adminOnly && !user?.is_org_admin) return null;
+                        if (!user?.is_org_admin) {
+                            if (section.adminOnly) return null;
+                            if (section.snapShotOnly && !user?.view_snapshots) return null;
+                        }
 
                         return (
-                        <SettingsItem
-                            key={section.id}
-                            label={t(section.label)}
-                            isNav={true}
-                            isActive={active === section.id}
-                            onClick={() => handleScrollToSection(section.id)}
-                        />
+                            <SettingsItem
+                                key={section.id}
+                                label={t(section.label)}
+                                isNav={true}
+                                isActive={active === section.id}
+                                onClick={() => handleScrollToSection(section.id)}
+                            />
                         );
                     })}
                 </div>

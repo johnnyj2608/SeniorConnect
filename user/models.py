@@ -30,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     preferences = models.JSONField(default=dict, blank=True)
     allowed_mltcs = models.ManyToManyField(MLTC, blank=True, related_name='users')
+    view_snapshots = models.BooleanField(default=False)
     is_org_admin = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)

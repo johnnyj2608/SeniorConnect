@@ -102,6 +102,7 @@
         "turning_years_old": "Turning {{count}}",
         "audit_log": "Audit Log",
         "no_recent_audits": "No recent audits",
+        "no_recent_enrollments": "No recent enrollments",
         "create": "Created",
         "update": "Updated",
         "delete": "Deleted",
@@ -262,7 +263,9 @@
                 "name": "Name",
                 "email": "Email",
                 "admin": "Admin",
-                "staff": "Staff"
+                "staff": "Staff",
+                "can_view_snapshots": "Can view snapshots",
+                "cant_view_snapshots": "Can not view snapshots"
             },
             "mltc": {
                 "label": "MLTC",

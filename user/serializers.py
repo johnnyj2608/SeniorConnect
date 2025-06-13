@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'preferences',
+            'view_snapshots',
             'allowed_mltcs',
             'password',
             'is_org_admin',
@@ -27,6 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
             'alt_name': False,
             'language': 'en'
         }
+
+        if validated_data.get('is_org_admin'):
+            validated_data['view_snapshots'] = True
 
         if request and hasattr(request.user, 'sadc'):
             validated_data['sadc'] = request.user.sadc
@@ -47,6 +51,9 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         allowed_mltcs = validated_data.pop('allowed_mltcs', None)
+
+        if instance.is_org_admin or validated_data.get('is_org_admin'):
+            validated_data['view_snapshots'] = True
 
         user = super().update(instance, validated_data)
 
