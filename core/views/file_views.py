@@ -23,15 +23,15 @@ def getFiles(request):
 def getFile(request, pk):
 
     if request.method == 'GET':
-        return getFileDetail(request, pk)
+        return getFileDetail(request, pk=pk)
 
     if request.method == 'PUT':
-        return updateFile(request, pk)
+        return updateFile(request, pk=pk)
 
     if request.method == 'DELETE':
-        return deleteFile(request, pk)
+        return deleteFile(request, pk=pk)
     
 @api_view(['GET'])
 def getFilesByMember(request, pk):
     if request.method == 'GET':
-        return getFileListByMember(request, pk)
+        return getFileListByMember(request, member_pk=pk)

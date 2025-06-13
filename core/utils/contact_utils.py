@@ -4,6 +4,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializers import ContactSerializer
+from ..access import member_access_filter, member_access_fk
 
 def getContactList(request):
     contacts = Contact.objects.prefetch_related('members').all()
@@ -17,8 +18,8 @@ def getContactDetail(request, pk):
 
 def createContact(request):
     data = request.data
-    member_ids = data.getlist('members')
-    member = get_object_or_404(Member, id=member_ids[-1])
+    member_pks = data.getlist('members')
+    member = get_object_or_404(Member, id=member_pks[-1])
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
@@ -31,10 +32,11 @@ def createContact(request):
     serializer = ContactSerializer(contact)
     return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
 
-def updateContact(request, pk, member_id):
+@member_access_fk
+def updateContact(request, pk, member_pk):
     data = request.data
     contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
-    member = get_object_or_404(Member, id=member_id)
+    member = get_object_or_404(Member, id=member_pk)
     contact._acting_member = member
 
     serializer = ContactSerializer(instance=contact, data=data)
@@ -49,11 +51,12 @@ def updateContact(request, pk, member_id):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def deleteContact(request, pk, member_id):
+@member_access_fk
+def deleteContact(request, pk, member_pk):
     contact = get_object_or_404(Contact, id=pk)
     members = contact.members.all()
 
-    deletedMember = members.filter(id=member_id).first()
+    deletedMember = members.filter(id=member_pk).first()
 
     if deletedMember:
         contact.members.remove(deletedMember)
@@ -64,6 +67,7 @@ def deleteContact(request, pk, member_id):
     
     return Response({'detail': 'Member association removed'}, status=status.HTTP_200_OK)
 
+@member_access_filter
 def getContactListByMember(request, member_pk):
     contacts = Contact.objects.prefetch_related('members').filter(members__id=member_pk)
     serializer = ContactSerializer(contacts, many=True)
@@ -72,7 +76,7 @@ def getContactListByMember(request, member_pk):
 def searchContactList(request):
     contact_type = request.query_params.get('contact_type', '')
     name_query = request.query_params.get('name', '')
-    member_id = request.query_params.get('member_id', None)
+    member_pk = request.query_params.get('member_pk', None)
     
     contacts = Contact.objects.all()
 
@@ -82,8 +86,8 @@ def searchContactList(request):
     if contact_type:
         contacts = contacts.filter(contact_type=contact_type)
 
-    if member_id:
-        contacts = contacts.exclude(members__id=member_id)
+    if member_pk:
+        contacts = contacts.exclude(members__id=member_pk)
 
     contacts = contacts.prefetch_related('members')
     serializer = ContactSerializer(contacts, many=True)

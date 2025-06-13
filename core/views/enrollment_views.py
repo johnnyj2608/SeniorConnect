@@ -23,13 +23,13 @@ def getEnrollments(request):
 def getEnrollment(request, pk):
 
     if request.method == 'GET':
-        return getEnrollmentDetail(request, pk)
+        return getEnrollmentDetail(request,  pk=pk)
 
     if request.method == 'PUT':
-        return updateEnrollment(request, pk)
+        return updateEnrollment(request,  pk=pk)
 
     if request.method == 'DELETE':
-        return deleteEnrollment(request, pk)
+        return deleteEnrollment(request,  pk=pk)
 
 
 @api_view(['GET'])

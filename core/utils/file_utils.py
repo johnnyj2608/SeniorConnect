@@ -6,17 +6,21 @@ from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
 from core.utils.supabase import *
 from django.utils.text import slugify
+from ..access import member_access_filter, member_access_pk, member_access_fk
 
+@member_access_filter
 def getFileList(request):
-    files = File.objects.select_related('member').all()
+    files = File.objects.select_related('member').filter(member__in=request.accessible_members_qs)
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@member_access_fk
 def getFileDetail(request, pk):
     file = get_object_or_404(File.objects.select_related('member'), id=pk)
     serializer = FileSerializer(file)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@member_access_fk
 @transaction.atomic
 def createFile(request):
     data = request.data.copy()
@@ -57,6 +61,7 @@ def createFile(request):
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 @transaction.atomic
 def updateFile(request, pk):
     data = request.data.copy()
@@ -98,6 +103,7 @@ def updateFile(request, pk):
             delete_file_from_supabase(public_url)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 def deleteFile(request, pk):
     file = get_object_or_404(File, id=pk)
     if file.file:
@@ -106,7 +112,7 @@ def deleteFile(request, pk):
     file.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+@member_access_pk
 def getFileListByMember(request, member_pk):
     files = File.objects.select_related('member').filter(member=member_pk)
     serializer = FileSerializer(files, many=True)

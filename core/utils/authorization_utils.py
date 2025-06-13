@@ -14,17 +14,25 @@ from core.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
+from ..access import member_access_filter, member_access_pk, member_access_fk
 
+@member_access_filter
 def getAuthorizationList(request):
-    authorizations = Authorization.objects.select_related('mltc', 'member').all()
+    authorizations = (
+        Authorization.objects
+        .select_related('mltc', 'member')
+        .filter(member__in=request.accessible_members_qs)
+    )
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@member_access_fk
 def getAuthorizationDetail(request, pk):
     authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
     serializer = AuthorizationSerializer(authorization)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@member_access_fk
 @transaction.atomic
 def createAuthorization(request):
     data = request.data.copy()
@@ -84,6 +92,7 @@ def createAuthorization(request):
             delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 @transaction.atomic
 def updateAuthorization(request, pk):
     data = request.data.copy()
@@ -153,11 +162,20 @@ def updateAuthorization(request, pk):
             delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 def deleteAuthorization(request, pk):
     authorization = get_object_or_404(Authorization, id=pk)
+
+    if authorization.file:
+        try:
+            delete_file_from_supabase(authorization.file)
+        except Exception as e:
+            print(f"Error deleting file from Supabase: {e}")
+
     authorization.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+@member_access_pk
 def getAuthorizationListByMember(request, member_pk):
     authorizations = (
         Authorization.objects

@@ -6,6 +6,7 @@ from collections import defaultdict
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
+
 from ..models.member_model import Member
 from ..models.authorization_model import MLTC
 from ..serializers.member_serializers import (
@@ -23,10 +24,11 @@ from core.utils.supabase import (
     delete_file_from_supabase,
     delete_folder_from_supabase
 )
+from ..access import member_access_filter, member_access_pk
 
+@member_access_filter
 def getMemberList(request):
-    user = request.user
-    members = Member.objects.select_related('active_auth', 'active_auth__mltc').accessible_by(user)
+    members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
     filter_param = request.GET.get('filter')
     if filter_param == "unknown":
@@ -48,6 +50,7 @@ def getMemberList(request):
 
     return Response(data, status=status.HTTP_200_OK)
 
+@member_access_pk
 def getMemberDetail(request, pk):
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     serializer = MemberSerializer(member)
@@ -66,11 +69,11 @@ def createMember(request):
         serializer = MemberSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        member = serializer.save(created_by=request.user)
-        
+        member = serializer.save()
+
         if photo:
-            first_name = request.data.get("first_name")
-            last_name = request.data.get("last_name")
+            first_name = data.get("first_name", "")
+            last_name = data.get("last_name", "")
             member_name = slugify(f"{first_name} {last_name}")
             new_path = f"{member.id}/{member_name}"
 
@@ -91,10 +94,11 @@ def createMember(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
     except Exception as e:
-        if public_url:
+        if public_url and 'member' in locals():
             delete_folder_from_supabase(f"{member.id}/")
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_pk
 @transaction.atomic
 def updateMember(request, pk):
     data = request.data.copy()
@@ -104,8 +108,8 @@ def updateMember(request, pk):
     try:
         if 'photo' in request.FILES:
             photo = request.FILES['photo']
-            first_name = request.data.get("first_name")
-            last_name = request.data.get("last_name")
+            first_name = data.get("first_name")
+            last_name = data.get("last_name")
             member_name = slugify(f"{first_name} {last_name}")
             new_path = f"{member.id}/{member_name}"
 
@@ -136,8 +140,9 @@ def updateMember(request, pk):
         print(e)
         if public_url:
             delete_file_from_supabase(public_url)
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@member_access_pk
 def getActiveAuth(request, pk):
     member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     if member.active_auth:
@@ -145,6 +150,7 @@ def getActiveAuth(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({}, status=status.HTTP_200_OK)
 
+@member_access_pk
 def deleteMember(request, pk):
     member = get_object_or_404(Member, id=pk)
 
@@ -157,18 +163,25 @@ def deleteMember(request, pk):
     member.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+@member_access_filter
 def getActiveMemberStats(request):
-    active_count = Member.objects.filter(active=True, active_auth__isnull=False).count()
+    user = request.user
+    accessible_members = request.accessible_members_qs
+    allowed_mltcs = user.allowed_mltcs.all()
+
+    active_count = accessible_members.filter(active=True, active_auth__isnull=False).count()
 
     try:
         mltc_counts = (
             MLTC.objects
+            .filter(id__in=allowed_mltcs)
             .annotate(
                 count=Count(
                     'authorization__member',
                     filter=Q(
                         authorization__active=True,
                         authorization__member__active=True,
+                        authorization__member__in=accessible_members
                     ),
                     distinct=True,
                 )
@@ -185,6 +198,7 @@ def getActiveMemberStats(request):
         "mltc_count": list(mltc_counts),
     }, status=status.HTTP_200_OK)
 
+@member_access_filter
 def getUpcomingBirthdays(request):
     today = timezone.now().date()
 
@@ -193,30 +207,26 @@ def getUpcomingBirthdays(request):
         future_day = today + timedelta(days=i)
         birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
 
-    members = Member.objects.filter(active=True).filter(birthday_queries)
+    members = (
+        request.accessible_members_qs
+        .filter(active=True)
+        .filter(birthday_queries)
+    )
 
     serializer = MemberBirthdaySerializer(members, many=True)
     sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])[:20]
     return Response(sorted_data, status=status.HTTP_200_OK)
 
+@member_access_pk
 def toggleMemberStatus(request, pk):
     member = get_object_or_404(Member, id=pk)
     member.active = not member.active
     member.save()
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
+@member_access_pk
 def getMemberProfile(request, pk):
-    user = request.user
-    
-    try:
-        member = (
-            Member.objects
-            .select_related('language', 'active_auth', 'active_auth__mltc')
-            .accessible_by(user)
-            .get(id=pk)
-        )
-    except Member.DoesNotExist:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
 
     absences = Absence.objects.filter(member=pk)
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)

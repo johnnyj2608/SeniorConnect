@@ -23,16 +23,16 @@ def getAuthorizations(request):
 def getAuthorization(request, pk):
 
     if request.method == 'GET':
-        return getAuthorizationDetail(request, pk)
+        return getAuthorizationDetail(request, pk=pk)
 
     if request.method == 'PUT':
-        return updateAuthorization(request, pk)
+        return updateAuthorization(request, pk=pk)
 
     if request.method == 'DELETE':
-        return deleteAuthorization(request, pk)
+        return deleteAuthorization(request, pk=pk)
     
 
 @api_view(['GET'])
 def getAuthorizationsByMember(request, pk):
     if request.method == 'GET':
-        return getAuthorizationListByMember(request, pk)
+        return getAuthorizationListByMember(request, member_pk=pk)

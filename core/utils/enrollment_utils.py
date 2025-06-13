@@ -7,9 +7,15 @@ from rest_framework.generics import get_object_or_404
 from ..models.member_model import Member
 from ..models.authorization_model import Enrollment
 from ..serializers.authorization_serializers import EnrollmentSerializer
+from ..access import member_access_filter, member_access_fk
 
+@member_access_filter
 def getEnrollmentList(request):
-    enrollments = Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc').all()
+    enrollments = (
+        Enrollment.objects
+        .select_related('member', 'old_mltc', 'new_mltc')
+        .filter(member__in=request.accessible_members_qs)
+    )
     filter_param = request.GET.get('filter')
     if filter_param:
         enrollments = enrollments.filter(change_type__iexact=filter_param)
@@ -18,11 +24,13 @@ def getEnrollmentList(request):
     serializer = EnrollmentSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+@member_access_fk
 def getEnrollmentDetail(request, pk):
     enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
     serializer = EnrollmentSerializer(enrollment)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@member_access_fk
 def createEnrollment(request):
     data = request.data.copy()
     member_id = data.get('member')
@@ -60,6 +68,7 @@ def createEnrollment(request):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 def updateEnrollment(request, pk):
     data = request.data
     enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
@@ -75,19 +84,25 @@ def updateEnrollment(request, pk):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@member_access_fk
 def deleteEnrollment(request, pk):
     enrollment = get_object_or_404(Enrollment, id=pk)
     enrollment.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+@member_access_filter
 def getCurrentMonthEnrollmentStats(request):
     today = now()
     current_year = today.year
     current_month = today.month
 
-    enrollments = Enrollment.objects.filter(
-        change_date__year=current_year,
-        change_date__month=current_month,
+    enrollments = (
+        Enrollment.objects
+        .filter(
+            change_date__year=current_year,
+            change_date__month=current_month,
+            member__in=request.accessible_members_qs
+        )
     )
 
     enroll_count = (

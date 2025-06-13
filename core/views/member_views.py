@@ -27,22 +27,22 @@ def getMembers(request):
 def getMember(request, pk):
 
     if request.method == 'GET':
-        return getMemberDetail(request, pk)
+        return getMemberDetail(request, pk=pk)
 
     if request.method == 'PUT':
-        return updateMember(request, pk)
+        return updateMember(request, pk=pk)
 
     if request.method == 'DELETE':
-        return deleteMember(request, pk)
+        return deleteMember(request, pk=pk)
     
     if request.method == 'PATCH':
-        return toggleMemberStatus(request, pk)
+        return toggleMemberStatus(request, pk=pk)
     
 @api_view(['GET'])
 def getMemberAuth(request, pk):
 
     if request.method == 'GET':
-        return getActiveAuth(request, pk)
+        return getActiveAuth(request, pk=pk)
     
 @api_view(['GET'])
 def getMembersStats(request):
@@ -57,4 +57,4 @@ def getMembersBirthdays(request):
 @api_view(['GET'])
 def getMemberFull(request, pk):
     if request.method == 'GET':
-        return getMemberProfile(request, pk)
+        return getMemberProfile(request, pk=pk)
