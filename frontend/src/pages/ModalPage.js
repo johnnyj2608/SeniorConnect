@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'; // ← Added useState
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
@@ -7,6 +7,7 @@ import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
 import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
+import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModal from '../hooks/useModal';
@@ -88,6 +89,14 @@ const ModalPage = ({ data, onClose }) => {
             case 'mltcs':
                 return (
                     <SettingsMltcModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                        activeTab={activeTab} 
+                    />
+                );
+            case 'languages':
+                return (
+                    <SettingsLanguageModal 
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab} 

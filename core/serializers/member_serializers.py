@@ -25,6 +25,7 @@ class MemberSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    language_name = serializers.ReadOnlyField(source='language.name')
 
     mltc = serializers.PrimaryKeyRelatedField(
         queryset=MLTC.objects.all(),

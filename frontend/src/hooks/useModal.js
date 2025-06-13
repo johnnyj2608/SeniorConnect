@@ -255,6 +255,12 @@ function useModal(data, onClose) {
 
                 savedData = await saveDataTabs(updatedData, 'mltcs');
                 break;
+            case 'languages':
+                requiredFields = ['name'];
+                if (!validateRequiredFields('settings.data.language', updatedData, requiredFields)) return;
+
+                savedData = await saveDataTabs(updatedData, 'languages');
+                break;
 
             default:
                 console.error("Unknown save type:", type);

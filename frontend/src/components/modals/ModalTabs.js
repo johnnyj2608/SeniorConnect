@@ -66,6 +66,10 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     heading: item.name || t('members.unknown'),
                     inactive: item.active === false,
                 };
+            case 'languages':
+                return { 
+                    heading: item.name || t('members.unknown'),
+                };
             default:
                 return { heading: t('members.unknown'), subheading: '' };
         }

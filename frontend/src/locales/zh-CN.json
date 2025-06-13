@@ -273,6 +273,10 @@
                 "name": "名称",
                 "dx_codes": "诊断代码",
                 "click_to_add_more": "点击添加更多"
+            },
+            "language": {
+                "label": "语言",
+                "name": "名称"
             }
         },
         "support": {

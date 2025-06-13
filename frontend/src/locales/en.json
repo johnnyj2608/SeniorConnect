@@ -273,6 +273,10 @@
                 "name": "Name",
                 "dx_codes": "DX Codes",
                 "click_to_add_more": "Click to add more"
+            },
+            "language": {
+                "label": "Language",
+                "name": "Name"
             }
         },
         "support": {

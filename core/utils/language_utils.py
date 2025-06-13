@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -5,7 +6,9 @@ from ..models.member_model import Language
 from ..serializers.member_serializers import LanguageSerializer
 
 def getLanguageList(request):
-    languages = Language.objects.all()
+    languages = Language.objects.annotate(
+        usage_count=Count('members')
+    ).order_by('-usage_count')
     serializer = LanguageSerializer(languages, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

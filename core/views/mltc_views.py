@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAdminUser
+from user.permissions import IsAdminUser
 from ..utils.mltc_utils import (
     updateMLTC,
     getMLTCDetail,
@@ -14,12 +14,12 @@ def getMLTCs(request):
     if request.method == 'GET':
         return getMLTCList(request)
 
-    permission = IsAdminUser()
-    if not permission.has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=403)
-
-    return createMLTC(request)
-
+    
+    if request.method == 'POST':
+        permission = IsAdminUser()
+        if not permission.has_permission(request, None):
+            return Response({'detail': 'Admin access required.'}, status=403)
+        return createMLTC(request)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def getMLTC(request, pk):

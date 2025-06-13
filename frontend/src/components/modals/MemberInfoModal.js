@@ -192,22 +192,24 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
             <div className="member-detail stack">
                 <label>{t('member.info.gender')} *</label>
                 <div className="radio-group">
-                    <label>{t('general.male')}</label>
-                    <input
-                        type="radio"
-                        name="gender"
-                        value="M"
-                        checked={data.gender === 'M'}
-                        onChange={handleChange('gender')}
-                    />
-                    <label>{t('general.female')}</label>
-                    <input
-                        type="radio"
-                        name="gender"
-                        value="F"
-                        checked={data.gender === 'F'}
-                        onChange={handleChange('gender')}
-                    />
+                    <label>{t('general.male')}
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="M"
+                            checked={data.gender === 'M'}
+                            onChange={handleChange('gender')}
+                        />
+                    </label>
+                    <label>{t('general.female')}
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="F"
+                            checked={data.gender === 'F'}
+                            onChange={handleChange('gender')}
+                        />
+                    </label>
                 </div>
             </div>
 
@@ -220,8 +222,8 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                 >
                     <option value="">{t('general.select_an_option')}</option>
                     {languageOptions.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
+                        <option key={option.name} value={option.id}>
+                            {option.name}
                         </option>
                     ))}
                 </select>

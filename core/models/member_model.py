@@ -44,7 +44,7 @@ class Member(models.Model):
     email = models.EmailField(null=True, blank=True)
     medicaid = models.CharField(max_length=8, null=True, blank=True)
     ssn = models.CharField(max_length=9, null=True, blank=True)
-    language = models.ForeignKey('Language', null=True, blank=True, on_delete=models.SET_NULL)
+    language = models.ForeignKey('Language', null=True, blank=True, on_delete=models.SET_NULL, related_name='members')
     enrollment_date = models.DateField(null=True, blank=True) 
     note = models.TextField(null=True, blank=True)
     active_auth = models.OneToOneField(

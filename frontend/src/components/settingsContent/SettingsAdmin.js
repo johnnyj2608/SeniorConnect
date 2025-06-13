@@ -11,34 +11,23 @@ const SettingsAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
 
-  const handleMLTCModal = useCallback(async () => {
-    if (!user?.is_org_admin) return;
-    try {
-      const response = await fetchWithRefresh(`/core/mltcs`);
-      if (!response.ok) return;
+  const openModal = useCallback(
+    async (endpoint, type) => {
+      if (!user?.is_org_admin) return;
 
-      const data = await response.json();
-      setModalData({ type: 'mltcs', data });
-      setModalOpen(true);
-    } catch (error) {
-      console.error(error);
-      alert(t('settings.data.error_load', 'Could not load data. Please try again.'));
-    }
-  }, [t, user?.is_org_admin]);
+      try {
+        const response = await fetchWithRefresh(endpoint);
+        if (!response.ok) return;
 
-  const handleUsersModal = useCallback(async () => {
-    if (!user?.is_org_admin) return;
-    try {
-      const response = await fetchWithRefresh(`/user/users`);
-      if (!response.ok) return;
-
-      const data = await response.json();
-      setModalData({ type: 'users', data });
-      setModalOpen(true);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [user]);
+        const data = await response.json();
+        setModalData({ type, data });
+        setModalOpen(true);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [user?.is_org_admin]
+  );
 
   const handleModalClose = useCallback(() => {
     setModalOpen(false);
@@ -51,9 +40,9 @@ const SettingsAdmin = () => {
     <>
       <h3 className="section-title">{t('settings.admin.label')}</h3>
       <div className="section-main">
-        <SettingsItem label={t('model.mltc')} onClick={handleMLTCModal} />
-        <SettingsItem label={t('settings.general.language')} onClick={() => console.log('Language')} />
-        <SettingsItem label={t('settings.admin.users.label')} onClick={handleUsersModal} />
+        <SettingsItem label={t('model.mltc')} onClick={() => openModal('/core/mltcs', 'mltcs')} />
+        <SettingsItem label={t('settings.general.language')} onClick={() => openModal('/core/languages', 'languages')} />
+        <SettingsItem label={t('settings.admin.users.label')} onClick={() => openModal('/user/users', 'users')} />
 
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />

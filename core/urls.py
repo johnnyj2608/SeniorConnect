@@ -24,6 +24,7 @@ urlpatterns = [
     path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
     
     # Language related paths
+    path('languages/<str:pk>/', language_views.getLanguage, name="language"),
     path('languages/', language_views.getLanguages, name="languages"),
 
     # Authorization related paths
