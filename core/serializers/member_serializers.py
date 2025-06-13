@@ -58,6 +58,7 @@ class MemberSerializer(serializers.ModelSerializer):
 class MemberListSerializer(serializers.ModelSerializer):
     mltc = serializers.ReadOnlyField(source='active_auth.mltc.name')
     schedule = serializers.ReadOnlyField(source='active_auth.schedule')
+    new = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
@@ -73,6 +74,17 @@ class MemberListSerializer(serializers.ModelSerializer):
             'active',
             'mltc',
             'schedule',
+            'new',
+        )
+
+    def get_new(self, obj):
+        today = timezone.now().date()
+        created_date = obj.created_at.date() if obj.created_at else None
+        enrollment_date = obj.enrollment_date
+
+        return (
+            (created_date and (today - created_date).days <= 30) or
+            (enrollment_date and (today - enrollment_date).days <= 30)
         )
 
 class MemberBirthdaySerializer(DaysUntilMixin, serializers.ModelSerializer):

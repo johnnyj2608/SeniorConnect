@@ -113,7 +113,8 @@
         "unknown": "Unknown",
         "search_members": "Search Members",
         "search_id_or_name": "Search ID or Name",
-        "inactive": "Inactive"
+        "inactive": "Inactive",
+        "new": "New"
     },
     "member": {
         "confirm_update": "Are you sure you want to {{action}} this member?",

@@ -113,7 +113,8 @@
         "unknown": "未知",
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
-        "inactive": "未激活"
+        "inactive": "未激活",
+        "new": "新会员"
     },
     "member": {
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",

@@ -1,11 +1,14 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { formatDate, formatPhone, formatSchedule, formatPhoto } from '../../utils/formatUtils';
 import NameDisplay from '../layout/NameDisplay';
 
 const ListItem = ({ member }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="members-list-item">
+    <div className={`members-list-item${member.new ? ' new' : ''}`}>
       <Link to={`/member/${member.id}`}>
         <img 
             src={formatPhoto(member.photo)} 
@@ -30,6 +33,7 @@ const ListItem = ({ member }) => {
               <p>{formatSchedule(member.schedule, true)}</p>
           )}
         </div>
+        {member.new && <span className="members-list-item-new">{t('members.new')}</span>}
       </Link>
     </div>
   )

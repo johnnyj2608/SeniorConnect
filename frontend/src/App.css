@@ -24,6 +24,10 @@
   --color-green: #10B981;
   --color-danger: #E02E2A;
   --color-danger-hover: #911E1B;
+  --color-danger-background: #ffe0e0;
+  --color-good: #00ac47;
+  --color-good-hover: #146c2e;
+  --color-good-background: #e7f8ed;
 }
 
 .dark {
@@ -761,6 +765,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .members-list-item {
   display: flex;
+  position: relative;
   flex-direction: column;
   border: 1px solid  var(--color-border);
   border-radius: 8px;
@@ -775,6 +780,20 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   transform: scale(1.03);
   transition: all 0.2s ease;
+}
+
+.members-list-item-new {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  text-transform: uppercase;
+  padding: 0.1rem;
+  color: var(--color-good);
+  background-color: var(--color-good-background);
+  font-weight: bold;
+  border-bottom: 2px solid var(--color-good);
 }
 
 .members-list-photo {
@@ -977,7 +996,7 @@ input[type="number"]::-webkit-inner-spin-button {
   top: 55px;
   left: 0;
   right: 0;
-  background-color: #ffe0e0;
+  background-color: var(--color-danger-background);
   color: var(--color-danger);
   text-align: center;
   font-weight: bold;
