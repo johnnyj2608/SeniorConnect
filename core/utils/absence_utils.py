@@ -84,7 +84,6 @@ def deleteAbsence(request, pk):
 
 @member_access_fk
 def getAbsenceListByMember(request, member_pk):
-    print('yo')
     absences = Absence.objects.select_related('member').filter(member=member_pk)
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

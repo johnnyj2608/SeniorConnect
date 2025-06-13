@@ -7,9 +7,7 @@ const ReportAuditsExpanded = ({ entry }) => {
   
     const baseKey = entry.model_name === 'member'
         ? 'info'
-        : entry.model_name !== 'authorization'
-        ? `${entry.model_name}s`
-        : 'authorization';
+        : `${entry.model_name}s`;
   
     const translateBool = (val) => {
         if (val === true) return t('general.yes');
@@ -22,28 +20,28 @@ const ReportAuditsExpanded = ({ entry }) => {
             <td colSpan={5}>
                 <span className="modal-main">
                     ↪&nbsp;<p>
-                    {formatObjectDisplay(entry, t)}
-                    {Object.entries(entry.changes).map(([field, { old, new: newVal }], i) => {
-                        const label = t(`member.${baseKey}.${field}`);
-        
-                        const formatChange = (val) => {
-                            if (!val) return '—';
-                        
-                            const isTimeString = (v) => /^\d{2}:\d{2}:\d{2}$/.test(v);
-                            const date = new Date(val);
-
-                            if (!isNaN(date) && val.length === 10) return formatDate(date);
-                            if (isTimeString(val)) return formatTime(val); 
-                            return translateBool(val);
-                        };
+                        {formatObjectDisplay(entry, t)}
+                        {Object.entries(entry.changes).map(([field, { old, new: newVal }], i) => {
+                            const label = t(`member.${baseKey}.${field}`);
+            
+                            const formatChange = (val) => {
+                                if (!val) return '—';
                             
-                        return (
-                            <Fragment key={i}>
-                                — {label}: {formatChange(old)} → {formatChange(newVal)}
-                                <br />
-                            </Fragment>
-                        );
-                    })}
+                                const isTimeString = (v) => /^\d{2}:\d{2}:\d{2}$/.test(v);
+                                const date = new Date(val);
+
+                                if (!isNaN(date) && val.length === 10) return formatDate(date);
+                                if (isTimeString(val)) return formatTime(val); 
+                                return translateBool(val);
+                            };
+                                
+                            return (
+                                <Fragment key={i}>
+                                    — {label}: {formatChange(old)} → {formatChange(newVal)}
+                                    <br />
+                                </Fragment>
+                            );
+                        })}
                     </p>
                 </span>
             </td>

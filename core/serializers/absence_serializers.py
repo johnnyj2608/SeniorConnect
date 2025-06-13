@@ -24,7 +24,6 @@ class AbsenceSerializer(MemberNameSerializer, DateRangeValidationMixin):
         return self.validate_date_range(data)
 
 class AbsenceUpcomingSerializer(DaysUntilMixin, MemberNameSerializer):
-    status = serializers.SerializerMethodField()
     days_until = serializers.SerializerMethodField()
     
     class Meta:
@@ -36,18 +35,8 @@ class AbsenceUpcomingSerializer(DaysUntilMixin, MemberNameSerializer):
             'member_name',
             'alt_name',
             'absence_type',
-            'status',
             'days_until',
         ]
-
-    def get_status(self, obj):
-        today = timezone.now().date()
-
-        if obj.start_date >= today:
-            return "Leaving"
-        if obj.end_date and obj.end_date >= today:
-            return "Returning"
-        return "N/A"
 
     def get_target_date(self, obj):
         today = timezone.now().date()

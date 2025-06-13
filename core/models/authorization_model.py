@@ -1,26 +1,10 @@
 from django.db import models
 import datetime
 
-class MLTCQuerySet(models.QuerySet):
-    def accessible_by(self, user):
-        if user.is_superuser or getattr(user, 'is_org_admin', False):
-            return self
-        allowed_mltcs = user.allowed_mltcs.all()
-        return self.filter(id__in=allowed_mltcs)
-
-class MLTCManager(models.Manager):
-    def get_queryset(self):
-        return MLTCQuerySet(self.model, using=self._db)
-
-    def accessible_by(self, user):
-        return self.get_queryset().accessible_by(user)
-
 class MLTC(models.Model):
     name = models.CharField(max_length=255, unique=True)
     dx_codes = models.JSONField(default=list)
     active = models.BooleanField(default=True)
-
-    objects = MLTCManager()
 
     class Meta:
         ordering = ['active',  'name']

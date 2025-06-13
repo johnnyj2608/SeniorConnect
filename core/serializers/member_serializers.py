@@ -4,31 +4,21 @@ from ..models.authorization_model import MLTC
 from django.utils import timezone
 from .mixins import DaysUntilMixin
 
-class MemberNameSerializer(serializers.ModelSerializer):
-    sadc_member_id = serializers.ReadOnlyField(source='member.sadc_member_id')
-    alt_name = serializers.ReadOnlyField(source='member.alt_name')
-    member_name = serializers.SerializerMethodField()
-
-    class Meta:
-        abstract = True
-
-    def get_member_name(self, obj):
-        member = obj.member
-        if member:
-            return f"{member.last_name}, {member.first_name}"
-        return None
-
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = '__all__'
 
-class MemberSerializer(serializers.ModelSerializer):
-    active = serializers.BooleanField(required=False, default=True)
+class MemberNameSerializer(serializers.ModelSerializer):
+    sadc_member_id = serializers.ReadOnlyField(source='member.sadc_member_id')
+    alt_name = serializers.ReadOnlyField(source='member.alt_name')
+    member_name = serializers.ReadOnlyField(source='member.formal_name')
+
+    class Meta:
+        abstract = True
     
-    
 class MemberSerializer(serializers.ModelSerializer):
-    active = serializers.BooleanField(required=False, default=True)
+    active = serializers.BooleanField(required=False, default=True) # Active default to True
     
     language = serializers.PrimaryKeyRelatedField(
         queryset=Language.objects.all(),
@@ -45,20 +35,11 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         exclude = ['created_at', 'updated_at']
-    mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
-        required=False,
-        allow_null=True
-    )
-
-    class Meta:
-        model = Member
-        exclude = ['created_at', 'updated_at']
 
 class MemberListSerializer(serializers.ModelSerializer):
-    mltc = serializers.ReadOnlyField(source='active_auth.mltc.name')
-    schedule = serializers.ReadOnlyField(source='active_auth.schedule')
-    new = serializers.SerializerMethodField()
+    mltc = serializers.ReadOnlyField(source='mltc_name')
+    schedule = serializers.ReadOnlyField()
+    new = serializers.ReadOnlyField(source='is_new') 
 
     class Meta:
         model = Member
@@ -75,16 +56,6 @@ class MemberListSerializer(serializers.ModelSerializer):
             'mltc',
             'schedule',
             'new',
-        )
-
-    def get_new(self, obj):
-        today = timezone.now().date()
-        created_date = obj.created_at.date() if obj.created_at else None
-        enrollment_date = obj.enrollment_date
-
-        return (
-            (created_date and (today - created_date).days <= 30) or
-            (enrollment_date and (today - enrollment_date).days <= 30)
         )
 
 class MemberBirthdaySerializer(DaysUntilMixin, serializers.ModelSerializer):

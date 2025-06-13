@@ -16,6 +16,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
 
         switch (type) {
             case 'authorizations':
+                // Status must be calculated on frontend, changes based on date inputs
                 if (item.active === true) {
                     status = t('status.active');
                 } else if (item.start_date && new Date(item.start_date) > today) {
@@ -35,6 +36,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     subheading: t(`member.contacts.${item.contact_type}`, '')
                 };
             case 'absences':
+                // Status must be calculated on frontend, changes based on date inputs
                 let inactive;
                 if (item.absence_type === 'assessment') {
                     status = formatDate(item.start_date)

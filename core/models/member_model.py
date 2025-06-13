@@ -65,3 +65,30 @@ class Member(models.Model):
 
     def __str__(self):
         return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"
+    
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def formal_name(self):
+        return f"{self.last_name}, {self.first_name}"
+    
+    @property
+    def is_new(self):
+        from django.utils import timezone
+        today = timezone.now().date()
+        created_date = self.created_at.date() if self.created_at else None
+        enrollment_date = self.enrollment_date
+        return (
+            (created_date and (today - created_date).days <= 30) or
+            (enrollment_date and (today - enrollment_date).days <= 30)
+        )
+    
+    @property
+    def mltc_name(self):
+        return self.active_auth.mltc.name if self.active_auth and self.active_auth.mltc else None
+    
+    @property
+    def schedule(self):
+        return self.active_auth.schedule if self.active_auth else None
