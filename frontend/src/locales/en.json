@@ -252,9 +252,9 @@
         "general": {
             "label": "General",
             "language": "Language",
-            "dark_mode": "Dark Mode",
+            "dark_mode": "Dark mode",
             "notification": "Notification",
-            "alt_name": "Display Nickname",
+            "alt_name": "Display nickname",
             "upload": "Upload"
         },
         "admin": {
@@ -279,16 +279,22 @@
                 "name": "Name"
             }
         },
+        "data": {
+            "label": "Data",
+            "download_template": "Download template",
+            "download_members": "Download members",
+            "restore_deleted": "Restore deleted"
+        },
         "support": {
             "label": "Support",
-            "help_center": "Help Center",
-            "terms_of_service": "Terms of Service",
-            "privacy_policy": "Privacy Policy"
+            "help_center": "Help center",
+            "terms_of_service": "Terms of service",
+            "privacy_policy": "Privacy policy"
         },
         "account": {
             "label": "Account",
-            "reset_password": "Reset Password",
-            "log_out": "Log Out",
+            "reset_password": "Reset password",
+            "log_out": "Log out",
             "password_reset_instructions": "Password instructions was sent to your email"
         }
     },

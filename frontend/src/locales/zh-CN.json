@@ -279,6 +279,12 @@
                 "name": "名称"
             }
         },
+        "data": {
+            "label": "数据",
+            "download_template": "下载模板",
+            "download_members": "下载成员",
+            "restore_deleted": "恢复已删除"
+        },
         "support": {
             "label": "支持",
             "help_center": "帮助中心",

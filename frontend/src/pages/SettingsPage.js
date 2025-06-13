@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
+import SettingsData from '../components/settingsContent/SettingsData';
 import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
 import SettingsItem from '../components/items/SettingsItem';
@@ -11,6 +12,7 @@ import SettingsItem from '../components/items/SettingsItem';
 const sections = [
     { label: 'settings.general.label', component: <SettingsGeneral />, id: 'settings-general' },
     { label: 'settings.admin.label', component: <SettingsAdmin />, id: 'settings-admin', adminOnly: true },
+    { label: 'settings.data.label', component: <SettingsData />, id: 'settings-data' },
     { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots', snapShotOnly: true },
     { label: 'settings.support.label', component: <SettingsSupport />, id: 'settings-support' },
     { label: 'settings.account.label', component: <SettingsAccount />, id: 'settings-account' },

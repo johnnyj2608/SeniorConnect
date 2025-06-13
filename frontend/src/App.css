@@ -470,6 +470,7 @@ input[type="number"]::-webkit-inner-spin-button {
   border-radius: 8px;
   white-space: nowrap;
   transition: all 0.2s ease-in-out;
+  text-transform: capitalize;
 }
 
 .action-button.thin {
@@ -1544,6 +1545,7 @@ body.modal-open {
 }
 
 .settings-item > span {
+  text-transform: capitalize;
   transition: transform 0.2s ease;
 }
 

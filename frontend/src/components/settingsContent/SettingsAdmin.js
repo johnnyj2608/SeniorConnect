@@ -43,7 +43,7 @@ const SettingsAdmin = () => {
         <SettingsItem label={t('model.mltc')} onClick={() => openModal('/core/mltcs', 'mltcs')} />
         <SettingsItem label={t('settings.general.language')} onClick={() => openModal('/core/languages', 'languages')} />
         <SettingsItem label={t('settings.admin.users.label')} onClick={() => openModal('/user/users', 'users')} />
-
+        <SettingsItem label={t('settings.general.upload')} onClick={() => console.log('Upload')} />
         {modalOpen && (
           <ModalPage data={modalData} onClose={handleModalClose} />
         )}
