@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from user.models import User
 from ..models.authorization_model import MLTC
 from ..serializers.authorization_serializers import MLTCSerializer
 from django.db import transaction

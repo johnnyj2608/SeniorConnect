@@ -14,7 +14,7 @@ from core.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
-from ..access import member_access_filter, member_access_pk, member_access_fk
+from ..access import member_access_filter, member_access_fk
 
 @member_access_filter
 def getAuthorizationList(request):
@@ -175,7 +175,7 @@ def deleteAuthorization(request, pk):
     authorization.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@member_access_pk
+@member_access_fk
 def getAuthorizationListByMember(request, member_pk):
     authorizations = (
         Authorization.objects

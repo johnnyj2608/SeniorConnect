@@ -11,7 +11,7 @@ from ..serializers.absence_serializers import (
     AbsenceUpcomingSerializer, 
     AssessmentSerializer
 )
-from ..access import member_access_filter, member_access_pk, member_access_fk
+from ..access import member_access_filter, member_access_fk
 
 @member_access_filter
 def getAbsenceList(request):
@@ -82,8 +82,9 @@ def deleteAbsence(request, pk):
     absence.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@member_access_pk
+@member_access_fk
 def getAbsenceListByMember(request, member_pk):
+    print('yo')
     absences = Absence.objects.select_related('member').filter(member=member_pk)
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

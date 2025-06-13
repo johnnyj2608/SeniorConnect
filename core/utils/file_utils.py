@@ -6,7 +6,7 @@ from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
 from core.utils.supabase import *
 from django.utils.text import slugify
-from ..access import member_access_filter, member_access_pk, member_access_fk
+from ..access import member_access_filter, member_access_fk
 
 @member_access_filter
 def getFileList(request):
@@ -112,7 +112,7 @@ def deleteFile(request, pk):
     file.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@member_access_pk
+@member_access_fk
 def getFileListByMember(request, member_pk):
     files = File.objects.select_related('member').filter(member=member_pk)
     serializer = FileSerializer(files, many=True)
