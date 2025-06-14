@@ -10,7 +10,7 @@ const SettingsSnapshots = () => {
   if (!user?.is_org_admin || !user?.view_snapshots) return null;
 
   return (
-    <>
+    <div id="settings-snapshots">
       <h3 className="section-title">{t('snapshots.label')}</h3>
       <div className="section-main">
         <SettingsItem label={t('snapshots.members')} onClick={() => console.log('Members')} />
@@ -19,7 +19,7 @@ const SettingsSnapshots = () => {
         <SettingsItem label={t('snapshots.enrollment')} onClick={() => console.log('Enrollment')} />
         {/* Dropdown to show year, then month */}
       </div>
-    </>
+    </div>
   );
 };
 

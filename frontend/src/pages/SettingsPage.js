@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
+import ModalPage from './ModalPage';
+
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
@@ -9,56 +11,133 @@ import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
 import SettingsItem from '../components/items/SettingsItem';
 
-const sections = [
-    { label: 'settings.general.label', component: <SettingsGeneral />, id: 'settings-general' },
-    { label: 'settings.admin.label', component: <SettingsAdmin />, id: 'settings-admin', adminOnly: true },
-    { label: 'settings.data.label', component: <SettingsData />, id: 'settings-data' },
-    { label: 'snapshots.label', component: <SettingsSnapshots />, id: 'settings-snapshots', snapShotOnly: true },
-    { label: 'settings.support.label', component: <SettingsSupport />, id: 'settings-support' },
-    { label: 'settings.account.label', component: <SettingsAccount />, id: 'settings-account' },
-];
+// Helper function to scroll with offset
+const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    const offset = 110;
+
+    if (section) {
+        const top = section.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+    }
+};
+
+const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
+    <div className="settings-nav">
+        <SettingsItem
+            label={t('settings.general.label')}
+            isNav
+            isActive={activeSection === 'settings-general'}
+            onClick={() => {
+                setActiveSection('settings-general');
+                scrollToSection('settings-general');
+            }}
+        />
+        {user?.is_org_admin && (
+            <SettingsItem
+                label={t('settings.admin.label')}
+                isNav
+                isActive={activeSection === 'settings-admin'}
+                onClick={() => {
+                    setActiveSection('settings-admin');
+                    scrollToSection('settings-admin');
+                }}
+            />
+        )}
+        <SettingsItem
+            label={t('settings.data.label')}
+            isNav
+            isActive={activeSection === 'settings-data'}
+            onClick={() => {
+                setActiveSection('settings-data');
+                scrollToSection('settings-data');
+            }}
+        />
+        {user?.view_snapshots && (
+            <SettingsItem
+                label={t('snapshots.label')}
+                isNav
+                isActive={activeSection === 'settings-snapshots'}
+                onClick={() => {
+                    setActiveSection('settings-snapshots');
+                    scrollToSection('settings-snapshots');
+                }}
+            />
+        )}
+        <SettingsItem
+            label={t('settings.support.label')}
+            isNav
+            isActive={activeSection === 'settings-support'}
+            onClick={() => {
+                setActiveSection('settings-support');
+                scrollToSection('settings-support');
+            }}
+        />
+        <SettingsItem
+            label={t('settings.account.label')}
+            isNav
+            isActive={activeSection === 'settings-account'}
+            onClick={() => {
+                setActiveSection('settings-account');
+                scrollToSection('settings-account');
+            }}
+        />
+    </div>
+);
 
 const SettingsPage = () => {
     const { t } = useTranslation();
     const { user } = useContext(AuthContext);
-    const [active, setActive] = useState(sections[0].id);
-    const observer = useRef(null);
 
-    const handleScrollToSection = (id) => {
-        const section = document.getElementById(id);
-        const offset = 110;
-    
-        if (section) {
-            const top = section.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top, behavior: 'smooth' });
-        }
-    };
+    const sections = [
+        { id: 'settings-general' },
+        { id: 'settings-admin' },
+        { id: 'settings-data' },
+        { id: 'settings-snapshots' },
+        { id: 'settings-support' },
+        { id: 'settings-account' },
+    ];
+
+    const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-general');
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const observer = useRef(null);
 
     useEffect(() => {
         const options = {
-          root: null,
-          rootMargin: '-110px 0px -60% 0px',
-          threshold: 0,
+            root: null,
+            rootMargin: '-110px 0px -60% 0px',
+            threshold: 0,
         };
-    
+
         observer.current = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                setActive(entry.target.id);
-            }
-          });
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
         }, options);
-    
-        sections.forEach((section) => {
-          const sectionElement = document.getElementById(section.id);
-          if (sectionElement) observer.current.observe(sectionElement);
+
+        sections.forEach(({ id }) => {
+            const el = document.getElementById(id);
+            if (el) observer.current.observe(el);
         });
-    
+
         return () => {
-          if (observer.current) observer.current.disconnect();
+            if (observer.current) observer.current.disconnect();
         };
+    }, [sections]);
+
+    const handleModalClose = useCallback(() => {
+        setModalOpen(false);
+        setModalData(null);
     }, []);
-    
+
+    const handleModalOpen = useCallback((type, data) => {
+        setModalData({ type, data });
+        setModalOpen(true);
+    }, []);
+
     return (
         <>
             <div className="page-header">
@@ -68,33 +147,26 @@ const SettingsPage = () => {
             </div>
 
             <div className="settings-body content-padding">
-                <div className="settings-nav">
-                    {sections.map((section) => {
-                        if (!user?.is_org_admin) {
-                            if (section.adminOnly) return null;
-                            if (section.snapShotOnly && !user?.view_snapshots) return null;
-                        }
-
-                        return (
-                            <SettingsItem
-                                key={section.id}
-                                label={t(section.label)}
-                                isNav={true}
-                                isActive={active === section.id}
-                                onClick={() => handleScrollToSection(section.id)}
-                            />
-                        );
-                    })}
-                </div>
+                <SettingsNav
+                    activeSection={activeSection}
+                    setActiveSection={setActiveSection}
+                    user={user}
+                    t={t}
+                />
 
                 <div className="settings-content">
-                {sections.map((section) => (
-                    <div key={section.id} id={section.id}>
-                        {section.component}
-                    </div>
-                ))}
+                    <SettingsGeneral />
+                    <SettingsAdmin onEdit={handleModalOpen} />
+                    <SettingsData onEdit={handleModalOpen} />
+                    <SettingsSnapshots />
+                    <SettingsSupport />
+                    <SettingsAccount />
                 </div>
             </div>
+
+            {modalOpen && (
+                <ModalPage data={modalData} onClose={handleModalClose} />
+            )}
         </>
     );
 };

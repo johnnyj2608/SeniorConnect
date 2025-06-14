@@ -48,7 +48,7 @@ const SettingsGeneral = () => {
   };
 
   return (
-    <>
+    <div id="settings-general">
       <h3 className="section-title">{t('settings.general.label')}</h3>
       <div className="section-main">
         <SettingsItem label={t('settings.general.notification')} onClick={() => console.log('Notification')} />
@@ -85,7 +85,7 @@ const SettingsGeneral = () => {
           }
         />
       </div>
-    </>
+    </div>
   );
 };
 

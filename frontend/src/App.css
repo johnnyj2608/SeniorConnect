@@ -422,8 +422,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .icon-button {
   cursor: pointer;
-  width: 28px;
-  height: 28px;
   z-index: 1;
   background: none;
   border: none;
@@ -431,15 +429,28 @@ input[type="number"]::-webkit-inner-spin-button {
   transition: all 0.2s ease;
 }
 
-.icon-button:hover{
+.icon-button:hover {
+  color: var(--color-main);
   fill: var(--color-main);
   transform: scale(1.05);
 }
 
+.icon-button svg {
+  width: 28px;
+  height: 28px;
+}
+
 .icon-button.absolute {
-    position: absolute;
+  position: absolute;
   top: 10px;
   right: 10px;
+}
+
+.icon-button span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
 }
 
 .dropdown-icon {
