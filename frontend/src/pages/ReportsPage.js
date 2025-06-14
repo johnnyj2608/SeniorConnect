@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
-import RefreshButton from '../components/buttons/RefreshButton';
+import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
 import ReportAssessmentsTable from '../components/reportTables/ReportAssessmentsTable';
@@ -73,7 +73,7 @@ const ReportsPage = () => {
             <div className="page-header">
                 <div className="page-title-row">
                     <h2 className="page-title">&#9782; {t('general.reports')}</h2>
-                    <RefreshButton onClick={fetchReport} />
+                    <SwitchButton onClick={fetchReport} />
                 </div>
                 <div className="filter-row">
                     <div className="filter-content">
