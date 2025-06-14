@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const ListDetail = ({ label, value }) => {
-    if (value == null || value === '') return null;
+const ListDetail = ({
+    label,
+    value,
+    tabs = null,
+    tabContent = {},
+}) => {
+    const [activeTab, setActiveTab] = useState(tabs?.[0]?.key || '');
+
+    if (!tabs && (value == null || value === '')) return null;
 
     return (
         <div className="member-box">
-            <label className="member-box-label">{label}</label>
-            <span className="member-box-list">{value}</span>
+            {tabs ? (
+                <div className="member-box-label">
+                    {tabs.map(({ key, label }) => (
+                        <button
+                            key={key}
+                            type="button"
+                            onClick={() => setActiveTab(key)}
+                            className={`member-box-tab ${activeTab === key ? 'active' : ''}`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+            ) : (
+                <label className="member-box-label">{label}</label>
+            )}
+
+            <div className="member-box-list">
+                {tabs ? tabContent?.[activeTab] ?? null : value}
+            </div>
         </div>
-    );   
+    );
 };
 
 export default ListDetail;

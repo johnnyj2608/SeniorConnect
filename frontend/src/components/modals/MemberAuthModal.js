@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
 import FileUpload from '../inputs/FileUpload';
+import ListDetail from '../layout/ListDetail';
 import CheckboxInput from '../inputs/CheckboxInput';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
@@ -133,13 +134,17 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 </select>
             </div>
 
-            <CheckboxInput
+            <ListDetail
                 label={t('member.authorizations.schedule')}
-                options={daysOfWeek}
-                selectedValues={current.schedule}
-                onChange={onScheduleChange}
-                disabled={disabled}
-                translateFn={(val) => t(`general.days_of_week.${val}`)}
+                value={
+                    <CheckboxInput
+                        options={daysOfWeek}
+                        selectedValues={current.schedule}
+                        onChange={onScheduleChange}
+                        disabled={disabled}
+                        translateFn={(val) => t(`general.days_of_week.${val}`)}
+                    />
+                }
             />
 
             <AuthorizationServicesTabs
@@ -182,8 +187,6 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
 const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
     const { t } = useTranslation();
 
-    const [activeTab, setActiveTab] = useState('sdc');
-
     const serviceLabels = [
         { key: 'sdc', label: t('member.authorizations.sdc') },
         { key: 'transportation', label: t('member.authorizations.transportation') }
@@ -201,60 +204,76 @@ const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
         handleChange('services')({ target: { value: updatedServices } });
     };
 
-    return (
-        <div className="member-box">
-            <div className="member-box-label">
-                {serviceLabels.map(({ key, label }) => (
-                    <button
-                        key={key}
-                        type="button"
-                        onClick={() => setActiveTab(key)}
-                        className={`member-box-tab ${activeTab === key ? 'active' : ''}`}
+    const tabContent = {
+        sdc: (
+            <div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.auth_id')}</label>
+                    <input
+                        type="text"
+                        value={services?.[0]?.auth_id || ''}
+                        onChange={handleServiceChange(0, 'auth_id')}
                         disabled={disabled}
-                    >
-                        {label}
-                    </button>
-                ))}
+                    />
+                </div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.service_code')}</label>
+                    <input
+                        type="text"
+                        value={services?.[0]?.service_code || ''}
+                        onChange={handleServiceChange(0, 'service_code')}
+                        disabled={disabled}
+                    />
+                </div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.service_units')}</label>
+                    <input
+                        type="number"
+                        value={services?.[0]?.service_units || ''}
+                        onChange={handleServiceChange(0, 'service_units')}
+                        disabled={disabled}
+                    />
+                </div>
             </div>
-
-            <div className="member-box-list">
-                {serviceLabels.map((label, index) =>
-                    activeTab === label ? (
-                        <div key={label}>
-                            <div className="member-detail">
-                                <label>{t('member.authorizations.auth_id')}</label>
-                                <input
-                                    type="text"
-                                    value={services?.[index]?.auth_id || ''}
-                                    onChange={handleServiceChange(index, 'auth_id')}
-                                    disabled={disabled}
-                                />
-                            </div>
-
-                            <div className="member-detail">
-                                <label>{t('member.authorizations.service_code')}</label>
-                                <input
-                                    type="text"
-                                    value={services?.[index]?.service_code || ''}
-                                    onChange={handleServiceChange(index, 'service_code')}
-                                    disabled={disabled}
-                                />
-                            </div>
-
-                            <div className="member-detail">
-                                <label>{t('member.authorizations.service_units')}</label>
-                                <input
-                                    type="number"
-                                    value={services?.[index]?.service_units || ''}
-                                    onChange={handleServiceChange(index, 'service_units')}
-                                    disabled={disabled}
-                                />
-                            </div>
-                        </div>
-                    ) : null
-                )}
+        ),
+        transportation: (
+            <div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.auth_id')}</label>
+                    <input
+                        type="text"
+                        value={services?.[1]?.auth_id || ''}
+                        onChange={handleServiceChange(1, 'auth_id')}
+                        disabled={disabled}
+                    />
+                </div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.service_code')}</label>
+                    <input
+                        type="text"
+                        value={services?.[1]?.service_code || ''}
+                        onChange={handleServiceChange(1, 'service_code')}
+                        disabled={disabled}
+                    />
+                </div>
+                <div className="member-detail">
+                    <label>{t('member.authorizations.service_units')}</label>
+                    <input
+                        type="number"
+                        value={services?.[1]?.service_units || ''}
+                        onChange={handleServiceChange(1, 'service_units')}
+                        disabled={disabled}
+                    />
+                </div>
             </div>
-        </div>
+        )
+    };
+
+    return (
+        <ListDetail
+            tabs={serviceLabels}
+            tabContent={tabContent}
+        />
     );
 };
 
