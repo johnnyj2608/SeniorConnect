@@ -30,7 +30,8 @@
             "view_file": "View File",
             "upload": "Upload",
             "view": "View",
-            "clear": "Clear"
+            "clear": "Clear",
+            "restore": "Restore"
         },
         "days_of_week": {
             "monday": "Monday",
@@ -283,7 +284,9 @@
             "label": "Data",
             "download_template": "Download template",
             "download_members": "Download members",
-            "restore_deleted": "Restore deleted"
+            "restore_deleted": "Restore deleted",
+            "days_left": "{{days}} Days left",
+            "no_deleted": "No members to restore"
         },
         "support": {
             "label": "Support",

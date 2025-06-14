@@ -8,6 +8,7 @@ import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
 import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
+import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModal from '../hooks/useModal';
@@ -102,6 +103,13 @@ const ModalPage = ({ data, onClose }) => {
                         activeTab={activeTab} 
                     />
                 );
+            case 'deleted':
+                return (
+                    <SettingsDeletedModal 
+                        data={localData} 
+                        activeTab={activeTab} 
+                    />
+                );
             default:
                 return null;
         }
@@ -157,9 +165,10 @@ const ModalPage = ({ data, onClose }) => {
                     </button>
                     {showDeleteButton && (
                         <button
-                            className="action-button destructive"
-                            onClick={() => handleDelete(activeTab)}>
-                            {t('general.buttons.delete')}
+                            className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
+                            onClick={() => handleDelete(activeTab)}
+                        >
+                            {type === 'deleted' ? t('general.buttons.restore') : t('general.buttons.delete')}
                         </button>
                     )}
                     <button className="action-button" onClick={() => handleSave(localData)}>

@@ -11,7 +11,7 @@ from ..models.authorization_model import Enrollment
 from ..serializers.authorization_serializers import EnrollmentSerializer
 from ..access import member_access_filter, member_access_fk
 
-@member_access_filter
+@member_access_filter()
 def getEnrollmentList(request):
     enrollments = (
         Enrollment.objects
@@ -92,7 +92,7 @@ def deleteEnrollment(request, pk):
     enrollment.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@member_access_filter
+@member_access_filter()
 def getCurrentMonthEnrollmentStats(request):
     today = now()
     current_year = today.year
@@ -134,7 +134,7 @@ def getCurrentMonthEnrollmentStats(request):
     flat_data['Overall'] = sum(flat_data.values())
     return Response(flat_data, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getRecentEnrollments(request):
     seven_days_ago = timezone.now() - timedelta(days=7)
     

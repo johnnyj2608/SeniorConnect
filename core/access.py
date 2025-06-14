@@ -46,10 +46,14 @@ def member_access_fk(func):
 
     return wrapper
 
-def member_access_filter(func):
-    @wraps(func)
-    def wrapper(request, *args, **kwargs):
-        request.accessible_members_qs = Member.objects.accessible_by(request.user)
-        return func(request, *args, **kwargs)
-
-    return wrapper
+def member_access_filter(include_deleted=False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(request, *args, **kwargs):
+            qs = Member.objects.accessible_by(request.user)
+            if not include_deleted:
+                qs = qs.filter(deleted_at__isnull=True)
+            request.accessible_members_qs = qs
+            return func(request, *args, **kwargs)
+        return wrapper
+    return decorator

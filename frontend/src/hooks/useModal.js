@@ -246,22 +246,30 @@ function useModal(data, onClose) {
                 requiredFields = ['name', 'email'];
                 if (!validateRequiredFields('settings.data.users', updatedData, requiredFields)) return;
 
-                savedData = await saveDataTabs(updatedData, 'users', 'user');
+                saveDataTabs(updatedData, 'users', 'user');
                 break;
             case 'mltcs':
                 requiredFields = ['name'];
                 if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
-                savedData = await saveDataTabs(updatedData, 'mltcs');
+                saveDataTabs(updatedData, 'mltcs');
                 break;
             case 'languages':
                 requiredFields = ['name'];
                 if (!validateRequiredFields('settings.data.language', updatedData, requiredFields)) return;
 
-                savedData = await saveDataTabs(updatedData, 'languages');
+                saveDataTabs(updatedData, 'languages');
                 break;
-
+            case 'deleted':
+                updatedData.forEach(item => {
+                    if (item.deleted) {
+                        sendRequest(`/core/members/${item.id}/`, 'PATCH', {}).catch(error => {
+                            console.error(error);
+                        });
+                        }
+                    });
+                break;
             default:
                 console.error("Unknown save type:", type);
         }

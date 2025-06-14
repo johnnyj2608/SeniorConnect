@@ -67,7 +67,7 @@ def deleteContact(request, pk, member_pk):
     
     return Response({'detail': 'Member association removed'}, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getContactListByMember(request, member_pk):
     contacts = Contact.objects.prefetch_related('members').filter(members__id=member_pk)
     serializer = ContactSerializer(contacts, many=True)

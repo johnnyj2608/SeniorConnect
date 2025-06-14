@@ -68,4 +68,4 @@ def getMemberFull(request, pk):
 @api_view(['GET'])
 def getMembersDeleted(request):
     if request.method == 'GET':
-        return getDeletedMembers
+        return getDeletedMembers(request)

@@ -13,7 +13,7 @@ from ..serializers.absence_serializers import (
 )
 from ..access import member_access_filter, member_access_fk
 
-@member_access_filter
+@member_access_filter()
 def getAbsenceList(request):
     absences = (
         Absence.objects
@@ -88,7 +88,7 @@ def getAbsenceListByMember(request, member_pk):
     serializer = AbsenceSerializer(absences, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getUpcomingAbsences(request):
     today = timezone.now().date()
     in_7_days = today + timedelta(days=7)
@@ -124,7 +124,7 @@ def getUpcomingAbsences(request):
         "returning": returning_serialized,
     }, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getAssessmentList(request):
     assessments = (
         Absence.objects
@@ -137,7 +137,7 @@ def getAssessmentList(request):
     serializer = AssessmentSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-@member_access_filter
+@member_access_filter()
 def getUpcomingAssessments(request):
     today = timezone.now().date()
     in_7_days = today + timedelta(days=7)

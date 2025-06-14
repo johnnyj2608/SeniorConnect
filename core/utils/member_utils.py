@@ -12,7 +12,8 @@ from ..models.authorization_model import MLTC
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
-    MemberBirthdaySerializer
+    MemberBirthdaySerializer,
+    MemberDeletedSerializer,
 )
 from ..serializers.absence_serializers import Absence, AbsenceSerializer
 from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer
@@ -26,7 +27,7 @@ from core.utils.supabase import (
 )
 from ..access import member_access_filter, member_access_pk
 
-@member_access_filter
+@member_access_filter()
 def getMemberList(request):
     members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
@@ -153,13 +154,6 @@ def getActiveAuth(request, pk):
 @member_access_pk
 def deleteMember(request, pk):
     member = get_object_or_404(Member, id=pk)
-
-    if member.photo:
-        try:
-            delete_folder_from_supabase(f"{member.id}/")
-        except Exception as e:
-            print(f"Error deleting photo from Supabase: {e}")
-
     member.soft_delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -169,18 +163,18 @@ def restoreMember(request, pk):
     member.restore()
     return Response({"detail": "Member restored."}, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter(include_deleted=True)
 def getDeletedMembers(request):
     members = (
-        request.accessible_members_qs.model.objects
+        request.accessible_members_qs
         .filter(deleted_at__isnull=False)
-        .filter(id__in=request.accessible_members_qs.values('id'))
         .select_related('active_auth', 'active_auth__mltc')
+        .order_by('deleted_at')
     )
-    serializer = MemberListSerializer(members, many=True)
+    serializer = MemberDeletedSerializer(members, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getActiveMemberStats(request):
     user = request.user
     accessible_members = request.accessible_members_qs
@@ -215,7 +209,7 @@ def getActiveMemberStats(request):
         "mltc_count": list(mltc_counts),
     }, status=status.HTTP_200_OK)
 
-@member_access_filter
+@member_access_filter()
 def getUpcomingBirthdays(request):
     today = timezone.now().date()
 

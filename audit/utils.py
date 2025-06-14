@@ -10,7 +10,7 @@ from .serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
 from core.access import member_access_filter, member_access_fk
 
-@member_access_filter
+@member_access_filter()
 def getAuditList(request):
     audits = AuditLog.objects.select_related('user', 'content_type', 'member').filter(
         member__in=request.accessible_members_qs
@@ -66,7 +66,7 @@ def deleteAudit(request, pk):
     audit.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@member_access_filter
+@member_access_filter()
 def getRecentAudits(request):
     seven_days_ago = timezone.now() - timedelta(days=7)
     recent_audits = (

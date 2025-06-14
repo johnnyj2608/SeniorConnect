@@ -8,7 +8,7 @@ from core.utils.supabase import *
 from django.utils.text import slugify
 from ..access import member_access_filter, member_access_fk
 
-@member_access_filter
+@member_access_filter()
 def getFileList(request):
     files = File.objects.select_related('member').filter(member__in=request.accessible_members_qs)
     serializer = FileSerializer(files, many=True)

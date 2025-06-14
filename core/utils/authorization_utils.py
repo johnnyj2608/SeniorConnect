@@ -16,7 +16,7 @@ from core.utils.supabase import (
 )
 from ..access import member_access_filter, member_access_fk
 
-@member_access_filter
+@member_access_filter()
 def getAuthorizationList(request):
     authorizations = (
         Authorization.objects

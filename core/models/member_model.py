@@ -2,6 +2,7 @@ from django.db import models
 import os
 from django.utils.text import slugify
 from django.utils import timezone
+from datetime import timedelta
 from django.db.models import Q
 
 def member_photo_path(instance, filename):
@@ -19,7 +20,7 @@ class Language(models.Model):
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
-        qs = self.filter(deleted_at__isnull=True)
+        qs = self
         if user.is_superuser or getattr(user, 'is_org_admin', False):
             return qs
         allowed_mltcs = user.allowed_mltcs.all()
@@ -99,6 +100,14 @@ class Member(models.Model):
     @property
     def is_deleted(self):
         return self.deleted_at is not None
+    
+    @property
+    def days_until_30(self):
+        if self.deleted_at:
+            elapsed = timezone.now() - self.deleted_at
+            remaining = timedelta(days=30) - elapsed
+            return max(remaining.days, 0)
+        return None
 
     def soft_delete(self):
         self.deleted_at = timezone.now()

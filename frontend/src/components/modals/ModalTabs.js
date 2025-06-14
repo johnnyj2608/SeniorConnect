@@ -2,11 +2,12 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as AddIcon } from '../../assets/folder-add.svg'
 import { formatDate, formatStatus } from '../../utils/formatUtils';
+import NameDisplay from '../layout/NameDisplay';
 
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     const { t } = useTranslation();
     
-    if (tab.deleted) {
+    if (tab.deleted || (type === 'deleted' && tab.add)) {
         return;
     } 
 
@@ -70,6 +71,17 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return { 
                     heading: item.name || t('members.unknown'),
                 };
+            case 'deleted':
+                return {
+                    heading: (
+                        <NameDisplay
+                            sadcId={item.sadc_member_id}
+                            memberName={item.member_name}
+                            altName={item.alt_name}
+                        />
+                    ),
+                    subheading: t('settings.data.days_left', { days: item.days_until_30 }),
+                }
             default:
                 return { heading: t('members.unknown'), subheading: '' };
         }

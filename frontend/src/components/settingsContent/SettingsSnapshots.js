@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import SettingsItem from '../items/SettingsItem';
+import { AuthContext } from '../../context/AuthContext';
 
 const SettingsSnapshots = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+
+  if (!user?.is_org_admin || !user?.view_snapshots) return null;
 
   return (
     <>

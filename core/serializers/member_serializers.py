@@ -59,6 +59,23 @@ class MemberListSerializer(serializers.ModelSerializer):
             'new',
         )
 
+class MemberDeletedSerializer(serializers.ModelSerializer):
+    days_until_30 = serializers.ReadOnlyField()
+    member_name = serializers.ReadOnlyField(source='formal_name')
+
+    class Meta:
+        model = Member
+        fields = (
+            'id',
+            'alt_name',
+            'last_name',
+            'first_name',
+            'member_name',
+            'photo',
+            'birth_date', 
+            'days_until_30',
+        )
+
 class MemberBirthdaySerializer(DaysUntilMixin, serializers.ModelSerializer):
     days_until = serializers.SerializerMethodField()
     age_turning = serializers.SerializerMethodField()

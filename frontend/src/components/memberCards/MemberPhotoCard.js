@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
 import usePreferences from '../../hooks/usePreferences';
 
-const MemberPhotoCard = ({ data }) => {
+const MemberPhotoCard = ({ data, small }) => {
     const info = data || [];
     const useAltName = usePreferences("alt_name", false);
 
@@ -12,12 +12,14 @@ const MemberPhotoCard = ({ data }) => {
     const primaryName = useAltName && altName ? altName : fullName;
     const secondaryName = useAltName && altName ? fullName : altName;
 
+    const imgClass = small ? 'member-photo small' : 'member-photo';
+
     return (
         <div className="photo-container">
             <img
                 src={formatPhoto(info.photo)}
                 alt="Member"
-                className="member-photo"
+                className={imgClass}
                 onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = '/default-profile.jpg';
