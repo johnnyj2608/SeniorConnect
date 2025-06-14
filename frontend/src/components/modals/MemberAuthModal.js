@@ -182,9 +182,12 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
 const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
     const { t } = useTranslation();
 
-    const [activeTab, setActiveTab] = useState('SDC');
+    const [activeTab, setActiveTab] = useState('sdc');
 
-    const serviceLabels = ['SDC', 'Transport'];
+    const serviceLabels = [
+        { key: 'sdc', label: t('member.authorizations.sdc') },
+        { key: 'transportation', label: t('member.authorizations.transportation') }
+    ];
 
     const handleServiceChange = (index, field) => (event) => {
         const updatedService = {
@@ -201,16 +204,16 @@ const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
     return (
         <div className="member-box">
             <div className="member-box-label">
-                {serviceLabels.map((label) => (
-                <button
-                    key={label}
-                    type="button"
-                    onClick={() => setActiveTab(label)}
-                    className={`member-box-tab ${activeTab === label ? 'active' : ''}`}
-                    disabled={disabled}
-                >
-                    {label}
-                </button>
+                {serviceLabels.map(({ key, label }) => (
+                    <button
+                        key={key}
+                        type="button"
+                        onClick={() => setActiveTab(key)}
+                        className={`member-box-tab ${activeTab === key ? 'active' : ''}`}
+                        disabled={disabled}
+                    >
+                        {label}
+                    </button>
                 ))}
             </div>
 

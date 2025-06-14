@@ -37,7 +37,7 @@ function useModalEdit(data, onClose) {
 
     const [mltcOptions, setMltcOptions] = useState([]);
     useEffect(() => {
-        if (type === 'users' || type === 'authorizations') {
+        if (type === 'users' || type === 'authorizations' || type === 'attendance') {
           (async () => {
             try {
               const response = await fetchWithRefresh('/core/mltcs/');

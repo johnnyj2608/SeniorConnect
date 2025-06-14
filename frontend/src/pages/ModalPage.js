@@ -9,6 +9,7 @@ import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
 import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
 import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
+import MembersAttendanceModal from '../components/modals/MembersAttendanceModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModalEdit from '../hooks/useModalEdit';
@@ -110,6 +111,14 @@ const ModalPage = ({ data, onClose }) => {
                         activeTab={activeTab} 
                     />
                 );
+            case 'attendance':
+                return (
+                    <MembersAttendanceModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                        mltcOptions={mltcOptions}
+                    />
+                );
             default:
                 return null;
         }
@@ -172,7 +181,7 @@ const ModalPage = ({ data, onClose }) => {
                         </button>
                     )}
                     <button className="action-button" onClick={() => handleSave(localData)}>
-                        {t('general.buttons.save')}
+                        {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
                     </button>
                 </div>
             </div>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next'
+import ModalPage from './ModalPage';
+import useModalOpen from '../hooks/useModalOpen';
 import ListItem from '../components/items/ListItem';
 import AddButton from '../components/buttons/AddButton';
-import DownloadButton from '../components/buttons/DownloadButton';
+import AttendanceButton from '../components/buttons/AttendanceButton';
 import SearchInput from '../components/inputs/SearchInput';
 import Switch from 'react-switch';
 import { useLocation } from 'react-router-dom';
@@ -20,6 +22,13 @@ const MembersListPage = () => {
 	const [mltcFilter, setMltcFilter] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const [showInactive, setShowInactive] = useState(false);
+
+	const {
+		modalOpen,
+		modalData,
+		openModal,
+		closeModal
+	  } = useModalOpen();
 
 	const getMembers = useCallback(async () => {
 		const params = new URLSearchParams();
@@ -70,7 +79,7 @@ const MembersListPage = () => {
 			<div className="page-header">
 				<div className="page-title-row">
 					<h2 className="page-title">&#9782; {t('general.members')}</h2>
-					<DownloadButton members={members} />
+					<AttendanceButton onClick={() => openModal('attendance')} />
 				</div>
 
 				<div className="filter-row">
@@ -131,6 +140,7 @@ const MembersListPage = () => {
 			</div>
 
 			<AddButton />
+			{modalOpen && <ModalPage data={modalData} onClose={closeModal} />}
 		</>
 	);
 };

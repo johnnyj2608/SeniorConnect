@@ -31,7 +31,9 @@
             "upload": "Upload",
             "view": "View",
             "clear": "Clear",
-            "restore": "Restore"
+            "restore": "Restore",
+            "attendance_sheets": "Attendance Sheets",
+            "generate": "Generate"
         },
         "days_of_week": {
             "monday": "Monday",
@@ -51,7 +53,8 @@
             "sat": "Sat",
             "sun": "Sun"
         },
-        "months": {
+        "month": {
+            "label": "Month",
             "january": "January",
             "february": "February",
             "march": "March",
@@ -115,7 +118,9 @@
         "search_members": "Search Members",
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",
-        "new": "New"
+        "new": "New",
+        "mltc": "MLTC",
+        "individual": "Individual"
     },
     "member": {
         "confirm_update": "Are you sure you want to {{action}} this member?",

@@ -31,7 +31,9 @@
             "upload": "上传",
             "view": "查看",
             "clear": "清除",
-            "restore": "恢复"
+            "restore": "恢复",
+            "attendance_sheets": "出勤表",
+            "generate": "生成"
         },
         "days_of_week": {
             "monday": "星期一",
@@ -51,7 +53,8 @@
             "sat": "六",
             "sun": "日"
         },
-        "months": {
+        "month": {
+            "label": "月份",
             "january": "一月",
             "february": "二月",
             "march": "三月",
@@ -115,7 +118,9 @@
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
-        "new": "新会员"
+        "new": "新会员",
+        "mltc": "MLTC",
+        "individual": "个人"
     },
     "member": {
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",
