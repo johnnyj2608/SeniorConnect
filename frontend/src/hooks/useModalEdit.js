@@ -16,7 +16,7 @@ import {
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 import { useTranslation } from 'react-i18next';
 
-function useModal(data, onClose) {
+function useModalEdit(data, onClose) {
     const { t } = useTranslation();
     const id = data.id;
     const type = data.type;
@@ -65,14 +65,17 @@ function useModal(data, onClose) {
 
     const handleChange = (field) => (event) => {
         const { value, files } = event.target;
-        const newValue = files?.[0] ?? (field.includes('date') && value === '' ? null : value);
+        const normalizedValue = files?.[0]
+            ?? (field.includes('date') && value === '' ? null
+            : !isNaN(Number(value)) ? Number(value)
+            : value);
 
         setLocalData((prevData) => {
             if (type !== 'info') {
                 const currentTab = prevData[activeTab];
                 const updatedTab = {
                     ...currentTab,
-                    [field]: newValue,
+                    [field]: normalizedValue,
                 };
 
                 const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab - newTabsCount]);
@@ -293,4 +296,4 @@ function useModal(data, onClose) {
     };
 }
 
-export default useModal;
+export default useModalEdit;

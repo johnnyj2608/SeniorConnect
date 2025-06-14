@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
+import useModalOpen from '../hooks/useModalOpen';
 import MemberInfoCard from '../components/memberCards/MemberInfoCard';
 import MemberAuthCard from '../components/memberCards/MemberAuthCard';
 import MemberContactsCard from '../components/memberCards/MemberContactsCard';
@@ -16,14 +17,18 @@ const MemberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState(null);
   const [memberData, setMemberData] = useState(null);
+
+  const {
+    modalOpen,
+    modalData,
+    openModal,
+    closeModal,
+  } = useModalOpen();
 
   useEffect(() => {
     if (id === 'new') {
-      setModalData({ id, type: 'info', data: {} });
-      setModalOpen(true);
+      openModal('info', { id, data: {}, setData: setMemberData });
     } else {
       const fetchMemberData = async () => {
         try {
@@ -89,19 +94,24 @@ const MemberPage = () => {
     }
   };
 
-  const handleCancel = (newId) => {
-    if (newId || id !== 'new') {
-      if (newId) navigate(`/member/${newId}`);
-      setModalOpen(false);
-    } else {
-      navigate('/members');
-    }
-  };
+  const handleCancel = useCallback(
+    (newId) => {
+      if (newId || id !== 'new') {
+        if (newId) navigate(`/member/${newId}`);
+        closeModal();
+      } else {
+        navigate('/members');
+      }
+    },
+    [closeModal, id, navigate]
+  );
 
-  const handleModalOpen = useCallback((type, data) => {
-    setModalData({ id, type, data, setData: setMemberData }); 
-    setModalOpen(true);
-  }, [id]);
+  const handleModalOpen = useCallback(
+    (type, data) => {
+      openModal(type, { id, data, setData: setMemberData });
+    },
+    [id, openModal]
+  );
 
   return (
     <div className="member content-padding">
@@ -135,9 +145,7 @@ const MemberPage = () => {
         </>
       )}
 
-      {modalOpen && (
-        <ModalPage data={modalData} onClose={handleCancel} />
-      )}
+      {modalOpen && <ModalPage data={modalData} onClose={handleCancel} />}
     </div>
   );
 };

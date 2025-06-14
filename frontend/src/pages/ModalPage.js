@@ -11,7 +11,7 @@ import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
 import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
 import ModalTabs from '../components/modals/ModalTabs';
 import DragOverlay from '../components/layout/DragOverlay';
-import useModal from '../hooks/useModal';
+import useModalEdit from '../hooks/useModalEdit';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
@@ -27,7 +27,7 @@ const ModalPage = ({ data, onClose }) => {
         handleSave,
         setActiveTab,
         mltcOptions,
-    } = useModal(data, onClose);
+    } = useModalEdit(data, onClose);
 
     const [dragging, setDragging] = useState(false);
 

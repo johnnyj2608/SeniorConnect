@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useContext, useCallback } from 'rea
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
+import useModalOpen from '../hooks/useModalOpen';
 
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
@@ -11,7 +12,6 @@ import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
 import SettingsItem from '../components/items/SettingsItem';
 
-// Helper function to scroll with offset
 const scrollToSection = (id) => {
     const section = document.getElementById(id);
     const offset = 110;
@@ -99,9 +99,14 @@ const SettingsPage = () => {
     ];
 
     const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-general');
-    const [modalOpen, setModalOpen] = useState(false);
-    const [modalData, setModalData] = useState(null);
     const observer = useRef(null);
+
+    const {
+        modalOpen,
+        modalData,
+        openModal,
+        closeModal,
+      } = useModalOpen();
 
     useEffect(() => {
         const options = {
@@ -128,15 +133,12 @@ const SettingsPage = () => {
         };
     }, [sections]);
 
-    const handleModalClose = useCallback(() => {
-        setModalOpen(false);
-        setModalData(null);
-    }, []);
-
-    const handleModalOpen = useCallback((type, data) => {
-        setModalData({ type, data });
-        setModalOpen(true);
-    }, []);
+    const handleModalOpen = useCallback(
+        (type, data) => {
+          openModal(type, { data });
+        },
+        [openModal]
+    );
 
     return (
         <>
@@ -164,9 +166,7 @@ const SettingsPage = () => {
                 </div>
             </div>
 
-            {modalOpen && (
-                <ModalPage data={modalData} onClose={handleModalClose} />
-            )}
+            {modalOpen && <ModalPage data={modalData} onClose={closeModal} />}
         </>
     );
 };
