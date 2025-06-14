@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
-
+import useNavObserver from '../hooks/useNavObserver';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
@@ -99,7 +99,6 @@ const SettingsPage = () => {
     ];
 
     const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-general');
-    const observer = useRef(null);
 
     const {
         modalOpen,
@@ -108,30 +107,11 @@ const SettingsPage = () => {
         closeModal,
       } = useModalOpen();
 
-    useEffect(() => {
-        const options = {
-            root: null,
-            rootMargin: '-110px 0px -60% 0px',
-            threshold: 0,
-        };
-
-        observer.current = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        }, options);
-
-        sections.forEach(({ id }) => {
-            const el = document.getElementById(id);
-            if (el) observer.current.observe(el);
-        });
-
-        return () => {
-            if (observer.current) observer.current.disconnect();
-        };
-    }, [sections]);
+    useNavObserver(sections, setActiveSection, {
+        root: null,
+        rootMargin: '-110px 0px -60% 0px',
+        threshold: 0,
+    });
 
     const handleModalOpen = useCallback(
         (type, data) => {
