@@ -106,6 +106,16 @@ ul, li {
   margin: 0;
 }
 
+ul::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+ul::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
 ::-webkit-calendar-picker-indicator{
   margin-left: -25px;
 }
@@ -997,20 +1007,61 @@ input[type="number"]::-webkit-inner-spin-button {
   top: 10px;
 }
 
-.modal-content .member-box-list {
+.modal-content .member-box-content {
   padding-top: 15px;
 }
 
-.modal-content .member-box-list.tabs {
+.modal-content .member-box-content.tabs {
   padding-top: 20px;
 }
 
-.member-box-list {
+.member-box-content {
   display: flex;
   justify-content: center;
-  padding: 10px 5px;
+  padding: 10px;
   width: 100%;
   border: 1px solid var(--color-border);
+}
+
+.member-box-list-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.member-box-list {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.member-box-list-label {
+  padding-left: 0.5rem;
+  color: var(--color-text-sub);
+}
+
+.member-box-list-items {
+  flex-grow: 1;
+  border: 1px solid var(--color-border);
+  overflow-y: auto;
+  height: 225px;
+}
+
+.member-box-list-items li {
+  display: flex;
+  transition: all 0.2s ease;
+  padding: 3px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.member-box-list-items li:hover {
+  background-color: var(--color-main);
+  cursor: pointer;
+}
+
+.member-box-list button {
+  width: 100%;
 }
 
 .inactive-banner {
@@ -1290,15 +1341,6 @@ body.modal-open {
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
-}
-
-.file-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.file-list::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
 }
 
 .file-item {

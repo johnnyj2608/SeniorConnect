@@ -17,11 +17,11 @@ const MemberFilesCard = ({ data, onEdit }) => {
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
                 {files.length > 0 ? (
-                    <div className="file-list">
+                    <ul className="file-list">
                         {files.map((file, index) => (
-                            <FileItem key={index} file={file} />
+                            <li><FileItem key={index} file={file} /></li>
                         ))}
-                    </div>
+                    </ul>
                 ) : (
                     <p>{t('member.files.no_files')}</p>
                 )}

@@ -11,7 +11,7 @@ const FileUpload = ({ current, disabled, handleChange, required=false, autoFill=
             <div className="member-box-label">
                 {`${t('member.files.file')}${required ? ' *' : ''}`}
             </div>
-            <div className="member-box-list">
+            <div className="member-box-content">
                 <div className="file-container">
                     <div className="file-container-buttons">
                         <button

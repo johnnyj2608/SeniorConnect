@@ -45,7 +45,7 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                             .map((service) => (
                                 <div key={service.id} className="member-box">
                                     <label className="member-box-label">{t(`member.authorizations.${service.service_type}`)}</label>
-                                    <div className="member-box-list card-full">
+                                    <div className="member-box-content card-full">
                                         <MemberDetail label={t('member.authorizations.auth_id')} value={service.auth_id} />
                                         <MemberDetail label={t('member.authorizations.service_code')} value={service.service_code} />
                                         <MemberDetail label={t('member.authorizations.service_units')} value={service.service_units} />

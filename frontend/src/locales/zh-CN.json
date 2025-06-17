@@ -33,7 +33,9 @@
             "clear": "清除",
             "restore": "恢复",
             "attendance_sheets": "出勤表",
-            "generate": "生成"
+            "generate": "生成",
+            "add_mltc": "添加 MLTC",
+            "add_member": "添加会员"
         },
         "days_of_week": {
             "monday": "星期一",
@@ -119,8 +121,7 @@
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
         "new": "新会员",
-        "mltc": "MLTC",
-        "individual": "个人"
+        "all_mltcs": "所有 MLTC"
     },
     "member": {
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",

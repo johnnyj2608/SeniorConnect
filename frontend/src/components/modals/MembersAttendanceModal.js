@@ -1,24 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import CheckboxInput from '../inputs/CheckboxInput';
 import ListDetail from '../layout/ListDetail';
 
 const MembersAttendanceModal = ({ data, handleChange, mltcOptions }) => {
     const { t } = useTranslation();
-
-    const attendanceLabels = [
-        { key: 'mltc', label: t('members.mltc') },
-        { key: 'individual', label: t('members.individual') }
-    ];
-
-    const tabContent = {
-        mltc: (
-            <CheckboxInput
-                options={mltcOptions}
-            />
-        ),
-        individual: <p>Individual</p>,
-    };
 
     return (
         <>
@@ -28,7 +13,7 @@ const MembersAttendanceModal = ({ data, handleChange, mltcOptions }) => {
 
             <div className="member-box">
                 <label className="member-box-label">{t('general.month.label')}</label>
-                <div className="member-box-list">
+                <div className="member-box-content">
                     <input
                         type="month"
                     />
@@ -36,8 +21,28 @@ const MembersAttendanceModal = ({ data, handleChange, mltcOptions }) => {
             </div>
 
             <ListDetail
-                tabs={attendanceLabels}
-                tabContent={tabContent}
+                label={t('general.members')}
+                value={
+                    <div className="member-box-list-container">
+                        <div className="member-box-list">
+                            <div className="member-box-list-label">{t('model.mltc')}</div>
+                            <ul className="member-box-list-items">
+                                <li key="all-mltc">{t('members.all_mltcs')}</li>
+                                {mltcOptions.map((mltc) => (
+                                    <li key={mltc.id}>{mltc.name}</li>
+                                ))}
+                            </ul>
+                            <button className="action-button thin">{t('general.buttons.add_mltc')}</button>
+                        </div>
+                        <div className="member-box-list">
+                            <div className="member-box-list-label">{t('model.member')}</div>
+                            <div className="member-box-list-items">
+
+                            </div>
+                            <button className="action-button thin">{t('general.buttons.add_member')}</button>
+                        </div>
+                    </div>
+                }
             />
         </>
     );

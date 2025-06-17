@@ -54,7 +54,7 @@ function useModalEdit(data, onClose) {
 
     const newTab = useMemo(() => {
         const base = getNewTab(type, localData, id);
-        if (type === 'users' || type === 'authorizations') {
+        if (type === 'users') {
             return {
                 ...base,
                 allowed_mltcs: mltcOptions.map(opt => opt.id),
