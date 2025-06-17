@@ -11,6 +11,7 @@ import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
 import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
 import MembersAttendanceModal from '../components/modals/MembersAttendanceModal';
 import ModalTabs from '../components/modals/ModalTabs';
+import ModalQueue from '../components/modals/ModalQueue';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModalEdit from '../hooks/useModalEdit';
 
@@ -114,8 +115,6 @@ const ModalPage = ({ data, onClose }) => {
             case 'attendance':
                 return (
                     <MembersAttendanceModal 
-                        data={localData} 
-                        handleChange={handleChange} 
                         mltcOptions={mltcOptions}
                     />
                 );
@@ -148,23 +147,29 @@ const ModalPage = ({ data, onClose }) => {
                     </div>
                     {type !== 'info' && (
                         <div className="modal-tabs">
-                            <ModalTabs
-                                key="new-tab"
-                                index={-1}
-                                handleTabClick={handleAdd}
-                                type={type}
-                                tab={add_tab}
-                            />
-                            {localData.map((tab, index) => (
-                                <ModalTabs
-                                    key={index}
-                                    index={index}
-                                    activeTab={activeTab}
-                                    handleTabClick={setActiveTab}
-                                    type={type}
-                                    tab={tab}
-                                />
-                            ))}
+                            {type !== 'attendance' ? (
+                                <>
+                                    <ModalTabs
+                                        key="new-tab"
+                                        index={-1}
+                                        handleTabClick={handleAdd}
+                                        type={type}
+                                        tab={add_tab}
+                                    />
+                                    {localData.map((tab, index) => (
+                                        <ModalTabs
+                                            key={index}
+                                            index={index}
+                                            activeTab={activeTab}
+                                            handleTabClick={setActiveTab}
+                                            type={type}
+                                            tab={tab}
+                                        />
+                                    ))}
+                                </>
+                            ) : (
+                                <ModalQueue />
+                            )}
                         </div>
                     )}
                 </div>
