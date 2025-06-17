@@ -1001,6 +1001,10 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-top: 15px;
 }
 
+.modal-content .member-box-list.tabs {
+  padding-top: 20px;
+}
+
 .member-box-list {
   display: flex;
   justify-content: center;

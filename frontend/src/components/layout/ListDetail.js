@@ -29,7 +29,7 @@ const ListDetail = ({
                 <label className="member-box-label">{label}</label>
             )}
 
-            <div className="member-box-list">
+            <div className={`member-box-list${tabs ? ' tabs' : ''}`}>
                 {tabs ? tabContent?.[activeTab] ?? null : value}
             </div>
         </div>
