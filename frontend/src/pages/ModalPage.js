@@ -198,7 +198,7 @@ const ModalPage = ({ data, onClose }) => {
                                 </>
                             ) : (
                                 <ModalQueue 
-                                    queuedMember={queuedMembers}
+                                    members={queuedMembers}
                                     removeQueue={removeQueue}
                                 />
                             )}

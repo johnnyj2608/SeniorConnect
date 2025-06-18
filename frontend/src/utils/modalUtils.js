@@ -31,7 +31,7 @@ const sendRequest = async (url, method, data) => {
         if (excludedKeys.has(key)) continue;
         let value = data[key];
 
-        if (value === null) {
+        if (value === null || (Array.isArray(value) && value.length === 0)) {
             formData.append(key, '');
         } else if (key === 'members' || key === 'allowed_mltcs') {  // M2M
             value.forEach(item => formData.append(key, item));

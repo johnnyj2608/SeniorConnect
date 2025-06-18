@@ -18,8 +18,10 @@ const MemberFilesCard = ({ data, onEdit }) => {
                 <EditButton onClick={handleEdit} />
                 {files.length > 0 ? (
                     <ul className="file-list">
-                        {files.map((file, index) => (
-                            <li><FileItem key={index} file={file} /></li>
+                        {files.map((file) => (
+                            <li key={file.id}>
+                                <FileItem file={file} />
+                            </li>
                         ))}
                     </ul>
                 ) : (
