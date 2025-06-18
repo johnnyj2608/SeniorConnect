@@ -135,10 +135,12 @@ const ModalPage = ({ data, onClose }) => {
 
     const add_tab = useMemo(() => ({ add: true }), []);
 
+    const hasQueuedMembers = Object.values(queuedMembers).some(arr => arr.length > 0);
     const showDeleteButton =
         type !== 'info' &&
         localData.filter(tab => !tab.deleted).length > 0 &&
-        !localData[activeTab]?.is_org_admin;
+        !localData[activeTab]?.is_org_admin &&
+        (type !== 'attendance' || hasQueuedMembers);
 
     const middleButton = showDeleteButton ? (
         <button

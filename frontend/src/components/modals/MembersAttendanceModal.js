@@ -8,9 +8,29 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
     const [selectedMltc, setSelectedMltc] = useState('all');
     const [selectedMember, setSelectedMember] = useState();
 
+    const displayedMltcs = Object.keys(members)
+        .filter(mltcName => members[mltcName].length > 0);
+
     const displayedMembers = selectedMltc === 'all'
         ? Object.values(members).flat()
         : members[selectedMltc] || [];
+
+    const handleAddQueue = () => {
+        if (selectedMember) {
+            addQueue(selectedMember, selectedMember.mltc);
+        } else if (selectedMltc === 'all') {
+            Object.entries(members).forEach(([mltcName, memberList]) => {
+                memberList.forEach((member) => {
+                    addQueue(member, mltcName);
+                });
+            });
+        } else {
+            displayedMembers.forEach((member) => {
+                addQueue(member, selectedMltc);
+            });
+        }
+        setSelectedMember(undefined);
+    };
 
     return (
         <>
@@ -27,19 +47,21 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
                 <div className="member-box-list">
                     <div className="member-box-list-label">{t('model.mltc')}</div>
                     <ul className="member-box-list-items">
-                        <li
-                            key="all-mltc"
-                            className={selectedMltc === 'all' ? 'selected' : ''}
-                            onClick={() => {
-                                if (selectedMltc !== 'all') {
-                                    setSelectedMltc('all');
-                                    setSelectedMember(undefined);
-                                }
-                            }}
-                        >
-                            {t('members.all_mltcs')}
-                        </li>
-                        {Object.keys(members).map((mltcName) => (
+                        {displayedMltcs.length > 0 && (
+                            <li
+                                key="all-mltc"
+                                className={selectedMltc === 'all' ? 'selected' : ''}
+                                onClick={() => {
+                                    if (selectedMltc !== 'all') {
+                                        setSelectedMltc('all');
+                                        setSelectedMember(undefined);
+                                    }
+                                }}
+                            >
+                                {t('members.all_mltcs')}
+                            </li>
+                        )}
+                        {displayedMltcs.map((mltcName) => (
                             <li
                                 key={mltcName}
                                 className={selectedMltc === mltcName ? 'selected' : ''}
@@ -54,9 +76,6 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
                             </li>
                         ))}
                     </ul>
-                    <button className="action-button thin">
-                        {t('general.buttons.add_mltc')}
-                    </button>
                 </div>
                 <div className="member-box-list">
                     <div className="member-box-list-label">{t('model.member')}</div>
@@ -75,10 +94,21 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
                             </li>
                         ))}
                     </ul>
-                    <button className="action-button thin">
-                        {t('general.buttons.add_member')}
-                    </button>
+                   
                 </div>
+            </div>
+            <div className="member-row">
+                <button 
+                    className="action-button thin long"
+                    disabled={displayedMltcs.length === 0}
+                    onClick={handleAddQueue}
+                >
+                    {selectedMember
+                        ? t('general.buttons.add_member')
+                        : selectedMltc === 'all'
+                        ? t('general.buttons.add_all')
+                        : t('general.buttons.add_mltc')}
+                </button>
             </div>
         </>
     );

@@ -35,7 +35,8 @@
             "attendance_sheets": "Attendance Sheets",
             "generate": "Generate",
             "add_mltc": "Add MLTC",
-            "add_member": "Add Member"
+            "add_member": "Add Member",
+            "add_all": "Add All"
         },
         "days_of_week": {
             "monday": "Monday",

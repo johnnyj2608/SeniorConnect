@@ -35,7 +35,8 @@
             "attendance_sheets": "出勤表",
             "generate": "生成",
             "add_mltc": "添加 MLTC",
-            "add_member": "添加会员"
+            "add_member": "添加会员",
+            "add_all": "全部添加"
         },
         "days_of_week": {
             "monday": "星期一",
