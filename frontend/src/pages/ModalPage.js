@@ -39,7 +39,6 @@ const ModalPage = ({ data, onClose }) => {
         removeQueue,
         clearQueue,
     } = useModalQueue(data);
-    console.log(availableMembers)
 
     const [dragging, setDragging] = useState(false);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { 
     compareTabs,
     getActiveAuthIndex,
@@ -15,9 +15,11 @@ import {
  } from '../utils/validateUtils';
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 import { useTranslation } from 'react-i18next';
+import { MltcContext } from '../context/MltcContext';
 
 function useModalEdit(data, onClose) {
     const { t } = useTranslation();
+    const { mltcOptions, setMltcOptions } = useContext(MltcContext);
     const id = data.id;
     const type = data.type;
     const originalData = useMemo(() => (
@@ -34,23 +36,6 @@ function useModalEdit(data, onClose) {
             document.body.classList.remove('modal-open');
         };
     }, []);
-
-    const [mltcOptions, setMltcOptions] = useState([]);
-    useEffect(() => {
-        if (type === 'users' || type === 'authorizations') {
-          (async () => {
-            try {
-              const response = await fetchWithRefresh('/core/mltcs/');
-              if (!response.ok) return;
-    
-              const data = await response.json();
-              setMltcOptions(data);
-            } catch (err) {
-              console.error(err);
-            }
-          })();
-        }
-    }, [type]);
 
     const newTab = useMemo(() => {
         const base = getNewTab(type, localData, id);
@@ -137,33 +122,6 @@ function useModalEdit(data, onClose) {
         });
     };
 
-    const updateState = (savedData) => {
-        if (!data?.setData) return;
-      
-        data.setData(prev => {
-            if (!prev) return prev;
-        
-            switch (type) {
-                case 'info':
-                    return { ...prev, info: savedData };
-                case 'contacts':
-                    return { ...prev, contacts: savedData };
-                case 'absences':
-                    return { ...prev, absences: savedData };
-                case 'files':
-                    return { ...prev, files: savedData };
-                case 'authorizations': {
-                    const activeAuthIndex = getActiveAuthIndex(savedData);
-                    if (activeAuthIndex === -1) return { ...prev, auth: null }; 
-                    return { ...prev, auth: savedData[activeAuthIndex] };
-                }
-                default:
-                    console.error("Unknown update type:", type);
-                return prev;
-            }
-        });
-    };
-
     const handleSave = async (updatedData) => {
         let savedData = null;
         let requiredFields = [];
@@ -180,6 +138,8 @@ function useModalEdit(data, onClose) {
                 const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
                 const memberMethod = id === 'new' ? 'POST' : 'PUT';
                 savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
+
+                data.setData(prev => prev ? { ...prev, info: savedData } : prev);
                 break;
 
             case 'authorizations':
@@ -212,6 +172,13 @@ function useModalEdit(data, onClose) {
                         active_auth: activeAuth ? activeAuth.id : null,
                         change_date: activeAuth ? activeAuth.start_date : null,
                     });
+
+                    data.setData(prev => {
+                        if (!prev) return prev;
+                        const activeAuthIndex = getActiveAuthIndex(savedData);
+                        if (activeAuthIndex === -1) return { ...prev, auth: null };
+                        return { ...prev, auth: savedData[activeAuthIndex] };
+                    });
                 } catch (error) {
                     console.error('Error during auth fetch or enrollment update:', error);
                 }
@@ -224,6 +191,8 @@ function useModalEdit(data, onClose) {
                 if (!validateInputLength(updatedData, 10, 'phone', t('member.contacts.phone'))) return;
 
                 savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
+
+                data.setData(prev => prev ? { ...prev, contacts: savedData } : prev);
                 break;
 
             case 'absences':
@@ -236,6 +205,8 @@ function useModalEdit(data, onClose) {
                 if (!validateDateRange(updatedData)) return;
 
                 savedData = await saveDataTabs(updatedData, 'absences');
+
+                data.setData(prev => prev ? { ...prev, absences: savedData } : prev);
                 break;
 
             case 'files':
@@ -243,6 +214,8 @@ function useModalEdit(data, onClose) {
                 if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
 
                 savedData = await saveDataTabs(updatedData, 'files');
+
+                data.setData(prev => prev ? { ...prev, files: savedData } : prev);
                 break;
 
             case 'users':
@@ -256,7 +229,8 @@ function useModalEdit(data, onClose) {
                 if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
-                saveDataTabs(updatedData, 'mltcs');
+                savedData = await saveDataTabs(updatedData, 'mltcs');
+                setMltcOptions(savedData);
                 break;
             case 'languages':
                 requiredFields = ['name'];
@@ -277,7 +251,6 @@ function useModalEdit(data, onClose) {
                 console.error("Unknown save type:", type);
         }
 
-        updateState(savedData);
         onClose(savedData?.id);
     };
 

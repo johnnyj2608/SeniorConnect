@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next'
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
@@ -10,15 +10,16 @@ import Switch from 'react-switch';
 import { useLocation } from 'react-router-dom';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 import useFilteredMembers from '../hooks/useFilteredMembers';
+import { MltcContext } from '../context/MltcContext';
 
 const MembersListPage = () => {
 	const { t } = useTranslation();
+	const { mltcOptions } = useContext(MltcContext);
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
 	const mltcQueryParam = queryParams.get('mltc');
 
 	const [members, setMembers] = useState({});
-	const [mltcOptions, setMltcOptions] = useState([]);
 	const [mltcFilter, setMltcFilter] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const [showInactive, setShowInactive] = useState(false);
@@ -42,21 +43,9 @@ const MembersListPage = () => {
 		}
 	}, []);
 
-	const getMltcOptions = useCallback(async () => {
-		try {
-			const response = await fetchWithRefresh('/core/mltcs/');
-			if (!response.ok) throw new Error('Failed to fetch MLTC options');
-			const data = await response.json();
-			setMltcOptions(data);
-		} catch (error) {
-			console.error(error);
-		}
-	}, []);
-
 	useEffect(() => {
-		getMltcOptions();
 		getMembers();
-	}, [getMembers, getMltcOptions]);
+	}, [getMembers]);
 
 	useEffect(() => {
 		if (mltcQueryParam && mltcFilter !== mltcQueryParam) {
