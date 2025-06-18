@@ -11,7 +11,7 @@ const SettingsAdmin = ({ onEdit }) => {
   const handleEdit = async (url, type) => {
     try {
       const response = await fetchWithRefresh(url);
-      if (!response.ok) throw new Error;
+      if (!response.ok) throw new Error();
 
       const data = await response.json();
       onEdit(type, data);

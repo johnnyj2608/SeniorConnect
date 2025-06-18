@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ModalQueue = () => {
+const ModalQueue = ({ removeQueue }) => {
   return (
     <div>ModalQueue</div>
   )

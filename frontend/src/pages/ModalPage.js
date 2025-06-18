@@ -14,6 +14,7 @@ import ModalTabs from '../components/modals/ModalTabs';
 import ModalQueue from '../components/modals/ModalQueue';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModalEdit from '../hooks/useModalEdit';
+import useModalQueue from '../hooks/useModalQueue';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
@@ -30,6 +31,15 @@ const ModalPage = ({ data, onClose }) => {
         setActiveTab,
         mltcOptions,
     } = useModalEdit(data, onClose);
+
+    const {
+        queuedMembers,
+        availableMembers,
+        addQueue,
+        removeQueue,
+        clearQueue,
+    } = useModalQueue(data);
+    console.log(availableMembers)
 
     const [dragging, setDragging] = useState(false);
 
@@ -115,7 +125,8 @@ const ModalPage = ({ data, onClose }) => {
             case 'attendance':
                 return (
                     <MembersAttendanceModal 
-                        mltcOptions={mltcOptions}
+                        members={availableMembers}
+                        addQueue={addQueue}
                     />
                 );
             default:
@@ -129,6 +140,25 @@ const ModalPage = ({ data, onClose }) => {
         type !== 'info' &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin;
+
+    const middleButton = showDeleteButton ? (
+        <button
+            className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
+            onClick={() => {
+                if (type === 'attendance') {
+                    clearQueue();
+                } else {
+                    handleDelete(activeTab);
+                }
+            }}
+        >
+        {type === 'deleted'
+            ? t('general.buttons.restore')
+            : type === 'attendance'
+            ? t('general.buttons.clear')
+            : t('general.buttons.delete')}
+        </button>
+    ) : null;
 
     return (
         <div className="modal">
@@ -168,7 +198,10 @@ const ModalPage = ({ data, onClose }) => {
                                     ))}
                                 </>
                             ) : (
-                                <ModalQueue />
+                                <ModalQueue 
+                                    queuedMember={queuedMembers}
+                                    removeQueue={removeQueue}
+                                />
                             )}
                         </div>
                     )}
@@ -177,14 +210,7 @@ const ModalPage = ({ data, onClose }) => {
                     <button className="action-button" onClick={() => onClose()}>
                         {t('general.buttons.cancel')}
                     </button>
-                    {showDeleteButton && (
-                        <button
-                            className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
-                            onClick={() => handleDelete(activeTab)}
-                        >
-                            {type === 'deleted' ? t('general.buttons.restore') : t('general.buttons.delete')}
-                        </button>
-                    )}
+                    {middleButton}
                     <button className="action-button" onClick={() => handleSave(localData)}>
                         {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
                     </button>

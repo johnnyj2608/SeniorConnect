@@ -1,48 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ListDetail from '../layout/ListDetail';
 import NameDisplay from '../layout/NameDisplay';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MembersAttendanceModal = ({ mltcOptions }) => {
+const MembersAttendanceModal = ({ members, addQueue }) => {
     const { t } = useTranslation();
-    const [selectedMltc, setSelectedMltc] = useState(0);
-    const [members, setMembers] = useState({});
+    const [selectedMltc, setSelectedMltc] = useState('all');
     const [selectedMember, setSelectedMember] = useState();
 
-    useEffect(() => {
-        const getMembers = async () => {
-            const params = new URLSearchParams();
-            if (selectedMltc) params.append('mltc', selectedMltc);
-
-            try {
-                const response = await fetchWithRefresh(`/core/members?${params.toString()}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setMembers(data);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getMembers();
-    }, []);
-
-    useEffect(() => {
-        setSelectedMember(null);
-    }, [selectedMltc]);
-
-    const getFilteredMembers = () => {
-        if (selectedMltc === 0) {
-            return Object.entries(members)
-                .filter(([key]) => key !== 'unknown')
-                .flatMap(([, value]) => value);
-        } else {
-            const selectedMltcName = mltcOptions.find(m => m.id === selectedMltc)?.name;
-            return members[selectedMltcName] || [];
-        }
-    };
+    const displayedMembers = selectedMltc === 'all'
+        ? Object.values(members).flat()
+        : members[selectedMltc] || [];
 
     return (
         <>
@@ -61,18 +29,28 @@ const MembersAttendanceModal = ({ mltcOptions }) => {
                     <ul className="member-box-list-items">
                         <li
                             key="all-mltc"
-                            className={selectedMltc === 0 ? 'selected' : ''}
-                            onClick={() => setSelectedMltc(0)}
+                            className={selectedMltc === 'all' ? 'selected' : ''}
+                            onClick={() => {
+                                if (selectedMltc !== 'all') {
+                                    setSelectedMltc('all');
+                                    setSelectedMember(undefined);
+                                }
+                            }}
                         >
                             {t('members.all_mltcs')}
                         </li>
-                        {mltcOptions.map((mltc) => (
+                        {Object.keys(members).map((mltcName) => (
                             <li
-                                key={mltc.id}
-                                className={selectedMltc === mltc.id ? 'selected' : ''}
-                                onClick={() => setSelectedMltc(mltc.id)}
+                                key={mltcName}
+                                className={selectedMltc === mltcName ? 'selected' : ''}
+                                onClick={() => {
+                                    if (selectedMltc !== mltcName) {
+                                        setSelectedMltc(mltcName);
+                                        setSelectedMember(undefined);
+                                    }
+                                }}
                             >
-                                {mltc.name}
+                                {mltcName}
                             </li>
                         ))}
                     </ul>
@@ -83,11 +61,11 @@ const MembersAttendanceModal = ({ mltcOptions }) => {
                 <div className="member-box-list">
                     <div className="member-box-list-label">{t('model.member')}</div>
                     <ul className="member-box-list-items">
-                        {getFilteredMembers().map((member) => (
+                        {displayedMembers.map((member) => (
                             <li
                                 key={member.id}
-                                className={selectedMember === member.id ? 'selected' : ''}
-                                onClick={() => setSelectedMember(member.id)}
+                                className={selectedMember?.id === member.id ? 'selected' : ''}
+                                onClick={() => setSelectedMember(member)}
                             >
                                 <NameDisplay
                                     sadcId={member.sadc_member_id}

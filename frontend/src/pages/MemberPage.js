@@ -43,7 +43,7 @@ const MemberPage = () => {
 
       fetchMemberData();
     }
-  }, [id]);
+  }, [id, openModal]);
 
   const handleDelete = async () => {
     if (!memberData) return;

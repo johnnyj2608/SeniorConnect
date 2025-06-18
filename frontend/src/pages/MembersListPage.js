@@ -31,12 +31,8 @@ const MembersListPage = () => {
 	  } = useModalOpen();
 
 	const getMembers = useCallback(async () => {
-		const params = new URLSearchParams();
-		if (mltcFilter) params.append('filter', mltcFilter);
-		if (showInactive) params.append('show_inactive', 'true');
-
 		try {
-			const response = await fetchWithRefresh(`/core/members?${params.toString()}`);
+			const response = await fetchWithRefresh('/core/members/');
 			if (response.ok) {
 				const data = await response.json();
 				setMembers(data);
@@ -44,7 +40,7 @@ const MembersListPage = () => {
 		} catch (error) {
 			console.error(error);
 		}
-	}, [mltcFilter, showInactive]);
+	}, []);
 
 	const getMltcOptions = useCallback(async () => {
 		try {
@@ -60,11 +56,7 @@ const MembersListPage = () => {
 	useEffect(() => {
 		getMltcOptions();
 		getMembers();
-	}, [getMltcOptions, getMembers]);
-
-	useEffect(() => {
-		getMembers();
-	}, [getMembers]);
+	}, [getMembers, getMltcOptions]);
 
 	useEffect(() => {
 		if (mltcQueryParam && mltcFilter !== mltcQueryParam) {
@@ -72,14 +64,19 @@ const MembersListPage = () => {
 		}
 	}, [mltcQueryParam, mltcFilter]);
 
-	const { filteredMembers, totalFiltered } = useFilteredMembers({ members, searchQuery });
+	const { filteredMembers, totalFiltered } = useFilteredMembers({
+		members,
+		searchQuery,
+		showInactive,
+		mltcFilter,
+	});
 
 	return (
 		<>
 			<div className="page-header">
 				<div className="page-title-row">
 					<h2 className="page-title">&#9782; {t('general.members')}</h2>
-					<AttendanceButton onClick={() => openModal('attendance')} />
+					<AttendanceButton onClick={() => openModal('attendance', {data: members })} />
 				</div>
 
 				<div className="filter-row">
