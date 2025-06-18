@@ -35,5 +35,8 @@ def clear_active_auth_on_mltc_delete(sender, instance, **kwargs):
             if member and member.active_auth_id == auth.id:
                 member.active_auth = None
                 member.save(update_fields=['active_auth'])
+
+            auth.active = False
+            auth.save(update_fields=['active'])
         except Member.DoesNotExist:
             continue
