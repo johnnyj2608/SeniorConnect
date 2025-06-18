@@ -36,7 +36,8 @@
             "generate": "生成",
             "add_mltc": "添加 MLTC",
             "add_member": "添加会员",
-            "add_all": "全部添加"
+            "add_all": "全部添加",
+            "clear_mltc": "清除 MLTC"
         },
         "days_of_week": {
             "monday": "星期一",
@@ -122,7 +123,8 @@
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
         "new": "新会员",
-        "all_mltcs": "所有 MLTC"
+        "all_mltcs": "所有 MLTC",
+        "no_members": "没有成员添加到队列"
     },
     "member": {
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",

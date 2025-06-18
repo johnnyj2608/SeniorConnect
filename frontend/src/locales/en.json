@@ -36,7 +36,8 @@
             "generate": "Generate",
             "add_mltc": "Add MLTC",
             "add_member": "Add Member",
-            "add_all": "Add All"
+            "add_all": "Add All",
+            "clear_mltc": "Clear MLTC"
         },
         "days_of_week": {
             "monday": "Monday",
@@ -122,7 +123,8 @@
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",
         "new": "New",
-        "all_mltcs": "All MLTCs"
+        "all_mltcs": "All MLTCs",
+        "no_members": "No members added to queue"
     },
     "member": {
         "confirm_update": "Are you sure you want to {{action}} this member?",

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ListDetail from '../layout/ListDetail';
 import NameDisplay from '../layout/NameDisplay';
 
-const MembersAttendanceModal = ({ members, addQueue }) => {
+const MembersAttendanceModal = ({ members, addQueue, addMltcQueue }) => {
     const { t } = useTranslation();
     const [selectedMltc, setSelectedMltc] = useState('all');
     const [selectedMember, setSelectedMember] = useState();
@@ -19,15 +19,11 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
         if (selectedMember) {
             addQueue(selectedMember, selectedMember.mltc);
         } else if (selectedMltc === 'all') {
-            Object.entries(members).forEach(([mltcName, memberList]) => {
-                memberList.forEach((member) => {
-                    addQueue(member, mltcName);
-                });
+            displayedMltcs.forEach((mltcName) => {
+                addMltcQueue(mltcName);
             });
         } else {
-            displayedMembers.forEach((member) => {
-                addQueue(member, selectedMltc);
-            });
+            addMltcQueue(selectedMltc);
         }
         setSelectedMember(undefined);
     };

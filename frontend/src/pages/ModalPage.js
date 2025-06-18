@@ -37,6 +37,8 @@ const ModalPage = ({ data, onClose }) => {
         availableMembers,
         addQueue,
         removeQueue,
+        addMltcQueue,
+        clearMltcQueue,
         clearQueue,
     } = useModalQueue(data);
 
@@ -126,6 +128,7 @@ const ModalPage = ({ data, onClose }) => {
                     <MembersAttendanceModal 
                         members={availableMembers}
                         addQueue={addQueue}
+                        addMltcQueue={addMltcQueue}
                     />
                 );
             default:
@@ -202,6 +205,7 @@ const ModalPage = ({ data, onClose }) => {
                                 <ModalQueue 
                                     members={queuedMembers}
                                     removeQueue={removeQueue}
+                                    clearMltcQueue={clearMltcQueue}
                                 />
                             )}
                         </div>

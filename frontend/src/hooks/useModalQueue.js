@@ -48,6 +48,41 @@ function useModalQueue(data) {
         });
     };
 
+    const addMltcQueue = (mltcName) => {
+        setQueuedMembers((prev) => {
+            const updatedQueued = { ...prev };
+            const available = availableMembers[mltcName] || [];
+    
+            updatedQueued[mltcName] = [...available];
+    
+            return updatedQueued;
+        });
+    
+        setAvailableMembers((prev) => {
+            const updatedAvailable = { ...prev };
+            delete updatedAvailable[mltcName];
+            return updatedAvailable;
+        });
+    };
+    
+    const clearMltcQueue = (mltcName) => {
+        setAvailableMembers((prev) => {
+            const updatedAvailable = { ...prev };
+            const queued = queuedMembers[mltcName] || [];
+    
+            updatedAvailable[mltcName] = [...queued];
+    
+            return updatedAvailable;
+        });
+    
+        setQueuedMembers((prev) => {
+            const updatedQueued = { ...prev };
+            delete updatedQueued[mltcName];
+            return updatedQueued;
+        });
+    };
+    
+
     const clearQueue = () => {
         setAvailableMembers((prev) => {
             const merged = { ...prev };
@@ -64,6 +99,8 @@ function useModalQueue(data) {
         availableMembers,
         addQueue,
         removeQueue,
+        addMltcQueue,
+        clearMltcQueue,
         clearQueue,
     };
 }
