@@ -50,14 +50,26 @@ function useModalEdit(data, onClose) {
 
     const handleChange = (field) => (event) => {
         const { value, files } = event.target;
-        const normalizedValue = files?.[0]
-            ?? (field.includes('date') && value === '' ? null
-            : !isNaN(Number(value)) ? Number(value)
-            : value);
 
         setLocalData((prevData) => {
             if (type !== 'info') {
                 const currentTab = prevData[activeTab];
+                const oldValue = currentTab[field];
+
+                let normalizedValue;
+    
+                if (files?.[0]) {
+                    normalizedValue = files[0];
+                } else if (field.includes('date') && value === '') {
+                    normalizedValue = null;
+                } else if (Array.isArray(oldValue)) {
+                    normalizedValue = Array.isArray(value) ? value : [value];
+                } else if (typeof oldValue === 'number') {
+                    normalizedValue = value === '' ? '' : (!isNaN(Number(value)) ? Number(value) : value);
+                } else {
+                    normalizedValue = value;
+                }
+
                 const updatedTab = {
                     ...currentTab,
                     [field]: normalizedValue,
@@ -156,7 +168,7 @@ function useModalEdit(data, onClose) {
                     const oldActiveAuth = await response.json();
                     const oldMLTC = oldActiveAuth?.mltc || null;
 
-                    savedData = await saveDataTabs(updatedData, 'auths');
+                    savedData = await saveDataTabs(updatedData, 'auths', id);
                     const activeAuth = savedData.find(auth => auth.active === true);
                     const newMLTC = activeAuth?.mltc || null;
 
@@ -190,7 +202,7 @@ function useModalEdit(data, onClose) {
                 if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
                 if (!validateInputLength(updatedData, 10, 'phone', t('member.contacts.phone'))) return;
 
-                savedData = await saveDataTabs(updatedData, 'contacts', undefined, id);
+                savedData = await saveDataTabs(updatedData, 'contacts', id);
 
                 data.setData(prev => prev ? { ...prev, contacts: savedData } : prev);
                 break;
@@ -204,7 +216,7 @@ function useModalEdit(data, onClose) {
                 if (!validateRequiredFields('member.absences', updatedData, requiredFields, dependentFields)) return;
                 if (!validateDateRange(updatedData)) return;
 
-                savedData = await saveDataTabs(updatedData, 'absences');
+                savedData = await saveDataTabs(updatedData, 'absences', id);
 
                 data.setData(prev => prev ? { ...prev, absences: savedData } : prev);
                 break;
@@ -213,7 +225,7 @@ function useModalEdit(data, onClose) {
                 requiredFields = ['name', 'date', 'file'];
                 if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
 
-                savedData = await saveDataTabs(updatedData, 'files');
+                savedData = await saveDataTabs(updatedData, 'files', id);
 
                 data.setData(prev => prev ? { ...prev, files: savedData } : prev);
                 break;
@@ -222,7 +234,7 @@ function useModalEdit(data, onClose) {
                 requiredFields = ['name', 'email'];
                 if (!validateRequiredFields('settings.data.users', updatedData, requiredFields)) return;
 
-                saveDataTabs(updatedData, 'users', 'user');
+                saveDataTabs(updatedData, 'users', undefined, 'user');
                 break;
             case 'mltcs':
                 requiredFields = ['name'];

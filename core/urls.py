@@ -31,6 +31,7 @@ urlpatterns = [
 
     # Authorization related paths
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),
+    path('auths/<str:pk>/<str:member_pk>/', authorization_views.authorizationDelete, name="auth_delete"),
     path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/', authorization_views.getAuthorizations, name="auths"),
 
@@ -50,12 +51,14 @@ urlpatterns = [
     path('assessments/upcoming/', absence_views.getAssessmentUpcoming, name="assessments_upcoming"),
     path('absences/upcoming/', absence_views.getAbsencesUpcoming, name="absences_upcoming"),
     path('absences/member/<str:pk>/', absence_views.getAbsencesByMember, name="absence_by_member"),
+    path('absences/<str:pk>/<str:member_pk>/', absence_views.absenceDelete, name="absence_delete"),
     path('absences/<str:pk>/', absence_views.getAbsence, name="absence"),
     path('assessments/', absence_views.getAssessments, name="assessments"),
     path('absences/', absence_views.getAbsences, name="absences"),
 
     # File related paths
     path('files/member/<str:pk>/', file_views.getFilesByMember, name="file_by_member"),
+    path('files/<str:pk>/<str:member_pk>/', file_views.fileDelete, name="file_delete"),
     path('files/<str:pk>/', file_views.getFile, name="file"),
     path('files/', file_views.getFiles, name="files"),
 ]

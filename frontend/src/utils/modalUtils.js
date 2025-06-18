@@ -31,7 +31,7 @@ const sendRequest = async (url, method, data) => {
         if (excludedKeys.has(key)) continue;
         let value = data[key];
 
-        if (value === null || (Array.isArray(value) && value.length === 0)) {
+        if (value === null) {
             formData.append(key, '');
         } else if (key === 'members' || key === 'allowed_mltcs') {  // M2M
             value.forEach(item => formData.append(key, item));
@@ -49,7 +49,7 @@ const sendRequest = async (url, method, data) => {
     return response.json();
 };
 
-const saveDataTabs = async (data, endpoint, api='core', id=null) => {
+const saveDataTabs = async (data, endpoint, id=null, api='core') => {
     const dataArray = Object.values(data);
 
     const updatedData = dataArray.filter(data => data.edited && !data.deleted);
@@ -62,7 +62,7 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
             const dataMethod = item.id === 'new' ? 'POST' : 'PUT';
             if (dataMethod === 'PUT') {
                 dataEndpoint += `${item.id}/`;
-                if (id !== null) {
+                if (endpoint === 'contacts') {
                   dataEndpoint += `${id}/`;
                 }
             }
@@ -72,7 +72,7 @@ const saveDataTabs = async (data, endpoint, api='core', id=null) => {
         ...deletedData.map(async (item) => {
             let dataEndpoint = `/${api}/${endpoint}/${item.id}/`;
             if (id !== null) {
-              dataEndpoint += `${id}/`;
+                dataEndpoint += `${id}/`;
             }
       
             await fetchWithRefresh(dataEndpoint, { method: 'DELETE' });

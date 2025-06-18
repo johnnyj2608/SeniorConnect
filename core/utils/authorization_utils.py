@@ -41,8 +41,8 @@ def createAuthorization(request):
     file = request.FILES.get('file')
     if 'file' in data:
         del data['file']
-    
-    data['schedule'] = data.getlist('schedule', [])[0]
+
+    data['schedule'] = data.getlist('schedule', '')[0]
     services = json.loads(data.pop('services', [])[0])
 
     member_id = data.get('member')
@@ -60,13 +60,13 @@ def createAuthorization(request):
                 new_path = f"{member_id}/auths/{authorization.id}"
 
                 public_url, error = upload_file_to_supabase(
-                file, 
-                new_path,
-                authorization.file,
-            )
+                    file, 
+                    new_path,
+                    authorization.file,
+                )
             
-            if error:
-                raise Exception(f"Photo upload failed: {error}")
+                if error:
+                    raise Exception(f"Photo upload failed: {error}")
             
             authorization.file = public_url
             authorization.save()
@@ -163,7 +163,7 @@ def updateAuthorization(request, pk):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
-def deleteAuthorization(request, pk):
+def deleteAuthorization(request, pk, member_pk):
     authorization = get_object_or_404(Authorization, id=pk)
 
     if authorization.file:

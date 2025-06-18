@@ -104,7 +104,7 @@ def updateFile(request, pk):
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
-def deleteFile(request, pk):
+def deleteFile(request, pk, member_pk):
     file = get_object_or_404(File, id=pk)
     if file.file:
         file_path = get_relative_path_of_supabase(file.file)

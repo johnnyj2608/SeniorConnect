@@ -19,7 +19,7 @@ def getFiles(request):
         return createFile(request)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 def getFile(request, pk):
 
     if request.method == 'GET':
@@ -28,8 +28,10 @@ def getFile(request, pk):
     if request.method == 'PUT':
         return updateFile(request, pk=pk)
 
+@api_view(['DELETE'])
+def fileDelete(request, pk, member_pk):
     if request.method == 'DELETE':
-        return deleteFile(request, pk=pk)
+        return deleteFile(request, pk=pk, member_pk=member_pk)
     
 @api_view(['GET'])
 def getFilesByMember(request, pk):

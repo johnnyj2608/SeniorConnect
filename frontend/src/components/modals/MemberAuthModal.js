@@ -121,7 +121,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 <label>{t('member.authorizations.dx_code')}</label>
                 <select
                     required
-                    value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : 0 || ''}
+                    value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : ''}
                     onChange={handleChange('dx_code')}
                     disabled={disabled}
                 >
@@ -273,6 +273,7 @@ const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
         <ListDetail
             tabs={serviceLabels}
             tabContent={tabContent}
+            disabled={disabled}
         />
     );
 };

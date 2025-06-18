@@ -5,6 +5,7 @@ const ListDetail = ({
     value,
     tabs = null,
     tabContent = {},
+    disabled = false,
 }) => {
     const [activeTab, setActiveTab] = useState(tabs?.[0]?.key || '');
 
@@ -20,6 +21,7 @@ const ListDetail = ({
                             type="button"
                             onClick={() => setActiveTab(key)}
                             className={`member-box-tab ${activeTab === key ? 'active' : ''}`}
+                            disabled={disabled}
                         >
                             {label}
                         </button>

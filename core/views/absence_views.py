@@ -21,8 +21,7 @@ def getAbsences(request):
     if request.method == 'POST':
         return createAbsence(request)
 
-
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 def getAbsence(request, pk):
 
     if request.method == 'GET':
@@ -30,9 +29,11 @@ def getAbsence(request, pk):
 
     if request.method == 'PUT':
         return updateAbsence(request, pk=pk)
-
+    
+@api_view(['DELETE'])
+def absenceDelete(request, pk, member_pk):
     if request.method == 'DELETE':
-        return deleteAbsence(request, pk=pk)
+        return deleteAbsence(request, pk=pk, member_pk=member_pk)
     
 @api_view(['GET'])
 def getAbsencesByMember(request, pk):

@@ -8,11 +8,13 @@ const CheckboxInput = ({
     isAdmin = false,
     translateFn,
 }) => {
+    const values = Array.isArray(selectedValues) ? selectedValues : [];
+
     const handleCheckboxChange = (value) => (event) => {
         const checked = event.target.checked;
         const newSelected = checked
-            ? [...selectedValues, value]
-            : selectedValues.filter((v) => v !== value);
+            ? [...values, value]
+            : values.filter((v) => v !== value);
         onChange(newSelected);
     };
 
@@ -23,7 +25,7 @@ const CheckboxInput = ({
                     <input
                         type="checkbox"
                         value={id}
-                        checked={selectedValues.includes(id)}
+                        checked={values.includes(id)}
                         onChange={handleCheckboxChange(id)}
                         disabled={disabled || isAdmin}
                     />

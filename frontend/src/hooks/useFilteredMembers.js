@@ -11,7 +11,7 @@ const useFilterMembers = ({ members, searchQuery, mltcFilter, showInactive }) =>
 			if (mltcFilter && mltcFilter !== mltcName) return acc;
 
 			const matching = memberList.filter((member) => {
-				if (!showInactive && member.inactive) return false;
+				if (!showInactive && member.active === false) return false;
 
 				const fields = [
 					member.sadc_member_id,

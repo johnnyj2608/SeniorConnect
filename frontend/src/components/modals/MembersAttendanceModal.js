@@ -40,7 +40,12 @@ const MembersAttendanceModal = ({ members, addQueue }) => {
 
             <ListDetail 
                 label={t('general.month.label')}
-                value={<input type="month" />}
+                value={
+                    <input 
+                        type="month" 
+                        defaultValue={new Date().toISOString().slice(0, 7)} 
+                    />
+                }
             />
 
             <div className="member-box-list-container">

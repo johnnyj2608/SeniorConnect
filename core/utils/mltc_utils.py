@@ -24,10 +24,8 @@ def getMLTCDetail(request, pk):
 @transaction.atomic
 def createMLTC(request):
     data = request.data.copy()
-    
-    dx_codes = data.get('dx_codes', '').split(',')
-    data['dx_codes'] = json.dumps([code for code in dx_codes if code != ''])
 
+    data['dx_codes'] = data.getlist('dx_codes', '')[0]
     serializer = MLTCSerializer(data=data)
     
     try:

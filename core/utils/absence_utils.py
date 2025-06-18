@@ -77,7 +77,7 @@ def updateAbsence(request, pk):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
-def deleteAbsence(request, pk):
+def deleteAbsence(request, pk, member_pk):
     absence = get_object_or_404(Absence, id=pk)
     absence.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
