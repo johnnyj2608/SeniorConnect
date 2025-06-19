@@ -907,6 +907,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .member-detail > label {
   width: 150px;
+  flex-shrink: 0;
   color: var(--color-text-sub);
 }
 

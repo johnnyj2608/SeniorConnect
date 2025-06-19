@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
-import DetailRow from '../layout/MemberDetail';
+import MemberDetail from '../layout/MemberDetail';
 import { formatDate, formatStatus, formatTime } from '../../utils/formatUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {
@@ -33,11 +33,11 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						const isAssessment = abs.absence_type === 'assessment';
 						return (
 						<li key={idx} className="absence-item">
-							<DetailRow
+							<MemberDetail
 								label={t('member.absences.label')}
 								value={t(`member.absences.${abs.absence_type}`, abs.absence_type)}
 							/>
-							<DetailRow
+							<MemberDetail
 								label={
 									isAssessment
 										? t('member.absences.date')
@@ -47,28 +47,28 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 							/>
 							{isAssessment ? (
 								<>
-									<DetailRow
+									<MemberDetail
 										label={t('member.absences.time')}
 										value={formatTime(abs.time)}
 									/>
-									<DetailRow
+									<MemberDetail
 										label={t('member.absences.user')}
 										value={abs.user_name}
 									/>
 								</>
 							) : (
 								<>
-									<DetailRow
+									<MemberDetail
 										label={t('member.absences.end_date')}
 										value={formatDate(abs.end_date)}
 									/>
-									<DetailRow
+									<MemberDetail
 										label={t('member.absences.status')}
 										value={t(`member.absences.${formatStatus(abs.start_date, abs.end_date)}`)}
 									/>
 								</>
 							)}
-							<DetailRow label={t('general.note')} value={abs.note} />
+							<MemberDetail label={t('general.note')} value={abs.note} />
 						</li>
 					)})}
 				</ul>

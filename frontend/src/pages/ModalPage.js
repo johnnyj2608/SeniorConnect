@@ -178,7 +178,7 @@ const ModalPage = ({ data, onClose }) => {
                     handleSave(localData);
                 }
             }}
-            disabled={!hasQueuedMembers}
+            disabled={type === 'attendance' && !hasQueuedMembers}
         >
             {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
         </button>

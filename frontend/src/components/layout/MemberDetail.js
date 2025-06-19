@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DetailRow = ({ label, value }) => {
+const MemberDetail = ({ label, value }) => {
     if (value == null || value === '') return null;
 
     return (
@@ -11,4 +11,4 @@ const DetailRow = ({ label, value }) => {
     );   
 };
 
-export default DetailRow;
+export default MemberDetail;
