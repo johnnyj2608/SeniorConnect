@@ -18,13 +18,14 @@ def getLanguageDetail(request, pk):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createLanguage(request):
-    data = request.data
+    data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
     serializer = LanguageSerializer(data=data)
     
     try:
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
@@ -32,7 +33,8 @@ def createLanguage(request):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateLanguage(request, pk):
-    data = request.data
+    data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
     language = get_object_or_404(Language, id=pk)
     serializer = LanguageSerializer(instance=language, data=data)
     

@@ -23,6 +23,7 @@ def getMLTCDetail(request, pk):
 @transaction.atomic
 def createMLTC(request):
     data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
 
     data['dx_codes'] = data.getlist('dx_codes', '')[0]
     serializer = MLTCSerializer(data=data)
@@ -38,7 +39,8 @@ def createMLTC(request):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateMLTC(request, pk):
-    data = request.data
+    data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
     mltc = get_object_or_404(MLTC, id=pk)
     serializer = MLTCSerializer(instance=mltc, data=data)
     
