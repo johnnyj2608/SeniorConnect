@@ -38,6 +38,7 @@ class MemberSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 class MemberListSerializer(serializers.ModelSerializer):
+    sadc = serializers.ReadOnlyField(source='sadc_name')
     mltc = serializers.ReadOnlyField(source='mltc_name')
     schedule = serializers.ReadOnlyField()
     new = serializers.ReadOnlyField(source='is_new') 
@@ -54,6 +55,7 @@ class MemberListSerializer(serializers.ModelSerializer):
             'birth_date', 
             'phone',
             'active',
+            'sadc',
             'mltc',
             'schedule',
             'new',

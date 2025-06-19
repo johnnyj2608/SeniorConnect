@@ -48,7 +48,7 @@ const attendanceTemplateOne = (member, month, year) => {
 
 	doc.setFontSize(16);
 	doc.setFont('helvetica', 'bold');
-  	doc.text('SADC', x, y, { align: 'center' });
+  	doc.text(member.sadc.toUpperCase(), x, y, { align: 'center' });
 	doc.text('PARTICIPANT SIGN IN SHEET', x, y+8, { align: 'center' });
     doc.setFontSize(11);
 

@@ -21,12 +21,19 @@ class Language(models.Model):
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
         qs = self
-        if user.is_superuser or getattr(user, 'is_org_admin', False):
-            return qs
+        user_sadc = getattr(user, 'sadc', None)
         allowed_mltcs = user.allowed_mltcs.all()
-        return qs.filter(
-            Q(active_auth__mltc__in=allowed_mltcs) | Q(active_auth__isnull=True)
-        )
+
+        if user.is_superuser:
+            return qs
+        elif getattr(user, 'is_org_admin', False):
+            return qs.filter(sadc=user_sadc)
+        else:
+            return qs.filter(
+                sadc=user_sadc,
+            ).filter(
+                Q(active_auth__mltc__in=allowed_mltcs) | Q(active_auth__isnull=True)
+            )
 
 class MemberManager(models.Manager):
     def get_queryset(self):
@@ -36,6 +43,7 @@ class MemberManager(models.Manager):
         return self.get_queryset().accessible_by(user)
 
 class Member(models.Model):
+    sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE, related_name='members')
     sadc_member_id = models.IntegerField(null=False, blank=False)
     photo = models.URLField(null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
@@ -88,6 +96,10 @@ class Member(models.Model):
             (created_date and (today - created_date).days <= 30) or
             (enrollment_date and (today - enrollment_date).days <= 30)
         )
+    
+    @property
+    def sadc_name(self):
+        return self.sadc.name if self.sadc else None
     
     @property
     def mltc_name(self):
