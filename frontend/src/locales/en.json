@@ -57,6 +57,15 @@
             "sat": "Sat",
             "sun": "Sun"
         },
+        "days_of_week_long_short": {
+            "monday": "Mon",
+            "tuesday": "Tue",
+            "wednesday": "Wed",
+            "thursday": "Thu",
+            "friday": "Fri",
+            "saturday": "Sat",
+            "sunday": "Sun"
+        },
         "month": {
             "label": "Month",
             "january": "January",

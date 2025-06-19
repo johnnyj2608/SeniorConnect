@@ -57,6 +57,15 @@
             "sat": "六",
             "sun": "日"
         },
+        "days_of_week_long_short": {
+            "monday": "星期一",
+            "tuesday": "星期二",
+            "wednesday": "星期三",
+            "thursday": "星期四",
+            "friday": "星期五",
+            "saturday": "星期六",
+            "sunday": "星期日"
+        },
         "month": {
             "label": "月份",
             "january": "一月",
