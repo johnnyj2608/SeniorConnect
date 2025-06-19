@@ -32,13 +32,13 @@ def getMemberList(request):
     members = (
         request.accessible_members_qs
         .select_related('active_auth', 'active_auth__mltc')
-        .order_by('active_auth__mltc__name')
+        .order_by('active_auth__mltc__name', 'sadc_member_id')
     )
     serializer = MemberListSerializer(members, many=True)
 
     data = defaultdict(list)
     for member_data in serializer.data:
-        mltc_name = member_data['mltc'] if member_data.get('mltc') else "unknown"
+        mltc_name = member_data['mltc_name'] if member_data.get('mltc_name') else "unknown"
         data[mltc_name].append(member_data)
 
     return Response(data, status=status.HTTP_200_OK)
@@ -53,6 +53,7 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data.copy()
     public_url = None
+    data['sadc'] = request.user.sadc.id
 
     photo = request.FILES.get('photo')
     if 'photo' in data:
@@ -97,6 +98,7 @@ def updateMember(request, pk):
     data = request.data.copy()
     member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
     public_url = None
+    data['sadc'] = request.user.sadc.id
 
     try:
         if 'photo' in request.FILES:

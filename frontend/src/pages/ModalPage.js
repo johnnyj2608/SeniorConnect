@@ -174,6 +174,7 @@ const ModalPage = ({ data, onClose }) => {
             onClick={() => {
                 if (type === 'attendance') {
                     generateAttendance(queuedMembers, month);
+                    onClose();
                 } else {
                     handleSave(localData);
                 }

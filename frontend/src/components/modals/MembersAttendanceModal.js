@@ -17,7 +17,7 @@ const MembersAttendanceModal = ({ members, onMonthChange, addQueue, addMltcQueue
 
     const handleAddQueue = () => {
         if (selectedMember) {
-            addQueue(selectedMember, selectedMember.mltc);
+            addQueue(selectedMember, selectedMember.mltc_name);
         } else if (selectedMltc === 'all') {
             displayedMltcs.forEach((mltcName) => {
                 addMltcQueue(mltcName);

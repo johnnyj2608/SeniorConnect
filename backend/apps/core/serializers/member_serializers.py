@@ -39,27 +39,56 @@ class MemberSerializer(serializers.ModelSerializer):
 
 class MemberListSerializer(serializers.ModelSerializer):
     sadc = serializers.ReadOnlyField(source='sadc_name')
-    mltc = serializers.ReadOnlyField(source='mltc_name')
-    schedule = serializers.ReadOnlyField()
     new = serializers.ReadOnlyField(source='is_new') 
+    
+    mltc_member_id = serializers.ReadOnlyField(source='active_auth.mltc_member_id')
+    mltc_name = serializers.ReadOnlyField(source='active_auth.mltc.name')
+    dx_code = serializers.ReadOnlyField(source='active_auth.dx_code')
+    start_date = serializers.ReadOnlyField(source='active_auth.start_date')
+    end_date = serializers.ReadOnlyField(source='active_auth.end_date')
+    schedule = serializers.ReadOnlyField(source='active_auth.schedule')
+
+    sdc_auth_id = serializers.SerializerMethodField()
+    transportation_auth_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
-        fields =(
+        fields = (
             'id',
-            'sadc_member_id', 
+            'sadc_member_id',
             'photo',
-            'first_name', 
-            'last_name', 
+            'first_name',
+            'last_name',
             'alt_name',
-            'birth_date', 
+            'birth_date',
             'phone',
+            'gender',
+            'address',
             'active',
             'sadc',
-            'mltc',
-            'schedule',
             'new',
+            'mltc_member_id',
+            'mltc_name',
+            'dx_code',
+            'start_date',
+            'end_date',
+            'schedule',
+            'sdc_auth_id',
+            'transportation_auth_id',
         )
+
+    def get_service_auth_id(self, obj, service_type):
+        auth = obj.active_auth
+        if not auth:
+            return None
+        service = auth.services.filter(service_type=service_type).first()
+        return service.auth_id if service else None
+
+    def get_sdc_auth_id(self, obj):
+        return self.get_service_auth_id(obj, 'sdc')
+
+    def get_transportation_auth_id(self, obj):
+        return self.get_service_auth_id(obj, 'transportation')
 
 class MemberDeletedSerializer(serializers.ModelSerializer):
     days_until_30 = serializers.ReadOnlyField()

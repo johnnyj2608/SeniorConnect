@@ -41,7 +41,8 @@ const attendanceTemplateOne = (member, month, year) => {
 	let y = 10;
 
     const drawField = (label, value) => {
-        const text = `${label}${value ?? ''}`;
+		if (value == null || value === '') return; 
+        const text = `${label}${value}`;
         doc.text(text, x, y);
         x += doc.getTextWidth(text) + 5;
     };
@@ -67,18 +68,18 @@ const attendanceTemplateOne = (member, month, year) => {
 
     y = 42;
     x = marginX;
-    drawField('MLTC INSURANCE: ', member.mltc?.toUpperCase() || '');
+    drawField('MLTC INSURANCE: ', member.mltc_name?.toUpperCase() || '');
     drawField('ID: ', member.mltc_member_id);
     doc.text(
-        `EFFECTIVE: ${formatDate(member.start_date)} - ${formatDate(member.end_date)}`, 
+        `EFFECTIVE: ${formatDate(member.start_date)} — ${formatDate(member.end_date)}`, 
         pageWidth - 5, y, { align: 'right' }
     );
 
     y = 49;
     x = marginX;
 	drawField('DX CODE: ', member.dx_code);
-    drawField('SDC: ', member.mltc_member_id);
-    drawField('TRANSP: ', member.transportation);
+    drawField('SDC: ', member.sdc_auth_id);
+    drawField('TRANSP: ', member.transportation_auth_id);
 
     y = 56;
     x = marginX;
@@ -164,16 +165,15 @@ const generateAttendance = async (memberList, monthYear) => {
         for (const member of members) {
             const pdfBlob = attendanceTemplateOne(member, month, year);
 
-            const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} - ${month}/${shortYear}.pdf`
-                .replace(/\s+/g, '_');
+            const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} -  Attendance ${month}-${shortYear}.pdf`
             folder.file(fileName, pdfBlob);
 
             // Uncomment to preview instead of download
-            if (mltcName === Object.keys(memberList)[0] && member === members[0]) {
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                window.open(pdfUrl);
-                return;
-            }
+            // if (mltcName === Object.keys(memberList)[0] && member === members[0]) {
+            //     const pdfUrl = URL.createObjectURL(pdfBlob);
+            //     window.open(pdfUrl);
+            //     return;
+            // }
         }
     }
 
