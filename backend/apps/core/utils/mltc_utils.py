@@ -4,7 +4,6 @@ from rest_framework.generics import get_object_or_404
 from ..models.authorization_model import MLTC
 from ..serializers.authorization_serializers import MLTCSerializer
 from django.db import transaction
-import json
 
 def getMLTCList(request):
     mltcs = MLTC.objects.all()

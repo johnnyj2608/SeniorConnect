@@ -3,13 +3,13 @@ from django.db.models.signals import post_save, pre_save, pre_delete, m2m_change
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser
-from user.authentication import get_current_user
-from audit.models import AuditLog
-from core.models.member_model import Member
-from core.models.contact_model import Contact
-from core.models.authorization_model import Authorization, MLTC
-from core.models.absence_model import Absence
-from core.models.file_model import File
+from .models import AuditLog
+from ..user.authentication import get_current_user
+from ..core.models.member_model import Member
+from ..core.models.contact_model import Contact
+from ..core.models.authorization_model import Authorization, MLTC
+from ..core.models.absence_model import Absence
+from ..core.models.file_model import File
 
 WHITELISTED_MODELS = (Member, Contact, Authorization, MLTC, Absence, File)
 

@@ -1,4 +1,4 @@
-from user.authentication import _thread_locals
+from .authentication import _thread_locals
 
 class ClearThreadLocalsMiddleware:
     def __init__(self, get_response):

@@ -3,7 +3,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
-from core.models.member_model import Member
+from ..core.models.member_model import Member
 
 class AuditLog(models.Model):
     

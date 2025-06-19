@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class AuditConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'audit'
+    name = 'backend.apps.audit'
 
     def ready(self):
-        import audit.signals
+        import backend.apps.audit.signals

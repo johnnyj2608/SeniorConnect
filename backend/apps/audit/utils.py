@@ -8,7 +8,7 @@ from rest_framework.generics import get_object_or_404
 from .models import AuditLog
 from .serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
-from core.access import member_access_filter, member_access_fk
+from ..core.access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getAuditList(request):

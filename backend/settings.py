@@ -41,9 +41,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
-    'core',
-    'user',
-    'audit',
+    'backend.apps.core',
+    'backend.apps.user',
+    'backend.apps.audit',
 ]
 
 AUTH_USER_MODEL = 'user.User'
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'user.middleware.ClearThreadLocalsMiddleware',
+    'backend.apps.user.middleware.ClearThreadLocalsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'user.authentication.JWTAuthenticationFromCookie',
+        'backend.apps.user.authentication.JWTAuthenticationFromCookie',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',

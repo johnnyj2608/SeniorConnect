@@ -1588,6 +1588,16 @@ body.modal-open {
   overscroll-behavior: auto;
 }
 
+.reports-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.reports-content::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+
 .report-table {
   width: 100%;
   border-collapse: collapse;
@@ -1732,6 +1742,7 @@ body.modal-open {
 
   .nav-links.open {
     display: flex;
+    min-width: 125px;
   }
 
   .home-content {
