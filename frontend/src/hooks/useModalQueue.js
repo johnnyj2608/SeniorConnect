@@ -8,16 +8,24 @@ function useModalQueue(data) {
 
     const [queuedMembers, setQueuedMembers] = useState({});
     const [availableMembers, setAvailableMembers] = useState(initialAvailable);
+    const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
 
     if (data?.type !== 'attendance') {
         return {
             queuedMembers: {},
             availableMembers: {},
+            month: '',
+            onMonthChange: () => {},
             addQueue: () => {},
             removeQueue: () => {},
             clearQueue: () => {},
+            
         };
     }
+
+    const onMonthChange = (value) => {
+        setMonth(value);
+    };
 
     const addQueue = (member, mltcName) => {
         setAvailableMembers((prev) => {
@@ -97,6 +105,8 @@ function useModalQueue(data) {
     return {
         queuedMembers,
         availableMembers,
+        month,
+        onMonthChange,
         addQueue,
         removeQueue,
         addMltcQueue,

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ListDetail from '../layout/ListDetail';
 import NameDisplay from '../layout/NameDisplay';
 
-const MembersAttendanceModal = ({ members, addQueue, addMltcQueue }) => {
+const MembersAttendanceModal = ({ members, onMonthChange, addQueue, addMltcQueue }) => {
     const { t } = useTranslation();
     const [selectedMltc, setSelectedMltc] = useState('all');
     const [selectedMember, setSelectedMember] = useState();
@@ -40,6 +40,7 @@ const MembersAttendanceModal = ({ members, addQueue, addMltcQueue }) => {
                     <input 
                         type="month" 
                         defaultValue={new Date().toISOString().slice(0, 7)} 
+                        onChange={(e) => onMonthChange(e.target.value)}
                     />
                 }
             />

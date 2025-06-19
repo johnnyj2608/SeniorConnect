@@ -15,6 +15,7 @@ import ModalQueue from '../components/modals/ModalQueue';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModalEdit from '../hooks/useModalEdit';
 import useModalQueue from '../hooks/useModalQueue';
+import generateAttendance from '../utils/generateAttendance';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
@@ -35,6 +36,8 @@ const ModalPage = ({ data, onClose }) => {
     const {
         queuedMembers,
         availableMembers,
+        month,
+        onMonthChange,
         addQueue,
         removeQueue,
         addMltcQueue,
@@ -127,6 +130,7 @@ const ModalPage = ({ data, onClose }) => {
                 return (
                     <MembersAttendanceModal 
                         members={availableMembers}
+                        onMonthChange={onMonthChange}
                         addQueue={addQueue}
                         addMltcQueue={addMltcQueue}
                     />
@@ -145,7 +149,7 @@ const ModalPage = ({ data, onClose }) => {
         !localData[activeTab]?.is_org_admin &&
         (type !== 'attendance' || hasQueuedMembers);
 
-    const middleButton = showDeleteButton ? (
+    const deleteButton = showDeleteButton ? (
         <button
             className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
             onClick={() => {
@@ -163,6 +167,22 @@ const ModalPage = ({ data, onClose }) => {
             : t('general.buttons.delete')}
         </button>
     ) : null;
+
+    const saveButton = (
+        <button
+            className="action-button"
+            onClick={() => {
+                if (type === 'attendance') {
+                    generateAttendance(queuedMembers, month);
+                } else {
+                    handleSave(localData);
+                }
+            }}
+            disabled={!hasQueuedMembers}
+        >
+            {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
+        </button>
+    );
 
     return (
         <div className="modal">
@@ -215,10 +235,8 @@ const ModalPage = ({ data, onClose }) => {
                     <button className="action-button" onClick={() => onClose()}>
                         {t('general.buttons.cancel')}
                     </button>
-                    {middleButton}
-                    <button className="action-button" onClick={() => handleSave(localData)}>
-                        {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
-                    </button>
+                    {deleteButton}
+                    {saveButton}
                 </div>
             </div>
         </div>
