@@ -270,14 +270,24 @@
     "settings": {
         "general": {
             "label": "General",
+            "sadc": "SADC",
+            "email": "Email",
+            "phone": "Phone",
+            "address" :"Address", 
+            "npi": "NPI"
+        },
+        "preferences": {
+            "label": "Preferences",
             "language": "Language",
             "dark_mode": "Dark mode",
             "notification": "Notification",
-            "alt_name": "Display nickname",
-            "upload": "Upload"
+            "alt_name": "Display nickname"
         },
         "admin": {
             "label": "Admin",
+            "upload": "Upload",
+            "attendance": "Attendance",
+            "template": "Template",
             "users": {
                 "label": "Users",
                 "name": "Name",

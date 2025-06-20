@@ -4,9 +4,10 @@ import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
 import useNavObserver from '../hooks/useNavObserver';
+import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
-import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
+import SettingsPreferences from '../components/settingsContent/SettingsPreferences';
 import SettingsData from '../components/settingsContent/SettingsData';
 import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
@@ -24,13 +25,22 @@ const scrollToSection = (id) => {
 
 const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
     <div className="settings-nav">
-        <SettingsItem
+         <SettingsItem
             label={t('settings.general.label')}
             isNav
             isActive={activeSection === 'settings-general'}
             onClick={() => {
                 setActiveSection('settings-general');
                 scrollToSection('settings-general');
+            }}
+        />
+        <SettingsItem
+            label={t('settings.preferences.label')}
+            isNav
+            isActive={activeSection === 'settings-preferences'}
+            onClick={() => {
+                setActiveSection('settings-preferences');
+                scrollToSection('settings-preferences');
             }}
         />
         {user?.is_org_admin && (
@@ -91,6 +101,7 @@ const SettingsPage = () => {
 
     const sections = [
         { id: 'settings-general' },
+        { id: 'settings-preferences' },
         { id: 'settings-admin' },
         { id: 'settings-data' },
         { id: 'settings-snapshots' },
@@ -138,7 +149,8 @@ const SettingsPage = () => {
 
                 <div className="settings-content">
                     <SettingsGeneral />
-                    <SettingsAdmin onEdit={handleModalOpen} />
+                    <SettingsPreferences />
+                    <SettingsAdmin onEdit={handleModalOpen}/>
                     <SettingsData onEdit={handleModalOpen} />
                     <SettingsSnapshots />
                     <SettingsSupport />

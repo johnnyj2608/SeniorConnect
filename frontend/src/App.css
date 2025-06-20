@@ -1721,6 +1721,14 @@ body.modal-open {
   padding: 10px;
 }
 
+.section-main .member-detail span {
+  width: 100%;
+}
+
+.section-main .member-detail input {
+  width: 80%;
+}
+
 @media (max-width: 835px) {
   .app-header > span {
     margin-right: 0;

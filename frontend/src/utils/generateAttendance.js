@@ -154,7 +154,13 @@ const attendanceTemplateOne = (member, month, year) => {
     return doc.output('blob');
 };
 
-const generateAttendance = async (memberList, monthYear) => {
+const attendanceTemplateTwo = (member, month, year) => {
+    const doc = new jsPDF();
+
+    return doc.output('blob');
+}
+
+const generateAttendance = async (memberList, monthYear, attendanceTemplate) => {
     const zip = new JSZip();
     const [year, month] = monthYear.split('-');
     const shortYear = year.slice(2);
@@ -163,17 +169,25 @@ const generateAttendance = async (memberList, monthYear) => {
         const folder = zip.folder(mltcName);
 
         for (const member of members) {
-            const pdfBlob = attendanceTemplateOne(member, month, year);
+            let pdfBlob;
+            switch (attendanceTemplate) {
+                case 2:
+                    pdfBlob = attendanceTemplateTwo(member, month, year);
+                    break;
+                case 1:
+                default:
+                    pdfBlob = attendanceTemplateOne(member, month, year);
+            }
 
             const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} -  Attendance ${month}-${shortYear}.pdf`
             folder.file(fileName, pdfBlob);
 
             // Uncomment to preview instead of download
-            // if (mltcName === Object.keys(memberList)[0] && member === members[0]) {
-            //     const pdfUrl = URL.createObjectURL(pdfBlob);
-            //     window.open(pdfUrl);
-            //     return;
-            // }
+            if (mltcName === Object.keys(memberList)[0] && member === members[0]) {
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                window.open(pdfUrl);
+                return;
+            }
         }
     }
 

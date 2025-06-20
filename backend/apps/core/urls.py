@@ -8,9 +8,12 @@ from .views import (
     absence_views,
     file_views,
     enrollment_views,
+    sadc_views,
 )
 
 urlpatterns = [
+    path('sadc/', sadc_views.getSadc, name="sadc"),
+
     # Member related paths
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
     path('members/birthdays/', member_views.getMembersBirthdays, name="members_birthdays"),

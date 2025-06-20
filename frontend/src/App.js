@@ -9,7 +9,7 @@ import './App.css';
 import './i18n';
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { MltcProvider } from './context/MltcContext';
+import AppProviders from './context/AppProviders';
 import usePreferences from './hooks/usePreferences';
 import PrivateRoute from './components/routes/PrivateRoute';
 import ScrollUp from './components/routes/ScrollUp';
@@ -59,9 +59,9 @@ function App() {
   return (
     <Router>
       <ScrollUp />
-      <MltcProvider>
+      <AppProviders>
         <Main />
-      </MltcProvider>
+      </AppProviders>
     </Router>
   );
 }

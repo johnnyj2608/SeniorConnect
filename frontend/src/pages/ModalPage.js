@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SadcContext } from '../context/SadcContext';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
@@ -19,6 +20,7 @@ import generateAttendance from '../utils/generateAttendance';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
+    const { sadc } = useContext(SadcContext);
 
     const {
         type,
@@ -173,7 +175,7 @@ const ModalPage = ({ data, onClose }) => {
             className="action-button"
             onClick={() => {
                 if (type === 'attendance') {
-                    generateAttendance(queuedMembers, month);
+                    generateAttendance(queuedMembers, month, sadc.attendance_template);
                     onClose();
                 } else {
                     handleSave(localData);
