@@ -179,7 +179,7 @@ const generateAttendance = async (memberList, monthYear, attendanceTemplate) => 
                     pdfBlob = attendanceTemplateOne(member, month, year);
             }
 
-            const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} -  Attendance ${month}-${shortYear}.pdf`
+            const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} - Attendance ${month}_${shortYear}.pdf`
             folder.file(fileName, pdfBlob);
 
             // Uncomment to preview instead of download

@@ -285,7 +285,6 @@
         },
         "admin": {
             "label": "Admin",
-            "upload": "Upload",
             "attendance": "Attendance",
             "template": "Template",
             "users": {
@@ -310,8 +309,8 @@
         },
         "data": {
             "label": "Data",
-            "download_template": "Download template",
             "download_members": "Download members",
+            "upload_members": "Upload Members",
             "restore_deleted": "Restore deleted",
             "days_left": "{{days}} Days left",
             "no_deleted": "No members to restore"

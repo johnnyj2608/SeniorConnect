@@ -65,7 +65,10 @@ const MembersListPage = () => {
 			<div className="page-header">
 				<div className="page-title-row">
 					<h2 className="page-title">&#9782; {t('general.members')}</h2>
-					<AttendanceButton onClick={() => openModal('attendance', {data: members })} />
+					<AttendanceButton 
+						onClick={() => openModal('attendance', {data: members })} 
+						disabled={Object.keys(members || {}).length === 0}
+					/>
 				</div>
 
 				<div className="filter-row">

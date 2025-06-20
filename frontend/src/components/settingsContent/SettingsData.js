@@ -18,12 +18,43 @@ const SettingsData = ({ onEdit }) => {
     }
   };
 
+  const exportMemberCSV = async () => {
+    try {
+      const response = await fetchWithRefresh('/core/members/csv/');
+      if (!response.ok) throw new Error();
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+
+      const todayStr = new Date()
+        .toLocaleDateString('en-US', {
+          year: '2-digit',
+          month: '2-digit',
+          day: '2-digit'
+        })
+        .replace(/\//g, '_');
+      const filename = `member_data_${todayStr}.csv`;
+      a.download = filename;
+
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div id="settings-data">
       <h3 className="section-title">{t('settings.data.label')}</h3>
       <div className="section-main">
-        <SettingsItem label={t('settings.data.download_template')} onClick={() => console.log('Template')} />
-        <SettingsItem label={t('settings.data.download_members')} onClick={() => console.log('Members')} />
+        <SettingsItem label={t('settings.data.download_members')} onClick={exportMemberCSV} />
+        <SettingsItem label={t('settings.data.upload_members')} onClick={() => console.log('Upload')}/>
         <SettingsItem label={t('settings.data.restore_deleted')} onClick={handleDeletedModal} />
       </div>
     </div>

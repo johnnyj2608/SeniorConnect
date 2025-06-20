@@ -60,10 +60,6 @@ const SettingsAdmin = ({ onEdit }) => {
           onClick={() => handleEdit('/user/users/', 'users')}
         />
         <SettingsItem
-          label={t('settings.admin.upload')}
-          onClick={() => console.log('Upload')}
-        />
-        <SettingsItem
           label={t('settings.admin.attendance')}
           component={
             <select

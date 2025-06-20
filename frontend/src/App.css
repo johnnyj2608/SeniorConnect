@@ -465,6 +465,16 @@ input[type="number"]::-webkit-inner-spin-button {
   font-size: 16px;
 }
 
+.icon-button:disabled {
+  color: gray;
+  fill: var(--color-gray-dark);
+  cursor: default;
+}
+
+.icon-button:disabled:hover {
+    transform: none;
+}
+
 .dropdown-icon {
   position: relative;
   top: 0;

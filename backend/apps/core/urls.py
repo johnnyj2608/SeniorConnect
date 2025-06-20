@@ -15,6 +15,7 @@ urlpatterns = [
     path('sadc/', sadc_views.getSadc, name="sadc"),
 
     # Member related paths
+    path('members/csv/', member_views.getMembersCsv, name="members_csv"),
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
     path('members/birthdays/', member_views.getMembersBirthdays, name="members_birthdays"),
     path('members/deleted/', member_views.getMembersDeleted, name="members_deleted"),

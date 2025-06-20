@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.db.models import Count, Q
 from datetime import timedelta
+from django.http import HttpResponse
 from django.utils import timezone
 from collections import defaultdict
 from rest_framework.response import Response
@@ -26,6 +27,7 @@ from .supabase import (
     delete_folder_from_supabase
 )
 from ..access import member_access_filter, member_access_pk
+import csv
 
 @member_access_filter()
 def getMemberList(request):
@@ -243,3 +245,45 @@ def getMemberProfile(request, pk):
         'contacts': ContactSerializer(contacts, many=True).data,
         'files': FileSerializer(files, many=True).data
     }, status=status.HTTP_200_OK)
+
+@member_access_filter()
+def exportmembersCsv(request):
+    members = request.accessible_members_qs.select_related('language', 'active_auth', 'active_auth__mltc')
+
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="member_data.csv"'
+    response.write('\ufeff')
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'sadc_member_id', 'first_name', 'last_name', 'alt_name',
+        'birth_date', 'gender', 'address', 'phone', 'email',
+        'medicaid', 'ssn', 'language', 'enrollment_date', 'note', 
+        'mltc', 'mltc_member_id', 'start_date', 'end_date', 'schedule',
+    ])
+
+    for member in members:
+        auth = member.active_auth
+        writer.writerow([
+            member.sadc_member_id,
+            member.first_name,
+            member.last_name,
+            member.alt_name or '',
+            member.birth_date.isoformat(),
+            member.gender,
+            member.address or '',
+            member.phone or '',
+            member.email or '',
+            member.medicaid or '',
+            member.ssn or '',
+            member.language.name if member.language else '',
+            member.enrollment_date.isoformat() if member.enrollment_date else '',
+            member.note or '',
+            auth.mltc.name if auth and auth.mltc else '',
+            auth.mltc_member_id if auth else '',
+            auth.start_date.isoformat() if auth and auth.start_date else '',
+            auth.end_date.isoformat() if auth and auth.end_date else '',
+            ', '.join(day for day in auth.schedule) if auth and auth.schedule else ''
+        ])
+
+    return response

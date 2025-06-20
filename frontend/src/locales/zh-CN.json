@@ -285,7 +285,6 @@
         },
         "admin": {
             "label": "数据",
-            "upload": "上传",
             "attendance": "出勤",
             "template": "模板",
             "users": {
@@ -310,8 +309,8 @@
         },
         "data": {
             "label": "数据",
-            "download_template": "下载模板",
             "download_members": "下载成员",
+            "upload": "上传成员",
             "restore_deleted": "恢复已删除",
             "days_left": "剩余{{days}}天",
             "no_deleted": "没有可恢复的成员"
