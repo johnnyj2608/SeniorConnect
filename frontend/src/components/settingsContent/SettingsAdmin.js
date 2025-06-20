@@ -29,7 +29,7 @@ const SettingsAdmin = ({ onEdit }) => {
 
   const updateAttendanceTemplate = async (newValue) => {
     try {
-      const response = await fetchWithRefresh(`/core/sadc/`, {
+      const response = await fetchWithRefresh(`/tenant/sadcs/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ attendance_template: newValue }),
@@ -49,11 +49,11 @@ const SettingsAdmin = ({ onEdit }) => {
       <div className="section-main">
         <SettingsItem
           label={t('model.mltc')}
-          onClick={() => handleEdit('/core/mltcs/', 'mltcs')}
+          onClick={() => handleEdit('/tenant/mltcs/', 'mltcs')}
         />
         <SettingsItem
           label={t('settings.admin.language.label')}
-          onClick={() => handleEdit('/core/languages/', 'languages')}
+          onClick={() => handleEdit('/tenant/languages/', 'languages')}
         />
         <SettingsItem
           label={t('settings.admin.users.label')}

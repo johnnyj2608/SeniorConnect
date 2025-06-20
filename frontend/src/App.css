@@ -28,6 +28,8 @@
   --color-good: #00ac47;
   --color-good-hover: #146c2e;
   --color-good-background: #e7f8ed;
+
+  --color-title: #6366F1;
 }
 
 .dark {
@@ -35,6 +37,8 @@
   --color-content: #1D2226;
   --color-text: #E9E9E9;
   --color-text-sub: rgb(255 255 255 / .6);
+
+  --color-title: #E9E9E9;
 }
 
 * {
@@ -173,7 +177,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .app-header h1 {
-  color: var(--color-main);
+  color: var(--color-title);
   padding-left: 20px;
   margin-left: 5%;
 }
@@ -217,6 +221,14 @@ input[type="number"]::-webkit-inner-spin-button {
 .nav-links button:hover {
   background-color: var(--color-main);
   color: var(--color-white);
+}
+
+.nav-links button span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.nav-links button:hover span {
   transform: scale(1.05);
 }
 
@@ -1285,6 +1297,7 @@ body.modal-open {
 }
 
 .modal-tabs-placeholder {
+  margin-top: 1rem;
   padding: 10px;
   text-align: center;
 }
@@ -1668,7 +1681,8 @@ body.modal-open {
 .settings-nav {
   position: sticky;
   top: 100px;
-  width: 25%;
+  width: 20%;
+  min-width: 225px;
   background-color: var(--color-content);
   padding: 1rem;
   border-radius: 8px;
@@ -1720,7 +1734,7 @@ body.modal-open {
 }
 
 .settings-content {
-  width: 72.5%;
+  width: 77.5%;
   border-radius: 8px;
   padding: 1rem;
   background-color: var(--color-content);

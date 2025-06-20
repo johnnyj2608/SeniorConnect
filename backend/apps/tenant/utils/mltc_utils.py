@@ -1,26 +1,32 @@
-from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from ..models.member_model import Language
-from ..serializers.member_serializers import LanguageSerializer
+from ..models.mltc_model import MLTC
+from ..serializers.mltc_serializers import MLTCSerializer
+from django.db import transaction
 
-def getLanguageList(request):
-    languages = Language.objects.annotate(
-        usage_count=Count('members')
-    ).order_by('-usage_count')
-    serializer = LanguageSerializer(languages, many=True)
+def getMLTCList(request):
+    mltcs = MLTC.objects.all()
+
+    user = request.user
+    if not (user.is_superuser or user.is_org_admin):
+        mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
+
+    serializer = MLTCSerializer(mltcs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def getLanguageDetail(request, pk):
-    language = get_object_or_404(Language, id=pk)
-    serializer = LanguageSerializer(language)
+def getMLTCDetail(request, pk):
+    mltc = get_object_or_404(MLTC, id=pk)
+    serializer = MLTCSerializer(mltc)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def createLanguage(request):
+@transaction.atomic
+def createMLTC(request):
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
-    serializer = LanguageSerializer(data=data)
+
+    data['dx_codes'] = data.getlist('dx_codes', '')[0]
+    serializer = MLTCSerializer(data=data)
     
     try:
         if serializer.is_valid():
@@ -32,11 +38,11 @@ def createLanguage(request):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def updateLanguage(request, pk):
+def updateMLTC(request, pk):
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
-    language = get_object_or_404(Language, id=pk)
-    serializer = LanguageSerializer(instance=language, data=data)
+    mltc = get_object_or_404(MLTC, id=pk)
+    serializer = MLTCSerializer(instance=mltc, data=data)
     
     try:
         if serializer.is_valid():
@@ -48,7 +54,7 @@ def updateLanguage(request, pk):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def deleteLanguage(request, pk):
-    language = get_object_or_404(Language, id=pk)
-    language.delete()
+def deleteMLTC(request, pk):
+    mltc = get_object_or_404(MLTC, id=pk)
+    mltc.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

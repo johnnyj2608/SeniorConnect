@@ -9,7 +9,7 @@ export const MltcProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetchWithRefresh('/core/mltcs/');
+                const response = await fetchWithRefresh('/tenant/mltcs/');
                 if (!response.ok) return;
                 const data = await response.json();
                 setMltcOptions(data);

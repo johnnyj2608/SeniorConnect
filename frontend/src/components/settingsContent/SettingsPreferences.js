@@ -61,7 +61,7 @@ const SettingsPreferences = () => {
           label={t('settings.preferences.dark_mode')} 
           component={
             <Switch
-              checked={user.preferences?.dark_mode}
+              checked={!!user?.preferences?.dark_mode}
               onChange={() => togglePreference('dark_mode')}
               onColor="#6366F1"
             />
@@ -71,7 +71,7 @@ const SettingsPreferences = () => {
           label={t('settings.preferences.alt_name')} 
           component={
             <Switch
-              checked={user.preferences?.alt_name}
+              checked={!!user?.preferences?.alt_name}
               onChange={() => togglePreference('alt_name')}
               onColor="#6366F1"
             />

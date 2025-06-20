@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from ..models.sadc_model import Sadc
-from ..serializers.sadc_serializers import SadcSerializer
+from ...tenant.models.sadc_model import Sadc
+from ...tenant.serializers.sadc_serializers import SadcSerializer
 
 def getSadcDetail(request):
     sadc = get_object_or_404(Sadc, id=request.user.sadc.id)

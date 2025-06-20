@@ -1,19 +1,14 @@
 from django.urls import path
 from .views import (
     member_views,
-    mltc_views,
     authorization_views,
-    language_views,
     contact_views,
     absence_views,
     file_views,
     enrollment_views,
-    sadc_views,
 )
 
 urlpatterns = [
-    path('sadc/', sadc_views.getSadc, name="sadc"),
-
     # Member related paths
     path('members/csv/', member_views.getMembersCsv, name="members_csv"),
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
@@ -24,14 +19,6 @@ urlpatterns = [
     path('members/<str:pk>/status/', member_views.toggleStatus, name="member_status"),
     path('members/<str:pk>/', member_views.getMember, name="member"),
     path('members/', member_views.getMembers, name="members"),
-    
-    # MLTC related paths
-    path('mltcs/<str:pk>/', mltc_views.getMLTC, name="mltc"),
-    path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
-    
-    # Language related paths
-    path('languages/<str:pk>/', language_views.getLanguage, name="language"),
-    path('languages/', language_views.getLanguages, name="languages"),
 
     # Authorization related paths
     path('auths/member/<str:pk>/', authorization_views.getAuthorizationsByMember, name="auth_by_member"),

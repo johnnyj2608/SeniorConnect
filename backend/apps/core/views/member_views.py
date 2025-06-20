@@ -13,7 +13,7 @@ from ..utils.member_utils import (
     getMemberProfile,
     restoreMember,
     getDeletedMembers,
-    exportmembersCsv,
+    exportMembersCsv,
 )
 
 @api_view(['GET', 'POST'])
@@ -74,4 +74,4 @@ def getMembersDeleted(request):
 @api_view(['GET'])
 def getMembersCsv(request):
     if request.method == 'GET':
-        return exportmembersCsv(request)
+        return exportMembersCsv(request)

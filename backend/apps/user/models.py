@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from ..core.models.authorization_model import MLTC
-from ..core.models.sadc_model import Sadc
+from ..tenant.models.mltc_model import MLTC
+from ..tenant.models.sadc_model import Sadc
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):

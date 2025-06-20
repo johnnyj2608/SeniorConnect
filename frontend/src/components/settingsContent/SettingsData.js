@@ -48,7 +48,7 @@ const SettingsData = ({ onEdit }) => {
       console.error(error);
     }
   };
-
+  
   return (
     <div id="settings-data">
       <h3 className="section-title">{t('settings.data.label')}</h3>

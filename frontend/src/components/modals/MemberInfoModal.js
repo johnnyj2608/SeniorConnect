@@ -134,7 +134,7 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
     useEffect(() => {
         const getLanguageOptions = async () => {
             try {
-                const response = await fetchWithRefresh('/core/languages/');
+                const response = await fetchWithRefresh('/tenant/languages/');
                 if (!response.ok) return;
 
                 const data = await response.json();

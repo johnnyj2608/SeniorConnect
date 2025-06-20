@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'backend.apps.tenant',
     'backend.apps.core',
     'backend.apps.user',
     'backend.apps.audit',

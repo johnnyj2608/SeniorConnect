@@ -1,6 +1,8 @@
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Q
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.http import HttpResponse
 from django.utils import timezone
 from collections import defaultdict
@@ -9,7 +11,9 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
-from ..models.authorization_model import MLTC
+from ..models.authorization_model import Authorization
+from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.language_model import Language
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
@@ -28,6 +32,7 @@ from .supabase import (
 )
 from ..access import member_access_filter, member_access_pk
 import csv
+import io
 
 @member_access_filter()
 def getMemberList(request):
@@ -247,7 +252,7 @@ def getMemberProfile(request, pk):
     }, status=status.HTTP_200_OK)
 
 @member_access_filter()
-def exportmembersCsv(request):
+def exportMembersCsv(request):
     members = request.accessible_members_qs.select_related('language', 'active_auth', 'active_auth__mltc')
 
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -259,7 +264,7 @@ def exportmembersCsv(request):
         'sadc_member_id', 'first_name', 'last_name', 'alt_name',
         'birth_date', 'gender', 'address', 'phone', 'email',
         'medicaid', 'ssn', 'language', 'enrollment_date', 'note', 
-        'mltc', 'mltc_member_id', 'start_date', 'end_date', 'schedule',
+        'mltc', 'mltc_member_id', 'start_date', 'end_date', 'schedule', 'dx_code'
     ])
 
     for member in members:
@@ -283,7 +288,8 @@ def exportmembersCsv(request):
             auth.mltc_member_id if auth else '',
             auth.start_date.isoformat() if auth and auth.start_date else '',
             auth.end_date.isoformat() if auth and auth.end_date else '',
-            ', '.join(day for day in auth.schedule) if auth and auth.schedule else ''
+            ', '.join(day for day in auth.schedule) if auth and auth.schedule else '',
+            auth.dx_code if auth else '',
         ])
 
     return response

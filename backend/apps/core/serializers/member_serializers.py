@@ -1,13 +1,9 @@
 from rest_framework import serializers
-from ..models.member_model import Member, Language
-from ..models.authorization_model import MLTC
+from ..models.member_model import Member
+from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.language_model import Language
 from django.utils import timezone
 from .mixins import DaysUntilMixin
-
-class LanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Language
-        fields = '__all__'
 
 class MemberNameSerializer(serializers.ModelSerializer):
     sadc_member_id = serializers.ReadOnlyField(source='member.sadc_member_id')

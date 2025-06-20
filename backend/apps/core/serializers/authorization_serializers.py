@@ -1,17 +1,7 @@
 from rest_framework import serializers
-from ..models.authorization_model import (
-    MLTC, 
-    Authorization, 
-    AuthorizationService, 
-    Enrollment
-)
-from .member_serializers import MemberNameSerializer
+from ..models.authorization_model import Authorization, AuthorizationService
+from ...tenant.models.mltc_model import MLTC
 from .mixins import DateRangeValidationMixin
-
-class MLTCSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MLTC
-        fields = '__all__'
 
 class AuthorizationServiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,22 +43,3 @@ class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
                 })
 
         return result
-
-class EnrollmentSerializer(MemberNameSerializer):
-    old_mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
-        allow_null=True,
-        required=False
-    )
-    old_mltc_name = serializers.ReadOnlyField(source='old_mltc.name')
-
-    new_mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
-        allow_null=True,
-        required=False
-    )
-    new_mltc_name = serializers.ReadOnlyField(source='new_mltc.name')
-
-    class Meta:
-        model = Enrollment
-        exclude = ['created_at']

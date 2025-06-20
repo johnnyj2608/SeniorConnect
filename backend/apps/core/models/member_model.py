@@ -1,26 +1,9 @@
 from django.db import models
-import os
-from django.utils.text import slugify
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
-
-def member_photo_path(instance, filename):
-    """Generate file path for new member photo, overwriting existing one."""
-    ext = filename.split('.')[-1]
-    filename = f"{instance.first_name}_{instance.last_name}_profile.{ext}"
-    name = f"{slugify(instance.first_name)}_{slugify(instance.last_name)}_profile.{ext}"
-    return os.path.join(str(instance.id), name)
-
-class Language(models.Model):
-    sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE, related_name='languages')
-    name = models.CharField(max_length=255, null=False, blank=False)
-
-    class Meta:
-        unique_together = ('sadc', 'name')
-
-    def __str__(self):
-        return self.name
+from ...tenant.models.sadc_model import Sadc
+from ...tenant.models.language_model import Language
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
@@ -47,7 +30,7 @@ class MemberManager(models.Manager):
         return self.get_queryset().accessible_by(user)
 
 class Member(models.Model):
-    sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE, related_name='members')
+    sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='members')
     sadc_member_id = models.IntegerField(null=False, blank=False)
     photo = models.URLField(null=True, blank=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
@@ -60,7 +43,7 @@ class Member(models.Model):
     email = models.EmailField(null=True, blank=True)
     medicaid = models.CharField(max_length=8, null=True, blank=True)
     ssn = models.CharField(max_length=9, null=True, blank=True)
-    language = models.ForeignKey('Language', null=True, blank=True, on_delete=models.SET_NULL, related_name='members')
+    language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.SET_NULL, related_name='members')
     enrollment_date = models.DateField(null=True, blank=True) 
     note = models.TextField(null=True, blank=True)
     active_auth = models.OneToOneField(

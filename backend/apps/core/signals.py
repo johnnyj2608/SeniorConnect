@@ -1,8 +1,9 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models.member_model import Member
-from .models.authorization_model import MLTC, Authorization, Enrollment
+from .models.enrollment_model import Enrollment
 from .models.authorization_model import Authorization
+from ..tenant.models.mltc_model import MLTC
 
 @receiver(post_save, sender=Member)
 def handle_member_change(sender, instance, created, **kwargs):
