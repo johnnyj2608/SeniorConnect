@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
+from ..models.authorization_model import Authorization
 from ...tenant.models.mltc_model import Mltc
 from ..serializers.member_serializers import (
     MemberSerializer,
@@ -17,7 +18,7 @@ from ..serializers.member_serializers import (
     MemberDeletedSerializer,
 )
 from ..serializers.absence_serializers import Absence, AbsenceSerializer
-from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer
+from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer, AuthorizationSerializer
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
 from django.utils.text import slugify
@@ -300,31 +301,60 @@ def importMembersCsv(request):
 
     sadc = request.user.sadc
     valid_members = []
-    skipped_count = 0
+    member_skipped = 0
 
     required_fields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
-
     for row in reader:
         if not all(row.get(field) for field in required_fields):
-            skipped_count += 1
+            member_skipped += 1
             continue
 
         row_data = {
             **row,
             'sadc': sadc.id,
         }
- 
+
         serializer = MemberSerializer(data=row_data, context={'sadc': sadc})
         if serializer.is_valid():
-            valid_members.append(Member(**serializer.validated_data))
+            member_instance = Member(**serializer.validated_data)
+            valid_members.append((member_instance, row))
         else:
-            skipped_count += 1
+            member_skipped += 1
             print({serializer.errors})
 
-    if valid_members:
-        Member.objects.bulk_create(valid_members)
+    created_members = Member.objects.bulk_create([m for m, _ in valid_members])
+
+    # Handle authorizations if applicable
+    auth_created = 0
+    auth_skipped = 0
+    for member, row in zip(created_members, [r for _, r in valid_members]):
+        if all(row.get(field) for field in ['mltc', 'mltc_member_id', 'start_date', 'end_date']):
+            auth_row = {
+                'member': member.id,
+                'mltc': row.get('mltc'),
+                'mltc_member_id': row.get('mltc_member_id'),
+                'start_date': row.get('start_date'),
+                'end_date': row.get('end_date'),
+                'dx_code': row.get('dx_code'),
+                'schedule': [d.strip() for d in row.get('schedule', '').split(',') if d.strip()],
+                'active': True
+            }
+
+            auth_serializer = AuthorizationSerializer(data=auth_row)
+            if auth_serializer.is_valid():
+                authorization = auth_serializer.save()
+                member.active_auth = authorization
+                member.save(update_fields=['active_auth'])
+                auth_created += 1
+            else:
+                auth_skipped += 1
+                print(f"Authorization error (member {member.sadc_member_id}): {auth_serializer.errors}")
+        else:
+            auth_skipped += 1
 
     return Response({
-        'created': len(valid_members),
-        'skipped': skipped_count,
+        'members_created': len(created_members),
+        'members_skipped': member_skipped,
+        'auth_created': auth_created,
+        'auth_skipped': auth_skipped,
     }, status=status.HTTP_200_OK)

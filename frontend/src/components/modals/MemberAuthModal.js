@@ -65,10 +65,10 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 <label>{t('member.authorizations.mltc')} *</label>
                 <select
                     required
-                    value={disabled ? '' : current.mltc || ''}
+                    value={disabled ? '' : current.mltc_name || ''}
                     onChange={(e) => {
                         const { value } = e.target;
-                        const name = mltcOptions.find(opt => String(opt.id) === value)?.name || '';
+                        const name = mltcOptions.find(opt => String(opt.name) === value)?.name || '';
 
                         handleChange('mltc')({ target: { value } });
                         handleChange('mltc_name')({ target: { value: name } });
@@ -78,7 +78,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 >
                     <option value="">{t('general.select_an_option')}</option>
                     {mltcOptions.map((option) => (
-                        <option key={option.name} value={option.id}>
+                        <option key={option.name} value={option.name}>
                             {option.name}
                         </option>
                     ))}
