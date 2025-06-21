@@ -49,6 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        validated_data.pop('sadc', None)
         password = validated_data.pop('password', None)
         allowed_mltcs = validated_data.pop('allowed_mltcs', None)
 

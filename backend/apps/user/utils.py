@@ -8,16 +8,21 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 
 def getUserList(request):
-    users = User.objects.all()
+    users = User.objects.filter(sadc=request.user.sadc)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getUserDetail(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
+
+    if user.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
     if current_user.is_org_admin or current_user.id == user.id:
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
 def createUser(request):
@@ -40,6 +45,10 @@ def createUser(request):
 def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
+
+    if user.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
     if not (current_user.is_org_admin or current_user.id == user.id):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -59,6 +68,10 @@ def updateUser(request, pk):
 def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
+
+    if user.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    
     if not current_user.is_org_admin:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -71,6 +84,10 @@ def deleteUser(request, pk):
 def patchUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
+
+    if user.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
     if not (current_user.is_org_admin or current_user.id == user.id):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     data = request.data
