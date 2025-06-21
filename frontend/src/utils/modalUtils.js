@@ -177,13 +177,6 @@ const getNewTab = (type, localData, id) => {
                 edited: true,
             };
         }
-        case 'languages': {
-            return {
-                id: 'new',
-                name: '',
-                edited: true,
-            };
-        }
         default:
             return null;
     }

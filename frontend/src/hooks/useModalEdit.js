@@ -244,12 +244,6 @@ function useModalEdit(data, onClose) {
                 savedData = await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
                 setMltcOptions(savedData);
                 break;
-            case 'languages':
-                requiredFields = ['name'];
-                if (!validateRequiredFields('settings.data.language', updatedData, requiredFields)) return;
-
-                saveDataTabs(updatedData, 'languages', undefined, 'tenant');
-                break;
             case 'deleted':
                 updatedData.forEach(item => {
                     if (item.deleted) {

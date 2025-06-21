@@ -3,7 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
 from ...tenant.models.sadc_model import Sadc
-from ...tenant.models.language_model import Language
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
@@ -43,7 +42,7 @@ class Member(models.Model):
     email = models.EmailField(null=True, blank=True)
     medicaid = models.CharField(max_length=8, null=True, blank=True)
     ssn = models.CharField(max_length=9, null=True, blank=True)
-    language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.SET_NULL, related_name='members')
+    language = models.CharField(max_length=255, blank=True, null=True)
     enrollment_date = models.DateField(null=True, blank=True) 
     note = models.TextField(null=True, blank=True)
     active_auth = models.OneToOneField(

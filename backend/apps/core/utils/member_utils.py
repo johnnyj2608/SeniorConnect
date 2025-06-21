@@ -1,8 +1,6 @@
-from django.core.validators import EmailValidator
-from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Q
-from datetime import timedelta, datetime
+from datetime import timedelta
 from django.http import HttpResponse
 from django.utils import timezone
 from collections import defaultdict
@@ -11,9 +9,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
-from ..models.authorization_model import Authorization
 from ...tenant.models.mltc_model import MLTC
-from ...tenant.models.language_model import Language
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
@@ -32,7 +28,6 @@ from .supabase import (
 )
 from ..access import member_access_filter, member_access_pk
 import csv
-import io
 
 @member_access_filter()
 def getMemberList(request):
@@ -52,7 +47,7 @@ def getMemberList(request):
 
 @member_access_pk
 def getMemberDetail(request, pk):
-    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
+    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     serializer = MemberSerializer(member)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -103,7 +98,7 @@ def createMember(request):
 @transaction.atomic
 def updateMember(request, pk):
     data = request.data.copy()
-    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
+    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     public_url = None
     data['sadc'] = request.user.sadc.id
 
@@ -237,7 +232,7 @@ def toggleMemberStatus(request, pk):
 
 @member_access_pk
 def getMemberProfile(request, pk):
-    member = get_object_or_404(Member.objects.select_related('language', 'active_auth', 'active_auth__mltc'), id=pk)
+    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
 
     absences = Absence.objects.filter(member=pk)
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)
@@ -253,7 +248,7 @@ def getMemberProfile(request, pk):
 
 @member_access_filter()
 def exportMembersCsv(request):
-    members = request.accessible_members_qs.select_related('language', 'active_auth', 'active_auth__mltc')
+    members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="member_data.csv"'
@@ -281,7 +276,7 @@ def exportMembersCsv(request):
             member.email or '',
             member.medicaid or '',
             member.ssn or '',
-            member.language.name if member.language else '',
+            member.language or '',
             member.enrollment_date.isoformat() if member.enrollment_date else '',
             member.note or '',
             auth.mltc.name if auth and auth.mltc else '',

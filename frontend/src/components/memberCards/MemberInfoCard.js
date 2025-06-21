@@ -32,7 +32,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
 					<MemberDetail label={t('member.info.email')} value={info.email} />
 					<MemberDetail label={t('member.info.medicaid')} value={info.medicaid?.toUpperCase()} />
 					<MemberDetail label={t('member.info.ssn')} value={formatSSN(info.ssn)} />
-					<MemberDetail label={t('member.info.language')} value={info.language_name} />
+					<MemberDetail label={t('member.info.language')} value={info.language} />
 					<MemberDetail label={t('member.info.enrollment')} value={formatDate(info.enrollment_date)} />
 					<MemberDetail label={t('general.note')} value={info.note} />
 				</>

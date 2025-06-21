@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
+import { SadcContext } from '../../context/SadcContext';
 
 const MemberInfoModal = ({ data, handleChange }) => {
     const { t } = useTranslation();
@@ -129,23 +129,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
 
 const MemberInfoSideModal = ({ data, handleChange }) => {
     const { t } = useTranslation();
-    const [languageOptions, setLanguageOptions] = useState([]);
-
-    useEffect(() => {
-        const getLanguageOptions = async () => {
-            try {
-                const response = await fetchWithRefresh('/tenant/languages/');
-                if (!response.ok) return;
-
-                const data = await response.json();
-                setLanguageOptions(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getLanguageOptions();
-    }, []);
+    const { sadc } = useContext(SadcContext);
 
     return (
         <>
@@ -221,9 +205,9 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                     onChange={handleChange('language')}
                 >
                     <option value="">{t('general.select_an_option')}</option>
-                    {languageOptions.map((option) => (
-                        <option key={option.name} value={option.id}>
-                            {option.name}
+                    {sadc.language.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
                         </option>
                     ))}
                 </select>

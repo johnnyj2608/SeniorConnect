@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from ..models.member_model import Member
 from ...tenant.models.mltc_model import MLTC
-from ...tenant.models.language_model import Language
 from django.utils import timezone
 from .mixins import DaysUntilMixin
 
@@ -16,13 +15,6 @@ class MemberNameSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True
     
-    language = serializers.PrimaryKeyRelatedField(
-        queryset=Language.objects.all(),
-        allow_null=True,
-        required=False
-    )
-    language_name = serializers.ReadOnlyField(source='language.name')
-
     mltc = serializers.PrimaryKeyRelatedField(
         queryset=MLTC.objects.all(),
         required=False,

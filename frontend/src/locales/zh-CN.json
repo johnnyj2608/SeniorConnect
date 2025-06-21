@@ -280,13 +280,10 @@
             "label": "偏好设置",
             "language": "语言",
             "dark_mode": "夜间模式",
-            "notification": "通知",
             "alt_name": "显示中文姓名"
         },
         "admin": {
             "label": "数据",
-            "attendance": "出勤",
-            "template": "模板",
             "users": {
                 "label": "行政",
                 "name": "名称",
@@ -302,9 +299,8 @@
                 "dx_codes": "诊断代码",
                 "click_to_add_more": "点击添加更多"
             },
-            "language": {
-                "label": "语言",
-                "name": "名称"
+            "sadc": {
+                "label": "老人中心"
             }
         },
         "data": {

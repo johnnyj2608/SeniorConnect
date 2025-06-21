@@ -56,7 +56,6 @@ const SettingsPreferences = () => {
     <div id="settings-preferences">
       <h3 className="section-title">{t('settings.preferences.label')}</h3>
       <div className="section-main">
-        <SettingsItem label={t('settings.preferences.notification')} onClick={() => console.log('Notification')} />
         <SettingsItem 
           label={t('settings.preferences.dark_mode')} 
           component={

@@ -270,7 +270,7 @@
     "settings": {
         "general": {
             "label": "General",
-            "sadc": "SADC",
+            "sadc": "Sadc",
             "email": "Email",
             "phone": "Phone",
             "address" :"Address", 
@@ -280,13 +280,10 @@
             "label": "Preferences",
             "language": "Language",
             "dark_mode": "Dark mode",
-            "notification": "Notification",
             "alt_name": "Display nickname"
         },
         "admin": {
             "label": "Admin",
-            "attendance": "Attendance",
-            "template": "Template",
             "users": {
                 "label": "Users",
                 "name": "Name",
@@ -297,14 +294,13 @@
                 "cant_view_snapshots": "Can not view snapshots"
             },
             "mltc": {
-                "label": "MLTC",
+                "label": "Mltc",
                 "name": "Name",
                 "dx_codes": "DX Codes",
                 "click_to_add_more": "Click to add more"
             },
-            "language": {
-                "label": "Language",
-                "name": "Name"
+            "sadc": {
+                "label": "Sadc"
             }
         },
         "data": {
