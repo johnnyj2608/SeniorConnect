@@ -100,7 +100,8 @@ def updateMember(request, pk):
     data = request.data.copy()
     member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
     public_url = None
-    data['sadc'] = request.user.sadc.id
+    sadc = request.user.sadc
+    data['sadc'] = sadc.id
 
     try:
         if 'photo' in request.FILES:
@@ -126,7 +127,7 @@ def updateMember(request, pk):
             delete_file_from_supabase(member.photo)
             data['photo'] = None
 
-        serializer = MemberSerializer(instance=member, data=data)
+        serializer = MemberSerializer(instance=member, data=data, context={'sadc': sadc})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -288,3 +289,42 @@ def exportMembersCsv(request):
         ])
 
     return response
+
+def importMembersCsv(request):
+    file = request.FILES.get('file')
+    if not file or not file.name.endswith('.csv'):
+        return Response({'error': 'CSV file required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    decoded_file = file.read().decode('utf-8-sig').splitlines()
+    reader = csv.DictReader(decoded_file)
+
+    sadc = request.user.sadc
+    valid_members = []
+    skipped_count = 0
+
+    required_fields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
+
+    for row in reader:
+        if not all(row.get(field) for field in required_fields):
+            skipped_count += 1
+            continue
+
+        row_data = {
+            **row,
+            'sadc': sadc.id,
+        }
+ 
+        serializer = MemberSerializer(data=row_data, context={'sadc': sadc})
+        if serializer.is_valid():
+            valid_members.append(Member(**serializer.validated_data))
+        else:
+            skipped_count += 1
+            print({serializer.errors})
+
+    if valid_members:
+        Member.objects.bulk_create(valid_members)
+
+    return Response({
+        'created': len(valid_members),
+        'skipped': skipped_count,
+    }, status=status.HTTP_200_OK)

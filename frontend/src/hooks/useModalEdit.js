@@ -234,7 +234,9 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 requiredFields = ['name', 'date', 'file'];
                 if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
 
-                console.log('Bulk uploaded!')
+                const importEndpoint = `/core/members/csv/`;
+                const importMethod = 'POST';
+                sendRequest(importEndpoint, importMethod, updatedData);
                 break;
 
             case 'users':

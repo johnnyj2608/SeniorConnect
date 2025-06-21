@@ -1,8 +1,11 @@
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from ..models.member_model import Member
 from ...tenant.models.mltc_model import Mltc
 from django.utils import timezone
 from .mixins import DaysUntilMixin
+import re
 
 class MemberNameSerializer(serializers.ModelSerializer):
     sadc_member_id = serializers.ReadOnlyField(source='member.sadc_member_id')
@@ -14,16 +17,56 @@ class MemberNameSerializer(serializers.ModelSerializer):
     
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True
-    
-    mltc = serializers.PrimaryKeyRelatedField(
-        queryset=Mltc.objects.all(),
-        required=False,
-        allow_null=True
-    )
 
     class Meta:
         model = Member
         exclude = ['created_at', 'updated_at']
+
+    def validate_gender(self, value):
+        value = value.upper()
+        if value not in ('M', 'F'):
+            raise serializers.ValidationError("Gender must be 'M' or 'F'.")
+        return value
+
+    def validate_phone(self, value):
+        if value:
+            digits_only = re.compile(r'^\d{10}$')
+            if not digits_only.match(value):
+                raise serializers.ValidationError("Phone must be exactly 10 digits.")
+        return value
+
+    def validate_email(self, value):
+        if value:
+            validator = EmailValidator()
+            try:
+                validator(value)
+            except ValidationError:
+                raise serializers.ValidationError("Invalid email address.")
+        return value
+
+    def validate_ssn(self, value):
+        if value:
+            digits_only = re.compile(r'^\d{9}$')
+            if not digits_only.match(value):
+                raise serializers.ValidationError("SSN must be exactly 9 digits.")
+        return value
+
+    def validate_medicaid(self, value):
+        if value:
+            pattern = re.compile(r'^[A-Z]{2}\d{5}[A-Z]$')
+            if not pattern.match(value.upper()):
+                raise serializers.ValidationError("Invalid Medicaid ID format.")
+            return value.upper()
+        return value
+
+    def validate_language(self, value):
+        if value:
+            sadc = getattr(self.context.get('sadc'), 'languages', [])
+            valid_languages = {lang.strip().lower() for lang in sadc}
+            if value.lower() not in valid_languages:
+                raise serializers.ValidationError(f"Language '{value}' not supported.")
+            return value.capitalize()
+        return value
 
 class MemberListSerializer(serializers.ModelSerializer):
     new = serializers.ReadOnlyField(source='is_new') 
