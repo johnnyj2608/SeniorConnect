@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
-import { SadcContext } from '../../context/SadcContext';
 
 const MemberInfoModal = ({ data, handleChange }) => {
     const { t } = useTranslation();

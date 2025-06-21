@@ -25,6 +25,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                     onChange={handleChange('name')}
                     placeholder={t('general.required')}
                     autoComplete="off"
+                    disabled={true}
                 />
             </div>
 
@@ -36,6 +37,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                     onChange={handleChange('email')}
                     placeholder={t('general.required')}
                     autoComplete="off"
+                    disabled={true}
                 />
             </div>
 
@@ -47,6 +49,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                     onChange={handleChange('phone')}
                     placeholder={t('general.required')}
                     autoComplete="off"
+                    disabled={true}
                 />
             </div>
 
@@ -58,6 +61,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                     onChange={handleChange('address')}
                     placeholder={t('general.required')}
                     autoComplete="off"
+                    disabled={true}
                 />
             </div>
 
@@ -69,6 +73,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                     onChange={handleChange('npi')}
                     placeholder={t('general.required')}
                     autoComplete="off"
+                    disabled={true}
                 />
             </div>
 
