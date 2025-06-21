@@ -1,18 +1,18 @@
 from rest_framework import serializers
 from ..models.enrollment_model import Enrollment
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 from .member_serializers import MemberNameSerializer
 
 class EnrollmentSerializer(MemberNameSerializer):
     old_mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
+        queryset=Mltc.objects.all(),
         allow_null=True,
         required=False
     )
     old_mltc_name = serializers.ReadOnlyField(source='old_mltc.name')
 
     new_mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
+        queryset=Mltc.objects.all(),
         allow_null=True,
         required=False
     )

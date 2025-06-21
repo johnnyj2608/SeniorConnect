@@ -9,7 +9,7 @@ export const SadcProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetchWithRefresh('/tenant/sadc/');
+                const response = await fetchWithRefresh('/tenant/sadcs/');
                 if (!response.ok) return;
                 const data = await response.json();
                 setSadc(data);

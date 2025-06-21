@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.authorization_model import Authorization, AuthorizationService
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 from .mixins import DateRangeValidationMixin
 
 class AuthorizationServiceSerializer(serializers.ModelSerializer):
@@ -9,7 +9,7 @@ class AuthorizationServiceSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMixin):
-    mltc = serializers.PrimaryKeyRelatedField(queryset=MLTC.objects.all())
+    mltc = serializers.PrimaryKeyRelatedField(queryset=Mltc.objects.all())
     mltc_name = serializers.ReadOnlyField(source='mltc.name')
 
     class Meta:
@@ -17,7 +17,7 @@ class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMi
         exclude = ['created_at', 'updated_at']
 
 class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
-    mltc = serializers.PrimaryKeyRelatedField(queryset=MLTC.objects.all())
+    mltc = serializers.PrimaryKeyRelatedField(queryset=Mltc.objects.all())
     mltc_name = serializers.ReadOnlyField(source='mltc.name')
     services = serializers.SerializerMethodField()
 

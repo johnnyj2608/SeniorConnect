@@ -9,14 +9,17 @@ def getSadcDetail(request):
     serializer = SadcSerializer(sadc)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def updateSadcAttendanceTemplate(request):
+def updateSadc(request):
+    data = request.data
     sadc = get_object_or_404(Sadc, id=request.user.sadc.id)
-    attendance_template = request.data.get('attendance_template')
-
-    if attendance_template is None:
-        return Response({"error": "attendance_template is required"}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = SadcSerializer(instance=sadc, data=data)
     
-    sadc.attendance_template = attendance_template
-    sadc.save()
-
-    return Response({"attendance_template": sadc.attendance_template}, status=status.HTTP_200_OK)
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

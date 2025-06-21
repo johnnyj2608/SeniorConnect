@@ -1166,6 +1166,10 @@ body.modal-open {
   overflow: hidden;
 }
 
+.modal-content.full-width {
+  width: 100%;
+}
+
 .modal-content-scroll {
   height: 100%;
   overflow-y: auto;
@@ -1228,36 +1232,37 @@ body.modal-open {
   width: auto;
 }
 
-.dx-container {
+.list-input-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
 }
 
-.dx-container span {
+.list-input-container span {
   cursor: pointer;
   align-self: flex-start;
+  padding-top: 5px;
 }
 
-.dx-container span:hover {
+.list-input-container span:hover {
   color: var(--color-main);
   text-decoration: underline;
 }
 
-.codes-container { 
+.list-input-textfields { 
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.codes-container > * {
+.list-input-textfields > * {
   display: flex;
   justify-content: space-between;
   gap: 5px;
 }
 
-.codes-container > * > input {
+.list-input-textfields > * > input {
   flex: 1;
 }
 
@@ -1265,7 +1270,7 @@ body.modal-open {
   margin-bottom: 5px;
 }
 
-.codes-container button {
+.list-input-textfields button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1280,7 +1285,7 @@ body.modal-open {
   transition: all 0.2s ease;
 }
 
-.codes-container button:hover {
+.list-input-textfields button:hover {
   background-color: var(--color-danger-hover);
 }
 

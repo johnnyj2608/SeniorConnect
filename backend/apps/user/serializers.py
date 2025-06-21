@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User
-from ..tenant.models.mltc_model import MLTC
+from ..tenant.models.mltc_model import Mltc
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
@@ -38,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = super().create(validated_data)
 
         if validated_data.get('is_org_admin'):
-            user.allowed_mltcs.set(MLTC.objects.all())  # Admins get all MLTCs
+            user.allowed_mltcs.set(Mltc.objects.all())  # Admins get all Mltcs
         else:
             user.allowed_mltcs.set(allowed_mltcs)
 
@@ -59,7 +59,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = super().update(instance, validated_data)
 
         if instance.is_org_admin:
-            user.allowed_mltcs.set(MLTC.objects.all())  # Admins always get all MLTCs
+            user.allowed_mltcs.set(Mltc.objects.all())  # Admins always get all Mltcs
         elif allowed_mltcs is not None:
             user.allowed_mltcs.set(allowed_mltcs)
 

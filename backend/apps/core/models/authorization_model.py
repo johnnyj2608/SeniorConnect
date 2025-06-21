@@ -1,8 +1,8 @@
 from django.db import models
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 
 class Authorization(models.Model):
-    mltc = models.ForeignKey(MLTC, null=True, blank=False, on_delete=models.SET_NULL)
+    mltc = models.ForeignKey(Mltc, null=True, blank=False, on_delete=models.SET_NULL)
     member = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
     mltc_member_id = models.CharField(max_length=255, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)

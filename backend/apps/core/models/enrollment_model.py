@@ -1,5 +1,5 @@
 from django.db import models
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 import datetime
 
 class Enrollment(models.Model):
@@ -15,7 +15,7 @@ class Enrollment(models.Model):
     member = models.ForeignKey('Member', null=True, on_delete=models.SET_NULL)
     change_type = models.CharField(max_length=20, choices=CHANGE_TYPES)
     new_mltc = models.ForeignKey(
-        MLTC,
+        Mltc,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -23,7 +23,7 @@ class Enrollment(models.Model):
     )
     
     old_mltc = models.ForeignKey(
-        MLTC,
+        Mltc,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

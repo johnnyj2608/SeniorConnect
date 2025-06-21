@@ -2,8 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models.mltc_model import MLTC
+from .models.mltc_model import Mltc
 from .models.sadc_model import Sadc
 
-admin.site.register(MLTC)
+admin.site.register(Mltc)
 admin.site.register(Sadc)

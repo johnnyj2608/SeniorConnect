@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from ..models.mltc_model import MLTC
+from ..models.mltc_model import Mltc
 
-class MLTCSerializer(serializers.ModelSerializer):
+class MltcSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MLTC
+        model = Mltc
         fields = '__all__'

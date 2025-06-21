@@ -1,33 +1,42 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from ..models.mltc_model import MLTC
-from ..serializers.mltc_serializers import MLTCSerializer
-from django.db import transaction
+from ..models.mltc_model import Mltc
+from ..serializers.mltc_serializers import MltcSerializer
 
-def getMLTCList(request):
-    mltcs = MLTC.objects.all()
+def getMltcList(request):
+    mltcs = Mltc.objects.filter(sadc=request.user.sadc)
 
     user = request.user
     if not (user.is_superuser or user.is_org_admin):
         mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
 
-    serializer = MLTCSerializer(mltcs, many=True)
+    serializer = MltcSerializer(mltcs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-def getMLTCDetail(request, pk):
-    mltc = get_object_or_404(MLTC, id=pk)
-    serializer = MLTCSerializer(mltc)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+def getMltcDetail(request, pk):
+    current_user = request.user
+    mltc = get_object_or_404(Mltc, id=pk)
 
-@transaction.atomic
-def createMLTC(request):
+    if mltc.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
+    if current_user.is_org_admin:
+        serializer = MltcSerializer(mltc)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
+def createMltc(request):
+    current_user = request.user
+    if not (current_user.is_org_admin):
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
 
     data['dx_codes'] = data.getlist('dx_codes', '')[0]
-    serializer = MLTCSerializer(data=data)
-    
+    serializer = MltcSerializer(data=data)
+
     try:
         if serializer.is_valid():
             serializer.save()
@@ -38,12 +47,20 @@ def createMLTC(request):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def updateMLTC(request, pk):
+def updateMltc(request, pk):
+    current_user = request.user
+    mltc = get_object_or_404(Mltc, id=pk)
+
+    if mltc.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
+    if not (current_user.is_org_admin):
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
-    mltc = get_object_or_404(MLTC, id=pk)
-    serializer = MLTCSerializer(instance=mltc, data=data)
-    
+    serializer = MltcSerializer(instance=mltc, data=data)
+
     try:
         if serializer.is_valid():
             serializer.save()
@@ -54,7 +71,15 @@ def updateMLTC(request, pk):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def deleteMLTC(request, pk):
-    mltc = get_object_or_404(MLTC, id=pk)
+def deleteMltc(request, pk):
+    current_user = request.user
+    mltc = get_object_or_404(Mltc, id=pk)
+
+    if mltc.sadc_id != current_user.sadc_id:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    
+    if not current_user.is_org_admin:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+
     mltc.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)  

@@ -4,7 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
 import useNavObserver from '../hooks/useNavObserver';
-import SettingsGeneral from '../components/settingsContent/SettingsGeneral';
 import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsPreferences from '../components/settingsContent/SettingsPreferences';
@@ -25,15 +24,6 @@ const scrollToSection = (id) => {
 
 const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
     <div className="settings-nav">
-         <SettingsItem
-            label={t('settings.general.label')}
-            isNav
-            isActive={activeSection === 'settings-general'}
-            onClick={() => {
-                setActiveSection('settings-general');
-                scrollToSection('settings-general');
-            }}
-        />
         <SettingsItem
             label={t('settings.preferences.label')}
             isNav
@@ -100,7 +90,6 @@ const SettingsPage = () => {
     const { user } = useContext(AuthContext);
 
     const sections = [
-        { id: 'settings-general' },
         { id: 'settings-preferences' },
         { id: 'settings-admin' },
         { id: 'settings-data' },
@@ -109,7 +98,7 @@ const SettingsPage = () => {
         { id: 'settings-account' },
     ];
 
-    const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-general');
+    const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-preferences');
 
     const {
         modalOpen,
@@ -148,7 +137,6 @@ const SettingsPage = () => {
                 />
 
                 <div className="settings-content">
-                    <SettingsGeneral />
                     <SettingsPreferences />
                     <SettingsAdmin onEdit={handleModalOpen}/>
                     <SettingsData onEdit={handleModalOpen} />

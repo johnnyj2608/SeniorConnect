@@ -268,14 +268,6 @@
         }
     },
     "settings": {
-        "general": {
-            "label": "常规",
-            "sadc": "SADC",
-            "email": "电子邮件",
-            "phone": "电话",
-            "address" :"地址",
-            "npi": "NPI"
-        },
         "preferences": {
             "label": "偏好设置",
             "language": "语言",
@@ -284,6 +276,7 @@
         },
         "admin": {
             "label": "数据",
+            "click_to_add_more": "点击添加更多",
             "users": {
                 "label": "行政",
                 "name": "名称",
@@ -296,11 +289,18 @@
             "mltc": {
                 "label": "老人中心保险",
                 "name": "名称",
-                "dx_codes": "诊断代码",
-                "click_to_add_more": "点击添加更多"
+                "dx_codes": "诊断代码"
             },
             "sadc": {
-                "label": "老人中心"
+                "label": "老人中心",
+                "name": "名称",
+                "email": "电子邮件",
+                "phone": "电话",
+                "address" :"地址",
+                "npi": "NPI",
+                "attendance": "出勤",
+                "template": "模板",
+                "languages": "语言"
             }
         },
         "data": {

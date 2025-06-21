@@ -26,7 +26,7 @@ function useModalEdit(data, onClose) {
         Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
     ), [data]);
 
-    const [localData, setLocalData] = useState(type === 'info' ? { ...data.data } : originalData);
+    const [localData, setLocalData] = useState((type === 'info' || type === 'sadcs') ? { ...data.data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
 
@@ -52,7 +52,7 @@ function useModalEdit(data, onClose) {
         const { value, files } = event.target;
 
         setLocalData((prevData) => {
-            if (type !== 'info') {
+            if (type !== 'info' && type !== 'sadcs') {
                 const currentTab = prevData[activeTab];
                 const oldValue = currentTab[field];
 
@@ -243,6 +243,17 @@ function useModalEdit(data, onClose) {
 
                 savedData = await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
                 setMltcOptions(savedData);
+                break;
+            case 'sadcs':
+                requiredFields = ['name', 'email', 'phone', 'address', 'npi'];
+                if (!validateRequiredFields('settings.admin.sadc', updatedData, requiredFields)) return;
+                if (!validateInputLength(updatedData.phone, 10, 'phone', t('settings.admin.sadc.phone'))) return;
+                if (!validateInputLength(updatedData.npi, 10, 'npi', t('settings.admin.sadc.npi'))) return;
+
+                const sadcEndpoint = `/tenant/sadcs/`;
+                const sadcMethod = 'PUT';
+                savedData = await sendRequest(sadcEndpoint, sadcMethod, updatedData)
+                data.setData(savedData)
                 break;
             case 'deleted':
                 updatedData.forEach(item => {

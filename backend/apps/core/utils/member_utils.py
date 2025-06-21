@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
@@ -47,7 +47,7 @@ def getMemberList(request):
 
 @member_access_pk
 def getMemberDetail(request, pk):
-    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
+    member = get_object_or_404(Member, id=pk)
     serializer = MemberSerializer(member)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -180,7 +180,7 @@ def getActiveMemberStats(request):
 
     try:
         mltc_counts = (
-            MLTC.objects
+            Mltc.objects
             .filter(id__in=allowed_mltcs)
             .annotate(
                 count=Count(

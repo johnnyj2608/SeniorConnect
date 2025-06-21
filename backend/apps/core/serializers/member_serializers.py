@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.member_model import Member
-from ...tenant.models.mltc_model import MLTC
+from ...tenant.models.mltc_model import Mltc
 from django.utils import timezone
 from .mixins import DaysUntilMixin
 
@@ -16,7 +16,7 @@ class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True
     
     mltc = serializers.PrimaryKeyRelatedField(
-        queryset=MLTC.objects.all(),
+        queryset=Mltc.objects.all(),
         required=False,
         allow_null=True
     )
@@ -26,7 +26,6 @@ class MemberSerializer(serializers.ModelSerializer):
         exclude = ['created_at', 'updated_at']
 
 class MemberListSerializer(serializers.ModelSerializer):
-    sadc = serializers.ReadOnlyField(source='sadc_name')
     new = serializers.ReadOnlyField(source='is_new') 
     
     mltc_member_id = serializers.ReadOnlyField(source='active_auth.mltc_member_id')
@@ -53,7 +52,6 @@ class MemberListSerializer(serializers.ModelSerializer):
             'gender',
             'address',
             'active',
-            'sadc',
             'new',
             'mltc_member_id',
             'mltc_name',

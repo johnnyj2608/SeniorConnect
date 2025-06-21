@@ -63,7 +63,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
 
             {isEmergencyContact && (
                 <div className="member-detail">
-                    <label>{t('member.contacts.relationship.label')} *</label>
+                    <label>{t('member.contacts.relationship')} *</label>
                     <select 
                         required
                         value={disabled ? '' : current.relationship_type || ''} 
@@ -73,7 +73,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                         <option value="">{t('general.select_an_option')}</option>
                         {relationshipTypes.map(type => (
                             <option key={type} value={type}>
-                                {t(`member.contacts.relationship.${type}`)}
+                                {t(`member.contacts.${type}`)}
                             </option>
                         ))}
                     </select>

@@ -27,12 +27,12 @@ const SettingsAdmin = ({ onEdit }) => {
       <h3 className="section-title">{t('settings.admin.label')}</h3>
       <div className="section-main">
         <SettingsItem
-          label={t('settings.admin.mltc.label')}
-          onClick={() => handleEdit('/tenant/mltcs/', 'mltcs')}
+          label={t('settings.admin.sadc.label')}
+          onClick={() => onEdit('sadcs', null)}
         />
         <SettingsItem
-          label={t('settings.admin.sadc.label')}
-          onClick={() => console.log('sadc')}
+          label={t('settings.admin.mltc.label')}
+          onClick={() => handleEdit('/tenant/mltcs/', 'mltcs')}
         />
         <SettingsItem
           label={t('settings.admin.users.label')}

@@ -5,10 +5,10 @@ from .views import (
 )
 
 urlpatterns = [
-    # SADC related paths
-    path('sadc/', sadc_views.getSadc, name="sadc"),
+    # Sadc related paths
+    path('sadcs/', sadc_views.getSadc, name="sadc"),
 
-    # MLTC related paths
-    path('mltcs/<str:pk>/', mltc_views.getMLTC, name="mltc"),
-    path('mltcs/', mltc_views.getMLTCs, name="mltcs"),
+    # Mltc related paths
+    path('mltcs/<str:pk>/', mltc_views.getMltc, name="mltc"),
+    path('mltcs/', mltc_views.getMltcs, name="mltcs"),
 ]

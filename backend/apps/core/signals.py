@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from .models.member_model import Member
 from .models.enrollment_model import Enrollment
 from .models.authorization_model import Authorization
-from ..tenant.models.mltc_model import MLTC
+from ..tenant.models.mltc_model import Mltc
 
 @receiver(post_save, sender=Member)
 def handle_member_change(sender, instance, created, **kwargs):
@@ -25,7 +25,7 @@ def handle_member_change(sender, instance, created, **kwargs):
 
         Member.objects.filter(pk=instance.pk).update(active_auth=None)
 
-@receiver(post_delete, sender=MLTC)
+@receiver(post_delete, sender=Mltc)
 def clear_active_auth_on_mltc_delete(sender, instance, **kwargs):
     # If mltc is deleted, set all members with active auth of that mltc to null
     affected_auths = Authorization.objects.filter(mltc=None)

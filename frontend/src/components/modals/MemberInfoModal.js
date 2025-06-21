@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
 import { SadcContext } from '../../context/SadcContext';
@@ -127,9 +127,8 @@ const MemberInfoModal = ({ data, handleChange }) => {
     );
 };
 
-const MemberInfoSideModal = ({ data, handleChange }) => {
+const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const { t } = useTranslation();
-    const { sadc } = useContext(SadcContext);
 
     return (
         <>
@@ -205,7 +204,7 @@ const MemberInfoSideModal = ({ data, handleChange }) => {
                     onChange={handleChange('language')}
                 >
                     <option value="">{t('general.select_an_option')}</option>
-                    {sadc.language.map((option) => (
+                    {languages.map((option) => (
                         <option key={option} value={option}>
                             {option}
                         </option>

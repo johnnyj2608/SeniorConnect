@@ -268,14 +268,6 @@
         }
     },
     "settings": {
-        "general": {
-            "label": "General",
-            "sadc": "Sadc",
-            "email": "Email",
-            "phone": "Phone",
-            "address" :"Address", 
-            "npi": "NPI"
-        },
         "preferences": {
             "label": "Preferences",
             "language": "Language",
@@ -284,6 +276,7 @@
         },
         "admin": {
             "label": "Admin",
+            "click_to_add_more": "Click to add more",
             "users": {
                 "label": "Users",
                 "name": "Name",
@@ -296,11 +289,18 @@
             "mltc": {
                 "label": "Mltc",
                 "name": "Name",
-                "dx_codes": "DX Codes",
-                "click_to_add_more": "Click to add more"
+                "dx_codes": "DX Codes"
             },
             "sadc": {
-                "label": "Sadc"
+                "label": "Sadc",
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "address" :"Address", 
+                "npi": "NPI",
+                "attendance": "Attendance",
+                "template": "Template",
+                "languages": "Languages"
             }
         },
         "data": {

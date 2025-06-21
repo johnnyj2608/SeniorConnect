@@ -7,11 +7,12 @@ from .models import AuditLog
 from ..user.authentication import get_current_user
 from ..core.models.member_model import Member
 from ..core.models.contact_model import Contact
-from ..core.models.authorization_model import Authorization, MLTC
+from ..core.models.authorization_model import Authorization
 from ..core.models.absence_model import Absence
 from ..core.models.file_model import File
+from ..tenant.models.mltc_model import Mltc
 
-WHITELISTED_MODELS = (Member, Contact, Authorization, MLTC, Absence, File)
+WHITELISTED_MODELS = (Member, Contact, Authorization, Mltc, Absence, File)
 
 def get_related_member(instance):
     if hasattr(instance, '_acting_member'):

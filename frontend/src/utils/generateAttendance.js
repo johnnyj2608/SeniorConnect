@@ -33,7 +33,7 @@ const calculateDays = (month, year, schedule) => {
     return days;
 };
 
-const attendanceTemplateOne = (member, month, year) => {
+const attendanceTemplateOne = (member, month, year, sadc) => {
     const doc = new jsPDF();
 	const pageWidth = doc.internal.pageSize.getWidth();
 	const marginX = 5;
@@ -49,7 +49,7 @@ const attendanceTemplateOne = (member, month, year) => {
 
 	doc.setFontSize(16);
 	doc.setFont('helvetica', 'bold');
-  	doc.text(member.sadc.toUpperCase(), x, y, { align: 'center' });
+  	doc.text(sadc.toUpperCase(), x, y, { align: 'center' });
 	doc.text('PARTICIPANT SIGN IN SHEET', x, y+8, { align: 'center' });
     doc.setFontSize(11);
 
@@ -154,13 +154,13 @@ const attendanceTemplateOne = (member, month, year) => {
     return doc.output('blob');
 };
 
-const attendanceTemplateTwo = (member, month, year) => {
+const attendanceTemplateTwo = (member, month, year, sadc) => {
     const doc = new jsPDF();
 
     return doc.output('blob');
 }
 
-const generateAttendance = async (memberList, monthYear, attendanceTemplate) => {
+const generateAttendance = async (memberList, monthYear, sadc) => {
     const zip = new JSZip();
     const [year, month] = monthYear.split('-');
     const shortYear = year.slice(2);
@@ -170,13 +170,13 @@ const generateAttendance = async (memberList, monthYear, attendanceTemplate) => 
 
         for (const member of members) {
             let pdfBlob;
-            switch (attendanceTemplate) {
+            switch (sadc.attendance_template) {
                 case 2:
-                    pdfBlob = attendanceTemplateTwo(member, month, year);
+                    pdfBlob = attendanceTemplateTwo(member, month, year, sadc.name);
                     break;
                 case 1:
                 default:
-                    pdfBlob = attendanceTemplateOne(member, month, year);
+                    pdfBlob = attendanceTemplateOne(member, month, year, sadc.name);
             }
 
             const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} - Attendance ${month}_${shortYear}.pdf`

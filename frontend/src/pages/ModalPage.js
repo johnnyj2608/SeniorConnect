@@ -8,7 +8,7 @@ import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
 import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
-import SettingsLanguageModal from '../components/modals/SettingsLanguageModal';
+import SettingsSadcModal from '../components/modals/SettingsSadcModal';
 import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
 import MembersAttendanceModal from '../components/modals/MembersAttendanceModal';
 import ModalTabs from '../components/modals/ModalTabs';
@@ -20,7 +20,11 @@ import generateAttendance from '../utils/generateAttendance';
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
-    const { sadc } = useContext(SadcContext);
+    const { sadc, setSadc } = useContext(SadcContext);
+
+    const dataForHook = data.type === 'sadcs'
+        ? { ...data, data: sadc, setData: setSadc }
+        : data;
 
     const {
         type,
@@ -33,7 +37,7 @@ const ModalPage = ({ data, onClose }) => {
         handleSave,
         setActiveTab,
         mltcOptions,
-    } = useModalEdit(data, onClose);
+    } = useModalEdit(dataForHook, onClose);
 
     const {
         queuedMembers,
@@ -45,7 +49,7 @@ const ModalPage = ({ data, onClose }) => {
         addMltcQueue,
         clearMltcQueue,
         clearQueue,
-    } = useModalQueue(data);
+    } = useModalQueue(dataForHook);
 
     const [dragging, setDragging] = useState(false);
 
@@ -113,12 +117,11 @@ const ModalPage = ({ data, onClose }) => {
                         activeTab={activeTab} 
                     />
                 );
-            case 'languages':
+            case 'sadcs':
                 return (
-                    <SettingsLanguageModal 
+                    <SettingsSadcModal 
                         data={localData} 
                         handleChange={handleChange} 
-                        activeTab={activeTab} 
                     />
                 );
             case 'deleted':
@@ -146,7 +149,7 @@ const ModalPage = ({ data, onClose }) => {
 
     const hasQueuedMembers = Object.values(queuedMembers).some(arr => arr.length > 0);
     const showDeleteButton =
-        type !== 'info' &&
+        (type !== 'info' && type !== 'sadcs')&&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin &&
         (type !== 'attendance' || hasQueuedMembers);
@@ -175,7 +178,7 @@ const ModalPage = ({ data, onClose }) => {
             className="action-button"
             onClick={() => {
                 if (type === 'attendance') {
-                    generateAttendance(queuedMembers, month, sadc.attendance_template);
+                    generateAttendance(queuedMembers, month, sadc);
                     onClose();
                 } else {
                     handleSave(localData);
@@ -191,18 +194,22 @@ const ModalPage = ({ data, onClose }) => {
         <div className="modal">
             <div className="modal-body">
                 <div className="modal-main">
-                    {type === 'info' && (
+                    {type === 'info'&& (
                         <div className="modal-tabs modal-tabs-info">
-                            <MemberInfoSideModal data={localData} handleChange={handleChange} />
+                            <MemberInfoSideModal 
+                                data={localData}
+                                handleChange={handleChange}
+                                languages={sadc.languages}
+                            />
                         </div>
                     )}
-                    <div className="modal-content">
+                    <div className={`modal-content${type === 'sadcs' ? ' full-width' : ''}`}>
                         <DragOverlay disabled={!(type === 'files' || type === 'authorizations') || !dragging} />
                         <div className={`modal-content-scroll${dragging ? ' no-scroll' : ''}`}>
                             {getModalContent()}
                         </div>
                     </div>
-                    {type !== 'info' && (
+                    {(type !== 'info' && type !== 'sadcs') && (
                         <div className="modal-tabs">
                             {type !== 'attendance' ? (
                                 <>
