@@ -17,7 +17,7 @@ import fetchWithRefresh from '../utils/fetchWithRefresh'
 import { useTranslation } from 'react-i18next';
 import { MltcContext } from '../context/MltcContext';
 
-function useModalEdit(data, onClose) {
+function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
     const { mltcOptions, setMltcOptions } = useContext(MltcContext);
     const id = data.id;
@@ -26,7 +26,7 @@ function useModalEdit(data, onClose) {
         Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
     ), [data]);
 
-    const [localData, setLocalData] = useState((type === 'info' || type === 'sadcs') ? { ...data.data } : originalData);
+    const [localData, setLocalData] = useState(NO_TABS_TYPE.has(type) ? { ...data.data } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
 
@@ -52,7 +52,7 @@ function useModalEdit(data, onClose) {
         const { value, files } = event.target;
 
         setLocalData((prevData) => {
-            if (type !== 'info' && type !== 'sadcs') {
+            if (!NO_TABS_TYPE.has(type)) {
                 const currentTab = prevData[activeTab];
                 const oldValue = currentTab[field];
 
@@ -230,12 +230,20 @@ function useModalEdit(data, onClose) {
                 data.setData(prev => prev ? { ...prev, files: savedData } : prev);
                 break;
 
+            case 'import':
+                requiredFields = ['name', 'date', 'file'];
+                if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
+
+                console.log('Bulk uploaded!')
+                break;
+
             case 'users':
                 requiredFields = ['name', 'email'];
                 if (!validateRequiredFields('settings.data.users', updatedData, requiredFields)) return;
 
                 saveDataTabs(updatedData, 'users', undefined, 'user');
                 break;
+
             case 'mltcs':
                 requiredFields = ['name'];
                 if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
@@ -244,6 +252,7 @@ function useModalEdit(data, onClose) {
                 savedData = await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
                 setMltcOptions(savedData);
                 break;
+
             case 'sadcs':
                 requiredFields = ['name', 'email', 'phone', 'address', 'npi'];
                 if (!validateRequiredFields('settings.admin.sadc', updatedData, requiredFields)) return;
@@ -255,6 +264,7 @@ function useModalEdit(data, onClose) {
                 savedData = await sendRequest(sadcEndpoint, sadcMethod, updatedData)
                 data.setData(savedData)
                 break;
+
             case 'deleted':
                 updatedData.forEach(item => {
                     if (item.deleted) {

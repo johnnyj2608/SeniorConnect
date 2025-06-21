@@ -18,6 +18,10 @@ import useModalEdit from '../hooks/useModalEdit';
 import useModalQueue from '../hooks/useModalQueue';
 import generateAttendance from '../utils/generateAttendance';
 
+const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import']);
+const NO_TABS_TYPE = new Set(['info', 'sadcs', 'import']);
+const FULL_WIDTH_TYPES = new Set(['sadcs', 'import']);
+
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
     const { sadc, setSadc } = useContext(SadcContext);
@@ -37,7 +41,7 @@ const ModalPage = ({ data, onClose }) => {
         handleSave,
         setActiveTab,
         mltcOptions,
-    } = useModalEdit(dataForHook, onClose);
+    } = useModalEdit(dataForHook, onClose, NO_TABS_TYPE);
 
     const {
         queuedMembers,
@@ -91,8 +95,10 @@ const ModalPage = ({ data, onClose }) => {
                     />
                 );
             case 'files':
+            case 'import':
                 return (
                     <MemberFilesModal
+                        type={type}
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
@@ -149,7 +155,7 @@ const ModalPage = ({ data, onClose }) => {
 
     const hasQueuedMembers = Object.values(queuedMembers).some(arr => arr.length > 0);
     const showDeleteButton =
-        (type !== 'info' && type !== 'sadcs')&&
+        !NO_TABS_TYPE.has(type) &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin &&
         (type !== 'attendance' || hasQueuedMembers);
@@ -194,7 +200,7 @@ const ModalPage = ({ data, onClose }) => {
         <div className="modal">
             <div className="modal-body">
                 <div className="modal-main">
-                    {type === 'info'&& (
+                    {type === 'info' && (
                         <div className="modal-tabs modal-tabs-info">
                             <MemberInfoSideModal 
                                 data={localData}
@@ -203,13 +209,13 @@ const ModalPage = ({ data, onClose }) => {
                             />
                         </div>
                     )}
-                    <div className={`modal-content${type === 'sadcs' ? ' full-width' : ''}`}>
-                        <DragOverlay disabled={!(type === 'files' || type === 'authorizations') || !dragging} />
+                    <div className={`modal-content${FULL_WIDTH_TYPES.has(type) ? ' full-width' : ''}`}>
+                        <DragOverlay disabled={!DRAG_DROP_TYPES.has(type) || !dragging} />
                         <div className={`modal-content-scroll${dragging ? ' no-scroll' : ''}`}>
                             {getModalContent()}
                         </div>
                     </div>
-                    {(type !== 'info' && type !== 'sadcs') && (
+                    {!NO_TABS_TYPE.has(type) && (
                         <div className="modal-tabs">
                             {type !== 'attendance' ? (
                                 <>
