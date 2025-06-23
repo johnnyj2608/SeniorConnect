@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ListDetail from '../layout/ListDetail';
 import NameDisplay from '../layout/NameDisplay';
+import mergeSortedArrays from '../../utils/mergeSortedArrays';
 
 const MembersAttendanceModal = ({ members, onMonthChange, addQueue, addMltcQueue }) => {
     const { t } = useTranslation();
@@ -11,8 +12,9 @@ const MembersAttendanceModal = ({ members, onMonthChange, addQueue, addMltcQueue
     const displayedMltcs = Object.keys(members)
         .filter(mltcName => members[mltcName].length > 0);
 
+    const sortedArrays = Object.values(members);
     const displayedMembers = selectedMltc === 'all'
-        ? Object.values(members).flat()
+        ? mergeSortedArrays(sortedArrays, m => Number(m.sadc_member_id))
         : members[selectedMltc] || [];
 
     const handleAddQueue = () => {
