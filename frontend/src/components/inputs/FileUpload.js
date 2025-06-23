@@ -80,6 +80,8 @@ const FileUpload = ({
                         <button
                             className="action-button thin destructive"
                             onClick={() => {
+                                const fileInput = document.getElementById('hiddenFileInput');
+                                if (fileInput) fileInput.value = '';
                                 handleChange('file')({ target: { value: '' } });
                         
                                 if (autoFill) {

@@ -26,9 +26,7 @@ class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMi
         if dx_code and mltc:
             valid_codes = getattr(mltc, 'dx_codes', [])
             if dx_code not in valid_codes:
-                raise serializers.ValidationError({
-                    'dx_code': f"DX code '{dx_code}' is not valid for MLTC '{mltc.name}'."
-                })
+                attrs['dx_code'] = None
 
         return attrs
 

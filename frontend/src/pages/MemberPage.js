@@ -32,7 +32,7 @@ const MemberPage = () => {
     } else {
       const fetchMemberData = async () => {
         try {
-          const response = await fetchWithRefresh(`/core/members/${id}/full/`);
+          const response = await fetchWithRefresh(`/core/members/${id}/profile/`);
           if (!response.ok) return;
           const data = await response.json();
           setMemberData(data);

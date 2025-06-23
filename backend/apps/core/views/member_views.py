@@ -63,7 +63,7 @@ def getMembersBirthdays(request):
         return getUpcomingBirthdays(request)
     
 @api_view(['GET'])
-def getMemberFull(request, pk):
+def getMemberDetailFull(request, pk):
     if request.method == 'GET':
         return getMemberProfile(request, pk=pk)
     

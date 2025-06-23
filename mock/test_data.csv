@@ -1,0 +1,6 @@
+sadc_member_id,first_name,last_name,alt_name,birth_date,gender,address,phone,email,medicaid,ssn,language,enrollment_date,note,mltc,mltc_member_id,start_date,end_date,schedule,dx_code
+1,Michael,Scott,Prison Mike,1965-03-15,M,123 Dundie Ln,1115550000,michael@dundermifflin.com,MS12345X,000112222,English,2025-06-03,,Zillage Care Max,2001,2025-06-07,2025-07-07,"monday, friday",F63.9
+2,Jim,Halpert,Big Tuna,1980-10-01,M,1725 Slough Ave,2225551234,jim@dundermifflin.com,JH12345X,111223333,English,2025-06-01,,Anthem Blue Cross,2002,2025-06-03,2025-07-03,"tuesday, friday",R53.83
+3,Pamela,Beesly,Pam,1981-03-25,F,1725 Slough Ave,3335555678,pam@dundermifflin.com,PB12345X,444556666,English,2025-06-02,,Zillage Care Max,2003,2025-06-04,2025-07-04,"monday, wednesday",F41.1
+4,Dwight,Schrute,,1978-01-20,M,Schrute Farms,4445559876,dwight@dundermifflin.com,DS12345X,777889999,English,2025-06-05,,Anthem Blue Cross,2004,2025-06-06,2025-07-06,"tuesday, thursday",F60.81
+5,Steve,Park,Asian Jim,1980-10-01,M,1725 Slough Ave Apt B,5555553141,asianjim@dundermifflin.com,AJ12345X,999001111,English,2025-06-08,,Anthem Blue Cross,2005,2025-06-10,2025-07-10,"wednesday, saturday",Z00.00

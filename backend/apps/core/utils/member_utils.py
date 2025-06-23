@@ -303,44 +303,60 @@ def importMembersCsv(request):
     valid_members = []
     member_skipped = 0
 
-    required_fields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
+    required_member_fields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender']
+    member_fields = [
+        'sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender',
+        'alt_name', 'address', 'phone', 'email', 'medicaid', 'ssn',
+        'language', 'enrollment_date', 'note'
+    ]
+
     for row in reader:
-        if not all(row.get(field) for field in required_fields):
-            member_skipped += 1
-            continue
+        try:
+            if not all(row.get(field) for field in required_member_fields):
+                member_skipped += 1
+                continue
 
-        row_data = {
-            **row,
-            'sadc': sadc.id,
-        }
+            member_data = {field: row.get(field) for field in member_fields if row.get(field)}
+            member_data['sadc'] = sadc.id
 
-        serializer = MemberSerializer(data=row_data, context={'sadc': sadc})
-        if serializer.is_valid():
-            member_instance = Member(**serializer.validated_data)
-            valid_members.append((member_instance, row))
-        else:
+            serializer = MemberSerializer(data=member_data, context={'sadc': sadc})
+            if serializer.is_valid():
+                member_instance = Member(**serializer.validated_data)
+                valid_members.append((member_instance, row))
+            else:
+                member_skipped += 1
+        except Exception as e:
+            print(f"Member parse error: {e}")
             member_skipped += 1
-            print({serializer.errors})
 
     created_members = Member.objects.bulk_create([m for m, _ in valid_members])
 
-    # Handle authorizations if applicable
+    # Handle authorizations
     auth_created = 0
     auth_skipped = 0
-    for member, row in zip(created_members, [r for _, r in valid_members]):
-        if all(row.get(field) for field in ['mltc', 'mltc_member_id', 'start_date', 'end_date']):
-            auth_row = {
-                'member': member.id,
-                'mltc': row.get('mltc'),
-                'mltc_member_id': row.get('mltc_member_id'),
-                'start_date': row.get('start_date'),
-                'end_date': row.get('end_date'),
-                'dx_code': row.get('dx_code'),
-                'schedule': [d.strip() for d in row.get('schedule', '').split(',') if d.strip()],
-                'active': True
-            }
 
-            auth_serializer = AuthorizationSerializer(data=auth_row)
+    auth_fields = [
+        'mltc', 'mltc_member_id', 'start_date', 'end_date',
+        'dx_code', 'schedule'
+    ]
+    required_auth_fields = ['mltc', 'mltc_member_id', 'start_date', 'end_date']
+
+    for member, row in zip(created_members, [r for _, r in valid_members]):
+        if not all(row.get(field) for field in required_auth_fields):
+            auth_skipped += 1
+            continue
+
+        try:
+            auth_data = {field: row.get(field) for field in auth_fields if row.get(field)}
+            auth_data['member'] = member.id
+            auth_data['active'] = True
+
+            if 'schedule' in auth_data:
+                auth_data['schedule'] = [
+                    d.strip() for d in auth_data['schedule'].split(',') if d.strip()
+                ]
+
+            auth_serializer = AuthorizationSerializer(data=auth_data)
             if auth_serializer.is_valid():
                 authorization = auth_serializer.save()
                 member.active_auth = authorization
@@ -349,8 +365,9 @@ def importMembersCsv(request):
             else:
                 auth_skipped += 1
                 print(f"Authorization error (member {member.sadc_member_id}): {auth_serializer.errors}")
-        else:
+        except Exception as e:
             auth_skipped += 1
+            print(f"Authorization exception (member {member.sadc_member_id}): {e}")
 
     return Response({
         'members_created': len(created_members),
