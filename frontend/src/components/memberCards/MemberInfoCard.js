@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import MemberDetail from '../layout/MemberDetail';
+import ContactDetail from '../layout/ContactDetail';
 import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/formatUtils';
 
 const MemberInfoCard = ({ data, onEdit }) => {
@@ -29,7 +30,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
 					<MemberDetail label={t('member.info.gender')} value={formatGender(info.gender)} />
 					<MemberDetail label={t('member.info.phone')} value={formatPhone(info.phone)} />
 					<MemberDetail label={t('member.info.address')} value={info.address} />
-					<MemberDetail label={t('member.info.email')} value={info.email} />
+					<ContactDetail label={t('member.info.email')} name={info.email} email={true} />
 					<MemberDetail label={t('member.info.medicaid')} value={info.medicaid?.toUpperCase()} />
 					<MemberDetail label={t('member.info.ssn')} value={formatSSN(info.ssn)} />
 					<MemberDetail label={t('member.info.language')} value={info.language} />

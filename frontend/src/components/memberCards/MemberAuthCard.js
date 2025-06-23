@@ -55,7 +55,7 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                         <ContactDetail
                             label={t(`member.authorizations.care_manager`)}
                             name={auth.cm_name}
-                            phone={auth.cm_phone}
+                            contact={auth.cm_phone}
                         />
 
                         {auth.file && (

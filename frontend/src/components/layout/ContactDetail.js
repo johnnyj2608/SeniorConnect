@@ -1,20 +1,27 @@
-import React from 'react'
+import React from 'react';
 import { formatPhone } from '../../utils/formatUtils';
 
-const ContactDetail = ({ label, name, phone }) => {
-    if (name == null || name === '') return null;
-    if (phone == null || phone === '') return null;
+const ContactDetail = ({ label, name, contact, email = false }) => {
+  if (!name) return null;
 
-    return (
-        <div className="member-detail">
-            <label>{label}:</label>
-            <span className="member-detail-contacts">
-                <div>{name}</div>
-                <div>{formatPhone(phone)}</div>
-            </span>
-        </div>
-    );
+  let displayName = name;
+  let displayContact = contact;
+
+  if (email) {
+    const parts = name.split('@');
+    displayName = parts[0] || '';
+    displayContact = parts[1] || '';
+  }
+
+  return (
+    <div className="member-detail">
+      <label>{label}:</label>
+      <span className="member-detail-contacts">
+        <div>{displayName}</div>
+        {displayContact && <div>{email ? `@${displayContact}` : formatPhone(displayContact)}</div>}
+      </span>
+    </div>
+  );
 };
 
-
-export default ContactDetail
+export default ContactDetail;
