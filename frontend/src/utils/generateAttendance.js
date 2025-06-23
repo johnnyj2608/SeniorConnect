@@ -160,30 +160,64 @@ const attendanceTemplateTwo = (member, month, year, sadc) => {
     return doc.output('blob');
 }
 
-const generateAttendance = async (memberList, monthYear, sadc) => {
-    const zip = new JSZip();
+const generateAttendance = async (memberList, monthYear, sadc="SADC", template, preview = false) => {
+    if (!monthYear) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        monthYear = `${year}-${month}`;
+    }
     const [year, month] = monthYear.split('-');
     const shortYear = year.slice(2);
 
+    if (preview) {
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+
+        const start_date = firstDay.toISOString().split('T')[0];
+        const end_date = lastDay.toISOString().split('T')[0];
+
+        memberList = {
+            'MLTC Insurance': [
+                {
+                    sadc_member_id: '25',
+                    first_name: 'John',
+                    last_name: 'Doe',
+                    gender: 'M',
+                    birth_date: '1980-05-04',
+                    phone: '1234567890',
+                    address: '123 Main St, City, State',
+                    mltc_name: 'MLTC Insurance',
+                    mltc_member_id: 'ML12345X',
+                    start_date,
+                    end_date,
+                    dx_code: 'M15.0',
+                    sdc_auth_id: 'T2003',
+                    transportation_auth_id: 'TRANS001',
+                    schedule: ['monday', 'wednesday', 'friday']
+                }
+            ]
+        };
+    }
+    const zip = new JSZip();
     for (const [mltcName, members] of Object.entries(memberList)) {
         const folder = zip.folder(mltcName);
 
         for (const member of members) {
             let pdfBlob;
-            switch (sadc.attendance_template) {
+            switch (template) {
                 case 2:
-                    pdfBlob = attendanceTemplateTwo(member, month, year, sadc.name);
+                    pdfBlob = attendanceTemplateTwo(member, month, year, sadc);
                     break;
                 case 1:
                 default:
-                    pdfBlob = attendanceTemplateOne(member, month, year, sadc.name);
+                    pdfBlob = attendanceTemplateOne(member, month, year, sadc);
             }
 
             const fileName = `${member.sadc_member_id}. ${member.last_name}, ${member.first_name} - Attendance ${month}_${shortYear}.pdf`
             folder.file(fileName, pdfBlob);
 
-            // Uncomment to preview instead of download
-            if (mltcName === Object.keys(memberList)[0] && member === members[0]) {
+            if (preview && mltcName === Object.keys(memberList)[0] && member === members[0]) {
                 const pdfUrl = URL.createObjectURL(pdfBlob);
                 window.open(pdfUrl);
                 return;

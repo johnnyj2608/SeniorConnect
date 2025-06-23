@@ -52,26 +52,26 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
         const { value, files } = event.target;
 
         setLocalData((prevData) => {
-            if (!NO_TABS_TYPE.has(type)) {
-                const currentTab = prevData[activeTab];
-                const oldValue = currentTab[field];
+            const tabularData = !NO_TABS_TYPE.has(type);
+            const current = tabularData ? prevData[activeTab] : prevData;
+            const oldValue = current[field];
 
-                let normalizedValue;
-    
-                if (files?.[0]) {
-                    normalizedValue = files[0];
-                } else if (field.includes('date') && value === '') {
-                    normalizedValue = null;
-                } else if (Array.isArray(oldValue)) {
-                    normalizedValue = Array.isArray(value) ? value : [value];
-                } else if (typeof oldValue === 'number') {
-                    normalizedValue = value === '' ? '' : (!isNaN(Number(value)) ? Number(value) : value);
-                } else {
-                    normalizedValue = value;
-                }
+            let normalizedValue;
+            if (files?.[0]) {
+                normalizedValue = files[0];
+            } else if (field.includes('date') && value === '') {
+                normalizedValue = null;
+            } else if (Array.isArray(oldValue)) {
+                normalizedValue = Array.isArray(value) ? value : [value];
+            } else if (typeof oldValue === 'number') {
+                normalizedValue = value === '' ? '' : (!isNaN(Number(value)) ? Number(value) : value);
+            } else {
+                normalizedValue = value;
+            }
 
+            if (tabularData) {
                 const updatedTab = {
-                    ...currentTab,
+                    ...current,
                     [field]: normalizedValue,
                 };
 
@@ -83,7 +83,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 };
                 return updatedData;
             }
-            return { ...prevData, [field]: files?.[0] || value };
+            return { ...prevData, [field]: normalizedValue };
         });
     };
 

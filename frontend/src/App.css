@@ -1242,7 +1242,6 @@ body.modal-open {
 .list-input-container span {
   cursor: pointer;
   align-self: flex-start;
-  padding-top: 5px;
 }
 
 .list-input-container span:hover {
@@ -1256,21 +1255,23 @@ body.modal-open {
   gap: 5px;
 }
 
-.list-input-textfields > * {
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-}
-
-.list-input-textfields > * > input {
-  flex: 1;
-}
-
-.codes-container > :last-child {
+.list-input-textfields > :last-child {
   margin-bottom: 5px;
 }
 
-.list-input-textfields button {
+.input-with-button {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
+}
+
+.input-with-button > input,
+.input-with-button > select {
+  flex: 1;
+}
+
+.input-with-button button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1278,15 +1279,30 @@ body.modal-open {
   font-size: 15px;
   font-weight: bold;
   color: var(--color-white);
-  background-color: var(--color-danger);
+  fill: var(--color-white);
+  background-color: var(--color-main);
   cursor: pointer;
   border: none;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
 
-.list-input-textfields button:hover {
+.input-with-button button:hover {
+  background-color: var(--color-main-dark);
+}
+
+.input-with-button.danger button {
+  color: var(--color-white);
+  background-color: var(--color-danger);
+}
+
+.input-with-button.danger button:hover {
   background-color: var(--color-danger-hover);
+}
+
+.input-with-button svg {
+  width: 15px;
+  height: 15px;
 }
 
 /* --------------

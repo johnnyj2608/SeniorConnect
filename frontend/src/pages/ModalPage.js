@@ -184,7 +184,7 @@ const ModalPage = ({ data, onClose }) => {
             className="action-button"
             onClick={() => {
                 if (type === 'attendance') {
-                    generateAttendance(queuedMembers, month, sadc);
+                    generateAttendance(queuedMembers, month, sadc.name, sadc.attendance_template);
                     onClose();
                 } else {
                     handleSave(localData);

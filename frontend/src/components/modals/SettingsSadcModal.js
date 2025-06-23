@@ -2,6 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ListInput from '../inputs/ListInput';
 import ListDetail from '../layout/ListDetail';
+import generateAttendance from '../../utils/generateAttendance';
+import { ReactComponent as Eye } from '../../assets/eye-open.svg'
 
 const attendanceTemplateOptions = [
     { value: 1 },
@@ -79,25 +81,39 @@ const SettingsSadcModal = ({ data, handleChange }) => {
 
             <div className="member-detail">
                 <label>{t('settings.admin.sadc.attendance')}</label>
-                <select
-                    value={data.attendance_template}
-                    onChange={handleChange('attendance_template')}
-                >
-                {attendanceTemplateOptions.map(({ value }) => (
-                    <option key={value} value={value}>
-                    {t('settings.admin.sadc.template')} #{value}
-                    </option>
-                ))}
-                </select>
+                <div className="input-with-button">
+                    <select
+                        value={data.attendance_template}
+                        onChange={handleChange('attendance_template')}
+                    >
+                    {attendanceTemplateOptions.map(({ value }) => (
+                        <option key={value} value={value}>
+                        {t('settings.admin.sadc.template')} #{value}
+                        </option>
+                    ))}
+                    </select>
+                    <button onClick={() => {
+                        generateAttendance(
+                            {}, 
+                            '', 
+                            data.name, 
+                            data.attendance_template, 
+                            true
+                        )}}
+                        >
+                        <Eye />
+                    </button>
+                </div>
+                
             </div>
-
+            
             <ListDetail
                 label={t('settings.admin.sadc.languages')}
                 value={
                     <ListInput
-                    data={data.languages || []}
-                    onChange={handleChange('languages')}
-                />
+                        data={data.languages || []}
+                        onChange={handleChange('languages')}
+                    />
                 }
             />
         </>

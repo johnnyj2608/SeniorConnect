@@ -24,7 +24,7 @@ const ListInput = ({ data = [], onChange, disabled }) => {
         <div className="list-input-container">
             <div className="list-input-textfields">
                 {data.map((item, index) => (
-                    <div key={index}>
+                    <div className="input-with-button danger" key={index}>
                         <input
                             type="text"
                             value={item}
