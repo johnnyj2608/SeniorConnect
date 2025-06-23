@@ -14,7 +14,7 @@ import { MltcContext } from '../context/MltcContext';
 
 const MembersListPage = () => {
 	const { t } = useTranslation();
-	const { mltcOptions } = useContext(MltcContext);
+	const { mltcOptions, refreshMltc } = useContext(MltcContext)
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
 	const mltcQueryParam = queryParams.get('mltc');
@@ -44,8 +44,9 @@ const MembersListPage = () => {
 	}, []);
 
 	useEffect(() => {
+		refreshMltc();
 		getMembers();
-	}, [getMembers]);
+	}, [getMembers, refreshMltc]);
 
 	useEffect(() => {
 		if (mltcQueryParam && mltcFilter !== mltcQueryParam) {

@@ -24,10 +24,10 @@ const FULL_WIDTH_TYPES = new Set(['sadcs', 'import']);
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
-    const { sadc, setSadc } = useContext(SadcContext);
+    const { sadc, refreshSadc } = useContext(SadcContext);
 
     const dataForHook = data.type === 'sadcs'
-        ? { ...data, data: sadc, setData: setSadc }
+        ? { ...data, data: sadc, refreshSadc: refreshSadc }
         : data;
 
     const {

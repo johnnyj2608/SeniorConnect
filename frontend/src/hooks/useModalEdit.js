@@ -19,7 +19,7 @@ import { MltcContext } from '../context/MltcContext';
 
 function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
-    const { mltcOptions, setMltcOptions } = useContext(MltcContext);
+    const { mltcOptions, refreshMltc } = useContext(MltcContext);
     const id = data.id;
     const type = data.type;
     const originalData = useMemo(() => (
@@ -251,8 +251,8 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
-                savedData = await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
-                setMltcOptions(savedData);
+                await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
+                refreshMltc();
                 break;
 
             case 'sadcs':
@@ -263,8 +263,8 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
                 const sadcEndpoint = `/tenant/sadcs/`;
                 const sadcMethod = 'PUT';
-                savedData = await sendRequest(sadcEndpoint, sadcMethod, updatedData)
-                data.setData(savedData)
+                await sendRequest(sadcEndpoint, sadcMethod, updatedData)
+                data.refreshSadc();
                 break;
 
             case 'deleted':
