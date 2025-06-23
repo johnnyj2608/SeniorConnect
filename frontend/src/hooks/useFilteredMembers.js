@@ -17,6 +17,7 @@ const useFilterMembers = ({ members, searchQuery, mltcFilter, showInactive }) =>
 					member.sadc_member_id,
 					member.first_name,
 					member.last_name,
+					member.alt_name,
 				].map((f) => normalizeField(f?.toString()));
 
 				return normalizedQuery === '' || fields.some((f) => f.includes(normalizedQuery));
