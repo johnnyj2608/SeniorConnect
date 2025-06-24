@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
+import getCroppedImg from '../../utils/getCroppedImage';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const MemberInfoModal = ({ data, handleChange }) => {
     const { t } = useTranslation();
@@ -128,21 +131,58 @@ const MemberInfoModal = ({ data, handleChange }) => {
 
 const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const { t } = useTranslation();
+    const [crop, setCrop] = useState();
+
+    const handlePhotoUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            handleChange('preview_photo')({ target: { value: file } });
+            handleChange('photo')({ target: { value: file } });
+        }
+    };
+
+    const imgRef = useRef(null);
+    const onCropComplete = async (pixelCrop) => {
+        if (imgRef.current && pixelCrop?.width && pixelCrop?.height) {
+            const croppedBlob = await getCroppedImg(imgRef.current, pixelCrop);
+            const croppedFile = new File([croppedBlob], 'cropped.jpg', { type: 'image/jpeg' });
+            handleChange('photo')({ target: { value: croppedFile } });
+        }
+    };
 
     return (
         <>
             <div className="photo-container">
-                <img
-                    src={formatPhoto(data.photo)}
-                    alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
-                    className="preview-photo"
-                    onError={(e) => e.target.src = "/default-profile.jpg"}
-                />
+                {data.photo ? (
+                    <ReactCrop 
+                        crop={crop} 
+                        onChange={(c) => setCrop(c)}
+                        onComplete={(c) => onCropComplete(c)}
+                    >
+                        <img
+                            ref={imgRef}
+                            src={formatPhoto(data.preview_photo)}
+                            alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
+                            className="preview-photo"
+                            crossOrigin="anonymous"
+                            onError={(e) => (e.target.src = "/default-profile.jpg")}
+                        />
+                    </ReactCrop>
+                ) : (
+                    <img
+                        src="/default-profile.jpg"
+                        alt={t('member.info.label')}
+                        className="preview-photo"
+                    />
+                )}
                 {data.photo ? (
                     <button
                         type="button"
                         className="action-button thin destructive"
-                        onClick={() => handleChange('photo')({ target: { value: '' } })}
+                        onClick={() => {
+                            handleChange('photo')({ target: { value: '' } });
+                            handleChange('preview_photo')({ target: { value: '' } });
+                        }}
                     >
                         {t('general.buttons.remove_photo')}
                     </button>
@@ -155,7 +195,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
                             id="image-upload"
                             type="file"
                             accept="image/*"
-                            onChange={handleChange('photo')}
+                            onChange={handlePhotoUpload}
                             style={{ display: 'none' }}
                         />
                     </>

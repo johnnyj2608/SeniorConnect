@@ -1774,6 +1774,10 @@ body.modal-open {
   width: 80%;
 }
 
+.ReactCrop {
+  width: 100%;
+}
+
 @media (max-width: 889px) {
   .card-400 {
     width: 550px;

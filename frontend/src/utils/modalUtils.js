@@ -13,17 +13,11 @@ const getActiveAuthIndex = (data) => {
 
 const sendRequest = async (url, method, data) => {
     const excludedKeys = new Set([
-        'last_login', 
-        'groups', 
-        'user_permissions', 
         'created_at', 
         'updated_at', 
-        'is_staff', 
-        'is_superuser', 
-        'is_admin_user',
-        'is_staff_user',
         'sadc',
         'edited',
+        'preview_photo'
     ]);
 
     const formData = new FormData();
