@@ -16,17 +16,24 @@ import {
 import fetchWithRefresh from '../utils/fetchWithRefresh'
 import { useTranslation } from 'react-i18next';
 import { MltcContext } from '../context/MltcContext';
+import { SadcContext } from '../context/SadcContext';
 
 function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
     const { mltcOptions, refreshMltc } = useContext(MltcContext);
-    const id = data.id;
-    const type = data.type;
-    const originalData = useMemo(() => (
-        Object.values(data?.data || {}).map(tab => ({ ...tab, edited: false }))
-    ), [data]);
+    const { sadc, refreshSadc } = useContext(SadcContext);
+    const { id, type } = data;
 
-    const [localData, setLocalData] = useState(NO_TABS_TYPE.has(type) ? { ...data.data } : originalData);
+    const effectiveData = useMemo(() => {
+        if (type === 'sadcs') return sadc;
+        return data.data || {};
+    }, [type, sadc, data.data]);
+
+    const originalData = useMemo(() => (
+        Object.values(effectiveData).map(tab => ({ ...tab, edited: false }))
+    ), [effectiveData]);
+
+    const [localData, setLocalData] = useState(NO_TABS_TYPE.has(type) ? { ...effectiveData } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
 
@@ -36,6 +43,18 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
             document.body.classList.remove('modal-open');
         };
     }, []);
+
+    useEffect(() => {
+        if (type === 'users' || type === 'authorizations') refreshMltc();
+    }, [type, refreshMltc]);
+
+    useEffect(() => {
+        if (type === 'sadcs' || type === 'attendance' || type === 'info') refreshSadc();
+    }, [type, refreshSadc]);
+
+    useEffect(() => {
+        if (type === 'sadcs') setLocalData({ ...sadc });
+    }, [sadc, type]);
 
     const newTab = useMemo(() => {
         const base = getNewTab(type, localData, id);
@@ -251,8 +270,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
-                await saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
-                refreshMltc();
+                saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
                 break;
 
             case 'sadcs':
@@ -263,8 +281,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
                 const sadcEndpoint = `/tenant/sadcs/`;
                 const sadcMethod = 'PUT';
-                await sendRequest(sadcEndpoint, sadcMethod, updatedData)
-                data.refreshSadc();
+                sendRequest(sadcEndpoint, sadcMethod, updatedData)
                 break;
 
             case 'deleted':
@@ -295,6 +312,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
         handleSave,
         setActiveTab,
         mltcOptions,
+        sadc,
     };
 }
 

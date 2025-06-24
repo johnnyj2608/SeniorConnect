@@ -1,6 +1,5 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SadcContext } from '../context/SadcContext';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
@@ -24,11 +23,6 @@ const FULL_WIDTH_TYPES = new Set(['sadcs', 'import']);
 
 const ModalPage = ({ data, onClose }) => {
     const { t } = useTranslation();
-    const { sadc, refreshSadc } = useContext(SadcContext);
-
-    const dataForHook = data.type === 'sadcs'
-        ? { ...data, data: sadc, refreshSadc: refreshSadc }
-        : data;
 
     const {
         type,
@@ -41,7 +35,8 @@ const ModalPage = ({ data, onClose }) => {
         handleSave,
         setActiveTab,
         mltcOptions,
-    } = useModalEdit(dataForHook, onClose, NO_TABS_TYPE);
+        sadc,
+    } = useModalEdit(data, onClose, NO_TABS_TYPE);
 
     const {
         queuedMembers,
@@ -53,7 +48,7 @@ const ModalPage = ({ data, onClose }) => {
         addMltcQueue,
         clearMltcQueue,
         clearQueue,
-    } = useModalQueue(dataForHook);
+    } = useModalQueue(data);
 
     const [dragging, setDragging] = useState(false);
 
