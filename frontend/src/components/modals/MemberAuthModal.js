@@ -21,7 +21,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
-    const selectedMltc = mltcOptions.find(mltc => String(mltc.id) === String(current.mltc));
+    const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes || [];
 
     const onScheduleChange = (newSchedule) => {
@@ -65,13 +65,9 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 <label>{t('member.authorizations.mltc')} *</label>
                 <select
                     required
-                    value={disabled ? '' : current.mltc_name || ''}
+                    value={disabled ? '' : current.mltc || ''}
                     onChange={(e) => {
-                        const { value } = e.target;
-                        const name = mltcOptions.find(opt => String(opt.name) === value)?.name || '';
-
-                        handleChange('mltc')({ target: { value } });
-                        handleChange('mltc_name')({ target: { value: name } });
+                        handleChange('mltc')({ target: { value: e.target.value } });
                         handleChange('dx_code')({ target: { value: '' } });
                     }}
                     disabled={disabled}

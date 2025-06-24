@@ -13,7 +13,6 @@ class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMi
         queryset=Mltc.objects.all(),
         slug_field='name'
     )
-    mltc_name = serializers.ReadOnlyField(source='mltc.name')
 
     class Meta:
         model = Authorization
@@ -31,8 +30,10 @@ class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMi
         return attrs
 
 class AuthorizationWithServiceSerializer(serializers.ModelSerializer):
-    mltc = serializers.PrimaryKeyRelatedField(queryset=Mltc.objects.all())
-    mltc_name = serializers.ReadOnlyField(source='mltc.name')
+    mltc = serializers.SlugRelatedField(
+        queryset=Mltc.objects.all(),
+        slug_field='name'
+    )
     services = serializers.SerializerMethodField()
 
     class Meta:
