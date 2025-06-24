@@ -832,8 +832,6 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   width: 100%;
-  position: absolute;
-  top: 0;
   text-transform: uppercase;
   padding: 0.1rem;
   color: var(--color-good);
@@ -842,10 +840,18 @@ input[type="number"]::-webkit-inner-spin-button {
   border-bottom: 2px solid var(--color-good);
 }
 
-.members-list-photo {
+.members-list-photo-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 200px;
   border-bottom: 1px solid  var(--color-border);
+}
+
+.members-list-photo {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .members-list-details {

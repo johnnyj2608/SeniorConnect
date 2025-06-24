@@ -8,15 +8,18 @@ const ListItem = ({ member }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`members-list-item${member.new ? ' new' : ''}`}>
+    <div className="members-list-item">
       <Link to={`/member/${member.id}`}>
-        <img 
+        <div className="members-list-photo-container">
+          {member.new && <span className="members-list-item-new">{t('members.new')}</span>}
+          <img 
             src={formatPhoto(member.photo)} 
-            alt={member.first_name ? `${member.first_name} ${member.last_name}` : "Member"} 
+            alt={member.first_name ? `${member.first_name} ${member.last_name}` : t('member.info.label')} 
             className="members-list-photo"
             onError={(e) => e.target.src = "/default-profile.jpg"}
             loading="lazy"
-        />
+          />
+        </div>
         <div className="members-list-details">
           <h3>
             <NameDisplay
@@ -33,7 +36,6 @@ const ListItem = ({ member }) => {
               <p>{formatSchedule(member.schedule, true)}</p>
           )}
         </div>
-        {member.new && <span className="members-list-item-new">{t('members.new')}</span>}
       </Link>
     </div>
   )
