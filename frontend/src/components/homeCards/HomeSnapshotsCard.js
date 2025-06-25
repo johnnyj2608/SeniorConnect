@@ -9,12 +9,12 @@ const HomeSnapshotCard = () => {
   return (
     <div className="home-section">
       <h2>{t('snapshots.label')}</h2>
-      <p>{t('snapshots.month_snapshot_ready', { month: t(`general.months.${month}`) })}</p>
+      <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${month}`) })}</p>
       <ul>
         <li>{t('snapshots.members')}</li>
         <li>{t('snapshots.birthdays')}</li>
         <li>{t('snapshots.absences')}</li>
-        <li>{t('snapshots.enrollment')}</li>
+        <li>{t('snapshots.enrollments')}</li>
       </ul>
       <p>{t('snapshots.see_archived')}</p>
     </div>

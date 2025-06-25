@@ -104,10 +104,9 @@
         "members": "Members",
         "absences": "Absences",
         "birthdays": "Birthdays",
-        "enrollment": "Enrollment",
-        "assessments": "Assessments",
+        "enrollments": "Enrollment",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
-        "see_archived": "See archived reports in settings"
+        "see_archived": "See archived snapshots in settings"
     },
     "home": {
         "leaving_soon": "Leaving Soon",

@@ -104,10 +104,9 @@
         "members": "成员",
         "absences": "缺勤",
         "birthdays": "生日",
-        "enrollment": "注册",
-        "assessments": "评估",
+        "enrollments": "注册",
         "month_snapshot_ready": "{{month}} 的快照已准备好查看",
-        "see_archived": "在设置中查看归档报告"
+        "see_archived": "在设置中查看已存档的快照"
     },
     "home": {
         "leaving_soon": "即将离开",
