@@ -19,13 +19,30 @@ def upload_file_to_supabase(file_obj, new_path, old_path, photo=False):
                 print(f"Error deleting file: {str(e)}")
 
         if photo:
-            image = Image.open(file_obj).convert("RGB")
-            image.thumbnail((400, 400), Image.Resampling.LANCZOS)
-            buffer = BytesIO()
-            image.save(buffer, format="JPEG", optimize=True, quality=75)
-            buffer.seek(0)
-            content = buffer.read()
-            content_type = "image/jpeg"
+            file_obj.seek(0, 2)
+            file_size = file_obj.tell()
+            file_obj.seek(0)
+
+            image = Image.open(file_obj)
+            width, height = image.size
+
+            raw_size = width * height * 3
+            threshold = raw_size * 0.1
+
+            if file_size < threshold:
+                file_obj.seek(0)
+                content = file_obj.read()
+                content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+                file_extension = file_obj.name.split('.')[-1].lower()
+            else:
+                image = image.convert("RGB")
+                image.thumbnail((400, 400), Image.Resampling.LANCZOS)
+                buffer = BytesIO()
+                image.save(buffer, format="JPEG", optimize=True, quality=75)
+                buffer.seek(0)
+                content = buffer.read()
+                content_type = "image/jpeg"
+                file_extension = "jpg"
         else:
             file_extension = file_obj.name.split('.')[-1].lower()
             content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
