@@ -18,4 +18,5 @@ urlpatterns = [
     path('snapshots/recent/', snapshot_views.getRecentSnapshotLogs, name='snapshots_recent'),
     path('snapshots/<str:pk>/', snapshot_views.getSnapshot, name='snapshot'),
     path('snapshots/', snapshot_views.getSnapshots, name='snapshots'),
+    path('snapshots/preview/<int:sadc_id>/', previewSnapshotPdf, name='snapshot_preview'),
 ]
