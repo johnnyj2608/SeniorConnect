@@ -243,11 +243,12 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
                     onChange={handleChange('language')}
                 >
                     <option value="">{t('general.select_an_option')}</option>
-                    {languages.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
-                        </option>
-                    ))}
+                    {Array.isArray(languages) &&
+                        languages.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
                 </select>
             </div>
         </>
