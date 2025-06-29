@@ -30,6 +30,7 @@ const ListInput = ({ data = [], onChange, disabled }) => {
                             value={item}
                             onChange={handleItemChange(index)}
                             disabled={disabled}
+                            maxLength={50}
                         />
                         <button type="button" onClick={removeItem(index)} disabled={disabled}>—</button>
                     </div>

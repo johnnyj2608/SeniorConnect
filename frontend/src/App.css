@@ -949,6 +949,23 @@ input[type="number"]::-webkit-inner-spin-button {
   flex: 1;
 }
 
+.member-detail-limit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  color: var(--color-danger);
+}
+
+.member-detail-limit svg {
+  height: 14px;
+  width: 14px;
+  background-color: var(--color-white);
+  fill: var(--color-danger);
+  border-radius: 100%;
+  margin-right: 4px;
+}
+
 .member-detail-contacts {
   display: flex;
   flex-direction: column;

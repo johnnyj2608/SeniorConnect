@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const absenceTypes = [
@@ -54,12 +55,12 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
             </div>
 
             <div className="member-detail">
-                <label>{t('member.absences.label')} *</label>
+                <label>{t('member.absences.label')}</label>
                 <select
-                    required
                     value={disabled ? '' : current.absence_type || ''}
                     onChange={handleChange('absence_type')}
                     disabled={disabled}
+                    required
                 >
                     <option value="">{t('general.select_an_option')}</option>
                     {absenceTypes.map((type) => (
@@ -70,43 +71,35 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 </select>
             </div>
 
-            <div className="member-detail">
-                <label>
-                    {isAssessment
-                        ? `${t('member.absences.date')} *`
-                        : `${t('member.absences.start_date')} *`}
-                </label>
-                <input
+            <TextInput
+                label={isAssessment ? t('member.absences.date') : t('member.absences.start_date')}
                 type="date"
-                value={disabled ? '' : current.start_date || ''}
+                value={current.start_date}
                 onChange={handleChange('start_date')}
                 disabled={disabled}
-                />
-            </div>
+                required
+            />
 
             {!isAssessment && (
-                <div className="member-detail">
-                <label>{t('member.absences.end_date')}</label>
-                <input
+                <TextInput
+                    label={t('member.absences.end_date')}
                     type="date"
-                    value={disabled ? '' : current.end_date || ''}
+                    value={current.end_date}
                     onChange={handleChange('end_date')}
                     disabled={disabled}
                 />
-                </div>
             )}
 
             {isAssessment && (
                 <>
-                <div className="member-detail">
-                    <label>{t('member.absences.time')} *</label>
-                    <input
-                    type="time"
-                    value={disabled ? '' : current.time || ''}
-                    onChange={handleChange('time')}
-                    disabled={disabled}
+                    <TextInput
+                        label={t('member.absences.time')}
+                        type="time"
+                        value={current.time}
+                        onChange={handleChange('time')}
+                        disabled={disabled}
+                        required
                     />
-                </div>
 
                 <div className="member-detail">
                     <label>{t('member.absences.user')} *</label>
@@ -127,16 +120,13 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 </>
             )}
 
-            <div className="member-detail">
-                <label>{t('general.note')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.note || ''}
-                    onChange={handleChange('note')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label={t('general.note')}
+                value={current.note}
+                onChange={handleChange('note')}
+                disabled={disabled}
+                maxLength={220}
+            />
         </>
     );
 };

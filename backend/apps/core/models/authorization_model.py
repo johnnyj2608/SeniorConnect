@@ -4,12 +4,12 @@ from ...tenant.models.mltc_model import Mltc
 class Authorization(models.Model):
     mltc = models.ForeignKey(Mltc, null=True, blank=False, on_delete=models.SET_NULL)
     member = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
-    mltc_member_id = models.CharField(max_length=255, null=False, blank=False)
+    mltc_member_id = models.CharField(max_length=50, null=False, blank=False)
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
-    dx_code = models.CharField(max_length=255, choices=[], null=True, blank=True)
+    dx_code = models.CharField(max_length=50, choices=[], null=True, blank=True)
     schedule = models.JSONField(default=list)
-    cm_name = models.CharField(max_length=255, null=True, blank=True)
+    cm_name = models.CharField(max_length=50, null=True, blank=True)
     cm_phone = models.CharField(max_length=10, null=True, blank=True)
     file = models.URLField(null=True, blank=True)
 

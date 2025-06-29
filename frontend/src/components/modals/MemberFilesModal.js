@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import FileUpload from '../inputs/FileUpload';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
@@ -50,27 +51,22 @@ const MemberFilesModal = ({ type, data, handleChange, activeTab, handleAdd, drag
                 <h3>{t('general.edit')}{t('member.files.label')}</h3>
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.files.name')} *</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.name || ''}
-                    onChange={handleChange('name')}
-                    placeholder="Required"
-                    autoComplete="off"
-                    disabled={disabled || type === 'import'}
-                />
-            </div>
+            <TextInput
+                label={t('member.files.name')}
+                value={current.name}
+                onChange={handleChange('name')}
+                required
+                disabled={disabled || type === 'import'}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.files.date')} *</label>
-                <input
-                    type="date"
-                    value={disabled ? '' : current.date || ''}
-                    onChange={handleChange('date')}
-                    disabled={disabled || type === 'import'}
-                />
-            </div>
+            <TextInput
+                label={t('member.files.date')}
+                type="date"
+                value={current.date}
+                onChange={handleChange('date')}
+                required
+                disabled={disabled || type === 'import'}
+            />
 
             <FileUpload 
                 current={current}

@@ -331,7 +331,8 @@
         "confirm_deletion": "您确定要删除以下MLTC{{plural}}吗？\n- {{names}}"
     },
     "errors": {
-        "unknown_type": "未知类型"
+        "unknown_type": "未知类型",
+        "character_limit": "超出最大字符长度 {{limit}}"
     },
     "language": {
         "english": "英文",

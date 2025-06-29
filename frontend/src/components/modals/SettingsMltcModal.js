@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import ListInput from '../inputs/ListInput';
 import ListDetail from '../layout/ListDetail';
 
@@ -22,16 +23,13 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
                     {t('status.active')}
                 </label>
             </div>
-            <div className="member-detail">
-                <label>{t('settings.admin.mltc.name')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.name || ''}
-                    onChange={handleChange('name')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
+
+            <TextInput
+                label={t('settings.admin.mltc.name')}
+                value={current.name}
+                onChange={handleChange('name')}
+                disabled={disabled}
+            />
 
             <ListDetail
                 label={t('settings.admin.mltc.dx_codes')}

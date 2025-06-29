@@ -331,7 +331,8 @@
         "confirm_deletion": "Are you sure you want to delete the following MLTC{{plural}}?\n- {{names}}"
     },
     "errors": {
-        "unknown_type": "Unknown type"
+        "unknown_type": "Unknown type",
+        "character_limit": "Exceeded maximum character length of {{limit}}"
     },
     "language": {
         "english": "English",

@@ -28,7 +28,7 @@ class Absence(models.Model):
     end_date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
     called = models.BooleanField(default=False)
-    note = models.TextField(blank=True, null=True)
+    note = models.CharField(max_length=220, blank=True, null=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

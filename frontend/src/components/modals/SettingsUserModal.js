@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import CheckboxInput from '../inputs/CheckboxInput';
 import ListDetail from '../layout/ListDetail';
 
@@ -30,26 +31,24 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
           </label>
         )}
       </div>
-      <div className="member-detail">
-        <label>{t('settings.admin.users.name')} *</label>
-        <input
-          type="text"
-          value={disabled ? '' : current.name || ''}
-          onChange={handleChange('name')}
-          autoComplete="off"
-          disabled={disabled}
-        />
-      </div>
-      <div className="member-detail">
-        <label>{t('settings.admin.users.email')} *</label>
-        <input
-          type="email"
-          value={disabled ? '' : current.email || ''}
-          onChange={handleChange('email')}
-          autoComplete="off"
-          disabled={disabled || adminUser}
-        />
-      </div>
+
+      <TextInput
+        label={t('settings.admin.users.name')}
+        value={current.name}
+        onChange={handleChange('name')}
+        required
+        disabled={disabled}
+      />
+
+      <TextInput
+        label={t('settings.admin.users.email')}
+        type="email"
+        value={current.email}
+        onChange={handleChange('email')}
+        maxLength={220}
+        required
+        disabled={disabled || adminUser}
+      />
 
       <div className="member-detail">
         <label>{t('snapshots.label')}</label>

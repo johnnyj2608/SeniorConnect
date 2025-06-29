@@ -2,7 +2,7 @@ from django.db import models
 
 class Mltc(models.Model):
     sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE, related_name='mltcs')
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     dx_codes = models.JSONField(default=list)
 
     active = models.BooleanField(default=True)

@@ -26,8 +26,8 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='users')
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=220, unique=True, null=True, blank=True)
+    name = models.CharField(max_length=50)
     preferences = models.JSONField(default=dict, blank=True)
     allowed_mltcs = models.ManyToManyField(Mltc, blank=True, related_name='users')
     view_snapshots = models.BooleanField(default=False)

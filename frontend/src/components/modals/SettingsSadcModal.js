@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import ListInput from '../inputs/ListInput';
 import ListDetail from '../layout/ListDetail';
 import generateAttendance from '../../utils/generateAttendance';
@@ -19,65 +20,51 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 <h3>{t('general.edit')}{t('settings.admin.sadc.label')}</h3>
             </div>
 
-            <div className="member-detail">
-                <label>{t('settings.admin.sadc.name')} *</label>
-                <input
-                    type="text"
-                    value={data.name || ''}
-                    onChange={handleChange('name')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={true}
-                />
-            </div>
+            <TextInput
+                label={t('settings.admin.sadc.name')}
+                value={data.name}
+                onChange={handleChange('name')}
+                required
+                disabled
+            />
 
-            <div className="member-detail">
-                <label>{t('settings.admin.sadc.email')} *</label>
-                <input
-                    type="text"
-                    value={data.email || ''}
-                    onChange={handleChange('email')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={true}
-                />
-            </div>
+            <TextInput
+                label={t('settings.admin.sadc.email')}
+                type="email"
+                value={data.email}
+                onChange={handleChange('email')}
+                maxLength={220}
+                required
+                disabled
+            />
 
-            <div className="member-detail">
-                <label>{t('settings.admin.sadc.phone')} *</label>
-                <input
-                    type="number"
-                    value={data.phone || ''}
-                    onChange={handleChange('phone')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={true}
-                />
-            </div>
+            <TextInput
+                label={t('settings.admin.sadc.phone')}
+                type="number"
+                value={data.phone}
+                onChange={handleChange('phone')}
+                required
+                disabled
+                maxLength={10}
+            />
 
-            <div className="member-detail">
-                <label>{t('settings.admin.sadc.address')} *</label>
-                <input
-                    type="text"
-                    value={data.address || ''}
-                    onChange={handleChange('address')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={true}
-                />
-            </div>
+            <TextInput
+                label={t('settings.admin.sadc.address')}
+                value={data.address}
+                onChange={handleChange('address')}
+                maxLength={220}
+                required
+                disabled
+            />
 
-            <div className="member-detail">
-                <label>{t('settings.admin.sadc.npi')} *</label>
-                <input
-                    type="number"
-                    value={data.npi || ''}
-                    onChange={handleChange('npi')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={true}
-                />
-            </div>
+            <TextInput
+                label={t('settings.admin.sadc.npi')}
+                type="number"
+                value={data.npi}
+                onChange={handleChange('npi')}
+                required
+                disabled
+            />
 
             <div className="member-detail">
                 <label>{t('settings.admin.sadc.attendance')}</label>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import TextInput from '../inputs/TextInput';
 import AutoCompleteInput from '../inputs/AutoCompleteInput';
 
 const contactTypes = [
@@ -96,17 +97,15 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
                 />
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.info.phone')} *</label>
-                <input
-                    type="number"
-                    value={disableFields ? '' : current.phone || ''}
-                    onChange={handleChange('phone')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={disableFields}
-                />
-            </div>
+            <TextInput
+                label={t('member.info.phone')}
+                type="number"
+                value={current.phone}
+                onChange={handleChange('phone')}
+                required
+                maxLength={10}
+                disabled={disableFields}
+            />
         </>
     );
 };

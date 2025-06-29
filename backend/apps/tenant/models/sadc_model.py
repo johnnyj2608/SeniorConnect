@@ -4,10 +4,10 @@ def default_language():
     return ["English"]
 
 class Sadc(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.EmailField(null=False, blank=False)
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=220, unique=True, null=True, blank=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
+    address = models.CharField(max_length=220, null=True, blank=True)
     npi = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text="National Provider Identifier")
     attendance_template = models.PositiveSmallIntegerField(default=1) 
     languages = models.JSONField(default=default_language)

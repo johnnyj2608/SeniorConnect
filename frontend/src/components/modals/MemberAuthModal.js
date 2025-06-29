@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sortSchedule } from '../../utils/formatUtils';
 import FileUpload from '../inputs/FileUpload';
+import TextInput from '../inputs/TextInput';
 import ListDetail from '../layout/ListDetail';
 import CheckboxInput from '../inputs/CheckboxInput';
 import useDragAndDrop from '../../hooks/useDragDrop';
@@ -81,37 +82,31 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 </select>
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.mltc_member_id')} *</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.mltc_member_id || ''}
-                    onChange={handleChange('mltc_member_id')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label={t('member.authorizations.mltc_member_id')}
+                value={disabled ? '' : current.mltc_member_id || ''}
+                onChange={handleChange('mltc_member_id')}
+                disabled={disabled}
+                required
+            />
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.start_date')} *</label>
-                <input
-                    type="date"
-                    value={disabled ? '' : current.start_date || ''}
-                    onChange={handleChange('start_date')}
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                type="date"
+                label={t('member.authorizations.start_date')}
+                value={current.start_date}
+                onChange={handleChange('start_date')}
+                disabled={disabled}
+                required
+            />
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.end_date')} *</label>
-                <input
-                    type="date"
-                    value={disabled ? '' : current.end_date || ''}
-                    onChange={handleChange('end_date')}
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                type="date"
+                label={t('member.authorizations.end_date')}
+                value={current.end_date}
+                onChange={handleChange('end_date')}
+                disabled={disabled}
+                required
+            />
 
             <div className="member-detail">
                 <label>{t('member.authorizations.dx_code')}</label>
@@ -149,27 +144,21 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 handleChange={handleChange}
             />
 
-            <div className="member-detail">
-                <label>{t('member.authorizations.care_manager')}</label>
-                <input
-                    type="text"
-                    value={disabled ? '' : current.cm_name || ''}
-                    onChange={handleChange('cm_name')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label={t('member.authorizations.care_manager')}
+                value={current.cm_name}
+                onChange={handleChange('cm_name')}
+                disabled={disabled}
+            />
 
-            <div className="member-detail">
-                <label>&nbsp;↪ {t('member.authorizations.phone')}</label>
-                <input
-                    type="number"
-                    value={disabled ? '' : current.cm_phone || ''}
-                    onChange={handleChange('cm_phone')}
-                    autoComplete="off"
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label={`↪ ${t('member.authorizations.phone')}`}
+                type="number"
+                value={current.cm_phone}
+                onChange={handleChange('cm_phone')}
+                maxLength={10}
+                disabled={disabled}
+            />
 
             <FileUpload 
                 current={current}

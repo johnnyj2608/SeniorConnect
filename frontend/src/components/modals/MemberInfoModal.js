@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
+import TextInput from '../inputs/TextInput';
 import getCroppedImg from '../../utils/getCroppedImage';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -14,117 +15,85 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 <h3>{t('general.edit')}{t('member.info.label')}</h3>
             </div>
 
-            <div className="member-detail">
-                <label>{t('member.info.sadc_member_id')} *</label>
-                <input
-                    type="number"
-                    value={data.sadc_member_id || ''}
-                    onChange={handleChange('sadc_member_id')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.sadc_member_id')}
+                type="number"
+                value={data.sadc_member_id}
+                onChange={handleChange('sadc_member_id')}
+                required
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.last_name')} *</label>
-                <input
-                    type="text"
-                    value={data.last_name || ''}
-                    onChange={handleChange('last_name')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.last_name')}
+                value={data.last_name}
+                onChange={handleChange('last_name')}
+                required
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.first_name')} *</label>
-                <input
-                    type="text"
-                    value={data.first_name || ''}
-                    onChange={handleChange('first_name')}
-                    placeholder={t('general.required')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.first_name')}
+                value={data.first_name}
+                onChange={handleChange('first_name')}
+                required
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.alt_name')}</label>
-                <input
-                    type="text"
-                    value={data.alt_name || ''}
-                    onChange={handleChange('alt_name')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.alt_name')}
+                value={data.alt_name}
+                onChange={handleChange('alt_name')}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.phone')}</label>
-                <input
-                    type="number"
-                    value={data.phone || ''}
-                    onChange={handleChange('phone')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.phone')}
+                type="number"
+                value={data.phone}
+                onChange={handleChange('phone')}
+                maxLength={10}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.address')}</label>
-                <input
-                    type="text"
-                    value={data.address || ''}
-                    onChange={handleChange('address')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.address')}
+                value={data.address}
+                onChange={handleChange('address')}
+                maxLength={220}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.email')}</label>
-                <input
-                    type="text"
-                    value={data.email || ''}
-                    onChange={handleChange('email')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.email')}
+                type="email"
+                value={data.email}
+                onChange={handleChange('email')}
+                maxLength={220}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.medicaid')}</label>
-                <input
-                    type="text"
-                    value={data.medicaid?.toUpperCase() || ''}
-                    onChange={handleChange('medicaid')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.medicaid')}
+                value={data.medicaid?.toUpperCase()}
+                onChange={handleChange('medicaid')}
+                maxLength={8}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.ssn')}</label>
-                <input
-                    type="number"
-                    value={data.ssn || ''}
-                    onChange={handleChange('ssn')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('member.info.ssn')}
+                type="number"
+                value={data.ssn}
+                onChange={handleChange('ssn')}
+                maxLength={9}
+            />
 
-            <div className="member-detail">
-                <label>{t('member.info.enrollment')}</label>
-                <input
-                    type="date"
-                    value={data.enrollment_date || ''}
-                    onChange={handleChange('enrollment_date')}
-                />
-            </div>
+            <TextInput
+                label={t('member.info.enrollment')}
+                type="date"
+                value={data.enrollment_date}
+                onChange={handleChange('enrollment_date')}
+            />
 
-            <div className="member-detail">
-                <label>{t('general.note')}</label>
-                <input
-                    type="text"
-                    value={data.note || ''}
-                    onChange={handleChange('note')}
-                    autoComplete="off"
-                />
-            </div>
+            <TextInput
+                label={t('general.note')}
+                value={data.note}
+                onChange={handleChange('note')}
+                maxLength={220}
+            />
         </>
     );
 };

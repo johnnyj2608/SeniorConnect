@@ -44,7 +44,7 @@ class Contact(models.Model):
 
     members = models.ManyToManyField('Member', related_name='contacts')
     contact_type = models.CharField(max_length=30, choices=CONTACT_TYPES)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=50)
     phone = models.CharField(max_length=10)
     relationship_type = models.CharField(
         max_length=20,
