@@ -33,7 +33,7 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
                     <p>{t('member.authorizations.no_authorization')}</p>
                 ) : (
                     <>
-                        <MemberDetail label={t('member.authorizations.mltc')} value={auth.mltc_name} />
+                        <MemberDetail label={t('member.authorizations.mltc')} value={auth.mltc} />
                         <MemberDetail label={t('member.authorizations.mltc_member_id')} value={auth.mltc_member_id} />
                         <MemberDetail label={t('member.authorizations.start_date')} value={formatDate(auth.start_date)} />
                         <MemberDetail label={t('member.authorizations.end_date')} value={formatDate(auth.end_date)} />

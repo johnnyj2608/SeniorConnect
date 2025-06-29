@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models.member_model import Member
-from .models.enrollment_model import Enrollment
+from ..audit.models.enrollment_model import Enrollment
 from .models.authorization_model import Authorization
 from ..tenant.models.mltc_model import Mltc
 

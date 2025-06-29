@@ -122,6 +122,7 @@
         "create": "已创建",
         "update": "已更新",
         "delete": "已删除",
+        "assessments": "评估",
         "no_upcoming_assessments": "没有即将进行的评估"
     },
     "members": {

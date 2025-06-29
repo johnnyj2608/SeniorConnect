@@ -5,10 +5,10 @@ from rest_framework import status
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework.generics import get_object_or_404
-from .models import AuditLog
-from .serializers import AuditLogSerializer
+from ..models.audit_model import AuditLog
+from ..serializers.audit_serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
-from ..core.access import member_access_filter, member_access_fk
+from backend.apps.core.access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getAuditList(request):

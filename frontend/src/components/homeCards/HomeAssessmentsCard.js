@@ -25,7 +25,7 @@ const HomeAssessmentCard = () => {
 
     return (
         <div className="card-full">
-            <h2>{t('snapshots.assessments')}</h2>
+            <h2>{t('home.assessments')}</h2>
             <div className="card-container">
                 {assessments.length === 0 ? (
             <p>{t('home.no_upcoming_assessments')}</p>

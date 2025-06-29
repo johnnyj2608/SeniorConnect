@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
-from ...tenant.models.mltc_model import Mltc
+from backend.apps.tenant.models.mltc_model import Mltc
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,

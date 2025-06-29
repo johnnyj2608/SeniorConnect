@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from ...user.permissions import IsAdminUser
+from backend.apps.user.permissions import IsAdminUser
 from ..utils.mltc_utils import (
     updateMltc,
     getMltcDetail,

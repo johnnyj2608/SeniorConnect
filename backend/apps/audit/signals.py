@@ -3,7 +3,7 @@ from django.db.models.signals import post_save, pre_save, pre_delete, m2m_change
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser
-from .models import AuditLog
+from .models.audit_model import AuditLog
 from ..user.authentication import get_current_user
 from ..core.models.member_model import Member
 from ..core.models.contact_model import Contact

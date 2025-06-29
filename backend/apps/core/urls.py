@@ -5,7 +5,6 @@ from .views import (
     contact_views,
     absence_views,
     file_views,
-    enrollment_views,
 )
 
 urlpatterns = [
@@ -25,11 +24,6 @@ urlpatterns = [
     path('auths/<str:pk>/<str:member_pk>/', authorization_views.authorizationDelete, name="auth_delete"),
     path('auths/<str:pk>/', authorization_views.getAuthorization, name="auth"),
     path('auths/', authorization_views.getAuthorizations, name="auths"),
-
-    # Enrollment related paths
-    path('enrollments/recent/', enrollment_views.getEnrollmentRecent, name="enrollments_recent"),
-    path('enrollments/stats/', enrollment_views.getEnrollmentStats, name="enrollments_stats"),
-    path('enrollments/', enrollment_views.getEnrollments, name="enrollments"),
 
     # Contact related paths
     path('contacts/search/', contact_views.searchContacts, name="contact_search"),

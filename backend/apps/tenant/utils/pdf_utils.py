@@ -11,8 +11,7 @@ from reportlab.pdfgen import canvas
 from ..models.sadc_model import Sadc
 from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.absence_model import Absence
-from backend.apps.core.models.enrollment_model import Enrollment
-
+from backend.apps.audit.models.enrollment_model import Enrollment
 
 X_POSITIONS = {
     "Member": 50,

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.authorization_model import Authorization, AuthorizationService
-from ...tenant.models.mltc_model import Mltc
+from backend.apps.tenant.models.mltc_model import Mltc
 from .mixins import DateRangeValidationMixin
 
 class AuthorizationServiceSerializer(serializers.ModelSerializer):

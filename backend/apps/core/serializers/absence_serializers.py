@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from ..models.absence_model import Absence
 from django.utils import timezone
-from ...user.models import User
+from backend.apps.user.models import User
 from .member_serializers import MemberNameSerializer
 from .mixins import DateRangeValidationMixin, DaysUntilMixin
 

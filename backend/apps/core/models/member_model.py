@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
-from ...tenant.models.sadc_model import Sadc
+from backend.apps.tenant.models.sadc_model import Sadc
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):

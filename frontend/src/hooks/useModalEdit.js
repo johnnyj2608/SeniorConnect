@@ -197,7 +197,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                     const activeAuth = savedData.find(auth => auth.active === true);
                     const newMLTC = activeAuth?.mltc || null;
 
-                    sendRequest(`/core/enrollments/`, 'POST', {
+                    sendRequest(`/audit/enrollments/`, 'POST', {
                         member: id,
                         old_mltc: oldMLTC,
                         new_mltc: newMLTC,

@@ -2,7 +2,6 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from ..models.member_model import Member
-from ...tenant.models.mltc_model import Mltc
 from django.utils import timezone
 from .mixins import DaysUntilMixin
 import re

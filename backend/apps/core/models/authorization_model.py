@@ -1,5 +1,5 @@
 from django.db import models
-from ...tenant.models.mltc_model import Mltc
+from backend.apps.tenant.models.mltc_model import Mltc
 
 class Authorization(models.Model):
     mltc = models.ForeignKey(Mltc, null=True, blank=False, on_delete=models.SET_NULL)

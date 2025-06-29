@@ -18,6 +18,7 @@ const useFilteredReports = (reportType, reportFilter) => {
             endpoint = 'assessments';
         } else if (reportType === 'enrollments') {
             endpoint = 'enrollments';
+            api = 'audit';
         } else if (reportType === 'audit_log') {
             endpoint = 'audits';
             api = 'audit';

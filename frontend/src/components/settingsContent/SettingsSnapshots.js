@@ -16,7 +16,7 @@ const SettingsSnapshots = () => {
         <SettingsItem label={t('snapshots.members')} onClick={() => console.log('Members')} />
         <SettingsItem label={t('snapshots.birthdays')} onClick={() => console.log('Birthdays')} />
         <SettingsItem label={t('snapshots.absences')} onClick={() => console.log('Absences')} />
-        <SettingsItem label={t('snapshots.enrollment')} onClick={() => console.log('Enrollment')} />
+        <SettingsItem label={t('snapshots.enrollments')} onClick={() => console.log('Enrollment')} />
         {/* Dropdown to show year, then month */}
       </div>
     </div>

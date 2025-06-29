@@ -1,5 +1,6 @@
 from django.db import models
-from ...tenant.models.mltc_model import Mltc
+from backend.apps.tenant.models.mltc_model import Mltc
+from backend.apps.core.models.member_model import Member
 import datetime
 
 class Enrollment(models.Model):
@@ -12,7 +13,7 @@ class Enrollment(models.Model):
         (TRANSFER, 'Transfer'),
         (DISENROLLMENT, 'Disenrollment'),
     ]
-    member = models.ForeignKey('Member', null=True, on_delete=models.SET_NULL)
+    member = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL)
     change_type = models.CharField(max_length=20, choices=CHANGE_TYPES)
     new_mltc = models.ForeignKey(
         Mltc,

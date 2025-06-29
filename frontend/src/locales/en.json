@@ -104,7 +104,7 @@
         "members": "Members",
         "absences": "Absences",
         "birthdays": "Birthdays",
-        "enrollments": "Enrollment",
+        "enrollments": "Enrollments",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
         "see_archived": "See archived snapshots in settings"
     },
@@ -122,6 +122,7 @@
         "create": "Created",
         "update": "Updated",
         "delete": "Deleted",
+        "assessments": "Assessments",
         "no_upcoming_assessments": "No upcoming assessments"
     },
     "members": {

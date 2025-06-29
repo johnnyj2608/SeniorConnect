@@ -18,7 +18,7 @@ const ReportEnrollmentsTable = ({ report }) => {
         </thead>
         <tbody>
             {report.map((entry) => {
-                const { change_type, old_mltc_name, new_mltc_name } = entry;
+                const { change_type, old_mltc, new_mltc } = entry;
 
                 return (
                     <tr key={entry.id}>
@@ -31,7 +31,7 @@ const ReportEnrollmentsTable = ({ report }) => {
                                 />
                             </Link>
                         </td>
-                        <td>{colorEnrollment(change_type, old_mltc_name, new_mltc_name, t)}</td>
+                        <td>{colorEnrollment(change_type, old_mltc, new_mltc, t)}</td>
                         <td>{formatDate(entry.change_date)}</td>
                     </tr>
                 );
