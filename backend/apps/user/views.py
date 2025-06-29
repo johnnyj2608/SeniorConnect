@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .permissions import IsAdminUser
+from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .utils import (
     updateUser,
@@ -17,34 +18,31 @@ from .utils import (
 
 @api_view(['GET', 'POST'])
 def getUsers(request):
+    if request.method == 'POST' and not IsAdminUser().has_permission(request, None):
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         return getUserList(request)
 
     if request.method == 'POST':
-        permission = IsAdminUser()
-        if not permission.has_permission(request, None):
-            return Response({'detail': 'Admin access required.'}, status=403)
         return createUser(request)
-
 
 @api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def getUser(request, pk):
+    if request.method in ['PUT', 'PATCH', 'DELETE'] and not IsAdminUser().has_permission(request, None):
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         return getUserDetail(request, pk)
 
     if request.method == 'PUT':
         return updateUser(request, pk)
-
-    if request.method == 'DELETE':
-        permission = IsAdminUser()
-        if not permission.has_permission(request, None):
-            return Response({'detail': 'Admin access required.'}, status=403)
-        return deleteUser(request, pk)
     
     if request.method == 'PATCH':
         return patchUser(request, pk)
+
+    if request.method == 'DELETE':
+        return deleteUser(request, pk)
 
 @api_view(['GET'])
 def getAuthenticatedUser(request):

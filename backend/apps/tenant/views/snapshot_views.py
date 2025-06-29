@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from ...user.permissions import IsAdminUser
+from rest_framework import status
 from ..utils.snapshot_utils import (
     updateSnapshot,
     getSnapshotDetail,
@@ -12,27 +12,23 @@ from ..utils.snapshot_utils import (
 
 @api_view(['GET', 'POST'])
 def getSnapshots(request):
+    if request.method == 'POST' and not request.user.is_superuser:
+        return Response({'detail': 'Super user access required.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         return getSnapshotList(request)
 
     if request.method == 'POST':
-        permission = IsAdminUser()
-        if not permission.has_permission(request, None):
-            return Response({'detail': 'Admin access required.'}, status=403)
         return createSnapshot(request)
-
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def getSnapshot(request, pk):
+    if request.method in ['PUT', 'DELETE'] and not request.user.is_superuser:
+        return Response({'detail': 'Super user access required.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
         return getSnapshotDetail(request, pk)
     
-    permission = IsAdminUser()
-    if not permission.has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=403)
-
     if request.method == 'PUT':
         return updateSnapshot(request, pk)
 

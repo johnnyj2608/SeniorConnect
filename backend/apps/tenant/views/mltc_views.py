@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from ...user.permissions import IsAdminUser
 from ..utils.mltc_utils import (
     updateMltc,
@@ -11,24 +12,22 @@ from ..utils.mltc_utils import (
 
 @api_view(['GET', 'POST'])
 def getMltcs(request):
+    if request.method == 'POST' and not IsAdminUser().has_permission(request, None):
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+    
     if request.method == 'GET':
         return getMltcList(request)
 
-    
-    if request.method == 'POST':
-        permission = IsAdminUser()
-        if not permission.has_permission(request, None):
-            return Response({'detail': 'Admin access required.'}, status=403)
+    if request.method == 'POST':        
         return createMltc(request)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def getMltc(request, pk):
+    if request.method in ['PUT', 'DELETE'] and not IsAdminUser().has_permission(request, None):
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+    
     if request.method == 'GET':
         return getMltcDetail(request, pk=pk)
-
-    permission = IsAdminUser()
-    if not permission.has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=403)
 
     if request.method == 'PUT':
         return updateMltc(request, pk=pk)
