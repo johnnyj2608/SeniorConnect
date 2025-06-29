@@ -1,6 +1,5 @@
 from io import BytesIO
 from calendar import monthrange, month_name
-from collections import defaultdict
 from datetime import date, timedelta
 
 from django.db.models import F, Q
@@ -9,6 +8,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
 
 from ..models.sadc_model import Sadc
+from ..models.mltc_model import Mltc
 from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.absence_model import Absence
 from backend.apps.audit.models.enrollment_model import Enrollment
@@ -87,7 +87,7 @@ def previewSnapshotPdf(request, sadc_id):
                 ~Q(absence_type="assessment") &
                 Q(start_date__lte=last_day) &
                 Q(end_date__gte=first_day)
-            ).select_related('member').annotate(
+            ).select_related('member', 'member__active_auth__mltc').annotate(
                 first_name=F('member__first_name'),
                 last_name=F('member__last_name'),
                 sadc_member_id=F('member__sadc_member_id'),
@@ -115,9 +115,14 @@ def previewSnapshotPdf(request, sadc_id):
             sadc=sadc,
             active=True,
             deleted_at__isnull=True
-        )
+        ).select_related('active_auth__mltc')
 
-    data = defaultdict(list)
+    mltc_names = (
+        Mltc.objects.filter(sadc=sadc)
+        .values_list('name', flat=True)
+        .order_by('name')
+    )
+    data = {mltc_name or "Unknown": [] for mltc_name in mltc_names}
     for item in members:
         if snapshot_type == "enrollments":
             old_mltc_name = item.old_mltc.name if item.old_mltc else None
