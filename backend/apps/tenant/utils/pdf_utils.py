@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from django.db.models import F, Q
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen import canvas as rl_canvas
 
 from ..models.sadc_model import Sadc
 from backend.apps.core.models.member_model import Member
@@ -30,7 +30,31 @@ day_map = {
     "sunday": "Sun"
 }
 
-# http://127.0.0.1:8000/tenant/snapshots/preview/1/?type=members
+class NumberedCanvas(rl_canvas.Canvas):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self.drawPageNumber(len(self._saved_page_states) + 1)
+        self._saved_page_states.append(dict(self.__dict__))
+        super().showPage()
+
+    def save(self):
+        """Add page info to each page (Page X of Y)"""
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.drawPageNumber(num_pages)
+            super().showPage()
+        super().save()
+
+    def drawPageNumber(self, page_count):
+        page = self._pageNumber
+        text = f"Page {page} of {page_count}"
+        self.setFont("Helvetica", 12)
+        width, height = letter
+        self.drawRightString(width - 30, 20, text)
 
 def previewSnapshotPdf(request, sadc_id):
     sadc = Sadc.objects.get(id=sadc_id)
@@ -226,7 +250,7 @@ def classify_enrollment(member, mltc_name):
 
 def generateSnapshot(sadc, data, month, year, title):
     buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
+    c = NumberedCanvas(buffer, pagesize=letter)
     width, height = letter
 
     y = drawSadcHeader(c, title, width, height, sadc, month, year)
