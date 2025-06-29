@@ -73,6 +73,18 @@ def previewSnapshotPdf(request, sadc_id):
             )
     elif snapshot_type == "enrollments":
         title = "enrollments"
+        members = Enrollment.objects.filter(
+            member__sadc=sadc,
+            member__active=True,
+            member__deleted_at__isnull=True,
+            change_date__range=(first_day, last_day)
+        ).select_related('member', 'new_mltc', 'old_mltc').annotate(
+            first_name=F('member__first_name'),
+            last_name=F('member__last_name'),
+            sadc_member_id=F('member__sadc_member_id'),
+            birth_date=F('member__birth_date'),
+            gender=F('member__gender'),
+        )
     else:
         title = "members"
         members = Member.objects.filter(
@@ -83,8 +95,15 @@ def previewSnapshotPdf(request, sadc_id):
 
     data = defaultdict(list)
     for item in members:
-        mltc = item.mltc_name or "Unknown"
-        data[mltc].append(item)
+        if snapshot_type == "enrollments":
+            old_mltc_name = item.old_mltc.name if item.old_mltc else None
+            new_mltc_name = item.new_mltc.name if item.new_mltc else None
+
+            if old_mltc_name: data[old_mltc_name].append(item)
+            if new_mltc_name: data[new_mltc_name].append(item)
+        else:
+            mltc = item.mltc_name or "Unknown"
+            data[mltc].append(item)
 
     pdf_buffer = generateSnapshot(
         sadc.name, 
@@ -141,7 +160,7 @@ def drawMltcHeader(c, title, width, y, mltc_name):
     if title == "birthdays":
         c.drawString(X_POSITIONS["Content"]-10, y, "Turning")
     elif title == "absences":
-        c.drawString(X_POSITIONS["Content"], y, "Reason")
+        c.drawString(X_POSITIONS["Content"], y, "Dates")
     elif title == "enrollments":
         c.drawString(X_POSITIONS["Content"], y, "Date")
     else:
@@ -167,18 +186,24 @@ def drawMemberInfo(c, title, width, y, member):
 
         c.line(start_x+50, y - 2, width-30, y - 2)
     elif title == "absences":
-        reason = member.get_absence_type_display() if hasattr(member, 'get_absence_type_display') else "-"
-        
         start_str = member.start_date.strftime('%m/%d/%Y') if member.start_date else ""
         end_str = member.end_date.strftime('%m/%d/%Y') if getattr(member, 'end_date', None) else ""
-        
-        date_range = f"{start_str} - {end_str}"
-        
-        absence_text = f"{reason} ({date_range.strip()})" if date_range.strip() else reason
+        date_range = f"{start_str} - {end_str}".strip()
+
+        reason = member.get_absence_type_display() if hasattr(member, 'get_absence_type_display') else "-"
+        absence_text = f"{date_range} ({reason})" if date_range else reason
         c.drawString(X_POSITIONS["Content"], y, absence_text)
     elif title == "enrollments":
-        pass
-        # Enrollment - Subgroups by type, change_date (transfer to/from)
+        change_date = member.change_date.strftime("%m/%d/%Y") if member.change_date else "-"
+        change_type = member.change_type.capitalize() if hasattr(member, 'change_type') else "-"
+        enrollment_text = f"{change_date} ({change_type})"
+        c.drawString(X_POSITIONS["Content"], y, enrollment_text)
+
+        if change_type == Enrollment.TRANSFER.capitalize():
+            y -= 20
+            transfer_text = f"{member.old_mltc.name} → {member.new_mltc.name}"
+            text_width = c.stringWidth(transfer_text, "Helvetica", 12)
+            c.drawString(width - text_width - 30, y, transfer_text)
     else:
         schedule_list = member.schedule or []
         short_schedule = [day_map.get(day, day) for day in schedule_list]
@@ -188,6 +213,17 @@ def drawMemberInfo(c, title, width, y, member):
     y -= 20
     return y
 
+def classify_enrollment(member, mltc_name):
+    new_mltc = getattr(member, 'new_mltc', None)
+    old_mltc = getattr(member, 'old_mltc', None)
+
+    return {
+        "enrollments": old_mltc is None and new_mltc is not None,
+        "disenrollments": old_mltc is not None and new_mltc is None,
+        "transfer_in": new_mltc is not None and new_mltc.name == mltc_name,
+        "transfer_out": old_mltc is not None and old_mltc.name == mltc_name,
+    }
+
 def generateSnapshot(sadc, data, month, year, title):
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -195,25 +231,57 @@ def generateSnapshot(sadc, data, month, year, title):
 
     y = drawSadcHeader(c, title, width, height, sadc, month, year)
 
-    for mltc_name, group_members in sorted(data.items()):
+    for mltc_name, group_data in sorted(data.items()):
         y = checkPageBreak(c, y, height)
         y = drawMltcHeader(c, title, width, y, mltc_name)
 
-        members_count = 0
-        for member in group_members:
+        counts = {
+            "members": 0,
+            "enrollments": 0,
+            "disenrollments": 0,
+            "transfer_in": 0,
+            "transfer_out": 0,
+        }
+
+        for member in group_data:
             y = checkPageBreak(c, y, height)
             y = drawMemberInfo(c, title, width, y, member)
-            members_count += 1
+            counts["members"] += 1
+
+            if title == "enrollments":
+                status = classify_enrollment(member, mltc_name)
+                for key, val in status.items():
+                    if val: counts[key] += 1
 
         c.line(30, y+5, width - 30, y+5)
         y -= 10
 
         c.setFont("Helvetica-Bold", 12)
-        total_text = f"Total: {members_count}"
-        text_width = c.stringWidth(total_text, "Helvetica-Bold", 12)
-        x_position = width - 50 - text_width
-        c.drawString(x_position, y, total_text)
 
+        if title == "enrollments":
+            net_change_count = (
+                counts["enrollments"]
+                - counts["disenrollments"]
+                + counts["transfer_in"]
+                - counts["transfer_out"]
+            )
+
+            text = (
+                f"Enrollments: {counts['enrollments']} | "
+                f"Disenrollments: {counts['disenrollments']} | "
+                f"Transfers In: {counts['transfer_in']} | "
+                f"Transfers Out: {counts['transfer_out']}"
+            )
+
+            text_width = c.stringWidth(text, "Helvetica-Bold", 12)
+            c.drawString(40, y, text)
+
+            total_text = f"Net Change: {net_change_count}"
+        else:
+            total_text = f"Total: {counts['members']}"
+
+        text_width = c.stringWidth(total_text, "Helvetica-Bold", 12)
+        c.drawString(width - 40 - text_width, y, total_text)
         y -= 40
        
     c.save()
