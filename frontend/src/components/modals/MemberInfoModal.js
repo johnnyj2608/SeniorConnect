@@ -1,15 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import useInputLimit from '../../hooks/useInputLimit';
 import { formatPhoto } from '../../utils/formatUtils';
 import TextInput from '../inputs/TextInput';
 import getCroppedImg from '../../utils/getCroppedImage';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
-const MemberInfoModal = ({ data, handleChange, setInputLimitExceeded }) => {
+const MemberInfoModal = ({ data, handleChange, handleLimit }) => {
     const { t } = useTranslation();
-    const handleLimit = useInputLimit(setInputLimitExceeded);
 
     return (
         <>

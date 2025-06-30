@@ -11,8 +11,9 @@ const absenceTypes = [
     'other'
 ];
 
-const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
+const MemberAbsencesModal = ({ data, handleChange, activeTab, handleLimit }) => {
     const { t } = useTranslation();
+
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
@@ -124,6 +125,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab }) => {
                 label={t('general.note')}
                 value={current.note}
                 onChange={handleChange('note')}
+                onLimitExceeded={(exceeded) => handleLimit('note', activeTab)(exceeded)}
                 disabled={disabled}
                 maxLength={220}
             />

@@ -25,7 +25,7 @@ const relationshipTypes = [
     'other',
 ];
 
-const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
+const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLimit }) => {
     const { t } = useTranslation();
 
     const current = data[activeTab] || {};
@@ -98,10 +98,11 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID }) => {
             </div>
 
             <TextInput
-                label={t('member.info.phone')}
+                label={t('member.contacts.phone')}
                 type="number"
                 value={current.phone}
                 onChange={handleChange('phone')}
+                onLimitExceeded={handleLimit('phone', activeTab)}
                 required
                 maxLength={10}
                 disabled={disableFields}

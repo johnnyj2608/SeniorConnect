@@ -4,8 +4,9 @@ import TextInput from '../inputs/TextInput';
 import ListInput from '../inputs/ListInput';
 import ListDetail from '../layout/ListDetail';
 
-const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
+const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
     const { t } = useTranslation();
+
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
@@ -28,6 +29,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab }) => {
                 label={t('settings.admin.mltc.name')}
                 value={current.name}
                 onChange={handleChange('name')}
+                onLimitExceeded={handleLimit('name', activeTab)}
                 disabled={disabled}
             />
 

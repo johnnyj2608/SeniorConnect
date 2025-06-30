@@ -4,7 +4,7 @@ import TextInput from '../inputs/TextInput';
 import CheckboxInput from '../inputs/CheckboxInput';
 import ListDetail from '../layout/ListDetail';
 
-const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
+const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions, handleLimit }) => {
   const { t } = useTranslation();
 
   const current = data[activeTab] || {};
@@ -36,6 +36,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         label={t('settings.admin.users.name')}
         value={current.name}
         onChange={handleChange('name')}
+        onLimitExceeded={handleLimit('name', activeTab)}
         required
         disabled={disabled}
       />
@@ -45,6 +46,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions }) => {
         type="email"
         value={current.email}
         onChange={handleChange('email')}
+        onLimitExceeded={handleLimit('email', activeTab)}
         maxLength={220}
         required
         disabled={disabled || adminUser}

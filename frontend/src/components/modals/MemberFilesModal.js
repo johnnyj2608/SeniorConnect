@@ -4,7 +4,15 @@ import TextInput from '../inputs/TextInput';
 import FileUpload from '../inputs/FileUpload';
 import useDragAndDrop from '../../hooks/useDragDrop';
 
-const MemberFilesModal = ({ type, data, handleChange, activeTab, handleAdd, dragStatus }) => {
+const MemberFilesModal = ({ 
+    type, 
+    data, 
+    handleChange, 
+    activeTab, 
+    handleAdd, 
+    dragStatus,
+    handleLimit,
+ }) => {
     const { t } = useTranslation();
     
     const current = type === 'import' ? data : data[activeTab] || {};
@@ -55,6 +63,7 @@ const MemberFilesModal = ({ type, data, handleChange, activeTab, handleAdd, drag
                 label={t('member.files.name')}
                 value={current.name}
                 onChange={handleChange('name')}
+                onLimitExceeded={handleLimit('name', activeTab)}
                 required
                 disabled={disabled || type === 'import'}
             />
@@ -64,6 +73,7 @@ const MemberFilesModal = ({ type, data, handleChange, activeTab, handleAdd, drag
                 type="date"
                 value={current.date}
                 onChange={handleChange('date')}
+                onLimitExceeded={handleLimit('date', activeTab)}
                 required
                 disabled={disabled || type === 'import'}
             />

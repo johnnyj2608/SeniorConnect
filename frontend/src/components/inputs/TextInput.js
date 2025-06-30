@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Stop } from '../../assets/stop.svg';
 
@@ -15,6 +15,11 @@ const TextInput = ({
     const { t } = useTranslation();
     const [charCount, setCharCount] = useState(0);
 
+    useEffect(() => {
+        const length = value ? String(value).length : 0;
+        setCharCount(length);
+    }, [value]);
+
     const handleChange = (e) => {
         const inputValue = e.target.value;
         setCharCount(inputValue.length);
@@ -22,6 +27,8 @@ const TextInput = ({
 
         onLimitExceeded(String(inputValue).length > maxLength);
     };
+
+    const invalidNumbers = new Set(['e', 'E', '+', '-']);
 
     return (
         <>
@@ -34,6 +41,11 @@ const TextInput = ({
                     type={type}
                     value={disabled ? '' : value || ''}
                     onChange={handleChange}
+                    onKeyDown={(e) => {
+                        if (type === 'number' && invalidNumbers.has(e.key)) {
+                            e.preventDefault();
+                        }
+                    }}
                     placeholder={required ? t('general.required') : ''}
                     autoComplete="off"
                     required={required}

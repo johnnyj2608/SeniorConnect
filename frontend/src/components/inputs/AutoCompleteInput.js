@@ -59,6 +59,7 @@ const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, d
         placeholder={t('general.required')}
         autoComplete="off"
         disabled={disabled}
+        maxLength={50}
       />
       {searchResults.length > 0 && !selectedSuggestion && (
         <ul className="search-dropdown">

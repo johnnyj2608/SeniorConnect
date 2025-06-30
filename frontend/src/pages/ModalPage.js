@@ -15,6 +15,7 @@ import ModalQueue from '../components/modals/ModalQueue';
 import DragOverlay from '../components/layout/DragOverlay';
 import useModalEdit from '../hooks/useModalEdit';
 import useModalQueue from '../hooks/useModalQueue';
+import useInputLimit from '../hooks/useInputLimit';
 import generateAttendance from '../utils/generateAttendance';
 
 const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import']);
@@ -50,8 +51,13 @@ const ModalPage = ({ data, onClose }) => {
         clearQueue,
     } = useModalQueue(data);
 
+    const {
+        handleLimit,
+        clearTabLimit,
+        inputLimitExceeded,
+    } = useInputLimit();
+
     const [dragging, setDragging] = useState(false);
-    const [inputLimitExceeded, setInputLimitExceeded] = useState(false);
 
     const getModalContent = () => {
         switch (type) {
@@ -60,7 +66,7 @@ const ModalPage = ({ data, onClose }) => {
                     <MemberInfoModal 
                         data={localData} 
                         handleChange={handleChange} 
-                        setInputLimitExceeded={setInputLimitExceeded}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'authorizations':
@@ -72,6 +78,7 @@ const ModalPage = ({ data, onClose }) => {
                         mltcOptions={mltcOptions}
                         handleActiveToggle={handleActiveToggle}
                         dragStatus={setDragging}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'contacts':
@@ -81,6 +88,7 @@ const ModalPage = ({ data, onClose }) => {
                         handleChange={handleChange}
                         activeTab={activeTab}
                         memberID={data.id}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'absences':
@@ -89,6 +97,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'files':
@@ -101,6 +110,7 @@ const ModalPage = ({ data, onClose }) => {
                         activeTab={activeTab}
                         handleAdd={handleAdd}
                         dragStatus={setDragging}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'users':
@@ -110,6 +120,7 @@ const ModalPage = ({ data, onClose }) => {
                         handleChange={handleChange} 
                         activeTab={activeTab}
                         mltcOptions={mltcOptions}
+                        handleLimit={handleLimit}
                     />
                 );
             case 'mltcs':
@@ -118,6 +129,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab} 
+                        handleLimit={handleLimit}
                     />
                 );
             case 'sadcs':
@@ -125,6 +137,7 @@ const ModalPage = ({ data, onClose }) => {
                     <SettingsSadcModal 
                         data={localData} 
                         handleChange={handleChange} 
+                        handleLimit={handleLimit}
                     />
                 );
             case 'deleted':
@@ -165,6 +178,7 @@ const ModalPage = ({ data, onClose }) => {
                     clearQueue();
                 } else {
                     handleDelete(activeTab);
+                    clearTabLimit(activeTab);
                 }
             }}
         >

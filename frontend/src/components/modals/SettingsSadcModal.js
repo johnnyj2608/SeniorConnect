@@ -11,7 +11,7 @@ const attendanceTemplateOptions = [
     // { value: 2 },
 ];
 
-const SettingsSadcModal = ({ data, handleChange }) => {
+const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
     const { t } = useTranslation();
 
     return (
@@ -24,6 +24,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 label={t('settings.admin.sadc.name')}
                 value={data.name}
                 onChange={handleChange('name')}
+                onLimitExceeded={handleLimit('name')}
                 required
                 disabled
             />
@@ -33,6 +34,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 type="email"
                 value={data.email}
                 onChange={handleChange('email')}
+                onLimitExceeded={handleLimit('email')}
                 maxLength={220}
                 required
                 disabled
@@ -43,6 +45,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 type="number"
                 value={data.phone}
                 onChange={handleChange('phone')}
+                onLimitExceeded={handleLimit('phone')}
                 required
                 disabled
                 maxLength={10}
@@ -52,6 +55,7 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 label={t('settings.admin.sadc.address')}
                 value={data.address}
                 onChange={handleChange('address')}
+                onLimitExceeded={handleLimit('address')}
                 maxLength={220}
                 required
                 disabled
@@ -62,8 +66,10 @@ const SettingsSadcModal = ({ data, handleChange }) => {
                 type="number"
                 value={data.npi}
                 onChange={handleChange('npi')}
+                onLimitExceeded={handleLimit('npi')}
                 required
                 disabled
+                maxLength={10}
             />
 
             <div className="member-detail">

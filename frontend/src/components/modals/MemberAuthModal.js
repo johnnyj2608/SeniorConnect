@@ -17,8 +17,17 @@ const daysOfWeek = [
     { id: 'sunday', name: 'sunday' },
 ];
 
-const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleActiveToggle, dragStatus }) => {
+const MemberAuthModal = ({ 
+    data, 
+    handleChange, 
+    activeTab, 
+    mltcOptions, 
+    handleActiveToggle, 
+    dragStatus,
+    handleLimit,
+ }) => {
     const { t } = useTranslation();
+
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
@@ -86,6 +95,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 label={t('member.authorizations.mltc_member_id')}
                 value={disabled ? '' : current.mltc_member_id || ''}
                 onChange={handleChange('mltc_member_id')}
+                onLimitExceeded={handleLimit('mltc_member_id', activeTab)}
                 disabled={disabled}
                 required
             />
@@ -148,6 +158,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 label={t('member.authorizations.care_manager')}
                 value={current.cm_name}
                 onChange={handleChange('cm_name')}
+                onLimitExceeded={handleLimit('cm_name', activeTab)}
                 disabled={disabled}
             />
 
@@ -156,6 +167,7 @@ const MemberAuthModal = ({ data, handleChange, activeTab, mltcOptions, handleAct
                 type="number"
                 value={current.cm_phone}
                 onChange={handleChange('cm_phone')}
+                onLimitExceeded={handleLimit('cm_phone', activeTab)}
                 maxLength={10}
                 disabled={disabled}
             />
