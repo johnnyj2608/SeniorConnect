@@ -1,6 +1,6 @@
 from io import BytesIO
 from calendar import monthrange, month_name
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import F, Q, Count
@@ -15,10 +15,10 @@ from backend.apps.core.models.absence_model import Absence
 from backend.apps.audit.models.enrollment_model import Enrollment
 
 X_POSITIONS = {
-    "POS1": 50,
-    "POS2": 225,
-    "POS3": 300,
-    "POS4": 375,
+    "POS1": 40,
+    "POS2": 250,
+    "POS3": 325,
+    "POS4": 395,
 }
 
 day_map = {
@@ -287,7 +287,7 @@ def drawMltcHeader(c, title, width, y, mltc_name):
 
     c.setFont("Helvetica-Bold", 12)
     c.drawString(X_POSITIONS["POS1"], y, "Member")
-    c.drawString(X_POSITIONS["POS2"], y, "DOB")
+    c.drawString(X_POSITIONS["POS2"], y, "DoB")
     c.drawString(X_POSITIONS["POS3"], y, "Gender")
 
     if title == "birthdays":
@@ -302,9 +302,9 @@ def drawMltcHeader(c, title, width, y, mltc_name):
 
 def drawMemberInfo(c, title, width, y, member):
     c.setFont("Helvetica", 12)
-    c.drawString(X_POSITIONS["POS1"], y, 
-        f"{member.sadc_member_id}. {member.last_name}, {member.first_name}"
-    )
+    name_line = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}"
+    c.drawString(X_POSITIONS["POS1"], y, name_line)
+
     c.drawString(X_POSITIONS["POS2"], y, member.birth_date.strftime("%m/%d/%Y"))
 
     text_width = c.stringWidth(member.gender, "Helvetica", 12)
@@ -391,7 +391,7 @@ def generateSnapshot(sadc, data, month, year, title):
             )
             c.drawString(40, y, text)
 
-            total_text = f"Net Change: {counts.get('net_change', 0)}"
+            total_text = f"Change: {counts.get('net_change', 0)}"
         else:
             total_text = f"Total: {len(members)}"
 
