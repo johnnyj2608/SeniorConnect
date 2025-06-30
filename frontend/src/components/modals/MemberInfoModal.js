@@ -1,13 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import useInputLimit from '../../hooks/useInputLimit';
 import { formatPhoto } from '../../utils/formatUtils';
 import TextInput from '../inputs/TextInput';
 import getCroppedImg from '../../utils/getCroppedImage';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
-const MemberInfoModal = ({ data, handleChange }) => {
+const MemberInfoModal = ({ data, handleChange, setInputLimitExceeded }) => {
     const { t } = useTranslation();
+    const handleLimit = useInputLimit(setInputLimitExceeded);
 
     return (
         <>
@@ -27,6 +29,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('member.info.last_name')}
                 value={data.last_name}
                 onChange={handleChange('last_name')}
+                onLimitExceeded={handleLimit('last_name')}
                 required
             />
 
@@ -34,6 +37,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('member.info.first_name')}
                 value={data.first_name}
                 onChange={handleChange('first_name')}
+                onLimitExceeded={handleLimit('first_name')}
                 required
             />
 
@@ -41,6 +45,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('member.info.alt_name')}
                 value={data.alt_name}
                 onChange={handleChange('alt_name')}
+                onLimitExceeded={handleLimit('alt_name')}
             />
 
             <TextInput
@@ -48,6 +53,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 type="number"
                 value={data.phone}
                 onChange={handleChange('phone')}
+                onLimitExceeded={handleLimit('phone')}
                 maxLength={10}
             />
 
@@ -55,6 +61,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('member.info.address')}
                 value={data.address}
                 onChange={handleChange('address')}
+                onLimitExceeded={handleLimit('address')}
                 maxLength={220}
             />
 
@@ -63,6 +70,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 type="email"
                 value={data.email}
                 onChange={handleChange('email')}
+                onLimitExceeded={handleLimit('email')}
                 maxLength={220}
             />
 
@@ -70,6 +78,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('member.info.medicaid')}
                 value={data.medicaid?.toUpperCase()}
                 onChange={handleChange('medicaid')}
+                onLimitExceeded={handleLimit('medicaid')}
                 maxLength={8}
             />
 
@@ -78,6 +87,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 type="number"
                 value={data.ssn}
                 onChange={handleChange('ssn')}
+                onLimitExceeded={handleLimit('ssn')}
                 maxLength={9}
             />
 
@@ -92,6 +102,7 @@ const MemberInfoModal = ({ data, handleChange }) => {
                 label={t('general.note')}
                 value={data.note}
                 onChange={handleChange('note')}
+                onLimitExceeded={handleLimit('note')}
                 maxLength={220}
             />
         </>

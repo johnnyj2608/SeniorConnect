@@ -51,6 +51,7 @@ const ModalPage = ({ data, onClose }) => {
     } = useModalQueue(data);
 
     const [dragging, setDragging] = useState(false);
+    const [inputLimitExceeded, setInputLimitExceeded] = useState(false);
 
     const getModalContent = () => {
         switch (type) {
@@ -59,6 +60,7 @@ const ModalPage = ({ data, onClose }) => {
                     <MemberInfoModal 
                         data={localData} 
                         handleChange={handleChange} 
+                        setInputLimitExceeded={setInputLimitExceeded}
                     />
                 );
             case 'authorizations':
@@ -179,13 +181,18 @@ const ModalPage = ({ data, onClose }) => {
             className="action-button"
             onClick={() => {
                 if (type === 'attendance') {
-                    generateAttendance(queuedMembers, month, sadc.name, sadc.attendance_template);
+                    generateAttendance(
+                        queuedMembers, 
+                        month, 
+                        sadc.name, 
+                        sadc.attendance_template
+                    );
                     onClose();
                 } else {
                     handleSave(localData);
                 }
             }}
-            disabled={type === 'attendance' && !hasQueuedMembers}
+            disabled={(type === 'attendance' && !hasQueuedMembers) || inputLimitExceeded}
         >
             {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
         </button>

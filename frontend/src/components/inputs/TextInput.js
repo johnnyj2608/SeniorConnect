@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as Stop } from '../../assets/stop.svg'
+import { ReactComponent as Stop } from '../../assets/stop.svg';
 
 const TextInput = ({
     label,
@@ -10,18 +10,17 @@ const TextInput = ({
     required = false,
     disabled = false,
     maxLength = 50,
+    onLimitExceeded = () => {},
 }) => {
     const { t } = useTranslation();
-
     const [charCount, setCharCount] = useState(0);
 
-    useEffect(() => {
-        setCharCount(value ? value.length : 0);
-    }, [value]);
-    
     const handleChange = (e) => {
-        setCharCount(e.target.value.length);
+        const inputValue = e.target.value;
+        setCharCount(inputValue.length);
         onChange(e);
+
+        onLimitExceeded(String(inputValue).length > maxLength);
     };
 
     return (
@@ -39,15 +38,15 @@ const TextInput = ({
                     autoComplete="off"
                     required={required}
                     disabled={disabled}
-                    maxLength={maxLength}
                 />
-                
             </div>
-            {charCount > maxLength && (
-                <div className="member-detail-limit">
-                    <Stop /> {t('errors.character_limit', { limit: maxLength })}
-                </div>
-            )}
+            <div className="member-detail-limit">
+                {charCount > maxLength && (
+                    <span className="limit-warning">
+                        <Stop /> {t('errors.character_limit', { limit: maxLength })}
+                    </span>
+                )}
+            </div>
         </>
     );
 };
