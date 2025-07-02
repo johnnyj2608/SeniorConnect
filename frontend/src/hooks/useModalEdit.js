@@ -100,7 +100,9 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                     [field]: normalizedValue,
                 };
 
-                const isEdited = compareTabs(updatedTab, updatedTab.id === 'new' ? newTab : originalData[activeTab - newTabsCount]);
+                const isEdited = updatedTab.id === 'new' 
+                    ? true 
+                    : compareTabs(updatedTab, originalData[activeTab - newTabsCount]);
                 const updatedData = [...prevData];
                 updatedData[activeTab] = {
                     ...updatedTab,

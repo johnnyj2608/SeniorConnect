@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import viewFile from '../../utils/viewFile';
 
 const FileUpload = ({
-    current,
+    file,
     disabled,
     handleChange,
     required = false,
@@ -27,17 +27,24 @@ const FileUpload = ({
     ]);
 
     const isFileViewable = (file) => {
-        if (!file) return false;
+    if (!file) return false;
 
-        if (file.type) {
-            return VIEWABLE_MIME_TYPES.has(file.type);
-        }
-
-        const extension = file.name?.split('.').pop().toLowerCase() || '';
+    if (typeof file === 'string') {
+        const url = file;
+        const extension = url.split('.').pop().toLowerCase();
         return VIEWABLE_EXTENSIONS.has(extension);
+    }
+
+    if (file.type) {
+        return VIEWABLE_MIME_TYPES.has(file.type);
+    }
+
+    const extension = file.name?.split('.').pop().toLowerCase() || '';
+    return VIEWABLE_EXTENSIONS.has(extension);
     };
 
-    const showViewButton = isFileViewable(current.file);
+
+    const showViewButton = isFileViewable(file);
 
     const getSubtitle = () => {
         if (!fileTypes || fileTypes === '*/*') {
@@ -71,8 +78,8 @@ const FileUpload = ({
                         {showViewButton && (
                              <button
                                 className="action-button thin"
-                                onClick={() => viewFile(current.file)}
-                                disabled={disabled || !current?.file}
+                                onClick={() => viewFile(file)}
+                                disabled={disabled || !file}
                             >
                                 {t('general.buttons.view')}
                             </button>
@@ -89,7 +96,7 @@ const FileUpload = ({
                                     handleChange('date')({ target: { value: '' } });
                                 }
                             }}
-                            disabled={disabled || !current?.file}
+                            disabled={disabled || !file}
                         >
                             {t('general.buttons.clear')}
                         </button>

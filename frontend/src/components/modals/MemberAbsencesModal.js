@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../context/UserContext';
+import FileUpload from '../inputs/FileUpload';
 import TextInput from '../inputs/TextInput';
+import useDragAndDrop from '../../hooks/useDragDrop';
 
 const absenceTypes = [
     'vacation', 
@@ -11,7 +13,7 @@ const absenceTypes = [
     'other'
 ];
 
-const MemberAbsencesModal = ({ data, handleChange, activeTab, handleLimit }) => {
+const MemberAbsencesModal = ({ data, handleChange, activeTab, handleAdd, dragStatus, handleLimit }) => {
     const { t } = useTranslation();
     const { users, refreshUser } = useContext(UserContext);
 
@@ -24,8 +26,29 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab, handleLimit }) => 
         refreshUser();
     }, [refreshUser]);
 
+    const onDropFile = (files) => {
+        const file = files[0];
+        if (!file) return;
+
+        if (!data.some(entry => !entry.deleted)) {
+            handleAdd();
+        }
+
+        const fakeEvent = { target: { files: [file] } };
+        handleChange('file')(fakeEvent);
+    };
+
+    const { isDragging, dragProps } = useDragAndDrop(onDropFile);
+
+    useEffect(() => {
+        if (dragStatus) dragStatus(isDragging);
+        return () => {
+            if (dragStatus) dragStatus(false);
+        };
+    }, [isDragging, dragStatus]);
+
     return (
-        <>
+        <div {...dragProps}>
             <div className="modal-header">
                 <h3>{t('general.edit')}{t('member.absences.label')}</h3>
                 {!isAssessment && (
@@ -117,7 +140,13 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab, handleLimit }) => 
                 disabled={disabled}
                 maxLength={220}
             />
-        </>
+
+            <FileUpload 
+                file={current.file}
+                handleChange={handleChange}
+                disabled={disabled}
+            />
+        </div>
     );
 };
     

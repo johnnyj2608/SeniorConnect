@@ -18,7 +18,7 @@ import useModalQueue from '../hooks/useModalQueue';
 import useInputLimit from '../hooks/useInputLimit';
 import generateAttendance from '../utils/generateAttendance';
 
-const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import']);
+const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import', 'absences']);
 const NO_TABS_TYPE = new Set(['info', 'sadcs', 'import']);
 const FULL_WIDTH_TYPES = new Set(['sadcs', 'import']);
 
@@ -77,6 +77,7 @@ const ModalPage = ({ data, onClose }) => {
                         activeTab={activeTab}
                         mltcs={mltcs}
                         handleActiveToggle={handleActiveToggle}
+                        handleAdd={handleAdd}
                         dragStatus={setDragging}
                         handleLimit={handleLimit}
                     />
@@ -97,6 +98,8 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
+                        handleAdd={handleAdd}
+                        dragStatus={setDragging}
                         handleLimit={handleLimit}
                     />
                 );

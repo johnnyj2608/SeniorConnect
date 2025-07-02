@@ -139,6 +139,7 @@ const getNewTab = (type, localData, id) => {
                 start_date: '',
                 end_date: '',
                 note: '',
+                file: '',
                 edited: true,
             };
         }

@@ -24,6 +24,10 @@ const MemberFilesModal = ({
         if (type === 'import') {
             const file = files[0];
             if (!file) return;
+
+            if (!data.some(entry => !entry.deleted)) {
+                handleAdd();
+            }
     
             const fakeEvent = { target: { files: [file] } };
             handleChange('file')(fakeEvent);
@@ -32,7 +36,7 @@ const MemberFilesModal = ({
     
         } else {
             files.forEach((file, index) => {
-                if (Object.keys(current).length === 0 || index !== 0) {
+                if (!data.some(entry => !entry.deleted) || index !== 0) {
                     handleAdd();
                 }
     
@@ -79,7 +83,7 @@ const MemberFilesModal = ({
             />
 
             <FileUpload 
-                current={current}
+                file={current.file}
                 handleChange={handleChange}
                 disabled={disabled && type === 'files'}
                 required={true}

@@ -22,7 +22,8 @@ const MemberAuthModal = ({
     handleChange, 
     activeTab, 
     mltcs, 
-    handleActiveToggle, 
+    handleActiveToggle,
+    handleAdd,
     dragStatus,
     handleLimit,
  }) => {
@@ -42,6 +43,10 @@ const MemberAuthModal = ({
     const onDropFile = (files) => {
         const file = files[0];
         if (!file) return;
+
+        if (!data.some(entry => !entry.deleted)) {
+            handleAdd();
+        }
 
         const fakeEvent = { target: { files: [file] } };
         handleChange('file')(fakeEvent);
@@ -173,7 +178,7 @@ const MemberAuthModal = ({
             />
 
             <FileUpload 
-                current={current}
+                file={current.file}
                 handleChange={handleChange}
                 disabled={disabled}
             />

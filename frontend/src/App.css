@@ -28,7 +28,6 @@
   --color-good: #00ac47;
   --color-good-hover: #146c2e;
   --color-good-background: #e7f8ed;
-
   --color-title: #6366F1;
 }
 
@@ -37,7 +36,6 @@
   --color-content: #1D2226;
   --color-text: #E9E9E9;
   --color-text-sub: rgb(255 255 255 / .6);
-
   --color-title: #E9E9E9;
 }
 
@@ -164,6 +162,7 @@ input[type="number"]::-webkit-inner-spin-button {
   color: var(--color-text);
   background-color: var(--color-background);
   min-height: 100svh;
+  overflow-x: hidden;
 }
 
 .app-header {
@@ -401,16 +400,13 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
   padding: 10px;
+  min-width: 400px;
 }
 
 .card-half h2, 
 .card-full h2,
 .card-400 h2 {
   padding-left: 10px;
-}
-
-.card-400 {
-  min-width: 400px;
 }
 
 .card-half {
@@ -504,6 +500,7 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
+  justify-self: center;
   width: 130px;
   font-size: 15px;
   padding: 15px 20px;
@@ -523,8 +520,12 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 5px 0;
 }
 
-.action-button.long {
+.action-button.md {
   width: 50%;
+}
+
+.action-button.lg {
+  width: 100%;
 }
 
 .action-button:disabled {

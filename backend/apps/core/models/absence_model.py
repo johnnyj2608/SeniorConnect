@@ -29,6 +29,7 @@ class Absence(models.Model):
     time = models.TimeField(null=True, blank=True)
     called = models.BooleanField(default=False)
     note = models.CharField(max_length=220, blank=True, null=True)
+    file = models.URLField(null=True, blank=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

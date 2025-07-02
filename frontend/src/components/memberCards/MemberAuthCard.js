@@ -60,7 +60,7 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
 
                         {auth.file && (
                             <button 
-                                className="action-button thin long"
+                                className="action-button thin lg"
                                 onClick={() => viewFile(auth.file)}
                             >
                                 {t('member.authorizations.view_auth')}

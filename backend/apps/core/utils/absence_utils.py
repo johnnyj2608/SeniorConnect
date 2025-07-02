@@ -11,6 +11,11 @@ from ..serializers.absence_serializers import (
     AbsenceUpcomingSerializer, 
     AssessmentSerializer
 )
+from django.db import transaction
+from .supabase import (
+    upload_file_to_supabase,
+    delete_file_from_supabase,
+)
 from ..access import member_access_filter, member_access_fk
 
 @member_access_filter()
@@ -46,34 +51,90 @@ def getAbsenceDetail(request, pk):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_fk
+@transaction.atomic
 def createAbsence(request):
-    data = request.data
-    serializer = AbsenceSerializer(data=data)
+    data = request.data.copy()
+    public_url = None
+
+    file = request.FILES.get('file')
+    data.pop('file', None)
+
+    member_id = data.get('member')
 
     try:
+        serializer = AbsenceSerializer(data=data)
+
         if serializer.is_valid():
-            serializer.save()
+            absence = serializer.save()
+
+            if file:
+                new_path = f"{member_id}/absences/{absence.id}"
+
+                public_url, error = upload_file_to_supabase(
+                    file, 
+                    new_path,
+                    absence.file,
+                )
+            
+                if error:
+                    raise Exception(f"File upload failed: {error}")
+            
+            absence.file = public_url
+            absence.save()
+
+            serializer = AbsenceSerializer(absence)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
+        if public_url:
+            delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
+@transaction.atomic
 def updateAbsence(request, pk):
-    data = request.data
-    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
-    serializer = AbsenceSerializer(instance=absence, data=data)
+    data = request.data.copy()
+    public_url = None
 
+    member_id = data.get('member')
+
+    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
+    
     try:
+        if 'file' in request.FILES:
+            file = request.FILES['file']
+            new_path = f"{member_id}/absences/{absence.id}"
+
+            public_url, error = upload_file_to_supabase(
+                file, 
+                new_path,
+                absence.file,
+            )
+
+            if error:
+                raise Exception(f"Photo upload failed: {error}")
+            
+            data['file'] = public_url
+
+        elif data.get('file') == '' and absence.file:
+            delete_file_from_supabase(absence.file)
+            data['file'] = None
+
+        serializer = AbsenceSerializer(instance=absence, data=data)
         if serializer.is_valid():
-            serializer.save()
+            absence = serializer.save()
+
+            serializer = AbsenceSerializer(absence)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
+        if public_url:
+            delete_file_from_supabase(public_url)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk

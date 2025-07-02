@@ -103,7 +103,7 @@ const MembersAttendanceModal = ({ members, onMonthChange, addQueue, addMltcQueue
             </div>
             <div className="member-row">
                 <button 
-                    className="action-button thin long"
+                    className="action-button thin md"
                     disabled={displayedMltcs.length === 0}
                     onClick={handleAddQueue}
                 >

@@ -25,7 +25,7 @@ const CheckboxInput = ({
                     <input
                         type="checkbox"
                         value={id}
-                        checked={values.includes(id)}
+                        checked={disabled ? false : values.includes(id)}
                         onChange={handleCheckboxChange(id)}
                         disabled={disabled || isAdmin}
                     />

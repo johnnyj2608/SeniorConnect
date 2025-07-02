@@ -58,8 +58,7 @@ def createMember(request):
     data['sadc'] = request.user.sadc.id
 
     photo = request.FILES.get('photo')
-    if 'photo' in data:
-        del data['photo']
+    data.pop('photo', None)
 
     try:
         serializer = MemberSerializer(data=data)

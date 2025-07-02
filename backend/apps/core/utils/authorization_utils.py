@@ -39,8 +39,7 @@ def createAuthorization(request):
     public_url = None
 
     file = request.FILES.get('file')
-    if 'file' in data:
-        del data['file']
+    data.pop('file', None)
 
     data['schedule'] = data.getlist('schedule', '')[0]
     services = json.loads(data.pop('services', [])[0])
@@ -66,7 +65,7 @@ def createAuthorization(request):
                 )
             
                 if error:
-                    raise Exception(f"Photo upload failed: {error}")
+                    raise Exception(f"File upload failed: {error}")
             
             authorization.file = public_url
             authorization.save()
