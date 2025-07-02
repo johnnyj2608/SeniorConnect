@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { UserContext } from '../../context/UserContext';
 import TextInput from '../inputs/TextInput';
-import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const absenceTypes = [
     'vacation', 
@@ -13,28 +13,16 @@ const absenceTypes = [
 
 const MemberAbsencesModal = ({ data, handleChange, activeTab, handleLimit }) => {
     const { t } = useTranslation();
+    const { users, refreshUser } = useContext(UserContext);
 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
     const isAssessment = current.absence_type === 'assessment';
-    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const getUserOptions = async () => {
-            try {
-                const response = await fetchWithRefresh('/user/users/');
-                if (!response.ok) return;
-
-                const data = await response.json();
-                setUsers(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getUserOptions();
-    }, []);
+        refreshUser();
+    }, [refreshUser]);
 
     return (
         <>

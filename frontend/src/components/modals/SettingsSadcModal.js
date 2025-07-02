@@ -27,6 +27,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                 onLimitExceeded={handleLimit('name')}
                 required
                 disabled
+                showDisabled
             />
 
             <TextInput
@@ -38,6 +39,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                 maxLength={220}
                 required
                 disabled
+                showDisabled
             />
 
             <TextInput
@@ -48,6 +50,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                 onLimitExceeded={handleLimit('phone')}
                 required
                 disabled
+                showDisabled
                 maxLength={10}
             />
 
@@ -59,6 +62,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                 maxLength={220}
                 required
                 disabled
+                showDisabled
             />
 
             <TextInput
@@ -69,6 +73,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                 onLimitExceeded={handleLimit('npi')}
                 required
                 disabled
+                showDisabled
                 maxLength={10}
             />
 

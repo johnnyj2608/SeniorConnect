@@ -10,6 +10,7 @@ const TextInput = ({
     required = false,
     disabled = false,
     maxLength = 50,
+    showDisabled = false,
     onLimitExceeded = () => {},
 }) => {
     const { t } = useTranslation();
@@ -39,7 +40,11 @@ const TextInput = ({
                 </label>
                 <input
                     type={type}
-                    value={disabled ? '' : value || ''}
+                    value={
+                        disabled
+                            ? (showDisabled ? value || '' : '')
+                            : value || ''
+                        }
                     onChange={handleChange}
                     onKeyDown={(e) => {
                         if (type === 'number' && invalidNumbers.has(e.key)) {
@@ -52,13 +57,13 @@ const TextInput = ({
                     disabled={disabled}
                 />
             </div>
-            <div className="member-detail-limit">
-                {charCount > maxLength && (
+            {charCount > maxLength && (
+                <div className="member-detail-limit">
                     <span className="limit-warning">
                         <Stop /> {t('errors.character_limit', { limit: maxLength })}
                     </span>
-                )}
-            </div>
+                </div>
+            )}
         </>
     );
 };

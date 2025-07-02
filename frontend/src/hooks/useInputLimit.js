@@ -4,8 +4,6 @@ const useInputLimit = () => {
 	const [overLimitFields, setOverLimitFields] = useState({});
 	const [inputLimitExceeded, setInputLimitExceeded] = useState(false);
 
-	console.log(overLimitFields)
-
 	const handleLimit = useCallback((key, tabIndex = null) => (exceeded) => {
 		const scopedKey = tabIndex !== null ? `${tabIndex}-${key}` : key;
 		setOverLimitFields(prev => ({ ...prev, [scopedKey]: exceeded }));
