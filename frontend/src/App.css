@@ -29,6 +29,7 @@
   --color-good-hover: #146c2e;
   --color-good-background: #e7f8ed;
   --color-title: #6366F1;
+  --color-disabled: #B3B3B3;
 }
 
 .dark {
@@ -37,6 +38,7 @@
   --color-text: #E9E9E9;
   --color-text-sub: rgb(255 255 255 / .6);
   --color-title: #E9E9E9;
+  --color-disabled: #7A7A7A;
 }
 
 * {
@@ -75,6 +77,10 @@ input::placeholder {
   color: var(--color-black);
 }
 
+input:disabled {
+  background-color: var(--color-disabled);
+}
+
 select {
   color: var(--color-black);
   font-size: 13px;
@@ -95,7 +101,7 @@ select {
 
 select:disabled {
   cursor: default;
-  background-color: var(--color-gray);
+  background-color: var(--color-disabled);
 }
 
 select:invalid {
@@ -475,7 +481,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .icon-button:disabled {
   color: gray;
-  fill: var(--color-gray-dark);
+  fill: var(--color-disabled);
   cursor: default;
 }
 
@@ -531,7 +537,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .action-button:disabled {
   opacity: 0.3;
   pointer-events: none;
-  background-color: var(--color-gray);
+  background-color: var(--color-disabled);
 }
 
 .action-button:hover {
@@ -1041,11 +1047,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .member-box-tab[disabled] {
   cursor: default;
   color: var(--color-black);
-  background-color: var(--color-gray);
+  background-color: var(--color-disabled);
 }
 
 .member-box-tab[disabled]:hover {
-  background-color: var(--color-gray);
+  background-color: var(--color-disabled);
 }
 
 .modal-content .member-box {
