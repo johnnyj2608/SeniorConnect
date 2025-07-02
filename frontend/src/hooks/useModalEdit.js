@@ -20,7 +20,7 @@ import { SadcContext } from '../context/SadcContext';
 
 function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
-    const { mltcOptions, refreshMltc } = useContext(MltcContext);
+    const { mltcs, refreshMltc } = useContext(MltcContext);
     const { sadc, refreshSadc } = useContext(SadcContext);
     const { id, type } = data;
 
@@ -67,11 +67,11 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
         if (type === 'users') {
             return {
                 ...base,
-                allowed_mltcs: mltcOptions.map(opt => opt.id),
+                allowed_mltcs: mltcs.map(opt => opt.id),
             };
         }
         return base;
-    }, [type, localData, id, mltcOptions]);
+    }, [type, localData, id, mltcs]);
 
     const handleChange = (field) => (event) => {
         const { value, files } = event.target;
@@ -317,7 +317,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
         handleDelete,
         handleSave,
         setActiveTab,
-        mltcOptions,
+        mltcs,
         sadc,
     };
 }

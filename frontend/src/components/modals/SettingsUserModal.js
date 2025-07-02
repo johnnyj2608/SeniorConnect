@@ -4,7 +4,7 @@ import TextInput from '../inputs/TextInput';
 import CheckboxInput from '../inputs/CheckboxInput';
 import ListDetail from '../layout/ListDetail';
 
-const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions, handleLimit }) => {
+const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }) => {
   const { t } = useTranslation();
 
   const current = data[activeTab] || {};
@@ -76,7 +76,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcOptions, handleL
         label={t('settings.admin.mltc.label')}
         value={
           <CheckboxInput
-            options={mltcOptions}
+            options={mltcs}
             selectedValues={current.allowed_mltcs || []}
             onChange={handleMltcChange}
             disabled={disabled}

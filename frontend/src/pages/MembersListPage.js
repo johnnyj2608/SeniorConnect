@@ -14,7 +14,7 @@ import { MltcContext } from '../context/MltcContext';
 
 const MembersListPage = () => {
 	const { t } = useTranslation();
-	const { mltcOptions, refreshMltc } = useContext(MltcContext)
+	const { mltcs, refreshMltc } = useContext(MltcContext)
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
 	const mltcQueryParam = queryParams.get('mltc');
@@ -82,7 +82,7 @@ const MembersListPage = () => {
 								onChange={(e) => setMltcFilter(e.target.value)}
 							>
 								<option value="">{t('general.select_an_option')}</option>
-								{mltcOptions.map((option) => (
+								{mltcs.map((option) => (
 									<option key={option.name} value={option.name}>
 										{option.name}
 									</option>

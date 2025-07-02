@@ -21,7 +21,7 @@ const MemberAuthModal = ({
     data, 
     handleChange, 
     activeTab, 
-    mltcOptions, 
+    mltcs, 
     handleActiveToggle, 
     dragStatus,
     handleLimit,
@@ -31,7 +31,7 @@ const MemberAuthModal = ({
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
 
-    const selectedMltc = mltcOptions.find(mltc => mltc.name === current.mltc);
+    const selectedMltc = mltcs.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes || [];
 
     const onScheduleChange = (newSchedule) => {
@@ -83,7 +83,7 @@ const MemberAuthModal = ({
                     disabled={disabled}
                 >
                     <option value="">{t('general.select_an_option')}</option>
-                    {mltcOptions.map((option) => (
+                    {mltcs.map((option) => (
                         <option key={option.name} value={option.name}>
                             {option.name}
                         </option>

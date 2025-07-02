@@ -4,14 +4,14 @@ import fetchWithRefresh from '../utils/fetchWithRefresh';
 export const MltcContext = createContext();
 
 export const MltcProvider = ({ children }) => {
-    const [mltcOptions, setMltcOptions] = useState([]);
+    const [mltcs, setMltcs] = useState([]);
 
     const fetchMltcs = useCallback(async () => {
         try {
             const response = await fetchWithRefresh('/tenant/mltcs/');
             if (!response.ok) return;
             const data = await response.json();
-            setMltcOptions(data);
+            setMltcs(data);
         } catch (err) {
             console.error(err);
         }
@@ -22,7 +22,7 @@ export const MltcProvider = ({ children }) => {
     }, [fetchMltcs]);
 
     return (
-        <MltcContext.Provider value={{ mltcOptions, refreshMltc: fetchMltcs }}>
+        <MltcContext.Provider value={{ mltcs, refreshMltc: fetchMltcs }}>
             {children}
         </MltcContext.Provider>
     );

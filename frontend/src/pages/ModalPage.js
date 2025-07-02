@@ -35,7 +35,7 @@ const ModalPage = ({ data, onClose }) => {
         handleDelete,
         handleSave,
         setActiveTab,
-        mltcOptions,
+        mltcs,
         sadc,
     } = useModalEdit(data, onClose, NO_TABS_TYPE);
 
@@ -75,7 +75,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData}
                         handleChange={handleChange}
                         activeTab={activeTab}
-                        mltcOptions={mltcOptions}
+                        mltcs={mltcs}
                         handleActiveToggle={handleActiveToggle}
                         dragStatus={setDragging}
                         handleLimit={handleLimit}
@@ -119,7 +119,7 @@ const ModalPage = ({ data, onClose }) => {
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab}
-                        mltcOptions={mltcOptions}
+                        mltcs={mltcs}
                         handleLimit={handleLimit}
                     />
                 );
