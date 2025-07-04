@@ -26,7 +26,7 @@ const HomeStatsCard = () => {
 
     const getChange = async () => {
       try {
-        const response = await fetchWithRefresh('/core/enrollments/stats/');
+        const response = await fetchWithRefresh('/audit/enrollments/stats/');
         if (!response.ok) return;
 
         const data = await response.json();

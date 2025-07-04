@@ -10,7 +10,7 @@ const HomeEnrollmentsCard = () => {
   useEffect(() => {
     const getEnrollments = async () => {
       try {
-        const response = await fetchWithRefresh('/core/enrollments/recent/');
+        const response = await fetchWithRefresh('/audit/enrollments/recent/');
         if (!response.ok) return;
 
         const data = await response.json();
