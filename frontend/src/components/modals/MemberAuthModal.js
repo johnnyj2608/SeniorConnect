@@ -31,6 +31,7 @@ const MemberAuthModal = ({
 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     const selectedMltc = mltcs.find(mltc => mltc.name === current.mltc);
     const dx_codes = selectedMltc?.dx_codes || [];
@@ -100,7 +101,7 @@ const MemberAuthModal = ({
                 label={t('member.authorizations.mltc_member_id')}
                 value={disabled ? '' : current.mltc_member_id || ''}
                 onChange={handleChange('mltc_member_id')}
-                onLimitExceeded={handleLimit('mltc_member_id', activeTab)}
+                onLimitExceeded={handleLimit('mltc_member_id', limitIndex)}
                 disabled={disabled}
                 required
             />
@@ -157,13 +158,15 @@ const MemberAuthModal = ({
                 services={current.services}
                 disabled={disabled}
                 handleChange={handleChange}
+                handleLimit={handleLimit}
+                limitIndex={limitIndex}
             />
 
             <TextInput
                 label={t('member.authorizations.care_manager')}
                 value={current.cm_name}
                 onChange={handleChange('cm_name')}
-                onLimitExceeded={handleLimit('cm_name', activeTab)}
+                onLimitExceeded={handleLimit('cm_name', limitIndex)}
                 disabled={disabled}
             />
 
@@ -172,7 +175,7 @@ const MemberAuthModal = ({
                 type="number"
                 value={current.cm_phone}
                 onChange={handleChange('cm_phone')}
-                onLimitExceeded={handleLimit('cm_phone', activeTab)}
+                onLimitExceeded={handleLimit('cm_phone', limitIndex)}
                 maxLength={10}
                 disabled={disabled}
             />
@@ -186,12 +189,36 @@ const MemberAuthModal = ({
     );
 };
 
-const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
+const AuthorizationServicesTabs = ({ 
+    services, 
+    disabled, 
+    handleChange, 
+    handleLimit, 
+    limitIndex 
+    }) => {
     const { t } = useTranslation();
 
     const serviceLabels = [
         { key: 'sdc', label: t('member.authorizations.sdc') },
         { key: 'transportation', label: t('member.authorizations.transportation') }
+    ];
+
+    const serviceFields = [
+        {
+            key: 'auth_id',
+            label: t('member.authorizations.auth_id'),
+            type: 'text',
+        },
+        {
+            key: 'service_code',
+            label: t('member.authorizations.service_code'),
+            type: 'text',
+        },
+        {
+            key: 'service_units',
+            label: t('member.authorizations.service_units'),
+            type: 'number',
+        },
     ];
 
     const handleServiceChange = (index, field) => (event) => {
@@ -206,70 +233,24 @@ const AuthorizationServicesTabs = ({ services, disabled, handleChange }) => {
         handleChange('services')({ target: { value: updatedServices } });
     };
 
-    const tabContent = {
-        sdc: (
+    const tabContent = serviceLabels.reduce((acc, { key }, index) => {
+        acc[key] = (
             <div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.auth_id')}</label>
-                    <input
-                        type="text"
-                        value={services?.[0]?.auth_id || ''}
-                        onChange={handleServiceChange(0, 'auth_id')}
-                        disabled={disabled}
-                    />
-                </div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.service_code')}</label>
-                    <input
-                        type="text"
-                        value={services?.[0]?.service_code || ''}
-                        onChange={handleServiceChange(0, 'service_code')}
-                        disabled={disabled}
-                    />
-                </div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.service_units')}</label>
-                    <input
-                        type="number"
-                        value={services?.[0]?.service_units || ''}
-                        onChange={handleServiceChange(0, 'service_units')}
-                        disabled={disabled}
-                    />
-                </div>
+                {serviceFields.map(({ key: fieldKey, label, type }) => (
+                <TextInput
+                    key={`${key}-${fieldKey}`}
+                    type={type}
+                    label={label}
+                    value={services?.[index]?.[fieldKey] || ''}
+                    onChange={handleServiceChange(index, fieldKey)}
+                    onLimitExceeded={handleLimit(fieldKey, limitIndex)}
+                    disabled={disabled}
+                />
+                ))}
             </div>
-        ),
-        transportation: (
-            <div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.auth_id')}</label>
-                    <input
-                        type="text"
-                        value={services?.[1]?.auth_id || ''}
-                        onChange={handleServiceChange(1, 'auth_id')}
-                        disabled={disabled}
-                    />
-                </div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.service_code')}</label>
-                    <input
-                        type="text"
-                        value={services?.[1]?.service_code || ''}
-                        onChange={handleServiceChange(1, 'service_code')}
-                        disabled={disabled}
-                    />
-                </div>
-                <div className="member-detail">
-                    <label>{t('member.authorizations.service_units')}</label>
-                    <input
-                        type="number"
-                        value={services?.[1]?.service_units || ''}
-                        onChange={handleServiceChange(1, 'service_units')}
-                        disabled={disabled}
-                    />
-                </div>
-            </div>
-        )
-    };
+        );
+        return acc;
+    }, {});
 
     return (
         <ListDetail

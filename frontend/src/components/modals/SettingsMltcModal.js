@@ -9,6 +9,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     return (
         <>
@@ -29,7 +30,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
                 label={t('settings.admin.mltc.name')}
                 value={current.name}
                 onChange={handleChange('name')}
-                onLimitExceeded={handleLimit('name', activeTab)}
+                onLimitExceeded={handleLimit('name', limitIndex)}
                 disabled={disabled}
             />
 

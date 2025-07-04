@@ -31,6 +31,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLi
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const disableFields = disabled || !current.contact_type;
+    const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     const isEmergencyContact = current.contact_type === 'emergency_contact';
 
@@ -102,7 +103,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLi
                 type="number"
                 value={current.phone}
                 onChange={handleChange('phone')}
-                onLimitExceeded={handleLimit('phone', activeTab)}
+                onLimitExceeded={handleLimit('phone', limitIndex)}
                 required
                 maxLength={10}
                 disabled={disableFields}

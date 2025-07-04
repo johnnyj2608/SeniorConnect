@@ -10,6 +10,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
   const current = data[activeTab] || {};
   const disabled = data.filter(tab => !tab.deleted).length <= 0;
   const adminUser = current.is_org_admin;
+  const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
   const handleMltcChange = (newSelected) => {
     handleChange('allowed_mltcs')({ target: { value: newSelected } });
@@ -36,7 +37,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
         label={t('settings.admin.users.name')}
         value={current.name}
         onChange={handleChange('name')}
-        onLimitExceeded={handleLimit('name', activeTab)}
+        onLimitExceeded={handleLimit('name', limitIndex)}
         required
         disabled={disabled}
       />
@@ -46,7 +47,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
         type="email"
         value={current.email}
         onChange={handleChange('email')}
-        onLimitExceeded={handleLimit('email', activeTab)}
+        onLimitExceeded={handleLimit('email', limitIndex)}
         maxLength={220}
         required
         disabled={disabled || adminUser}

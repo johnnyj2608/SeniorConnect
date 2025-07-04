@@ -36,8 +36,8 @@ class AuthorizationService(models.Model):
 
     authorization = models.ForeignKey('Authorization', related_name='services', on_delete=models.CASCADE)
     service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
-    auth_id = models.CharField(max_length=255, null=True, blank=False)
-    service_code = models.CharField(max_length=255, null=True, blank=True)
+    auth_id = models.CharField(max_length=50, null=True, blank=False)
+    service_code = models.CharField(max_length=50, null=True, blank=True)
     service_units = models.IntegerField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=False)

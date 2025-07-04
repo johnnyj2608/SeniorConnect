@@ -181,7 +181,11 @@ const ModalPage = ({ data, onClose }) => {
                     clearQueue();
                 } else {
                     handleDelete(activeTab);
-                    clearTabLimit(activeTab);
+                    const limitIndex =
+                        localData[activeTab]?.id === 'new'
+                            ? localData.length - 1 - activeTab
+                            : activeTab;
+                    clearTabLimit(limitIndex);
                 }
             }}
         >

@@ -19,6 +19,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab, handleAdd, dragSta
 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     const isAssessment = current.absence_type === 'assessment';
 
@@ -136,7 +137,7 @@ const MemberAbsencesModal = ({ data, handleChange, activeTab, handleAdd, dragSta
                 label={t('general.note')}
                 value={current.note}
                 onChange={handleChange('note')}
-                onLimitExceeded={(exceeded) => handleLimit('note', activeTab)(exceeded)}
+                onLimitExceeded={handleLimit('note', limitIndex)}
                 disabled={disabled}
                 maxLength={220}
             />

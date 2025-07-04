@@ -17,6 +17,7 @@ const MemberFilesModal = ({
     
     const current = type === 'import' ? data : data[activeTab] || {};
     const disabled = type === 'import' ? false : data.filter(tab => !tab.deleted).length <= 0;
+    const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     const onDropFile = (files) => {
         const today = new Date().toISOString().split('T')[0];
@@ -67,7 +68,7 @@ const MemberFilesModal = ({
                 label={t('member.files.name')}
                 value={current.name}
                 onChange={handleChange('name')}
-                onLimitExceeded={handleLimit('name', activeTab)}
+                onLimitExceeded={handleLimit('name', limitIndex)}
                 required
                 disabled={disabled || type === 'import'}
             />
@@ -77,7 +78,7 @@ const MemberFilesModal = ({
                 type="date"
                 value={current.date}
                 onChange={handleChange('date')}
-                onLimitExceeded={handleLimit('date', activeTab)}
+                onLimitExceeded={handleLimit('date', limitIndex)}
                 required
                 disabled={disabled || type === 'import'}
             />
