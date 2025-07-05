@@ -186,7 +186,7 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     )
 
     pdf_buffer.seek(0)
-    return pdf_buffer.read()
+    return pdf_buffer
 
 def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
     if y < 35:

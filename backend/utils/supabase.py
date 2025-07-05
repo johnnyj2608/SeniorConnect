@@ -50,7 +50,7 @@ def upload_file_to_supabase(file_obj, new_path, old_path, photo=False):
             content = file_obj.read()
 
         short_id = uuid4().hex[:4]
-        file_path = f"{new_path}_{short_id}.{file_extension if not photo else 'jpg'}"
+        file_path = f"{new_path}_{short_id}.{file_extension}"
         
         response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
             file_path,

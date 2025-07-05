@@ -1,4 +1,1 @@
-0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot --type members
-0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot --type birthdays
-0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot --type absences
-0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot --type enrollments
+58 13 * * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot
