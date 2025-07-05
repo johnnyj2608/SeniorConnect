@@ -68,7 +68,8 @@ def createAbsence(request):
             absence = serializer.save()
 
             if file:
-                new_path = f"{member_id}/absences/{absence.id}"
+                member_sadc = request.user.sadc.id
+                new_path = f"{member_sadc}/members/{member_id}/absences/{absence.id}"
 
                 public_url, error = upload_file_to_supabase(
                     file, 
@@ -106,7 +107,8 @@ def updateAbsence(request, pk):
     try:
         if 'file' in request.FILES:
             file = request.FILES['file']
-            new_path = f"{member_id}/absences/{absence.id}"
+            member_sadc = request.user.sadc.id
+            new_path = f"{member_sadc}/members/{member_id}/absences/{absence.id}"
 
             public_url, error = upload_file_to_supabase(
                 file, 

@@ -31,8 +31,9 @@ def createFile(request):
             file_obj = request.FILES['file']
             file_name = slugify(request.data.get("name"))
             member_id = request.data.get("member")
+            member_sadc = request.user.sadc.id
+            new_path = f"{member_sadc}/members/{member_id}/files/{file_name}"
 
-            new_path = f"{member_id}/files/{file_name}"
             public_url, error = upload_file_to_supabase(
                 file_obj, 
                 new_path,
@@ -73,8 +74,8 @@ def updateFile(request, pk):
             file_obj = request.FILES['file']
             file_name = slugify(request.data.get("name"))
             member_id = request.data.get("member")
-
-            new_path = f"{member_id}/files/{file_name}"
+            member_sadc = request.user.sadc.id
+            new_path = f"{member_sadc}/members/{member_id}/files/{file_name}"
 
             public_url, error = upload_file_to_supabase(
                 file_obj,

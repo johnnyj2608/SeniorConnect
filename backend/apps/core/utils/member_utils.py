@@ -70,7 +70,7 @@ def createMember(request):
             first_name = data.get("first_name", "")
             last_name = data.get("last_name", "")
             member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{member.id}/{member_name}"
+            new_path = f"{request.user.sadc.id}/members/{member.id}/{member_name}"
 
             public_url, error = upload_file_to_supabase(
                 photo, 
@@ -108,7 +108,7 @@ def updateMember(request, pk):
             first_name = data.get("first_name")
             last_name = data.get("last_name")
             member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{member.id}/{member_name}"
+            new_path = f"{sadc.id}/members/{member.id}/{member_name}"
 
             public_url, error = upload_file_to_supabase(
                 photo, 

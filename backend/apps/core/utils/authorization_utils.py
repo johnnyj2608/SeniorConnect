@@ -56,7 +56,8 @@ def createAuthorization(request):
             authorization = serializer.save()
 
             if file:
-                new_path = f"{member_id}/auths/{authorization.id}"
+                member_sadc = request.user.sadc.id
+                new_path = f"{member_sadc}/members/{member_id}/auths/{authorization.id}"
 
                 public_url, error = upload_file_to_supabase(
                     file, 
@@ -109,7 +110,8 @@ def updateAuthorization(request, pk):
     try:
         if 'file' in request.FILES:
             file = request.FILES['file']
-            new_path = f"{member_id}/auths/{authorization.id}"
+            member_sadc = request.user.sadc.id
+            new_path = f"{member_sadc}/members/{member_id}/auths/{authorization.id}"
 
             public_url, error = upload_file_to_supabase(
                 file, 
