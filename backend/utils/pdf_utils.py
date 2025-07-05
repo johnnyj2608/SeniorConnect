@@ -4,15 +4,14 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import F, Q, Count
-from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
 
-from ..models.sadc_model import Sadc
-from ..models.mltc_model import Mltc
-from backend.apps.core.models.member_model import Member
-from backend.apps.core.models.absence_model import Absence
-from backend.apps.audit.models.enrollment_model import Enrollment
+from ..apps.tenant.models.sadc_model import Sadc
+from ..apps.tenant.models.mltc_model import Mltc
+from ..apps.core.models.member_model import Member
+from ..apps.core.models.absence_model import Absence
+from ..apps.audit.models.enrollment_model import Enrollment
 
 X_POSITIONS = {
     "POS1": 40,
@@ -57,9 +56,10 @@ class NumberedCanvas(rl_canvas.Canvas):
         width, height = letter
         self.drawRightString(width - 30, 20, text)
 
-def previewSnapshotPdf(request, sadc_id):
+def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     sadc = Sadc.objects.get(id=sadc_id)
     today = date.today()
+    
     first_day = today.replace(day=1)
     last_day = today.replace(day=monthrange(today.year, today.month)[1])
     snapshot_date = first_day - timedelta(days=1)
@@ -67,7 +67,7 @@ def previewSnapshotPdf(request, sadc_id):
     display_month = snapshot_date.month
     display_year = snapshot_date.year
 
-    snapshot_type = request.GET.get("type", "members").lower()
+    snapshot_type = snapshot_type.lower()
 
     if snapshot_type == "birthdays":
         title = "birthdays"
@@ -184,13 +184,9 @@ def previewSnapshotPdf(request, sadc_id):
         display_year,
         title,
     )
+
     pdf_buffer.seek(0)
-
-    response = HttpResponse(pdf_buffer.read(), content_type='application/pdf')
-    filename = f"preview_{snapshot_type}_snapshot_{sadc.name}.pdf"
-    response['Content-Disposition'] = f'inline; filename="{filename}"'
-
-    return response
+    return pdf_buffer.read()
 
 def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
     if y < 35:

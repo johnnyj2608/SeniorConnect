@@ -4,7 +4,7 @@ from .views import (
     sadc_views,
     snapshot_views,
 )
-from .utils.pdf_utils import previewSnapshotPdf
+from ...utils.pdf_utils import generateSnapshotPdf
 
 urlpatterns = [
     # Sadc related paths
@@ -18,5 +18,5 @@ urlpatterns = [
     path('snapshots/recent/', snapshot_views.getRecentSnapshotLogs, name='snapshots_recent'),
     path('snapshots/<str:pk>/', snapshot_views.getSnapshot, name='snapshot'),
     path('snapshots/', snapshot_views.getSnapshots, name='snapshots'),
-    path('snapshots/preview/<int:sadc_id>/', previewSnapshotPdf, name='snapshot_preview'),
+    # path('snapshots/preview/<int:sadc_id>/', generateSnapshotPdf, name='snapshot_preview'),
 ]

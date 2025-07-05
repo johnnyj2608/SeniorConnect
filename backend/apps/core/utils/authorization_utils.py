@@ -10,7 +10,7 @@ from ..serializers.authorization_serializers import (
 )
 from django.db import transaction
 import json
-from .supabase import (
+from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )

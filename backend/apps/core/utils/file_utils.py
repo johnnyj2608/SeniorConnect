@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
-from .supabase import *
+from ....utils.supabase import *
 from django.utils.text import slugify
 from ..access import member_access_filter, member_access_fk
 

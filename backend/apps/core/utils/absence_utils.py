@@ -12,7 +12,7 @@ from ..serializers.absence_serializers import (
     AssessmentSerializer
 )
 from django.db import transaction
-from .supabase import (
+from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )

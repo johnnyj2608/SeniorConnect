@@ -21,7 +21,7 @@ from ..serializers.authorization_serializers import AuthorizationWithServiceSeri
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
 from django.utils.text import slugify
-from .supabase import (
+from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
     delete_folder_from_supabase

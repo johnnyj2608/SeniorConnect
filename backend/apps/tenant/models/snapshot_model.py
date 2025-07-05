@@ -24,3 +24,6 @@ class Snapshot(models.Model):
     class Meta:
         unique_together = ('sadc', 'date', 'type')
         ordering = ['-date']
+        
+    def __str__(self):
+        return f"{self.sadc} - {self.snapshot_type} - {self.timestamp}"
