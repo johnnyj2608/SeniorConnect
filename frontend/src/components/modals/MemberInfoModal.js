@@ -114,6 +114,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const handlePhotoUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
+            setCrop(undefined);
             handleChange('preview_photo')({ target: { value: file } });
             handleChange('photo')({ target: { value: file } });
         }
