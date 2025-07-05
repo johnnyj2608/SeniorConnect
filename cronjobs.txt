@@ -1,1 +1,1 @@
-58 13 * * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot
+0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot

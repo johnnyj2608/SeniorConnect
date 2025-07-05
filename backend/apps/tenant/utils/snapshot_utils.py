@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -57,5 +58,13 @@ def deleteSnapshot(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 def getRecentSnapshots(request):
-
-    return Response(status=status.HTTP_200_OK)
+    current_user = request.user
+    now = timezone.now()
+    
+    snapshots = Snapshot.objects.filter(
+        sadc=current_user.sadc,
+        date__year=now.year,
+        date__month=now.month
+    )
+    serializer = SnapshotSerializer(snapshots, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
