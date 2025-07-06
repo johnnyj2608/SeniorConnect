@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import viewFile from '../../utils/viewFile';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 const HomeSnapshotCard = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [snapshots, setSnapshots] = useState([]);
 
   useEffect(() => {
+    if (!user?.view_snapshots) return;
+
     const getSnapshots = async () => {
       try {
         const response = await fetchWithRefresh('/tenant/snapshots/recent/');
@@ -23,12 +27,14 @@ const HomeSnapshotCard = () => {
     };
 
     getSnapshots();
-  }, []);
+  }, [user]);
 
   const currentMonth = () => {
     const now = new Date();
     return now.toLocaleString('default', { month: 'long' }).toLowerCase();
   };
+
+  if (!user?.view_snapshots) return null;
 
   return (
     <div className="card-full">

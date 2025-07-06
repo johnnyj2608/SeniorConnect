@@ -22,19 +22,22 @@ const scrollToSection = (id) => {
     }
 };
 
-const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
-    <div className="settings-nav">
-        <SettingsItem
-            label={t('settings.preferences.label')}
-            isNav
-            isActive={activeSection === 'settings-preferences'}
-            onClick={() => {
+const SettingsNav = ({ activeSection, setActiveSection, t }) => {
+    const { user } = useContext(AuthContext);
+
+    return (
+        <div className="settings-nav">
+            <SettingsItem
+                label={t('settings.preferences.label')}
+                isNav
+                isActive={activeSection === 'settings-preferences'}
+                onClick={() => {
                 setActiveSection('settings-preferences');
                 scrollToSection('settings-preferences');
-            }}
-        />
-        {user?.is_org_admin && (
-            <SettingsItem
+                }}
+            />
+            {user?.is_org_admin && (
+                <SettingsItem
                 label={t('settings.admin.label')}
                 isNav
                 isActive={activeSection === 'settings-admin'}
@@ -42,19 +45,19 @@ const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
                     setActiveSection('settings-admin');
                     scrollToSection('settings-admin');
                 }}
-            />
-        )}
-        <SettingsItem
-            label={t('settings.data.label')}
-            isNav
-            isActive={activeSection === 'settings-data'}
-            onClick={() => {
+                />
+            )}
+            <SettingsItem
+                label={t('settings.data.label')}
+                isNav
+                isActive={activeSection === 'settings-data'}
+                onClick={() => {
                 setActiveSection('settings-data');
                 scrollToSection('settings-data');
-            }}
-        />
-        {user?.view_snapshots && (
-            <SettingsItem
+                }}
+            />
+            {user?.view_snapshots && (
+                <SettingsItem
                 label={t('snapshots.label')}
                 isNav
                 isActive={activeSection === 'settings-snapshots'}
@@ -62,32 +65,32 @@ const SettingsNav = ({ activeSection, setActiveSection, user, t }) => (
                     setActiveSection('settings-snapshots');
                     scrollToSection('settings-snapshots');
                 }}
-            />
-        )}
-        <SettingsItem
-            label={t('settings.support.label')}
-            isNav
-            isActive={activeSection === 'settings-support'}
-            onClick={() => {
+                />
+            )}
+            <SettingsItem
+                label={t('settings.support.label')}
+                isNav
+                isActive={activeSection === 'settings-support'}
+                onClick={() => {
                 setActiveSection('settings-support');
                 scrollToSection('settings-support');
-            }}
-        />
-        <SettingsItem
-            label={t('settings.account.label')}
-            isNav
-            isActive={activeSection === 'settings-account'}
-            onClick={() => {
+                }}
+            />
+            <SettingsItem
+                label={t('settings.account.label')}
+                isNav
+                isActive={activeSection === 'settings-account'}
+                onClick={() => {
                 setActiveSection('settings-account');
                 scrollToSection('settings-account');
-            }}
-        />
-    </div>
-);
+                }}
+            />
+        </div>
+    );
+};
 
 const SettingsPage = () => {
     const { t } = useTranslation();
-    const { user } = useContext(AuthContext);
 
     const sections = [
         { id: 'settings-preferences' },
@@ -132,7 +135,6 @@ const SettingsPage = () => {
                 <SettingsNav
                     activeSection={activeSection}
                     setActiveSection={setActiveSection}
-                    user={user}
                     t={t}
                 />
 
