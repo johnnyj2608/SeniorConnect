@@ -40,11 +40,9 @@ const HomeSnapshotCard = () => {
     <div className="card-full">
       <h2>{t('snapshots.label')}</h2>
       <div className="card-container">
-        {snapshots.length === 0 ? (
-        <p>{t('snapshots.no_recent_snapshots')}</p>
-        ) : (
+        {snapshots.length > 0 && (
           <>
-          <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${currentMonth()}`) })}</p>
+            <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${currentMonth()}`) })}</p>
             <ul className="snapshot-group">
               {snapshots.map(snapshot => (
                 <li 

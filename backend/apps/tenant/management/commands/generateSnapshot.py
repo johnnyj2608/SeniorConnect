@@ -11,6 +11,7 @@ class Command(BaseCommand):
     help = 'Generate all snapshot PDFs for all SADCs and upload to Supabase'
 
     def handle(self, *args, **options):
+        print(f"Generating snapshot at {timezone.now()}")
         sadcs = Sadc.objects.all()
         if not sadcs.exists():
             return
@@ -22,10 +23,9 @@ class Command(BaseCommand):
 
                     now = timezone.now()
                     date_str = now.strftime("%B_%Y").lower()
-                    filename = f"{snapshot_type}_{date_str}.pdf"
-                    file.name = filename
+                    file.name = f"{snapshot_type}_{date_str}.pdf"
 
-                    new_path = f"{sadc.id}/snapshots/{snapshot_type}/{filename}"
+                    new_path = f"{sadc.id}/snapshots/{snapshot_type}/{snapshot_type}_{date_str}"
                     public_url, error = upload_file_to_supabase(
                         file,
                         new_path,

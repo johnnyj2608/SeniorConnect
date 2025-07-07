@@ -45,13 +45,16 @@ def upload_file_to_supabase(file_obj, new_path, old_path, photo=False):
                 file_extension = "jpg"
         else:
             file_extension = file_obj.name.split('.')[-1].lower()
-            content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+            if file_extension == 'pdf':
+                content_type = 'application/pdf'
+            else:
+                content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
             file_obj.seek(0)
             content = file_obj.read()
 
         short_id = uuid4().hex[:4]
         file_path = f"{new_path}_{short_id}.{file_extension}"
-        
+
         response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
             file_path,
             content,
