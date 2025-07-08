@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = 'Generate all snapshot PDFs for all SADCs and upload to Supabase'
 
     def handle(self, *args, **options):
-        print(f"Generating snapshot at {timezone.now()}")
+        now = timezone.now()
         sadcs = Sadc.objects.all()
         if not sadcs.exists():
             return
@@ -29,7 +29,7 @@ class Command(BaseCommand):
                     )
 
                     if not error:
-                        snapshot_date = timezone.now().replace(day=1).date()
+                        snapshot_date = now.replace(day=1).date()
                         Snapshot.objects.create(
                             sadc=sadc,
                             date=snapshot_date,
@@ -37,4 +37,4 @@ class Command(BaseCommand):
                             file=public_url
                         )
                 except Exception as e:
-                    pass
+                    print(f"Failed to generate/upload snapshot for SADC {sadc.id}, type {snapshot_type}: {e}")
