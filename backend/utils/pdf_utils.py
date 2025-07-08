@@ -3,6 +3,7 @@ from calendar import monthrange, month_name
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
+from django.core.files.base import ContentFile
 from django.db.models import F, Q, Count
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
@@ -186,7 +187,10 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     )
 
     pdf_buffer.seek(0)
-    return pdf_buffer
+    file_name = f"{title}_snapshot_{date.today().strftime('%Y%m%d')}.pdf"
+    file = ContentFile(pdf_buffer.read(), name=file_name)
+
+    return file
 
 def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
     if y < 35:
@@ -356,6 +360,8 @@ def classify_enrollment(member, mltc_name):
 def generateSnapshot(sadc, data, month, year, title):
     buffer = BytesIO()
     c = NumberedCanvas(buffer, pagesize=letter)
+    pdf_title = f"{title.capitalize()} Snapshot {month_name[month]} {year}"
+    c.setTitle(pdf_title)
     width, height = letter
 
     y = drawSadcHeader(c, title, width, height, sadc, month, year)

@@ -21,11 +21,7 @@ class Command(BaseCommand):
                 try:
                     file = generateSnapshotPdf(sadc.id, snapshot_type)
 
-                    now = timezone.now()
-                    date_str = now.strftime("%B_%Y").lower()
-                    file.name = f"{snapshot_type}_{date_str}.pdf"
-
-                    new_path = f"{sadc.id}/snapshots/{snapshot_type}/{snapshot_type}_{date_str}"
+                    new_path = f"{sadc.id}/snapshots/{snapshot_type}/{file.name}"
                     public_url, error = upload_file_to_supabase(
                         file,
                         new_path,
@@ -33,7 +29,7 @@ class Command(BaseCommand):
                     )
 
                     if not error:
-                        snapshot_date = now.replace(day=1).date()
+                        snapshot_date = timezone.now().replace(day=1).date()
                         Snapshot.objects.create(
                             sadc=sadc,
                             date=snapshot_date,
