@@ -8,7 +8,6 @@ import SettingsAccount from '../components/settingsContent/SettingsAccount';
 import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
 import SettingsPreferences from '../components/settingsContent/SettingsPreferences';
 import SettingsData from '../components/settingsContent/SettingsData';
-import SettingsSnapshots from '../components/settingsContent/SettingsSnapshots';
 import SettingsSupport from '../components/settingsContent/SettingsSupport';
 import SettingsItem from '../components/items/SettingsItem';
 
@@ -56,17 +55,6 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 scrollToSection('settings-data');
                 }}
             />
-            {user?.view_snapshots && (
-                <SettingsItem
-                label={t('snapshots.label')}
-                isNav
-                isActive={activeSection === 'settings-snapshots'}
-                onClick={() => {
-                    setActiveSection('settings-snapshots');
-                    scrollToSection('settings-snapshots');
-                }}
-                />
-            )}
             <SettingsItem
                 label={t('settings.support.label')}
                 isNav
@@ -96,7 +84,6 @@ const SettingsPage = () => {
         { id: 'settings-preferences' },
         { id: 'settings-admin' },
         { id: 'settings-data' },
-        { id: 'settings-snapshots' },
         { id: 'settings-support' },
         { id: 'settings-account' },
     ];
@@ -142,7 +129,6 @@ const SettingsPage = () => {
                     <SettingsPreferences />
                     <SettingsAdmin onEdit={handleModalOpen}/>
                     <SettingsData onEdit={handleModalOpen} />
-                    <SettingsSnapshots />
                     <SettingsSupport />
                     <SettingsAccount />
                 </div>
