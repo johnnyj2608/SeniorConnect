@@ -22,6 +22,9 @@ const useFilteredReports = (reportType, reportFilter) => {
         } else if (reportType === 'audit_log') {
             endpoint = 'audits';
             api = 'audit';
+         } else if (reportType === 'snapshots') {
+            endpoint = 'snapshots';
+            api = 'tenant';
         } else {
             return;
         }

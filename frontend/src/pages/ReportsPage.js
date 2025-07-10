@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
+import { AuthContext } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
 import ReportAssessmentsTable from '../components/reportTables/ReportAssessmentsTable';
 import ReportAuditsTable from '../components/reportTables/ReportAuditsTable';
 import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
+import ReportSnapshotsTable from '../components/reportTables/ReportSnapshotsTable';
 import useFilteredReports from '../hooks/useFilteredReports';
-
-const reportTypes = [
-    'absences', 
-    'assessments',
-    'audit_log', 
-    'enrollments',
-];
 
 const reportFilters = {
     absences: [
@@ -34,11 +30,22 @@ const reportFilters = {
         'update', 
         'delete'
     ],
+    snapshots: [
+        'members',
+        'birthdays',
+        'absences',
+        'enrollments',
+    ],
 };
 
 const ReportsPage = () => {
     const { t } = useTranslation();
-    const [reportType, setReportType] = useState('absences');
+    const { user } = useContext(AuthContext);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const typeQueryParam = queryParams.get('type');
+
+    const [reportType, setReportType] = useState(typeQueryParam || 'absences');
     const [reportFilter, setReportFilter] = useState('');
 
     const {
@@ -59,10 +66,23 @@ const ReportsPage = () => {
                 return <ReportAuditsTable key={currentPage} report={report} />;
             case 'assessments':
                 return <ReportAssessmentsTable key={currentPage} report={report} />;
+            case 'snapshots':
+                return <ReportSnapshotsTable key={currentPage} report={report} />;
             default:
                 return null;
         }
     };
+
+    const reportTypes = [
+        'absences', 
+        'assessments',
+        'audit_log', 
+        'enrollments',
+    ];
+
+    if (user?.is_org_admin || user?.view_snapshots) {
+        reportTypes.push('snapshots');
+    }
 
     useEffect(() => {
         setReportFilter('');

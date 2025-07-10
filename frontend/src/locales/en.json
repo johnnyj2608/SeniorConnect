@@ -253,6 +253,13 @@
         "assessments": {
             "label": "Assessments"
         },
+        "snapshots": {
+            "label": "Snapshots",
+            "members": "Members",
+            "birthdays": "Birthdays",
+            "absences": "Absences",
+            "enrollments": "Enrollments"
+        },
         "table": {
             "member": "Member",
             "status": "Status",
@@ -264,7 +271,10 @@
             "action": "Action",
             "date": "Date",
             "user": "Staff",
-            "time": "Time"
+            "time": "Time",
+            "type": "Type",
+            "size": "Size",
+            "open_or_save": "Open or Save"
         }
     },
     "settings": {

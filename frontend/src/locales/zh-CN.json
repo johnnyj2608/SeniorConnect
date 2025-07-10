@@ -253,6 +253,13 @@
         "assessments": {
             "label": "评估"
         },
+        "snapshots": {
+            "label": "快照",
+            "members": "会员",
+            "birthdays": "生日",
+            "absences": "缺席",
+            "enrollments": "注册人数"
+        },
         "table": {
             "member": "成员",
             "status": "状态",
@@ -264,7 +271,10 @@
             "action": "操作",
             "date": "日期",
             "user": "用户",
-            "time": "时间"
+            "time": "时间",
+            "type": "类型",
+            "size": "页数",
+            "open_or_save": "打开或保存"
         }
     },
     "settings": {
