@@ -197,7 +197,7 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     file_name = f"{title}_snapshot_{date.today().strftime('%Y%m%d')}.pdf"
     file = ContentFile(pdf_buffer.read(), name=file_name)
 
-    return file, pages
+    return file, file_name, pages
 
 def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
     if y < 35:

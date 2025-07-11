@@ -21,7 +21,7 @@ const ReportSnapshotsTable = ({ report }) => {
                 <td>{formatDate(entry.date)}</td>
                 <td> {t(`reports.snapshots.${entry.type}`)}</td>
                 <td>{entry.pages} {entry.pages === 1 ? 'Page' : 'Pages'}</td>
-                <td><OpenSaveButtons file={entry.file} /></td>
+                <td><OpenSaveButtons file={entry.file} name={entry.name} /></td>
             </tr>
             ))}
         </tbody>

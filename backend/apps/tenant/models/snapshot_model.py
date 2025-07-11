@@ -19,6 +19,7 @@ class Snapshot(models.Model):
     date = models.DateField()
     type = models.CharField(max_length=20, choices=SNAPSHOT_TYPES)
     file = models.URLField()
+    name = models.CharField(max_length=50)
     pages = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
