@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 from django.db.models import F, Q, Count
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
+from PyPDF2 import PdfReader
 
 from ..apps.tenant.models.sadc_model import Sadc
 from ..apps.tenant.models.mltc_model import Mltc
@@ -187,10 +188,16 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     )
 
     pdf_buffer.seek(0)
+
+    reader = PdfReader(pdf_buffer)
+    pages = len(reader.pages)
+
+    pdf_buffer.seek(0)
+
     file_name = f"{title}_snapshot_{date.today().strftime('%Y%m%d')}.pdf"
     file = ContentFile(pdf_buffer.read(), name=file_name)
 
-    return file
+    return file, pages
 
 def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
     if y < 35:

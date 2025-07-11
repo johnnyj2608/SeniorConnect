@@ -19,7 +19,7 @@ const ReportSnapshotsTable = ({ report }) => {
             <tr key={entry.id}>
                 <td>{formatDate(entry.date)}</td>
                 <td> {t(`reports.snapshots.${entry.type}`)}</td>
-                <td>X Pages</td>
+                <td>{entry.pages} {entry.pages === 1 ? 'Page' : 'Pages'}</td>
                 <td>Open or Save Icons</td>   
             </tr>
             ))}

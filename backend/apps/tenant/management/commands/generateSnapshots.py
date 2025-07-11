@@ -19,7 +19,7 @@ class Command(BaseCommand):
         for sadc in sadcs:
             for snapshot_type in SNAPSHOT_TYPES:
                 try:
-                    file = generateSnapshotPdf(sadc.id, snapshot_type)
+                    file, pages = generateSnapshotPdf(sadc.id, snapshot_type)
 
                     new_path = f"{sadc.id}/snapshots/{snapshot_type}/{file.name}"
                     public_url, error = upload_file_to_supabase(
@@ -34,7 +34,8 @@ class Command(BaseCommand):
                             sadc=sadc,
                             date=snapshot_date,
                             type=snapshot_type,
-                            file=public_url
+                            file=public_url,
+                            pages=pages,
                         )
                 except Exception as e:
                     print(f"Failed to generate/upload snapshot for SADC {sadc.id}, type {snapshot_type}: {e}")
