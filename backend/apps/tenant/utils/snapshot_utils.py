@@ -8,6 +8,9 @@ from ..serializers.snapshot_serializers import SnapshotSerializer
 
 def getSnapshotList(request):
     snapshots = Snapshot.objects.filter(sadc=request.user.sadc)
+    filter_param = request.GET.get('filter')
+    if filter_param:
+        snapshots = snapshots.filter(type__iexact=filter_param)
     paginator = PageNumberPagination()
     result_page = paginator.paginate_queryset(snapshots, request)
 
