@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import { ReactComponent as FileIcon } from '../../assets/file.svg';
-import viewFile from '../../utils/viewFile';
+import { openFile } from '../../utils/fileUtils';
 
 const FileItem = ({ file }) => {
 
     const handleClick = () => {
-        if (file.file) viewFile(file.file);
+        if (file.file) openFile(file.file);
     };
 
     return (

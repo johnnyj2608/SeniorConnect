@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
-import viewFile from '../../utils/viewFile';
+import { openFile } from '../../utils/fileUtils';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -48,7 +48,7 @@ const HomeSnapshotCard = () => {
                 <li 
                   key={snapshot.id}
                   className="home-item"
-                  onClick={() => viewFile(snapshot.file)}
+                  onClick={() => openFile(snapshot.file)}
                 >
                   {t(`snapshots.${snapshot.type}`)}
                 </li>

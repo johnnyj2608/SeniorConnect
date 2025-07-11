@@ -1696,6 +1696,7 @@ body.modal-open {
 .report-table th {
   padding-top: 0;
   background-color: var(--color-background);
+  white-space: nowrap;
 }
 
 .report-table tbody {
@@ -1722,6 +1723,14 @@ body.modal-open {
 
 .report-table tr.expanded + tr td {
   padding-top: 5px;
+}
+
+.open-save-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding-right: 30px;
 }
 
 /* --------------

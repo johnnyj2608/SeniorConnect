@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import MemberDetail from '../layout/MemberDetail';
 import { formatDate, formatStatus, formatTime } from '../../utils/formatUtils';
-import viewFile from '../../utils/viewFile';
+import { openFile } from '../../utils/fileUtils';
 
 const MemberAbsencesCard = ({ data, onEdit }) => {
 	const { t } = useTranslation();
@@ -73,7 +73,7 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 								{abs.file && (
 									<button 
 										className="action-button thin lg"
-										onClick={() => viewFile(abs.file)}
+										onClick={() => openFile(abs.file)}
 									>
 										{t('general.buttons.view_file')}
 									</button>

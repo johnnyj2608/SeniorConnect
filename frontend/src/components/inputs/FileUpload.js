@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import viewFile from '../../utils/viewFile';
+import { openFile } from '../../utils/fileUtils';
 
 const FileUpload = ({
     file,
@@ -78,7 +78,7 @@ const FileUpload = ({
                         {showViewButton && (
                              <button
                                 className="action-button thin"
-                                onClick={() => viewFile(file)}
+                                onClick={() => openFile(file)}
                                 disabled={disabled || !file}
                             >
                                 {t('general.buttons.view')}
