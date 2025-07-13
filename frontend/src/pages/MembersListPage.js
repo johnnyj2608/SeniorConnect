@@ -116,7 +116,7 @@ const MembersListPage = () => {
 
 			<div className="members-list-content content-padding">
 				{Object.entries(filteredMembers).map(([mltcName, memberList]) => (
-					<div key={mltcName}>
+					<div className="members-list-group" key={mltcName}>
 						<h3 className="section-title">
 							{mltcName === 'unknown' ? t('members.unknown') : mltcName}
 						</h3>

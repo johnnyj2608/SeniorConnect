@@ -669,6 +669,10 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-bottom: 20px;
 }
 
+.audit-group:last-of-type {
+  margin-bottom: 0;
+}
+
 .audit-group > h3 {
   color: var(--color-text-sub)
 }
@@ -810,15 +814,16 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 15px;
 }
 
-.members-list-content > * {
+.members-list-group {
   background-color: var(--color-content);
   border-radius: 8px;
   padding: 20px;
   border: 1px solid var(--color-border);
+  margin-bottom: 1rem;
 }
 
-.members-list-content > *:not(:last-child) {
-  margin-bottom: 1rem;
+.members-list-group:last-of-type {
+  margin-bottom: 0;
 }
 
 .members-list-item {
