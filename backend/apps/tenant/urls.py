@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
-    mltc_views,
     sadc_views,
+    mltc_views,
+    gift_views,
     snapshot_views,
 )
 from ...utils.pdf_utils import generateSnapshotPdf
@@ -13,6 +14,10 @@ urlpatterns = [
     # Mltc related paths
     path('mltcs/<str:pk>/', mltc_views.getMltc, name="mltc"),
     path('mltcs/', mltc_views.getMltcs, name="mltcs"),
+
+    # Mltc related paths
+    path('gifts/<str:pk>/', gift_views.getGift, name="gift"),
+    path('gifts/', gift_views.getGifts, name="gifts"),
 
     # Snapshot related paths
     path('snapshots/recent/', snapshot_views.getRecentSnapshotLogs, name='snapshots_recent'),

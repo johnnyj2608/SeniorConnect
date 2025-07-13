@@ -5,6 +5,7 @@ from .views import (
     contact_views,
     absence_views,
     file_views,
+    gifted_views,
 )
 
 urlpatterns = [
@@ -46,4 +47,8 @@ urlpatterns = [
     path('files/<str:pk>/<str:member_pk>/', file_views.fileDelete, name="file_delete"),
     path('files/<str:pk>/', file_views.getFile, name="file"),
     path('files/', file_views.getFiles, name="files"),
+
+    # Gift related paths
+    path('gifted/<str:pk>/', gifted_views.getGifted, name="gifted"),
+    path('gifteds/', gifted_views.getGifteds, name="gifteds"),
 ]
