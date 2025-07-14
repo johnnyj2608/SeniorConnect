@@ -226,7 +226,7 @@ def getUpcomingBirthdays(request):
 
 @member_access_pk
 def toggleMemberStatus(request, pk):
-    member = get_object_or_404(Member, id=pk)
+    member = get_object_or_404(Member.objects.select_related('sadc'), id=pk)
     member.toggle_active()
     return Response({"active": member.active}, status=status.HTTP_200_OK)
 
@@ -234,9 +234,9 @@ def toggleMemberStatus(request, pk):
 def getMemberProfile(request, pk):
     member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
 
-    absences = Absence.objects.filter(member=pk)
+    absences = Absence.objects.select_related('member').filter(member=pk)
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)
-    files = File.objects.filter(member=pk)
+    files = File.objects.select_related('member').filter(member=pk)
 
     return Response({
         'info': MemberSerializer(member).data,

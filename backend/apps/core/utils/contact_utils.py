@@ -19,7 +19,7 @@ def getContactDetail(request, pk):
 def createContact(request):
     data = request.data
     member_pks = data.getlist('members')
-    member = get_object_or_404(Member, id=member_pks[-1])
+    member = get_object_or_404(Member.objects.select_related('sadc'), id=member_pks[-1])
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
@@ -78,7 +78,7 @@ def searchContactList(request):
     name_query = request.query_params.get('name', '')
     member_pk = request.query_params.get('member_pk', None)
     
-    contacts = Contact.objects.all()
+    contacts = Contact.objects.prefetch_related('members').all()
 
     if name_query:
         contacts = contacts.filter(name__icontains=name_query)

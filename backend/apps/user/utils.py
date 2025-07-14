@@ -8,13 +8,13 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 
 def getUserList(request):
-    users = User.objects.filter(sadc=request.user.sadc)
+    users = User.objects.select_related('sadc').filter(sadc=request.user.sadc)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getUserDetail(request, pk):
     current_user = request.user
-    user = get_object_or_404(User, id=pk)
+    user = get_object_or_404(User.objects.select_related('sadc'), id=pk)
 
     if user.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -44,7 +44,7 @@ def createUser(request):
 
 def updateUser(request, pk):
     current_user = request.user
-    user = get_object_or_404(User, id=pk)
+    user = get_object_or_404(User.objects.select_related('sadc'), id=pk)
 
     if user.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -67,7 +67,7 @@ def updateUser(request, pk):
 
 def deleteUser(request, pk):
     current_user = request.user
-    user = get_object_or_404(User, id=pk)
+    user = get_object_or_404(User.objects.select_related('sadc'), id=pk)
 
     if user.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -83,7 +83,7 @@ def deleteUser(request, pk):
 
 def patchUser(request, pk):
     current_user = request.user
-    user = get_object_or_404(User, id=pk)
+    user = get_object_or_404(User.objects.select_related('sadc'), id=pk)
 
     if user.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)

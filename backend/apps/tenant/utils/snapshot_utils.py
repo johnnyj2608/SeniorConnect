@@ -7,7 +7,7 @@ from ..models.snapshot_model import Snapshot
 from ..serializers.snapshot_serializers import SnapshotSerializer
 
 def getSnapshotList(request):
-    snapshots = Snapshot.objects.filter(sadc=request.user.sadc)
+    snapshots = Snapshot.objects.select_related('sadc', 'mltc').filter(sadc=request.user.sadc)
     filter_param = request.GET.get('filter')
     if filter_param:
         snapshots = snapshots.filter(type__iexact=filter_param)
@@ -19,7 +19,7 @@ def getSnapshotList(request):
 
 def getSnapshotDetail(request, pk):
     current_user = request.user
-    snapshot = get_object_or_404(Snapshot, id=pk)
+    snapshot = get_object_or_404(Snapshot.objects.select_related('sadc', 'mltc'), id=pk)
 
     if snapshot.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -46,7 +46,7 @@ def createSnapshot(request):
 
 def updateSnapshot(request, pk):
     data = request.data
-    snapshot = get_object_or_404(Snapshot, id=pk)
+    snapshot = get_object_or_404(Snapshot.objects.select_related('sadc', 'mltc'), id=pk)
     serializer = SnapshotSerializer(instance=snapshot, data=data)
 
     try:
@@ -60,7 +60,7 @@ def updateSnapshot(request, pk):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteSnapshot(request, pk):
-    snapshot = get_object_or_404(Snapshot, id=pk)
+    snapshot = get_object_or_404(Snapshot.objects.select_related('sadc', 'mltc'), id=pk)
     snapshot.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -68,7 +68,7 @@ def getRecentSnapshots(request):
     current_user = request.user
     now = timezone.now()
     
-    snapshots = Snapshot.objects.filter(
+    snapshots = Snapshot.objects.select_related('sadc', 'mltc').filter(
         sadc=current_user.sadc,
         date__year=now.year,
         date__month=now.month

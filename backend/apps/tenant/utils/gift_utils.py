@@ -5,7 +5,7 @@ from ..models.gift_model import Gift
 from ..serializers.gift_serializers import GiftSerializer
 
 def getGiftList(request):
-    gifts = Gift.objects.filter(sadc=request.user.sadc)
+    gifts = Gift.objects.select_related('sadc', 'mltc').filter(sadc=request.user.sadc)
 
     user = request.user
     if not (user.is_superuser or user.is_org_admin):
@@ -16,7 +16,7 @@ def getGiftList(request):
 
 def getGiftDetail(request, pk):
     current_user = request.user
-    gift = get_object_or_404(Gift, id=pk)
+    gift = get_object_or_404(Gift.objects.select_related('sadc', 'mltc'), id=pk)
 
     if gift.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -48,7 +48,7 @@ def createGift(request):
 
 def updateGift(request, pk):
     current_user = request.user
-    gift = get_object_or_404(Gift, id=pk)
+    gift = get_object_or_404(Gift.objects.select_related('sadc', 'mltc'), id=pk)
 
     if gift.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -72,7 +72,7 @@ def updateGift(request, pk):
 
 def deleteGift(request, pk):
     current_user = request.user
-    gift = get_object_or_404(Gift, id=pk)
+    gift = get_object_or_404(Gift.objects.select_related('sadc', 'mltc'), id=pk)
 
     if gift.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
