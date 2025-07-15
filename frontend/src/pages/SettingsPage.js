@@ -26,15 +26,6 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
 
     return (
         <div className="settings-nav">
-            <SettingsItem
-                label={t('settings.preferences.label')}
-                isNav
-                isActive={activeSection === 'settings-preferences'}
-                onClick={() => {
-                setActiveSection('settings-preferences');
-                scrollToSection('settings-preferences');
-                }}
-            />
             {user?.is_org_admin && (
                 <SettingsItem
                 label={t('settings.admin.label')}
@@ -46,6 +37,15 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 }}
                 />
             )}
+            <SettingsItem
+                label={t('settings.preferences.label')}
+                isNav
+                isActive={activeSection === 'settings-preferences'}
+                onClick={() => {
+                setActiveSection('settings-preferences');
+                scrollToSection('settings-preferences');
+                }}
+            />
             <SettingsItem
                 label={t('settings.data.label')}
                 isNav
@@ -81,8 +81,8 @@ const SettingsPage = () => {
     const { t } = useTranslation();
 
     const sections = [
-        { id: 'settings-preferences' },
         { id: 'settings-admin' },
+        { id: 'settings-preferences' },
         { id: 'settings-data' },
         { id: 'settings-support' },
         { id: 'settings-account' },
@@ -126,8 +126,8 @@ const SettingsPage = () => {
                 />
 
                 <div className="settings-content">
-                    <SettingsPreferences />
                     <SettingsAdmin onEdit={handleModalOpen}/>
+                    <SettingsPreferences />
                     <SettingsData onEdit={handleModalOpen} />
                     <SettingsSupport />
                     <SettingsAccount />
