@@ -28,4 +28,4 @@ class Snapshot(models.Model):
         ordering = ['-date']
         
     def __str__(self):
-        return f"{self.sadc} - {self.snapshot_type} - {self.timestamp}"
+        return f"{self.sadc} - {self.type} - {self.date}"
