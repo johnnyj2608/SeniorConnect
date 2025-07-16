@@ -4,11 +4,11 @@ import { AuthContext } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
-import ReportAbsencesTable from '../components/reportTables/ReportAbsencesTable';
-import ReportAssessmentsTable from '../components/reportTables/ReportAssessmentsTable';
-import ReportAuditsTable from '../components/reportTables/ReportAuditsTable';
-import ReportEnrollmentsTable from '../components/reportTables/ReportEnrollmentsTable';
-import ReportSnapshotsTable from '../components/reportTables/ReportSnapshotsTable';
+import ReportAbsencesTable from '../components/tables/ReportAbsencesTable';
+import ReportAssessmentsTable from '../components/tables/ReportAssessmentsTable';
+import ReportAuditsTable from '../components/tables/ReportAuditsTable';
+import ReportEnrollmentsTable from '../components/tables/ReportEnrollmentsTable';
+import ReportSnapshotsTable from '../components/tables/ReportSnapshotsTable';
 import useFilteredReports from '../hooks/useFilteredReports';
 
 const reportFilters = {

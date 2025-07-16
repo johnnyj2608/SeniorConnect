@@ -4,11 +4,11 @@ import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
 import useNavObserver from '../hooks/useNavObserver';
-import SettingsAccount from '../components/settingsContent/SettingsAccount';
-import SettingsAdmin from '../components/settingsContent/SettingsAdmin';
-import SettingsPreferences from '../components/settingsContent/SettingsPreferences';
-import SettingsData from '../components/settingsContent/SettingsData';
-import SettingsSupport from '../components/settingsContent/SettingsSupport';
+import SettingsAccount from '../components/settings/SettingsAccount';
+import SettingsAdmin from '../components/settings/SettingsAdmin';
+import SettingsPreferences from '../components/settings/SettingsPreferences';
+import SettingsData from '../components/settings/SettingsData';
+import SettingsSupport from '../components/settings/SettingsSupport';
 import SettingsItem from '../components/items/SettingsItem';
 
 const scrollToSection = (id) => {

@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
-import MemberInfoCard from '../components/memberCards/MemberInfoCard';
-import MemberAuthCard from '../components/memberCards/MemberAuthCard';
-import MemberContactsCard from '../components/memberCards/MemberContactsCard';
-import MemberAbsencesCard from '../components/memberCards/MemberAbsencesCard';
-import MemberFilesCard from '../components/memberCards/MemberFilesCard';
-import MemberPhotoCard from '../components/memberCards/MemberPhotoCard';
+import MemberInfoCard from '../components/cards/MemberInfoCard';
+import MemberAuthCard from '../components/cards/MemberAuthCard';
+import MemberContactsCard from '../components/cards/MemberContactsCard';
+import MemberAbsencesCard from '../components/cards/MemberAbsencesCard';
+import MemberFilesCard from '../components/cards/MemberFilesCard';
+import MemberPhotoCard from '../components/cards/MemberPhotoCard';
 import MemberStatusBanner from '../components/layout/StatusBanner';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import MemberPhotoCard from '../memberCards/MemberPhotoCard';
+import MemberPhotoCard from '../cards/MemberPhotoCard';
 import { formatDate } from '../../utils/formatUtils';
 
 const SettingsDeletedModal = ({ data, activeTab }) => {
