@@ -227,6 +227,12 @@
             "date": "日期",
             "drop_to_upload": "拖放文件进行上传",
             "no_files": "未上传任何文件"
+        },
+        "gifts": {
+            "label": "礼品",
+            "name": "名称",
+            "expires_at": "到期",
+            "no_gifts": "所有可用的礼品已收到"
         }
     },
     "reports": {

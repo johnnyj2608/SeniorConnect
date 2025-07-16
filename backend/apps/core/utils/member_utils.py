@@ -234,8 +234,8 @@ def getMemberProfile(request, pk):
     member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
 
     absences = Absence.objects.select_related('member').filter(member=pk)
-    contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)
-    files = File.objects.select_related('member').filter(member=pk)
+    contacts = Contact.objects.filter(members__id=pk)
+    files = File.objects.filter(member=pk)
 
     absences_data = []
     for absence in absences:

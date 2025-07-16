@@ -29,8 +29,8 @@ const HomeAbsenceCard = () => {
     <div className="card-full">
       <h2>{t('snapshots.absences')}</h2>
       <div className="card-container">
-        <div className="absence-container">
-          <div className="absence-list">
+        <div className="card-list-container">
+          <div className="card-list">
             <h3>{t('home.leaving_soon')}</h3>
             <ul>
               {leaving.map(absence => (
@@ -38,7 +38,7 @@ const HomeAbsenceCard = () => {
               ))}
             </ul>
           </div>
-          <div className="absence-list">
+          <div className="card-list">
             <h3>{t('home.returning_soon')}</h3>
             <ul>
               {returning.map(absence => (

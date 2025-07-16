@@ -28,12 +28,14 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 			<h2>{t('member.absences.label')}</h2>
 			<div className="card-container">
 				<EditButton onClick={handleEdit} />
-				{activeAbsences.length > 0 ? (
-				<ul className="absence-list">
+				{activeAbsences.length === 0 ? (
+					<p>{t('member.absences.no_absences')}</p>
+				) : (
+					<ul className="card-list">
 					{activeAbsences.map((abs, idx) => {
 						const isAssessment = abs.absence_type === 'assessment';
 						return (
-							<li key={idx} className="absence-item">
+							<li key={idx} className="card-list-item">
 								<MemberDetail
 									label={t('member.absences.label')}
 									value={t(`member.absences.${abs.absence_type}`, abs.absence_type)}
@@ -82,8 +84,6 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 						)
 					})}
 				</ul>
-				) : (
-				<p>{t('member.absences.no_absences')}</p>
 				)}
 			</div>
 		</div>

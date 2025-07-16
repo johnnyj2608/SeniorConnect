@@ -16,7 +16,9 @@ const MemberFilesCard = ({ data, onEdit }) => {
             <h2>{t('member.files.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
-                {files.length > 0 ? (
+                {files.length === 0 ? (
+                    <p>{t('member.files.no_files')}</p>
+                ) : (
                     <ul className="file-list">
                         {files.map((file) => (
                             <li key={file.id}>
@@ -24,8 +26,6 @@ const MemberFilesCard = ({ data, onEdit }) => {
                             </li>
                         ))}
                     </ul>
-                ) : (
-                    <p>{t('member.files.no_files')}</p>
                 )}
             </div>
         </div>

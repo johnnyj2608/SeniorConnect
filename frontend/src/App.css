@@ -648,19 +648,19 @@ input[type="number"]::-webkit-inner-spin-button {
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-.absence-container {
+.card-list-container {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 2rem;
 }
 
-.absence-list {
+.card-list {
   flex: 1 1 45%;
   min-width: 235px;
 }
 
-.absence-list > h3 {
+.card-list > h3 {
   padding: 0 5px;
   color: var(--color-text-sub)
 }
@@ -1153,7 +1153,7 @@ input[type="number"]::-webkit-inner-spin-button {
   text-transform: uppercase;
 }
 
-.absence-item:not(:last-child) {
+.card-list-item:not(:last-child) {
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
   border-bottom: 1px solid var(--color-border);

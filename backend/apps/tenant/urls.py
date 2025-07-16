@@ -16,6 +16,7 @@ urlpatterns = [
     path('mltcs/', mltc_views.getMltcs, name="mltcs"),
 
     # Mltc related paths
+    path('gifts/active/', gift_views.getActiveGifts, name="active_gifts"),
     path('gifts/<str:pk>/', gift_views.getGift, name="gift"),
     path('gifts/', gift_views.getGifts, name="gifts"),
 

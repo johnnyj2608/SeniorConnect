@@ -227,6 +227,12 @@
             "date": "Date",
             "drop_to_upload": "Drop file to upload",
             "no_files": "No files uploaded"
+        },
+        "gifts": {
+            "label": "Gifts",
+            "name": "Name",
+            "expires_at": "Expires",
+            "no_gifts": "All eligible gifts received"
         }
     },
     "reports": {

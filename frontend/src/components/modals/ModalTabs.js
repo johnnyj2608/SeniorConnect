@@ -71,6 +71,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                 return { 
                     heading: item.name || t('members.unknown'),
                     subheading: formatDate(item.expires_at) || '',
+                    inactive: item.expires_at && new Date(item.expires_at) < today,
                 };
             case 'deleted':
                 return {

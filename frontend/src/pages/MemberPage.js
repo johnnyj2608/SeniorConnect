@@ -8,6 +8,7 @@ import MemberAuthCard from '../components/cards/MemberAuthCard';
 import MemberContactsCard from '../components/cards/MemberContactsCard';
 import MemberAbsencesCard from '../components/cards/MemberAbsencesCard';
 import MemberFilesCard from '../components/cards/MemberFilesCard';
+import MemberGiftedCard from '../components/cards/MemberGiftedCard';
 import MemberPhotoCard from '../components/cards/MemberPhotoCard';
 import MemberStatusBanner from '../components/layout/StatusBanner';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
@@ -128,6 +129,11 @@ const MemberPage = () => {
           <div className="member-row">
             <MemberContactsCard data={memberData.contacts} onEdit={handleModalOpen} />
             <MemberAbsencesCard data={memberData.absences} onEdit={handleModalOpen} />
+            <MemberGiftedCard 
+              birthDate={memberData.info.birth_date} 
+              mltc={memberData.auth.mltc} 
+              onEdit={handleModalOpen} 
+            />
           </div>
           <div className="member-row">
             <MemberFilesCard data={memberData.files} onEdit={handleModalOpen} />
