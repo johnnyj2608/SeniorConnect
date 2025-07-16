@@ -9,11 +9,13 @@ export const SadcProvider = ({ children }) => {
     const fetchSadc = useCallback(async () => {
         try {
             const response = await fetchWithRefresh('/tenant/sadcs/');
-            if (!response.ok) return;
+            if (!response.ok) return [];
             const data = await response.json();
             setSadc(data);
+            return data;
         } catch (err) {
             console.error(err);
+            return [];
         }
     }, []);
 

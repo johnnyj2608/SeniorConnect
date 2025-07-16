@@ -9,11 +9,13 @@ export const GiftProvider = ({ children }) => {
     const fetchGifts = useCallback(async () => {
         try {
             const response = await fetchWithRefresh('/tenant/gifts/');
-            if (!response.ok) return;
+            if (!response.ok) return [];
             const data = await response.json();
             setGifts(data);
+            return data;
         } catch (err) {
             console.error(err);
+            return [];
         }
     }, []);
 

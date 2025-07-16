@@ -9,11 +9,13 @@ export const UserProvider = ({ children }) => {
     const fetchUsers = useCallback(async () => {
         try {
             const response = await fetchWithRefresh('/user/users/');
-            if (!response.ok) return;
+            if (!response.ok) return [];
             const data = await response.json();
             setUsers(data);
+            return data;
         } catch (err) {
             console.error(err);
+            return [];
         }
     }, []);
 

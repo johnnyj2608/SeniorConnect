@@ -9,11 +9,13 @@ export const MltcProvider = ({ children }) => {
     const fetchMltcs = useCallback(async () => {
         try {
             const response = await fetchWithRefresh('/tenant/mltcs/');
-            if (!response.ok) return;
+            if (!response.ok) return [];
             const data = await response.json();
             setMltcs(data);
+            return data;
         } catch (err) {
             console.error(err);
+            return [];
         }
     }, []);
 
