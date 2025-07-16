@@ -12,6 +12,8 @@ class Mltc(models.Model):
     class Meta:
         ordering = ['active',  'name']
         unique_together = ('sadc', 'name')
+        verbose_name = "MLTC"
+        verbose_name_plural = "MLTCs"
 
     def __str__(self):
         return self.name

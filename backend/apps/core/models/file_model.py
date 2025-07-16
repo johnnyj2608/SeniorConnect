@@ -10,6 +10,8 @@ class File(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = "File"
+        verbose_name_plural = "Files"
 
     def __str__(self):
         return f"File: {self.name}"

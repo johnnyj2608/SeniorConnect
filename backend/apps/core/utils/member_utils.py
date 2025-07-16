@@ -16,7 +16,7 @@ from ..serializers.member_serializers import (
     MemberBirthdaySerializer,
     MemberDeletedSerializer,
 )
-from ..serializers.absence_serializers import Absence, AbsenceSerializer
+from ..serializers.absence_serializers import Absence, AbsenceSerializer, AssessmentSerializer
 from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer, AuthorizationSerializer
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
@@ -97,7 +97,7 @@ def createMember(request):
 @transaction.atomic
 def updateMember(request, pk):
     data = request.data.copy()
-    member = get_object_or_404(Member.objects.select_related('active_auth', 'active_auth__mltc'), id=pk)
+    member = get_object_or_404(Member, id=pk)
     public_url = None
     sadc = request.user.sadc
     data['sadc'] = sadc.id
@@ -164,7 +164,6 @@ def getDeletedMembers(request):
     members = (
         request.accessible_members_qs
         .filter(deleted_at__isnull=False)
-        .select_related('active_auth', 'active_auth__mltc')
         .order_by('deleted_at')
     )
     serializer = MemberDeletedSerializer(members, many=True)
@@ -238,10 +237,17 @@ def getMemberProfile(request, pk):
     contacts = Contact.objects.prefetch_related('members').filter(members__id=pk)
     files = File.objects.select_related('member').filter(member=pk)
 
+    absences_data = []
+    for absence in absences:
+        if hasattr(absence, 'assessment'):
+            absences_data.append(AssessmentSerializer(absence.assessment).data)
+        else:
+            absences_data.append(AbsenceSerializer(absence).data)
+
     return Response({
         'info': MemberSerializer(member).data,
         'auth': AuthorizationWithServiceSerializer(member.active_auth).data if member.active_auth else None,
-        'absences': AbsenceSerializer(absences, many=True).data,
+        'absences': absences_data,
         'contacts': ContactSerializer(contacts, many=True).data,
         'files': FileSerializer(files, many=True).data
     }, status=status.HTTP_200_OK)

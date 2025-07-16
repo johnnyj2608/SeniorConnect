@@ -10,13 +10,13 @@ from ..access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getFileList(request):
-    files = File.objects.select_related('member').filter(member__in=request.accessible_members_qs)
+    files = File.objects.filter(member__in=request.accessible_members_qs)
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_fk
 def getFileDetail(request, pk):
-    file = get_object_or_404(File.objects.select_related('member'), id=pk)
+    file = get_object_or_404(File, id=pk)
     serializer = FileSerializer(file)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -66,7 +66,7 @@ def createFile(request):
 @transaction.atomic
 def updateFile(request, pk):
     data = request.data.copy()
-    file = get_object_or_404(File.objects.select_related('member'), id=pk)
+    file = get_object_or_404(File, id=pk)
     public_url = None
 
     try:
@@ -112,9 +112,3 @@ def deleteFile(request, pk, member_pk):
         delete_file_from_supabase(file_path)
     file.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
-@member_access_fk
-def getFileListByMember(request, member_pk):
-    files = File.objects.select_related('member').filter(member=member_pk)
-    serializer = FileSerializer(files, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)

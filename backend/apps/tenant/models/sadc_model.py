@@ -16,5 +16,9 @@ class Sadc(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "SADC"
+        verbose_name_plural = "SADCs"
+
     def __str__(self):
         return self.name

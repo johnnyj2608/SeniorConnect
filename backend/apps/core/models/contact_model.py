@@ -58,6 +58,8 @@ class Contact(models.Model):
 
     class Meta:
         ordering = ['contact_type']
+        verbose_name = "Contact"
+        verbose_name_plural = "Contacts"
 
     def clean(self):
         if self.contact_type == self.EMERGENCY and not self.relationship_type:

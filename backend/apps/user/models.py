@@ -46,6 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         ordering = ['is_org_admin', 'name']
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return f"{self.email}: {self.name}"

@@ -12,6 +12,8 @@ class Gifted(models.Model):
     class Meta:
         unique_together = ('gift', 'member')
         ordering = ['-received_at']
+        verbose_name = "Gifted"
+        verbose_name_plural = "Gifted"
 
     def __str__(self):
         return f"{self.member.full_name} received {self.gift.name} on {self.received_at.date()}"

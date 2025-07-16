@@ -19,7 +19,7 @@ def getContactDetail(request, pk):
 def createContact(request):
     data = request.data
     member_pks = data.getlist('members')
-    member = get_object_or_404(Member.objects.select_related('sadc'), id=member_pks[-1])
+    member = get_object_or_404(Member, id=member_pks[-1])
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
@@ -67,18 +67,12 @@ def deleteContact(request, pk, member_pk):
     
     return Response({'detail': 'Member association removed'}, status=status.HTTP_200_OK)
 
-@member_access_filter()
-def getContactListByMember(request, member_pk):
-    contacts = Contact.objects.prefetch_related('members').filter(members__id=member_pk)
-    serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
 def searchContactList(request):
     contact_type = request.query_params.get('contact_type', '')
     name_query = request.query_params.get('name', '')
     member_pk = request.query_params.get('member_pk', None)
     
-    contacts = Contact.objects.prefetch_related('members').all()
+    contacts = Contact.objects.all()
 
     if name_query:
         contacts = contacts.filter(name__icontains=name_query)

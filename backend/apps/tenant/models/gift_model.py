@@ -12,6 +12,8 @@ class Gift(models.Model):
 
     class Meta:
         ordering = ['expires_at', 'created_at']
+        verbose_name = "Gift"
+        verbose_name_plural = "Gifts"
 
     def __str__(self):
         return f"{self.name} ({self.mltc.name if self.mltc else 'All MLTCs'})"

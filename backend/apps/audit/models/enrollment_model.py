@@ -35,6 +35,8 @@ class Enrollment(models.Model):
 
     class Meta:
         ordering = ['-change_date', '-created_at']
+        verbose_name = "Enrollment"
+        verbose_name_plural = "Enrollments"
 
     def __str__(self):
         if self.change_type == self.ENROLLMENT:

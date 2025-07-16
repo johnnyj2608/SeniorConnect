@@ -6,7 +6,6 @@ from ..utils.contact_utils import (
     deleteContact,
     getContactList,
     createContact,
-    getContactListByMember,
     searchContactList,
 )
 

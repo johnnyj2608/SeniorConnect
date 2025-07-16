@@ -20,7 +20,7 @@ from ..access import member_access_filter, member_access_fk
 def getAuthorizationList(request):
     authorizations = (
         Authorization.objects
-        .select_related('mltc', 'member')
+        .select_related('mltc')
         .filter(member__in=request.accessible_members_qs)
     )
     serializer = AuthorizationSerializer(authorizations, many=True)
@@ -28,7 +28,7 @@ def getAuthorizationList(request):
 
 @member_access_fk
 def getAuthorizationDetail(request, pk):
-    authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
+    authorization = get_object_or_404(Authorization.objects.select_related('mltc'), id=pk)
     serializer = AuthorizationSerializer(authorization)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -105,7 +105,7 @@ def updateAuthorization(request, pk):
     if not member.active:
             data['active'] = False
 
-    authorization = get_object_or_404(Authorization.objects.select_related('mltc', 'member'), id=pk)
+    authorization = get_object_or_404(Authorization.objects.select_related('mltc'), id=pk)
     
     try:
         if 'file' in request.FILES:
@@ -180,7 +180,7 @@ def deleteAuthorization(request, pk, member_pk):
 def getAuthorizationListByMember(request, member_pk):
     authorizations = (
         Authorization.objects
-        .select_related('mltc', 'member')
+        .select_related('mltc')
         .prefetch_related('services')
         .filter(member=member_pk)
         .order_by('-active', '-start_date')

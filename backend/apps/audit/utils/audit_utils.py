@@ -25,7 +25,7 @@ def getAuditList(request):
 
 @member_access_fk
 def getAuditDetail(request, pk):
-    audit = get_object_or_404(AuditLog, id=pk)
+    audit = get_object_or_404(AuditLog.objects.select_related('user', 'content_type', 'member'), id=pk)
     serializer = AuditLogSerializer(audit)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

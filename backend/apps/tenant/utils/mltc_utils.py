@@ -5,7 +5,7 @@ from ..models.mltc_model import Mltc
 from ..serializers.mltc_serializers import MltcSerializer
 
 def getMltcList(request):
-    mltcs = Mltc.objects.select_related('sadc').filter(sadc=request.user.sadc)
+    mltcs = Mltc.objects.filter(sadc=request.user.sadc)
 
     user = request.user
     if not (user.is_superuser or user.is_org_admin):
@@ -16,7 +16,7 @@ def getMltcList(request):
 
 def getMltcDetail(request, pk):
     current_user = request.user
-    mltc = get_object_or_404(Mltc.objects.select_related('sadc'), id=pk)
+    mltc = get_object_or_404(Mltc, id=pk)
 
     if mltc.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -49,7 +49,7 @@ def createMltc(request):
 
 def updateMltc(request, pk):
     current_user = request.user
-    mltc = get_object_or_404(Mltc.objects.select_related('sadc'), id=pk)
+    mltc = get_object_or_404(Mltc, id=pk)
 
     if mltc.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
@@ -73,7 +73,7 @@ def updateMltc(request, pk):
 
 def deleteMltc(request, pk):
     current_user = request.user
-    mltc = get_object_or_404(Mltc.objects.select_related('sadc'), id=pk)
+    mltc = get_object_or_404(Mltc, id=pk)
 
     if mltc.sadc_id != current_user.sadc_id:
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)

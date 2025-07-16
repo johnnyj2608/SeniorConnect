@@ -5,7 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from ..models.absence_model import Absence
+from ..models.absence_model import Absence, Assessment
 from ..serializers.absence_serializers import (
     AbsenceSerializer, 
     AbsenceUpcomingSerializer, 
@@ -46,8 +46,12 @@ def getAbsenceList(request):
 
 @member_access_fk
 def getAbsenceDetail(request, pk):
-    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
-    serializer = AbsenceSerializer(absence)
+    try:
+        instance = Assessment.objects.select_related('member').get(id=pk)
+        serializer = AssessmentSerializer(instance)
+    except Assessment.DoesNotExist:
+        instance = get_object_or_404(Absence.objects.select_related('member'), id=pk)
+        serializer = AbsenceSerializer(instance)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_fk
@@ -60,30 +64,31 @@ def createAbsence(request):
     data.pop('file', None)
 
     member_id = data.get('member')
+    is_assessment = data.get('absence_type') == 'assessment'
+
+    serializer_class = AssessmentSerializer if is_assessment else AbsenceSerializer
 
     try:
-        serializer = AbsenceSerializer(data=data)
-
+        serializer = serializer_class(data=data)
         if serializer.is_valid():
-            absence = serializer.save()
+            instance = serializer.save()
 
             if file:
                 member_sadc = request.user.sadc.id
-                new_path = f"{member_sadc}/members/{member_id}/absences/{absence.id}"
+                new_path = f"{member_sadc}/members/{member_id}/absences/{instance.id}"
 
                 public_url, error = upload_file_to_supabase(
                     file, 
                     new_path,
-                    absence.file,
+                    instance.file,
                 )
-            
                 if error:
                     raise Exception(f"File upload failed: {error}")
-            
-            absence.file = public_url
-            absence.save()
 
-            serializer = AbsenceSerializer(absence)
+            instance.file = public_url
+            instance.save()
+
+            serializer = serializer_class(instance)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
@@ -100,36 +105,41 @@ def updateAbsence(request, pk):
     data = request.data.copy()
     public_url = None
 
-    member_id = data.get('member')
+    file = request.FILES.get('file')
+    data.pop('file', None)
 
-    absence = get_object_or_404(Absence.objects.select_related('member'), id=pk)
-    
+    member_id = data.get('member')
+    is_assessment = data.get('absence_type') == 'assessment'
+
+    model_class = Assessment if is_assessment else Absence
+    serializer_class = AssessmentSerializer if is_assessment else AbsenceSerializer
+
+    instance = get_object_or_404(model_class.objects.select_related('member'), id=pk)
+
     try:
-        if 'file' in request.FILES:
-            file = request.FILES['file']
+        if file:
             member_sadc = request.user.sadc.id
-            new_path = f"{member_sadc}/members/{member_id}/absences/{absence.id}"
+            new_path = f"{member_sadc}/members/{member_id}/absences/{instance.id}"
 
             public_url, error = upload_file_to_supabase(
                 file, 
                 new_path,
-                absence.file,
+                instance.file,
             )
 
             if error:
-                raise Exception(f"Photo upload failed: {error}")
-            
+                raise Exception(f"File upload failed: {error}")
+
             data['file'] = public_url
 
-        elif data.get('file') == '' and absence.file:
-            delete_file_from_supabase(absence.file)
+        elif data.get('file') == '' and instance.file:
+            delete_file_from_supabase(instance.file)
             data['file'] = None
 
-        serializer = AbsenceSerializer(instance=absence, data=data)
+        serializer = serializer_class(instance=instance, data=data)
         if serializer.is_valid():
-            absence = serializer.save()
-
-            serializer = AbsenceSerializer(absence)
+            updated_instance = serializer.save()
+            serializer = serializer_class(updated_instance)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -144,12 +154,6 @@ def deleteAbsence(request, pk, member_pk):
     absence = get_object_or_404(Absence, id=pk)
     absence.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
-@member_access_fk
-def getAbsenceListByMember(request, member_pk):
-    absences = Absence.objects.select_related('member').filter(member=member_pk)
-    serializer = AbsenceSerializer(absences, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_filter()
 def getUpcomingAbsences(request):
@@ -190,8 +194,8 @@ def getUpcomingAbsences(request):
 @member_access_filter()
 def getAssessmentList(request):
     assessments = (
-        Absence.objects
-        .filter(absence_type='assessment', member__in=request.accessible_members_qs)
+        Assessment.objects
+        .filter(member__in=request.accessible_members_qs)
         .select_related('member')
     )
 
@@ -206,9 +210,8 @@ def getUpcomingAssessments(request):
     in_7_days = today + timedelta(days=7)
 
     assessments = (
-        Absence.objects
+        Assessment.objects
         .filter(
-            absence_type='assessment',
             start_date__range=(today, in_7_days),
             member__in=request.accessible_members_qs,
             member__isnull=False

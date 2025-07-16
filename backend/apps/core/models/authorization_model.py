@@ -45,6 +45,8 @@ class AuthorizationService(models.Model):
 
     class Meta:
         unique_together = ('authorization', 'service_type')
+        verbose_name = "Authorization"
+        verbose_name_plural = "Authorizations"
 
     def __str__(self):
         return f"{self.service_type} for {self.authorization}"

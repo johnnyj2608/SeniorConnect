@@ -7,13 +7,13 @@ from ..access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getGiftedList(request):
-    gifted = Gifted.objects.select_related('member').filter(member__in=request.accessible_members_qs)
+    gifted = Gifted.objects.filter(member__in=request.accessible_members_qs)
     serializer = GiftedSerializer(gifted, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_fk
 def getGiftedDetail(request, pk):
-    gifted = get_object_or_404(Gifted.objects.select_related('member'), id=pk)
+    gifted = get_object_or_404(Gifted, id=pk)
     serializer = GiftedSerializer(gifted)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -35,7 +35,7 @@ def createGifted(request):
 @member_access_fk
 def updateGifted(request, pk):
     data = request.data
-    gifted = get_object_or_404(Gifted.objects.select_related('member'), id=pk)
+    gifted = get_object_or_404(Gifted, id=pk)
 
     serializer = GiftedSerializer(instance=gifted, data=data)
     try:
@@ -56,6 +56,6 @@ def deleteGifted(request, pk, member_pk):
 
 @member_access_fk
 def getGiftedListByMember(request, member_pk):
-    gifted = Gifted.objects.select_related('member').filter(member=member_pk)
+    gifted = Gifted.objects.filter(member=member_pk)
     serializer = GiftedSerializer(gifted, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

@@ -26,6 +26,8 @@ class Snapshot(models.Model):
     class Meta:
         unique_together = ('sadc', 'date', 'type')
         ordering = ['-date']
+        verbose_name = "Snapshot"
+        verbose_name_plural = "Snapshots"
         
     def __str__(self):
         return f"{self.sadc} - {self.type} - {self.date}"

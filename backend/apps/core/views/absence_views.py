@@ -6,7 +6,6 @@ from ..utils.absence_utils import (
     deleteAbsence,
     getAbsenceList,
     createAbsence,
-    getAbsenceListByMember,
     getUpcomingAbsences,
     getAssessmentList,
     getUpcomingAssessments,
@@ -34,11 +33,6 @@ def getAbsence(request, pk):
 def absenceDelete(request, pk, member_pk):
     if request.method == 'DELETE':
         return deleteAbsence(request, pk=pk, member_pk=member_pk)
-    
-@api_view(['GET'])
-def getAbsencesByMember(request, pk):
-    if request.method == 'GET':
-        return getAbsenceListByMember(request, member_pk=pk)
     
 @api_view(['GET'])
 def getAbsencesUpcoming(request):

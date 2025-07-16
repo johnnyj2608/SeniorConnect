@@ -6,7 +6,6 @@ from ..utils.file_utils import (
     deleteFile,
     getFileList,
     createFile,
-    getFileListByMember,
 )
 
 @api_view(['GET', 'POST'])
@@ -32,7 +31,7 @@ def getFile(request, pk):
 def fileDelete(request, pk, member_pk):
     if request.method == 'DELETE':
         return deleteFile(request, pk=pk, member_pk=member_pk)
-    
+
 @api_view(['GET'])
 def getFilesByMember(request, pk):
     if request.method == 'GET':

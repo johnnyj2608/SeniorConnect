@@ -61,6 +61,8 @@ class Member(models.Model):
 
     class Meta:
         ordering = ['sadc_member_id']
+        verbose_name = "Member"
+        verbose_name_plural = "Members"
 
     def __str__(self):
         return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"
