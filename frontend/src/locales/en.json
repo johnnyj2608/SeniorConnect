@@ -296,10 +296,17 @@
                 "can_view_snapshots": "Can view snapshots",
                 "cant_view_snapshots": "Can not view snapshots"
             },
-            "mltc": {
-                "label": "Mltc",
+            "mltcs": {
+                "label": "Mltcs",
                 "name": "Name",
                 "dx_codes": "DX Codes"
+            },
+            "gifts": {
+                "label": "Gifts",
+                "name": "Name",
+                "expires_at": "Expires",
+                "mltc": "MLTC",
+                "all_mltcs": "All MLTCs"
             },
             "sadc": {
                 "label": "Sadc",

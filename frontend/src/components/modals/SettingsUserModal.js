@@ -74,7 +74,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
       </div>
 
       <ListDetail
-        label={t('settings.admin.mltc.label')}
+        label={t('settings.admin.mltcs.label')}
         value={
           <CheckboxInput
             options={mltcs}

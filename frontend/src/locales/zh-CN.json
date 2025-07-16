@@ -296,10 +296,17 @@
                 "can_view_snapshots": "可以查看快照",
                 "cant_view_snapshots": "无法查看快照"
             },
-            "mltc": {
+            "mltcs": {
                 "label": "老人中心保险",
                 "name": "名称",
                 "dx_codes": "诊断代码"
+            },
+            "gifts": {
+                "label": "礼品",
+                "name": "名称",
+                "expires_at": "到期",
+                "mltc": "老人中心保险",
+                "all_mltcs": "所有老人中心保险"
             },
             "sadc": {
                 "label": "老人中心",

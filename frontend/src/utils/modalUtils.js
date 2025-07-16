@@ -172,6 +172,15 @@ const getNewTab = (type, localData, id) => {
                 edited: true,
             };
         }
+        case 'gifts': {
+            return {
+                id: 'new',
+                name: '',
+                expires_at: '',
+                mltc: '',
+                edited: true,
+            };
+        }
         default:
             return null;
     }

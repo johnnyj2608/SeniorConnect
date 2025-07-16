@@ -67,9 +67,10 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     heading: item.name || t('members.unknown'),
                     inactive: item.active === false,
                 };
-            case 'languages':
+            case 'gifts':
                 return { 
                     heading: item.name || t('members.unknown'),
+                    subheading: formatDate(item.expires_at) || '',
                 };
             case 'deleted':
                 return {

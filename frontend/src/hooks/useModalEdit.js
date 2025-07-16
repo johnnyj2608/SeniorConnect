@@ -20,8 +20,8 @@ import { SadcContext } from '../context/SadcContext';
 
 function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
-    const { mltcs, refreshMltc } = useContext(MltcContext);
-    const { sadc, refreshSadc } = useContext(SadcContext);
+    const { mltcs } = useContext(MltcContext);
+    const { sadc } = useContext(SadcContext);
     const { id, type } = data;
 
     const effectiveData = useMemo(() => {
@@ -49,14 +49,6 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
             document.body.classList.remove('modal-open');
         };
     }, []);
-
-    useEffect(() => {
-        if (type === 'users' || type === 'authorizations') refreshMltc();
-    }, [type, refreshMltc]);
-
-    useEffect(() => {
-        if (type === 'sadcs' || type === 'attendance' || type === 'info') refreshSadc();
-    }, [type, refreshSadc]);
 
     useEffect(() => {
         if (type === 'sadcs') setLocalData({ ...sadc });
@@ -268,17 +260,24 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
             case 'users':
                 requiredFields = ['name', 'email'];
-                if (!validateRequiredFields('settings.data.users', updatedData, requiredFields)) return;
+                if (!validateRequiredFields('settings.admin.users', updatedData, requiredFields)) return;
 
                 saveDataTabs(updatedData, 'users', undefined, 'user');
                 break;
 
             case 'mltcs':
                 requiredFields = ['name'];
-                if (!validateRequiredFields('settings.data.mltc', updatedData, requiredFields)) return;
+                if (!validateRequiredFields('settings.admin.mltc', updatedData, requiredFields)) return;
                 if (!confirmMltcDeletion(updatedData)) return;
 
                 saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
+                break;
+
+            case 'gifts':
+                requiredFields = ['name'];
+                if (!validateRequiredFields('settings.admin.gifts', updatedData, requiredFields)) return;
+
+                saveDataTabs(updatedData, 'gifts', undefined, 'tenant');
                 break;
 
             case 'sadcs':

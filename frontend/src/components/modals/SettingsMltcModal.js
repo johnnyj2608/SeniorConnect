@@ -14,7 +14,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
     return (
         <>
             <div className="modal-header">
-                <h3>{t('general.edit')}{t('settings.admin.mltc.label')}</h3>
+                <h3>{t('general.edit')}{t('settings.admin.mltcs.label')}</h3>
                 <label>
                     <input
                         type="checkbox"
@@ -27,7 +27,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
             </div>
 
             <TextInput
-                label={t('settings.admin.mltc.name')}
+                label={t('settings.admin.mltcs.name')}
                 value={current.name}
                 onChange={handleChange('name')}
                 onLimitExceeded={handleLimit('name', limitIndex)}
@@ -35,7 +35,7 @@ const SettingsMltcModal = ({ data, handleChange, activeTab, handleLimit }) => {
             />
 
             <ListDetail
-                label={t('settings.admin.mltc.dx_codes')}
+                label={t('settings.admin.mltcs.dx_codes')}
                 value={
                     <ListInput
                     data={current.dx_codes || []}

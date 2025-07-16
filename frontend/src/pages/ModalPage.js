@@ -7,6 +7,7 @@ import MemberAbsencesModal from '../components/modals/MemberAbsencesModal';
 import MemberFilesModal from '../components/modals/MemberFilesModal';
 import SettingsUserModal from '../components/modals/SettingsUserModal';
 import SettingsMltcModal from '../components/modals/SettingsMltcModal';
+import SettingsGiftModal from '../components/modals/SettingsGiftModal';
 import SettingsSadcModal from '../components/modals/SettingsSadcModal';
 import SettingsDeletedModal from '../components/modals/SettingsDeletedModal';
 import MembersAttendanceModal from '../components/modals/MembersAttendanceModal';
@@ -119,6 +120,16 @@ const ModalPage = ({ data, onClose }) => {
             case 'users':
                 return (
                     <SettingsUserModal 
+                        data={localData} 
+                        handleChange={handleChange} 
+                        activeTab={activeTab}
+                        mltcs={mltcs}
+                        handleLimit={handleLimit}
+                    />
+                );
+            case 'gifts':
+                return (
+                    <SettingsGiftModal 
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab}
