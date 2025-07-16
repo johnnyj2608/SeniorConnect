@@ -1,7 +1,7 @@
 from functools import wraps
 from rest_framework.response import Response
 from rest_framework import status
-from .models.member_model import Member
+from backend.apps.core.models.member_model import Member
 
 def member_access_pk(func):
     @wraps(func)

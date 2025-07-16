@@ -6,7 +6,7 @@ from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
 from ....utils.supabase import *
 from django.utils.text import slugify
-from ..access import member_access_filter, member_access_fk
+from backend.access.member_access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getFileList(request):

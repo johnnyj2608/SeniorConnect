@@ -14,7 +14,7 @@ from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
-from ..access import member_access_filter, member_access_fk
+from backend.access.member_access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getAuthorizationList(request):

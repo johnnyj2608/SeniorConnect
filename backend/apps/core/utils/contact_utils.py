@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializers import ContactSerializer
-from ..access import member_access_filter, member_access_fk
+from backend.access.member_access import member_access_filter, member_access_fk
 
 def getContactList(request):
     contacts = Contact.objects.prefetch_related('members').all()

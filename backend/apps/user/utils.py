@@ -6,6 +6,7 @@ from .serializers import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from django.conf import settings
+from backend.access.ownership_access import require_sadc_ownership, require_org_admin, require_self_or_admin
 
 def getUserList(request):
     users = User.objects.filter(sadc=request.user.sadc)
@@ -16,19 +17,18 @@ def getUserDetail(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    if user.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
+    if unauthorized:
+        return unauthorized
 
-    if current_user.is_org_admin or current_user.id == user.id:
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createUser(request):
     current_user = request.user
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_org_admin(current_user)
+    if unauthorized:
+        return unauthorized
     data = request.data
     serializer = UserSerializer(data=data, context={'request': request})
 
@@ -46,11 +46,9 @@ def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    if user.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
-    if not (current_user.is_org_admin or current_user.id == user.id):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
+    if unauthorized:
+        return unauthorized
 
     data = request.data
     serializer = UserSerializer(instance=user, data=data)
@@ -69,12 +67,10 @@ def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    if user.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(user, current_user) or require_org_admin(current_user)
+    if unauthorized:
+        return unauthorized
     
-    if not current_user.is_org_admin:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
     if user.is_org_admin:
         return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -85,11 +81,10 @@ def patchUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    if user.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
+    if unauthorized:
+        return unauthorized
 
-    if not (current_user.is_org_admin or current_user.id == user.id):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     data = request.data
     serializer = UserSerializer(user, data=data, partial=True)
     

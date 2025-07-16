@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.snapshot_model import Snapshot
 from ..serializers.snapshot_serializers import SnapshotSerializer
+from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 
 def getSnapshotList(request):
     snapshots = Snapshot.objects.filter(sadc=request.user.sadc)
@@ -21,17 +22,22 @@ def getSnapshotDetail(request, pk):
     current_user = request.user
     snapshot = get_object_or_404(Snapshot, id=pk)
 
-    if snapshot.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(snapshot, current_user) or require_org_admin(current_user)
+    if unauthorized:
+        return unauthorized
 
-    if current_user.is_org_admin:
-        serializer = SnapshotSerializer(snapshot)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer = SnapshotSerializer(snapshot)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
-    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
 def createSnapshot(request):
-    data = request.data
+    current_user = request.user
+    unauthorized = require_org_admin(current_user)
+    if unauthorized: return unauthorized
+
+    data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
+
     serializer = SnapshotSerializer(data=data)
 
     try:
@@ -45,8 +51,14 @@ def createSnapshot(request):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def updateSnapshot(request, pk):
-    data = request.data
+    current_user = request.user
     snapshot = get_object_or_404(Snapshot, id=pk)
+
+    unauthorized = require_sadc_ownership(snapshot, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
+
+    data = request.data.copy()
+    data['sadc'] = request.user.sadc.id
     serializer = SnapshotSerializer(instance=snapshot, data=data)
 
     try:
@@ -60,7 +72,13 @@ def updateSnapshot(request, pk):
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def deleteSnapshot(request, pk):
+    current_user = request.user
     snapshot = get_object_or_404(Snapshot, id=pk)
+
+    unauthorized = require_sadc_ownership(snapshot, current_user) or require_org_admin(current_user)
+    if unauthorized:
+        return unauthorized
+
     snapshot.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 

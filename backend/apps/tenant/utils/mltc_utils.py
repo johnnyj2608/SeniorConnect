@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.mltc_model import Mltc
 from ..serializers.mltc_serializers import MltcSerializer
+from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 
 def getMltcList(request):
     mltcs = Mltc.objects.filter(sadc=request.user.sadc)
@@ -18,19 +19,17 @@ def getMltcDetail(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    if mltc.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
-    if current_user.is_org_admin:
-        serializer = MltcSerializer(mltc)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    serializer = MltcSerializer(mltc)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createMltc(request):
     current_user = request.user
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_org_admin(current_user)
+    if unauthorized: return unauthorized
+    
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
 
@@ -51,11 +50,8 @@ def updateMltc(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    if mltc.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
@@ -75,11 +71,8 @@ def deleteMltc(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    if mltc.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-    
-    if not current_user.is_org_admin:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
     mltc.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)  

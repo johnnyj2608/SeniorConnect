@@ -26,7 +26,7 @@ from ....utils.supabase import (
     delete_file_from_supabase,
     delete_folder_from_supabase
 )
-from ..access import member_access_filter, member_access_pk
+from backend.access.member_access import member_access_filter, member_access_pk
 import csv
 
 @member_access_filter()

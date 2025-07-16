@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gift_model import Gift
 from ..serializers.gift_serializers import GiftSerializer
+from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 
 def getGiftList(request):
     gifts = Gift.objects.filter(sadc=request.user.sadc)
@@ -18,19 +19,17 @@ def getGiftDetail(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    if gift.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
-    if current_user.is_org_admin:
-        serializer = GiftSerializer(gift)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    serializer = GiftSerializer(gift)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 def createGift(request):
     current_user = request.user
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_org_admin(current_user)
+    if unauthorized: return unauthorized
+
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
 
@@ -50,11 +49,8 @@ def updateGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    if gift.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
-    if not (current_user.is_org_admin):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
     data = request.data.copy()
     data['sadc'] = request.user.sadc.id
@@ -74,11 +70,8 @@ def deleteGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    if gift.sadc_id != current_user.sadc_id:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-    
-    if not current_user.is_org_admin:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    if unauthorized: return unauthorized
 
     gift.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)  

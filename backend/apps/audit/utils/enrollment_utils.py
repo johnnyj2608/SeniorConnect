@@ -9,7 +9,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.enrollment_model import Enrollment
 from ..serializers.enrollment_serializers import EnrollmentSerializer
 from backend.apps.core.models.member_model import Member
-from backend.apps.core.access import member_access_filter, member_access_fk
+from backend.access.member_access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getEnrollmentList(request):

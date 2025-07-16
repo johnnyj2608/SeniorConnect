@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gifted_model import Gifted
 from ..serializers.gifted_serializers import GiftedSerializer
-from ..access import member_access_filter, member_access_fk
+from backend.access.member_access import member_access_filter, member_access_fk
 
 @member_access_filter()
 def getGiftedList(request):
