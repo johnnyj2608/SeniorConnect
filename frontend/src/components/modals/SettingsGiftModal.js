@@ -48,6 +48,23 @@ const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
                     ))}
                 </select>
             </div>
+
+            <div className="member-detail">
+                <label>{t('settings.admin.gifts.birth_month')}</label>
+                <select
+                    value={current.birth_month || ''}
+                    onChange={handleChange('birth_month')}
+                    disabled={disabled}
+                    required
+                >
+                    <option value="">{t('settings.admin.gifts.all_months')}</option>
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                            {t('general.month.' + (i + 1))}
+                        </option>
+                    ))}
+                </select>
+            </div>
         </>
     );
 };

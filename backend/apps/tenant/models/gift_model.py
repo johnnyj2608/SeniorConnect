@@ -4,8 +4,9 @@ from django.utils import timezone
 class Gift(models.Model):
     name = models.CharField(max_length=50)
     sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE, related_name='gifts')
-    mltc = models.ForeignKey('Mltc', on_delete=models.CASCADE, related_name='gifts', null=True, blank=True)
     expires_at = models.DateField(null=True, blank=True)
+    mltc = models.ForeignKey('Mltc', on_delete=models.CASCADE, related_name='gifts', null=True, blank=True)
+    birth_month = models.PositiveSmallIntegerField(null=True, blank=True)  # 1=Jan, 12=Dec
 
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)

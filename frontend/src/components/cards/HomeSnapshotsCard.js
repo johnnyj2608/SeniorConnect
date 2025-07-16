@@ -29,10 +29,8 @@ const HomeSnapshotCard = () => {
     getSnapshots();
   }, [user]);
 
-  const currentMonth = () => {
-    const now = new Date();
-    return now.toLocaleString('default', { month: 'long' }).toLowerCase();
-  };
+  const now = new Date();
+  const monthIndex = now.getMonth() + 1;
 
   if (!user?.view_snapshots) return null;
 
@@ -42,7 +40,7 @@ const HomeSnapshotCard = () => {
       <div className="card-container">
         {snapshots.length > 0 && (
           <>
-            <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${currentMonth()}`) })}</p>
+            <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${monthIndex}`) })}</p>
             <ul className="snapshot-group">
               {snapshots.map(snapshot => (
                 <li 
