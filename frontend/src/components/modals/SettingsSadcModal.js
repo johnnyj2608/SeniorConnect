@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextInput from '../inputs/TextInput';
 import ListInput from '../inputs/ListInput';
 import ListDetail from '../layout/ListDetail';
 import generateAttendance from '../../utils/generateAttendance';
 import { ReactComponent as Eye } from '../../assets/eye-open.svg'
+import { AuthContext } from '../../context/AuthContext';
 
 const attendanceTemplateOptions = [
     { value: 1 },
@@ -13,6 +14,7 @@ const attendanceTemplateOptions = [
 
 const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
     const { t } = useTranslation();
+    const { user } = useContext(AuthContext);
 
     return (
         <>
@@ -83,6 +85,7 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                     <select
                         value={data.attendance_template}
                         onChange={handleChange('attendance_template')}
+                        disabled={!user?.is_org_admin}
                     >
                     {attendanceTemplateOptions.map(({ value }) => (
                         <option key={value} value={value}>
@@ -102,7 +105,6 @@ const SettingsSadcModal = ({ data, handleChange, handleLimit }) => {
                         <Eye />
                     </button>
                 </div>
-                
             </div>
             
             <ListDetail
