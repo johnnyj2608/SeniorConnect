@@ -18,6 +18,7 @@ const HomePage = () => {
       <div className="page-header">
         <div className="page-title-row">
           <h2 className="page-title">&#9782; {t('general.home')}</h2>
+          <h2 className="page-title">{t('home.welcome', { name: user?.name })}</h2>
         </div>
       </div>
 

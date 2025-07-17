@@ -109,6 +109,7 @@
         "see_archived": "在设置中查看已存档的快照"
     },
     "home": {
+        "welcome": "欢迎, {{name}}",
         "leaving_soon": "即将离开",
         "returning_soon": "即将返回",
         "days": "{{count}}天",

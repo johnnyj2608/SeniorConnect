@@ -109,6 +109,7 @@
         "see_archived": "See archived snapshots in settings"
     },
     "home": {
+        "welcome": "Welcome, {{name}}",
         "leaving_soon": "Leaving Soon",
         "returning_soon": "Returning Soon",
         "days": "{{count}} days",
