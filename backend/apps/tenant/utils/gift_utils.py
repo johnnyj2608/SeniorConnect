@@ -2,7 +2,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gift_model import Gift
-from ..models.mltc_model import Mltc
+from backend.apps.core.models.member_model import Member
+from backend.apps.core.models.gifted_model import Gifted
 from ..serializers.gift_serializers import GiftSerializer
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 from django.db.models import Q
@@ -90,27 +91,33 @@ def deleteGift(request, pk):
     gift.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)  
 
-def getActiveGiftList(request):
+def getActiveGiftListByMember(request, member_pk):
+    member = Member.objects.select_related('active_auth__mltc').get(
+        id=member_pk, 
+        sadc=request.user.sadc
+    )
+    
+    birth_month = member.birth_date.month
+    mltc = member.active_auth.mltc if member.active_auth else None
+    
+    gifted_gift_ids = Gifted.objects.filter(
+        member=member
+    ).values_list('gift_id', flat=True)
+    
     gifts = Gift.objects.select_related('mltc').filter(
         sadc=request.user.sadc
     ).filter(
         Q(expires_at__isnull=True) | Q(expires_at__gte=timezone.now().date())
+    ).exclude(
+        id__in=gifted_gift_ids
+    ).filter(
+        Q(birth_month__isnull=True) | Q(birth_month=birth_month)
     )
-
-    birthdate_param = request.GET.get('birthdate')
-    mltc_param = request.GET.get('mltc')
-
-    if not birthdate_param and not mltc_param:
-        serializer = GiftSerializer(gifts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    if birthdate_param: 
-        birth_month = int(birthdate_param.split('-')[1])
-        gifts = gifts.filter(Q(birth_month__isnull=True) | Q(birth_month=birth_month))
-
-    if mltc_param: 
-        mltc = Mltc.objects.get(name=mltc_param)
+    
+    if mltc:
         gifts = gifts.filter(Q(mltc__isnull=True) | Q(mltc=mltc))
-
+    else:
+        gifts = gifts.filter(mltc__isnull=True)
+    
     serializer = GiftSerializer(gifts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

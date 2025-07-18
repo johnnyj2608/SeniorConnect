@@ -5,15 +5,14 @@ import MemberDetail from '../layout/MemberDetail';
 import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberGiftedCard = ({ birthDate, mltc, onEdit }) => {
+const MemberGiftedCard = ({ id, onEdit }) => {
     const { t } = useTranslation();
     const [gifts, setGifts] = useState([]);
 
     useEffect(() => {
         const fetchGifts = async () => {
-            const params = new URLSearchParams({ birthdate: birthDate, mltc: mltc });
             try {
-                const response = await fetchWithRefresh(`/tenant/gifts/active/?${params.toString()}`);
+                const response = await fetchWithRefresh(`/tenant/gifts/active/${id}/`);
                 if (!response.ok) return;
                 const data = await response.json();
                 setGifts(data);
