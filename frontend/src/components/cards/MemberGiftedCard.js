@@ -24,7 +24,22 @@ const MemberGiftedCard = ({ id, onEdit }) => {
     }, []);
 
     const handleEdit = async () => {
-        // Append gifted as inactive
+        try {
+            const response = await fetchWithRefresh(`/core/gifteds/member/${id}/`);
+            if (!response.ok) return;
+            const giftedData = await response.json();
+
+            const normalizedGifts = gifts.map(gift => ({
+                ...gift,
+                received_at: '',
+                note: ''
+            }));
+
+            const updatedGifts = [...normalizedGifts, ...giftedData];
+            onEdit('gifteds', updatedGifts);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (

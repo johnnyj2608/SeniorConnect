@@ -5,6 +5,7 @@ class Gifted(models.Model):
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE, related_name='gifted')
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='received_gifts')
     received_at = models.DateTimeField(auto_now_add=True)
+    note = models.CharField(max_length=220, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)

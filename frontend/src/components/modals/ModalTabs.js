@@ -7,7 +7,7 @@ import NameDisplay from '../layout/NameDisplay';
 const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
     const { t } = useTranslation();
     
-    if (tab.deleted || (type === 'deleted' && tab.add)) {
+    if (tab.deleted || (type === 'deleted' && tab.add) || (type === 'gifteds' && tab.add)) {
         return;
     } 
 
@@ -67,11 +67,12 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
                     heading: item.name || t('members.unknown'),
                     inactive: item.active === false,
                 };
+            case 'gifteds':
             case 'gifts':
                 return { 
                     heading: item.name || t('members.unknown'),
                     subheading: formatDate(item.expires_at) || '',
-                    inactive: item.expires_at && new Date(item.expires_at) < today,
+                    inactive: (item.expires_at && new Date(item.expires_at) < today) || !!item.received_at,
                 };
             case 'deleted':
                 return {

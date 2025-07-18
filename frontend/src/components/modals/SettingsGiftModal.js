@@ -2,17 +2,35 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TextInput from '../inputs/TextInput';
 
-const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }) => {
+const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleLimit }) => {
     const { t } = useTranslation();
 
     const current = data[activeTab] || {};
-    const disabled = data.filter(tab => !tab.deleted).length <= 0;
+    const disabled = data.filter(tab => !tab.deleted).length <= 0 || type === 'gifteds';
     const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     return (
         <>
             <div className="modal-header">
                 <h3>{t('general.edit')}{t('settings.admin.gifts.label')}</h3>
+                {type === 'gifteds' && (
+                <label>
+                    <input
+                    type="checkbox"
+                    checked={!!current.received_at}
+                    onChange={(e) =>
+                        handleChange('received_at')({
+                            target: {
+                                value: e.target.checked
+                                    ? new Date().toISOString()
+                                    : ''
+                            }
+                        })
+                    }
+                    />
+                    {t('settings.admin.gifts.received')}
+                </label>
+                )}
             </div>
 
             <TextInput
@@ -21,6 +39,7 @@ const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
                 onChange={handleChange('name')}
                 onLimitExceeded={handleLimit('name', limitIndex)}
                 required
+                showDisabled={type === 'gifteds'}
                 disabled={disabled}
             />
 
@@ -29,6 +48,7 @@ const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
                 label={t('settings.admin.gifts.expires_at')}
                 value={current.expires_at}
                 onChange={handleChange('expires_at')}
+                showDisabled={type === 'gifteds'}
                 disabled={disabled}
             />
 
@@ -36,7 +56,7 @@ const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
                 <label>{t('settings.admin.gifts.mltc')} </label>
                 <select
                     required
-                    value={disabled ? '' : current.mltc || ''}
+                    value={(disabled && type === 'gifts') ? '' : current.mltc || ''}
                     onChange={handleChange('mltc')}
                     disabled={disabled}
                 >
@@ -65,6 +85,16 @@ const SettingsGiftModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
                     ))}
                 </select>
             </div>
+
+            {type === 'gifteds' && (
+                <TextInput
+                    label={t('general.note')}
+                    value={current.note}
+                    onChange={handleChange('note')}
+                    onLimitExceeded={handleLimit('note')}
+                    maxLength={220}
+                />
+            )}
         </>
     );
 };

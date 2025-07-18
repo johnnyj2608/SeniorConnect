@@ -127,9 +127,11 @@ const ModalPage = ({ data, onClose }) => {
                         handleLimit={handleLimit}
                     />
                 );
+            case 'gifteds':
             case 'gifts':
                 return (
                     <SettingsGiftModal 
+                        type={type}
                         data={localData} 
                         handleChange={handleChange} 
                         activeTab={activeTab}
@@ -182,7 +184,7 @@ const ModalPage = ({ data, onClose }) => {
         !NO_TABS_TYPE.has(type) &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin &&
-        (type !== 'attendance' || hasQueuedMembers);
+        (type !== 'attendance' && type !== 'gifteds' || hasQueuedMembers);
 
     const deleteButton = showDeleteButton ? (
         <button
