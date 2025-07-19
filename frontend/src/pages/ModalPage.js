@@ -18,6 +18,7 @@ import useModalEdit from '../hooks/useModalEdit';
 import useModalQueue from '../hooks/useModalQueue';
 import useInputLimit from '../hooks/useInputLimit';
 import generateAttendance from '../utils/generateAttendance';
+import { ReactComponent as InfoIcon } from '../assets/info.svg';
 
 const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import', 'absences']);
 const NO_TABS_TYPE = new Set(['info', 'sadcs', 'import']);
@@ -184,30 +185,39 @@ const ModalPage = ({ data, onClose }) => {
         !NO_TABS_TYPE.has(type) &&
         localData.filter(tab => !tab.deleted).length > 0 &&
         !localData[activeTab]?.is_org_admin &&
-        (type !== 'attendance' && type !== 'gifteds' || hasQueuedMembers);
+        (type !== 'attendance' || hasQueuedMembers);
 
     const deleteButton = showDeleteButton ? (
-        <button
-            className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
-            onClick={() => {
-                if (type === 'attendance') {
-                    clearQueue();
-                } else {
-                    handleDelete(activeTab);
-                    const limitIndex =
-                        localData[activeTab]?.id === 'new'
-                            ? localData.length - 1 - activeTab
-                            : activeTab;
-                    clearTabLimit(limitIndex);
-                }
-            }}
-        >
-        {type === 'deleted'
-            ? t('general.buttons.restore')
-            : type === 'attendance'
-            ? t('general.buttons.clear')
-            : t('general.buttons.delete')}
-        </button>
+        type === 'gifteds' ? (
+            <button 
+                className="icon-button tooltip"
+                data-tooltip={t('member.gifts.modal_tooltip')}
+            >
+                <InfoIcon />
+            </button>
+        ) : (
+            <button
+                className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
+                onClick={() => {
+                    if (type === 'attendance') {
+                        clearQueue();
+                    } else {
+                        handleDelete(activeTab);
+                        const limitIndex =
+                            localData[activeTab]?.id === 'new'
+                                ? localData.length - 1 - activeTab
+                                : activeTab;
+                        clearTabLimit(limitIndex);
+                    }
+                }}
+            >
+                {type === 'deleted'
+                    ? t('general.buttons.restore')
+                    : type === 'attendance'
+                    ? t('general.buttons.clear')
+                    : t('general.buttons.delete')}
+            </button>
+        )
     ) : null;
 
     const saveButton = (

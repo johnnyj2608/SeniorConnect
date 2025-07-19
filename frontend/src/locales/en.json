@@ -233,7 +233,8 @@
             "label": "Gifts",
             "name": "Name",
             "expires_at": "Expires",
-            "no_gifts": "All eligible gifts received"
+            "no_gifts": "All eligible gifts received",
+            "modal_tooltip": "Create new gifts in settings"
         }
     },
     "reports": {

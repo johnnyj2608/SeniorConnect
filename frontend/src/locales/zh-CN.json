@@ -233,7 +233,8 @@
             "label": "礼品",
             "name": "名称",
             "expires_at": "到期",
-            "no_gifts": "所有可用的礼品已收到"
+            "no_gifts": "所有可用的礼品已收到",
+            "modal_tooltip": "在设置中创建新的礼品"
         }
     },
     "reports": {
