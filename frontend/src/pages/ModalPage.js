@@ -18,7 +18,7 @@ import useModalEdit from '../hooks/useModalEdit';
 import useModalQueue from '../hooks/useModalQueue';
 import useInputLimit from '../hooks/useInputLimit';
 import generateAttendance from '../utils/generateAttendance';
-import { ReactComponent as InfoIcon } from '../assets/info.svg';
+import { CancelButton, DeleteButton, SaveButton } from '../components/modals/ModalButtons';
 
 const DRAG_DROP_TYPES = new Set(['authorizations', 'files', 'import', 'absences']);
 const NO_TABS_TYPE = new Set(['info', 'sadcs', 'import']);
@@ -187,60 +187,13 @@ const ModalPage = ({ data, onClose }) => {
         !localData[activeTab]?.is_org_admin &&
         (type !== 'attendance' || hasQueuedMembers);
 
-    const deleteButton = showDeleteButton ? (
-        type === 'gifteds' ? (
-            <button 
-                className="icon-button tooltip"
-                data-tooltip={t('member.gifts.modal_tooltip')}
-            >
-                <InfoIcon />
-            </button>
-        ) : (
-            <button
-                className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
-                onClick={() => {
-                    if (type === 'attendance') {
-                        clearQueue();
-                    } else {
-                        handleDelete(activeTab);
-                        const limitIndex =
-                            localData[activeTab]?.id === 'new'
-                                ? localData.length - 1 - activeTab
-                                : activeTab;
-                        clearTabLimit(limitIndex);
-                    }
-                }}
-            >
-                {type === 'deleted'
-                    ? t('general.buttons.restore')
-                    : type === 'attendance'
-                    ? t('general.buttons.clear')
-                    : t('general.buttons.delete')}
-            </button>
-        )
-    ) : null;
-
-    const saveButton = (
-        <button
-            className="action-button"
-            onClick={() => {
-                if (type === 'attendance') {
-                    generateAttendance(
-                        queuedMembers, 
-                        month, 
-                        sadc.name, 
-                        sadc.attendance_template
-                    );
-                    onClose();
-                } else {
-                    handleSave(localData);
-                }
-            }}
-            disabled={(type === 'attendance' && !hasQueuedMembers) || inputLimitExceeded}
-        >
-            {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
-        </button>
-    );
+    const handleDeleteClick = () => {
+        handleDelete(activeTab);
+        const limitIndex = localData[activeTab]?.id === 'new'
+            ? localData.length - 1 - activeTab
+            : activeTab;
+        clearTabLimit(limitIndex);
+    }
 
     return (
         <div className="modal">
@@ -294,11 +247,23 @@ const ModalPage = ({ data, onClose }) => {
                     )}
                 </div>
                 <div className="modal-buttons-container">
-                    <button className="action-button" onClick={() => onClose()}>
-                        {t('general.buttons.cancel')}
-                    </button>
-                    {deleteButton}
-                    {saveButton}
+                    <CancelButton onClose={onClose} />
+                    <DeleteButton 
+                        type={type}
+                        showDeleteButton={showDeleteButton}
+                        onDelete={handleDeleteClick}
+                        onClearQueue={clearQueue}
+                    />
+                    <SaveButton 
+                        type={type}
+                        hasQueuedMembers={hasQueuedMembers}
+                        inputLimitExceeded={inputLimitExceeded}
+                        onSave={() => handleSave(localData)}
+                        onGenerate={() => {
+                            generateAttendance(queuedMembers, month, sadc.name, sadc.attendance_template);
+                            onClose();
+                        }}
+                    />
                 </div>
             </div>
         </div>
