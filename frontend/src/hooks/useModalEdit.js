@@ -92,7 +92,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                     [field]: normalizedValue,
                 };
 
-                const isEdited = updatedTab.id === 'new' 
+                const isEdited = updatedTab.id === 'new' && type !== 'gifteds'
                     ? true 
                     : compareTabs(updatedTab, originalData[activeTab - newTabsCount]);
                 const updatedData = [...prevData];
@@ -247,6 +247,10 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 savedData = await saveDataTabs(updatedData, 'files', id);
 
                 data.setData(prev => prev ? { ...prev, files: savedData } : prev);
+                break;
+
+            case 'gifteds':
+                savedData = await saveDataTabs(updatedData, 'gifteds', id);
                 break;
 
             case 'import':

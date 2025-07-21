@@ -37,6 +37,11 @@ def updateGifted(request, pk):
     data = request.data
     gifted = get_object_or_404(Gifted, id=pk)
 
+    received_at = data.get('received_at', None)
+    if received_at in [None, ""]:
+        gifted.delete()
+        return Response({"detail": "Deleted"}, status=status.HTTP_200_OK)
+
     serializer = GiftedSerializer(instance=gifted, data=data)
     try:
         if serializer.is_valid():

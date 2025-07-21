@@ -90,7 +90,8 @@
         "contact": "联系人",
         "file": "文件",
         "file_str": "文件: {{name}}",
-        "user": "用户"
+        "user": "用户",
+        "gifted": "礼品"
     },
     "status": {
         "label": "状态",

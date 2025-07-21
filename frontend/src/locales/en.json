@@ -90,7 +90,8 @@
         "contact": "Contact",
         "file": "File",
         "file_str": "File: {{name}}",
-        "user": "User"
+        "user": "User",
+        "gifted": "Gift"
     },
     "status": {
         "label": "Status",

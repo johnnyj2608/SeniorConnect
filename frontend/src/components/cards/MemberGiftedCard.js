@@ -31,6 +31,9 @@ const MemberGiftedCard = ({ id, onEdit }) => {
 
             const normalizedGifts = gifts.map(gift => ({
                 ...gift,
+                id: 'new',
+                gift: gift.id,
+                member: id,
                 received_at: '',
                 note: ''
             }));

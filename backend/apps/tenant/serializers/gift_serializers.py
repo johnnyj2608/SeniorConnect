@@ -12,4 +12,4 @@ class GiftSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Gift
-        exclude = ['created_at', 'updated_at']
+        exclude = ['created_at', 'updated_at', 'sadc']
