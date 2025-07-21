@@ -34,7 +34,7 @@ const MemberGiftedCard = ({ id, onEdit }) => {
                 id: 'new',
                 gift: gift.id,
                 member: id,
-                received_at: '',
+                received: false,
                 note: ''
             }));
 

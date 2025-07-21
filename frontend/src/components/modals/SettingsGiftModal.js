@@ -16,17 +16,11 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                 {type === 'gifteds' && (
                 <label>
                     <input
-                    type="checkbox"
-                    checked={!!current.received_at}
-                    onChange={(e) =>
-                        handleChange('received_at')({
-                            target: {
-                                value: e.target.checked
-                                    ? new Date().toISOString()
-                                    : ''
-                            }
-                        })
-                    }
+                        type="checkbox"
+                        checked={!!current.received}
+                        onChange={(e) =>
+                            handleChange('received')({ target: { value: e.target.checked } })
+                        }
                     />
                     {t('settings.admin.gifts.received')}
                 </label>
