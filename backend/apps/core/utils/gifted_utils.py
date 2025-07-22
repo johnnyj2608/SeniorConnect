@@ -40,7 +40,7 @@ def updateGifted(request, pk):
     received_at = data.get('received_at', None)
     if received_at in [None, ""]:
         gifted.delete()
-        return Response({"detail": "Deleted"}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     serializer = GiftedSerializer(instance=gifted, data=data)
     try:

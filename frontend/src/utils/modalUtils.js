@@ -40,6 +40,8 @@ const sendRequest = async (url, method, data) => {
 
     if (!response.ok) return Promise.reject(response);
 
+    if (response.status === 204) return null;
+
     return response.json();
 };
 
@@ -74,11 +76,14 @@ const saveDataTabs = async (data, endpoint, id=null, api='core') => {
           })
     ]));
     
+    const normalizedData = processedData.filter(updated => updated !== null);
+
     const savedData = dataArray
         .filter(data => !data.deleted && data.id !== 'new')
-        .map(data => processedData.find(updated => updated.id === data.id) || data)
-        .concat(processedData.filter(updated => !dataArray.some(data => data.id === updated.id)));
-    return savedData
+        .map(data => normalizedData.find(updated => updated.id === data.id) || data)
+        .concat(normalizedData.filter(updated => !dataArray.some(data => data.id === updated.id)));
+
+    return savedData;
 };
 
 const getNewTab = (type, localData, id) => {
