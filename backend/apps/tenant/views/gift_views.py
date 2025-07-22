@@ -35,8 +35,3 @@ def getGift(request, pk):
 
     if request.method == 'DELETE':
         return deleteGift(request, pk=pk)
-
-@api_view(['GET'])
-def getActiveGifts(request, pk):
-    if request.method == 'GET':
-        return getActiveGiftListByMember(request, member_pk=pk)

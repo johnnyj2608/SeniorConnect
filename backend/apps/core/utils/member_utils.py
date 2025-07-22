@@ -10,6 +10,7 @@ from rest_framework.generics import get_object_or_404
 
 from ..models.member_model import Member
 from backend.apps.tenant.models.mltc_model import Mltc
+from backend.apps.tenant.utils.gift_utils import getActiveGiftListByMember
 from ..serializers.member_serializers import (
     MemberSerializer,
     MemberListSerializer,
@@ -244,12 +245,15 @@ def getMemberProfile(request, pk):
         else:
             absences_data.append(AbsenceSerializer(absence).data)
 
+    gifts_data = getActiveGiftListByMember(request.user.sadc, member)
+
     return Response({
         'info': MemberSerializer(member).data,
         'auth': AuthorizationWithServiceSerializer(member.active_auth).data if member.active_auth else None,
         'absences': absences_data,
         'contacts': ContactSerializer(contacts, many=True).data,
-        'files': FileSerializer(files, many=True).data
+        'files': FileSerializer(files, many=True).data,
+        'gifts': gifts_data,
     }, status=status.HTTP_200_OK)
 
 @member_access_filter()

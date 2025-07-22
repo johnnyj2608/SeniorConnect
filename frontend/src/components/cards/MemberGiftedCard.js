@@ -1,27 +1,13 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditButton from '../buttons/EditButton';
 import MemberDetail from '../layout/MemberDetail';
 import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const MemberGiftedCard = ({ id, onEdit }) => {
+const MemberGiftedCard = ({ id, data, onEdit }) => {
     const { t } = useTranslation();
-    const [gifts, setGifts] = useState([]);
-
-    useEffect(() => {
-        const fetchGifts = async () => {
-            try {
-                const response = await fetchWithRefresh(`/tenant/gifts/active/${id}/`);
-                if (!response.ok) return;
-                const data = await response.json();
-                setGifts(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchGifts();
-    }, []);
+    const gifts = data || [];
 
     const handleEdit = async () => {
         try {
@@ -50,7 +36,7 @@ const MemberGiftedCard = ({ id, onEdit }) => {
             <h2>{t('member.gifts.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
-                {Object.keys(gifts).length === 0 ? (
+                {gifts.length === 0 ? (
                     <p>{t('member.gifts.no_gifts')}</p>
                 ) : (
                     <ul className="card-list">

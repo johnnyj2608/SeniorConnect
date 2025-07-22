@@ -129,7 +129,7 @@ const MemberPage = () => {
           <div className="member-row">
             <MemberContactsCard data={memberData.contacts} onEdit={handleModalOpen} />
             <MemberAbsencesCard data={memberData.absences} onEdit={handleModalOpen} />
-            <MemberGiftedCard id={id} onEdit={handleModalOpen} />
+            <MemberGiftedCard id={id} data={memberData.gifts} onEdit={handleModalOpen} />
           </div>
           <div className="member-row">
             <MemberFilesCard data={memberData.files} onEdit={handleModalOpen} />

@@ -91,21 +91,16 @@ def deleteGift(request, pk):
     gift.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)  
 
-def getActiveGiftListByMember(request, member_pk):
-    member = Member.objects.select_related('active_auth__mltc').get(
-        id=member_pk, 
-        sadc=request.user.sadc
-    )
-    
+def getActiveGiftListByMember(sadc, member):
     birth_month = member.birth_date.month
     mltc = member.active_auth.mltc if member.active_auth else None
-    
+
     gifted_gift_ids = Gifted.objects.filter(
         member=member
     ).values_list('gift_id', flat=True)
-    
+
     gifts = Gift.objects.select_related('mltc').filter(
-        sadc=request.user.sadc
+        sadc=sadc
     ).filter(
         Q(expires_at__isnull=True) | Q(expires_at__gte=timezone.now().date())
     ).exclude(
@@ -113,11 +108,10 @@ def getActiveGiftListByMember(request, member_pk):
     ).filter(
         Q(birth_month__isnull=True) | Q(birth_month=birth_month)
     )
-    
+
     if mltc:
         gifts = gifts.filter(Q(mltc__isnull=True) | Q(mltc=mltc))
     else:
         gifts = gifts.filter(mltc__isnull=True)
-    
-    serializer = GiftSerializer(gifts, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return GiftSerializer(gifts, many=True).data
