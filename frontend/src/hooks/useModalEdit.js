@@ -17,11 +17,13 @@ import fetchWithRefresh from '../utils/fetchWithRefresh'
 import { useTranslation } from 'react-i18next';
 import { MltcContext } from '../context/MltcContext';
 import { SadcContext } from '../context/SadcContext';
+import { GiftContext } from '../context/GiftContext';
 
 function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const { t } = useTranslation();
     const { mltcs } = useContext(MltcContext);
     const { sadc } = useContext(SadcContext);
+    const { gifts: allGifts } = useContext(GiftContext);
     const { id, type } = data;
 
     const effectiveData = useMemo(() => {
@@ -251,6 +253,27 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
             case 'gifteds':
                 savedData = await saveDataTabs(updatedData, 'gifteds', id);
+
+                data.setData(prev => {
+                    if (!prev) return prev;
+                
+                    let newGifts = [...prev.gifts];
+                
+                    savedData.forEach(item => {
+                        if (item.received) {
+                            newGifts = newGifts.filter(gift => gift.id !== item.gift);
+                        } else {
+                            if (!newGifts.some(gift => gift.id === item.gift)) {
+                                const fullGift = allGifts.find(gift => gift.id === item.gift);
+                                if (fullGift) {
+                                    newGifts.push(fullGift);
+                                }
+                            }
+                        }
+                    });
+                
+                    return { ...prev, gifts: newGifts };
+                });
                 break;
 
             case 'import':
