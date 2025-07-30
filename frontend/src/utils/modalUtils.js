@@ -96,8 +96,6 @@ const getNewTab = (type, localData, id) => {
                 member: id,
                 mltc_member_id: activeAuth?.mltc_member_id || '',
                 mltc: activeAuth?.mltc || '',
-                start_date: '',
-                end_date: '',
                 schedule: activeAuth?.schedule || [],
                 dx_code: activeAuth?.dx_code || '',
                 services: [
@@ -120,7 +118,6 @@ const getNewTab = (type, localData, id) => {
                 ],
                 cm_name: activeAuth?.cm_name || '',
                 cm_phone: activeAuth?.cm_phone || '',
-                file: '',
                 active: true,
                 edited: true,
             };
@@ -129,41 +126,20 @@ const getNewTab = (type, localData, id) => {
             return {
                 id: 'new',
                 members: [id],
-                contact_type: '',
-                name: '',
-                phone: '',
-                relationship_type: '',
                 edited: true,
             };
         }
+        case 'files':
         case 'absences': {
             return {
                 id: 'new',
                 member: id,
-                absence_type: '',
-                start_date: '',
-                end_date: '',
-                note: '',
-                file: '',
-                edited: true,
-            };
-        }
-        case 'files': {
-            return {
-                id: 'new',
-                member: id,
-                name: '',
-                file: '',
-                date: '',
                 edited: true,
             };
         }
         case 'users': {
             return {
                 id: 'new',
-                name: '',
-                email: '',
-                view_snapshots: false,
                 is_active: true,
                 edited: true,
             };
@@ -171,7 +147,6 @@ const getNewTab = (type, localData, id) => {
         case 'mltcs': {
             return {
                 id: 'new',
-                name: '',
                 dx_codes: [],
                 active: true,
                 edited: true,
@@ -180,9 +155,6 @@ const getNewTab = (type, localData, id) => {
         case 'gifts': {
             return {
                 id: 'new',
-                name: '',
-                expires_at: '',
-                mltc: '',
                 edited: true,
             };
         }

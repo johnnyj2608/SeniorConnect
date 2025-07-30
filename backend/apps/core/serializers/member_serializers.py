@@ -29,7 +29,7 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        exclude = ['created_at', 'updated_at']
+        exclude = ['created_at', 'updated_at', 'sadc']
 
     def validate_gender(self, value):
         value = value.upper()

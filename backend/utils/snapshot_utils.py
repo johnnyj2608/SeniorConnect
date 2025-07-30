@@ -150,7 +150,7 @@ def draw_enrollments(c, width, y, member):
     return y
 
 def draw_gifts(c, width, y, member):
-    gift_text = f"{member.gift_name}: {member.created_at.strftime('%m/%d/%Y')}"
+    gift_text = f"{member.name}: {member.created_at.strftime('%m/%d/%Y')}"
     c.drawString(X_POSITIONS["POS4"], y, gift_text)
     return y
 

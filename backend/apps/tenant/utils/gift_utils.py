@@ -44,14 +44,12 @@ def createGift(request):
     unauthorized = require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    data = request.data.copy()
-    data['sadc'] = request.user.sadc.id
-
+    data = request.data
     serializer = GiftSerializer(data=data)
 
     try:
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -66,13 +64,12 @@ def updateGift(request, pk):
     unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    data = request.data.copy()
-    data['sadc'] = request.user.sadc.id
+    data = request.data
     serializer = GiftSerializer(instance=gift, data=data)
 
     try:
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

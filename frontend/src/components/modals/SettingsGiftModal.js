@@ -42,9 +42,9 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
 
             <TextInput
                 label={t('settings.admin.gifts.name')}
-                value={current.gift_name || current.name}
-                onChange={handleChange('gift_name')}
-                onLimitExceeded={handleLimit('gift_name', limitIndex)}
+                value={current.name}
+                onChange={handleChange('name')}
+                onLimitExceeded={handleLimit('name', limitIndex)}
                 required
                 showDisabled={type === 'gifteds'}
                 disabled={disabled}

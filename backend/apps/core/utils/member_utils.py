@@ -56,7 +56,6 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data.copy()
     public_url = None
-    data['sadc'] = request.user.sadc.id
 
     photo = request.FILES.get('photo')
     data.pop('photo', None)
@@ -65,7 +64,7 @@ def createMember(request):
         serializer = MemberSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        member = serializer.save()
+        member = serializer.save(sadc=request.user.sadc)
 
         if photo:
             first_name = data.get("first_name", "")
@@ -101,7 +100,6 @@ def updateMember(request, pk):
     member = get_object_or_404(Member, id=pk)
     public_url = None
     sadc = request.user.sadc
-    data['sadc'] = sadc.id
 
     try:
         if 'photo' in request.FILES:
@@ -129,7 +127,7 @@ def updateMember(request, pk):
 
         serializer = MemberSerializer(instance=member, data=data, context={'sadc': sadc})
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sadc=request.user.sadc)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

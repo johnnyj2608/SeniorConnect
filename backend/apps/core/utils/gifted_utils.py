@@ -23,6 +23,8 @@ def getGiftedDetail(request, pk):
 @member_access_fk
 def createGifted(request):
     data = request.data
+    if data.get('received', False) in ['false', False]:
+        return Response(status=status.HTTP_204_NO_CONTENT)
     serializer = GiftedSerializer(data=data)
     
     try:
@@ -40,8 +42,7 @@ def updateGifted(request, pk):
     data = request.data
     gifted = get_object_or_404(Gifted, id=pk)
 
-    received_at = data.get('received_at', None)
-    if received_at in [None, ""]:
+    if data.get('received', False) in ['false', False]:
         gifted.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

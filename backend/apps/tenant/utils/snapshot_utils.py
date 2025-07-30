@@ -35,14 +35,12 @@ def createSnapshot(request):
     unauthorized = require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    data = request.data.copy()
-    data['sadc'] = request.user.sadc.id
-
+    data = request.data
     serializer = SnapshotSerializer(data=data)
 
     try:
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -57,13 +55,12 @@ def updateSnapshot(request, pk):
     unauthorized = require_sadc_ownership(snapshot, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    data = request.data.copy()
-    data['sadc'] = request.user.sadc.id
+    data = request.data
     serializer = SnapshotSerializer(instance=snapshot, data=data)
 
     try:
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

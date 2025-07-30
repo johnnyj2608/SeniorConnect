@@ -268,7 +268,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                                 if (fullGift) {
                                     newGifts.push({
                                         gift_id: fullGift.id,
-                                        gift_name: fullGift.name,
+                                        name: fullGift.name,
                                         expires_at: fullGift.expires_at
                                     });
                                 }

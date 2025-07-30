@@ -70,7 +70,7 @@ const ModalTabs = ({ index, activeTab, handleTabClick, type, tab }) => {
             case 'gifteds':
             case 'gifts':
                 return { 
-                    heading: item.name || item.gift_name || t('members.unknown'),
+                    heading: item.name || t('members.unknown'),
                     subheading: formatDate(item.expires_at) || '',
                     inactive: (item.expires_at && new Date(item.expires_at) < today) || !!item.received,
                 };
