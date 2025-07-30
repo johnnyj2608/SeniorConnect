@@ -5,7 +5,7 @@ from backend.utils.pdf_utils import generateSnapshotPdf
 from backend.apps.tenant.models.sadc_model import Sadc
 from backend.apps.tenant.models.snapshot_model import Snapshot
 
-SNAPSHOT_TYPES = ['members', 'birthdays', 'absences', 'enrollments']
+SNAPSHOT_TYPES = ['members', 'birthdays', 'absences', 'enrollments', 'gifts']
 
 class Command(BaseCommand):
     help = 'Generate all snapshot PDFs for all SADCs and upload to Supabase'

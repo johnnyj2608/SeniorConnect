@@ -106,6 +106,7 @@
         "absences": "Absences",
         "birthdays": "Birthdays",
         "enrollments": "Enrollments",
+        "gifts": "Gifts",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
         "see_archived": "See archived snapshots in settings"
     },

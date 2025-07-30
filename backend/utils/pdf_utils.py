@@ -14,6 +14,7 @@ from ..apps.tenant.models.mltc_model import Mltc
 from ..apps.core.models.member_model import Member
 from ..apps.core.models.absence_model import Absence
 from ..apps.audit.models.enrollment_model import Enrollment
+from ..apps.core.models.gifted_model import Gifted
 
 X_POSITIONS = {
     "POS1": 40,
@@ -110,6 +111,19 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
             birth_date=F('member__birth_date'),
             gender=F('member__gender'),
         )
+    elif snapshot_type == "gifts":
+        title = "gifts"
+        members = Gifted.objects.filter(
+            member__sadc=sadc,
+            created_at__range=(first_day, last_day)
+        ).select_related('member', 'member__active_auth__mltc').annotate(
+                first_name=F('member__first_name'),
+                last_name=F('member__last_name'),
+                sadc_member_id=F('member__sadc_member_id'),
+                birth_date=F('member__birth_date'),
+                gender=F('member__gender'),
+                mltc_name=F('member__active_auth__mltc__name'),
+            )
     else:
         title = "members"
         members = Member.objects.filter(
@@ -241,17 +255,17 @@ def drawMltcSummary(c, width, y, title, data):
     if title == "enrollments":
         pos2_header = "Start"
         pos3_header = "End"
-        c.drawString(X_POSITIONS["POS2"], y, pos2_header)
+        
         c.drawString(X_POSITIONS["POS3"], y, pos3_header)
     elif title == "birthdays":
         pos2_header = "Birthdays"
-        c.drawString(X_POSITIONS["POS2"], y, pos2_header)
     elif title == "absences":
         pos2_header = "Absences"
-        c.drawString(X_POSITIONS["POS2"], y, pos2_header)
+    elif title == "gifts":
+        pos2_header = "Gifts"
     else:
         pos2_header = "Members"
-        c.drawString(X_POSITIONS["POS2"], y, pos2_header)
+    c.drawString(X_POSITIONS["POS2"], y, pos2_header)
 
     y -= 20
     header_width = c.stringWidth(pos2_header, "Helvetica-Bold", 12)
@@ -303,6 +317,8 @@ def drawMltcHeader(c, title, width, y, mltc_name):
         c.drawString(X_POSITIONS["POS4"], y, "Dates")
     elif title == "enrollments":
         c.drawString(X_POSITIONS["POS4"], y, "Date")
+    elif title == "gifts":
+        c.drawString(X_POSITIONS["POS4"], y, "Gift")
     else:
         c.drawString(X_POSITIONS["POS4"], y, "Schedule")
     return y - 20
@@ -344,6 +360,9 @@ def drawMemberInfo(c, title, width, y, member):
             transfer_text = f"{member.old_mltc.name} → {member.new_mltc.name}"
             text_width = c.stringWidth(transfer_text, "Helvetica", 12)
             c.drawString(width - text_width - 30, y, transfer_text)
+    elif title == "gifts":
+        gift_text = f"{member.gift_name}: {member.created_at.strftime('%m/%d/%Y')}"
+        c.drawString(X_POSITIONS["POS4"], y, gift_text)
     else:
         schedule_list = getattr(member, 'schedule', []) or []
         short_schedule = [day_map.get(day, day) for day in schedule_list]
