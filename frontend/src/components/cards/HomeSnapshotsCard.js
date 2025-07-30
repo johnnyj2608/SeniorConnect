@@ -30,7 +30,7 @@ const HomeSnapshotCard = () => {
   }, [user]);
 
   const now = new Date();
-  const monthIndex = now.getMonth() + 1;
+  const monthIndex = now.getMonth();
 
   if (!user?.view_snapshots) return null;
 
@@ -42,15 +42,31 @@ const HomeSnapshotCard = () => {
           <>
             <p>{t('snapshots.month_snapshot_ready', { month: t(`general.month.${monthIndex}`) })}</p>
             <ul className="snapshot-group">
-              {snapshots.map(snapshot => (
-                <li 
-                  key={snapshot.id}
-                  className="home-item"
-                  onClick={() => openFile(snapshot.file)}
-                >
-                  {t(`snapshots.${snapshot.type}`)}
-                </li>
-              ))}
+              {snapshots.map(snapshot => {
+                const label = t(`snapshots.${snapshot.type}`);
+                if (snapshot.type === 'birthdays') {
+                  const birthdayMonth = monthIndex + 1;
+                  return (
+                    <li 
+                      key={snapshot.id}
+                      className="home-item"
+                      onClick={() => openFile(snapshot.file)}
+                    >
+                      {t(`general.month.${birthdayMonth}`)} {label}
+                    </li>
+                  );
+                }
+
+                return (
+                  <li 
+                    key={snapshot.id}
+                    className="home-item"
+                    onClick={() => openFile(snapshot.file)}
+                  >
+                    {label}
+                  </li>
+                );
+              })}
             </ul>
           </>
         )}

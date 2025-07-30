@@ -1,10 +1,9 @@
 from io import BytesIO
-from calendar import monthrange, month_name
-from datetime import date, timedelta
-from dateutil.relativedelta import relativedelta
+from calendar import month_name
+from datetime import date
 
 from django.core.files.base import ContentFile
-from django.db.models import F, Q, Count
+from django.db.models import F, Count
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
 from PyPDF2 import PdfReader
@@ -12,26 +11,13 @@ from PyPDF2 import PdfReader
 from ..apps.tenant.models.sadc_model import Sadc
 from ..apps.tenant.models.mltc_model import Mltc
 from ..apps.core.models.member_model import Member
-from ..apps.core.models.absence_model import Absence
-from ..apps.audit.models.enrollment_model import Enrollment
-from ..apps.core.models.gifted_model import Gifted
 
-X_POSITIONS = {
-    "POS1": 40,
-    "POS2": 250,
-    "POS3": 325,
-    "POS4": 395,
-}
-
-day_map = {
-    "monday": "Mon",
-    "tuesday": "Tue",
-    "wednesday": "Wed",
-    "thursday": "Thu",
-    "friday": "Fri",
-    "saturday": "Sat",
-    "sunday": "Sun"
-}
+from .snapshot_utils import (
+    X_POSITIONS,
+    SNAPSHOT_QUERIES,
+    DRAW_FUNCTIONS,
+    get_snapshot_dates,
+)
 
 class NumberedCanvas(rl_canvas.Canvas):
     def __init__(self, *args, **kwargs):
@@ -61,81 +47,19 @@ class NumberedCanvas(rl_canvas.Canvas):
 
 def generateSnapshotPdf(sadc_id, snapshot_type="members"):
     sadc = Sadc.objects.get(id=sadc_id)
-    today = date.today()
-    
-    first_day = today.replace(day=1)
-    last_day = today.replace(day=monthrange(today.year, today.month)[1])
-    snapshot_date = first_day - timedelta(days=1)
-
-    display_month = snapshot_date.month
-    display_year = snapshot_date.year
+    today, first_day, last_day, snapshot_date = get_snapshot_dates()
 
     snapshot_type = snapshot_type.lower()
+    query_func = SNAPSHOT_QUERIES.get(snapshot_type, SNAPSHOT_QUERIES['members'])
 
-    if snapshot_type == "birthdays":
-        title = "birthdays"
-        members = Member.objects.filter(
-            sadc=sadc,
-            active=True,
-            deleted_at__isnull=True,
-            birth_date__month=today.month
-        )
-        display_month = today.month
-        display_year = today.year
-    elif snapshot_type == "absences":
-        title = "absences"
-        members = Absence.objects.filter(
-                Q(member__sadc=sadc) &
-                Q(member__active=True) &
-                Q(member__deleted_at__isnull=True) &
-                ~Q(absence_type="assessment") &
-                Q(start_date__lte=last_day) &
-                Q(end_date__gte=first_day)
-            ).select_related('member', 'member__active_auth__mltc').annotate(
-                first_name=F('member__first_name'),
-                last_name=F('member__last_name'),
-                sadc_member_id=F('member__sadc_member_id'),
-                birth_date=F('member__birth_date'),
-                gender=F('member__gender'),
-                mltc_name=F('member__active_auth__mltc__name'),
-            )
-    elif snapshot_type == "enrollments":
-        title = "enrollments"
-        members = Enrollment.objects.filter(
-            member__sadc=sadc,
-            change_date__range=(first_day, last_day)
-        ).select_related('member', 'new_mltc', 'old_mltc').annotate(
-            first_name=F('member__first_name'),
-            last_name=F('member__last_name'),
-            sadc_member_id=F('member__sadc_member_id'),
-            birth_date=F('member__birth_date'),
-            gender=F('member__gender'),
-        )
-    elif snapshot_type == "gifts":
-        title = "gifts"
-        members = Gifted.objects.filter(
-            member__sadc=sadc,
-            created_at__range=(first_day, last_day)
-        ).select_related('member', 'member__active_auth__mltc').annotate(
-                first_name=F('member__first_name'),
-                last_name=F('member__last_name'),
-                sadc_member_id=F('member__sadc_member_id'),
-                birth_date=F('member__birth_date'),
-                gender=F('member__gender'),
-                mltc_name=F('member__active_auth__mltc__name'),
-            )
-    else:
-        title = "members"
-        members = Member.objects.filter(
-            sadc=sadc,
-            active=True,
-            deleted_at__isnull=True
-        ).select_related('active_auth__mltc')
+    query_info = query_func(sadc, today, first_day, last_day)
+    title = query_info['title']
+    members_qs = query_info['members']()
 
-    mltc_names = (
-        Mltc.objects.filter(sadc=sadc)
-        .values_list('name', flat=True)
-    )
+    display_month = query_info.get('display_month', snapshot_date.month)
+    display_year = query_info.get('display_year', snapshot_date.year)
+
+    mltc_names = Mltc.objects.filter(sadc=sadc).values_list('name', flat=True)
 
     data = {
         mltc_name or "Unknown": {
@@ -152,7 +76,7 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
         for mltc_name in mltc_names
     }
 
-    for item in members:
+    for item in members_qs:
         mltc = getattr(item, 'mltc_name', None) or "Unknown"
 
         if snapshot_type == "enrollments":
@@ -257,14 +181,9 @@ def drawMltcSummary(c, width, y, title, data):
         pos3_header = "End"
         
         c.drawString(X_POSITIONS["POS3"], y, pos3_header)
-    elif title == "birthdays":
-        pos2_header = "Birthdays"
-    elif title == "absences":
-        pos2_header = "Absences"
-    elif title == "gifts":
-        pos2_header = "Gifts"
     else:
-        pos2_header = "Members"
+        pos2_header = title.capitalize()
+
     c.drawString(X_POSITIONS["POS2"], y, pos2_header)
 
     y -= 20
@@ -331,46 +250,13 @@ def drawMemberInfo(c, title, width, y, member):
     c.drawString(X_POSITIONS["POS2"], y, member.birth_date.strftime("%m/%d/%Y"))
 
     text_width = c.stringWidth(member.gender, "Helvetica", 12)
-    start_x = X_POSITIONS["POS3"]+20 - (text_width / 2)
+    start_x = X_POSITIONS["POS3"] + 20 - (text_width / 2)
     c.drawString(start_x, y, member.gender)
 
-    if title == "birthdays":
-        age_turning = str(relativedelta(date.today(), member.birth_date).years)
-        text_width = c.stringWidth(age_turning, "Helvetica", 12)
-        start_x = X_POSITIONS["POS4"]+10 - (text_width / 2)
-        c.drawString(start_x, y, age_turning)
+    draw_func = DRAW_FUNCTIONS.get(title, DRAW_FUNCTIONS["members"])
+    y = draw_func(c, width, y, member)
 
-        c.line(start_x+50, y - 2, width-30, y - 2)
-    elif title == "absences":
-        start_str = member.start_date.strftime('%m/%d/%Y') if member.start_date else ""
-        end_str = member.end_date.strftime('%m/%d/%Y') if getattr(member, 'end_date', None) else ""
-        date_range = f"{start_str} - {end_str}".strip()
-
-        reason = member.get_absence_type_display() if hasattr(member, 'get_absence_type_display') else "-"
-        absence_text = f"{date_range} ({reason})" if date_range else reason
-        c.drawString(X_POSITIONS["POS4"], y, absence_text)
-    elif title == "enrollments":
-        change_date = member.change_date.strftime("%m/%d/%Y") if member.change_date else "-"
-        change_type = member.change_type.capitalize() if hasattr(member, 'change_type') else "-"
-        enrollment_text = f"{change_date} ({change_type})"
-        c.drawString(X_POSITIONS["POS4"], y, enrollment_text)
-
-        if change_type == Enrollment.TRANSFER.capitalize():
-            y -= 20
-            transfer_text = f"{member.old_mltc.name} → {member.new_mltc.name}"
-            text_width = c.stringWidth(transfer_text, "Helvetica", 12)
-            c.drawString(width - text_width - 30, y, transfer_text)
-    elif title == "gifts":
-        gift_text = f"{member.gift_name}: {member.created_at.strftime('%m/%d/%Y')}"
-        c.drawString(X_POSITIONS["POS4"], y, gift_text)
-    else:
-        schedule_list = getattr(member, 'schedule', []) or []
-        short_schedule = [day_map.get(day, day) for day in schedule_list]
-        schedule_str = ", ".join(short_schedule)
-        c.drawString(X_POSITIONS["POS4"], y, schedule_str)
-
-    y -= 20
-    return y
+    return y - 20
 
 def classify_enrollment(member, mltc_name):
     new_mltc = getattr(member, 'new_mltc', None)

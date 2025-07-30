@@ -108,7 +108,7 @@
         "enrollments": "Enrollments",
         "gifts": "Gifts",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
-        "see_archived": "See archived snapshots in settings"
+        "see_archived": "See archived snapshots in reports"
     },
     "home": {
         "welcome": "Welcome, {{name}}",
@@ -268,7 +268,8 @@
             "members": "Members",
             "birthdays": "Birthdays",
             "absences": "Absences",
-            "enrollments": "Enrollments"
+            "enrollments": "Enrollments",
+            "gifts": "Gifts"
         },
         "table": {
             "member": "Member",

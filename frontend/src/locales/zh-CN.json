@@ -108,7 +108,7 @@
         "enrollments": "注册",
         "gifts": "礼物",
         "month_snapshot_ready": "{{month}} 的快照已准备好查看",
-        "see_archived": "在设置中查看已存档的快照"
+        "see_archived": "查看报告中的存档快照"
     },
     "home": {
         "welcome": "欢迎, {{name}}",
@@ -268,7 +268,8 @@
             "members": "会员",
             "birthdays": "生日",
             "absences": "缺席",
-            "enrollments": "注册人数"
+            "enrollments": "注册人数",
+            "Gifts": "礼物"
         },
         "table": {
             "member": "成员",
