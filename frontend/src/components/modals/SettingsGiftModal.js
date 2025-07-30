@@ -29,56 +29,59 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
 
             <TextInput
                 label={t('settings.admin.gifts.name')}
-                value={current.name}
-                onChange={handleChange('name')}
-                onLimitExceeded={handleLimit('name', limitIndex)}
+                value={current.gift_name || current.name}
+                onChange={handleChange('gift_name')}
+                onLimitExceeded={handleLimit('gift_name', limitIndex)}
                 required
                 showDisabled={type === 'gifteds'}
                 disabled={disabled}
             />
 
-            <TextInput
-                type="date"
-                label={t('settings.admin.gifts.expires_at')}
-                value={current.expires_at}
-                onChange={handleChange('expires_at')}
-                showDisabled={type === 'gifteds'}
-                disabled={disabled}
-            />
+            {type !== 'gifteds' && (
+                <>
+                    <TextInput
+                        type="date"
+                        label={t('settings.admin.gifts.expires_at')}
+                        value={current.expires_at}
+                        onChange={handleChange('expires_at')}
+                        disabled={disabled}
+                    />
 
-            <div className="member-detail">
-                <label>{t('settings.admin.gifts.mltc')} </label>
-                <select
-                    required
-                    value={(disabled && type === 'gifts') ? '' : current.mltc || ''}
-                    onChange={handleChange('mltc')}
-                    disabled={disabled}
-                >
-                    <option value="">{t('settings.admin.gifts.all_mltcs')}</option>
-                    {mltcs.map((option) => (
-                        <option key={option.name} value={option.name}>
-                            {option.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+                    <div className="member-detail">
+                        <label>{t('settings.admin.gifts.mltc')} </label>
+                        <select
+                            required
+                            value={(disabled && type === 'gifts') ? '' : current.mltc || ''}
+                            onChange={handleChange('mltc')}
+                            disabled={disabled}
+                        >
+                            <option value="">{t('settings.admin.gifts.all_mltcs')}</option>
+                            {mltcs.map((option) => (
+                                <option key={option.name} value={option.name}>
+                                    {option.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-            <div className="member-detail">
-                <label>{t('settings.admin.gifts.birth_month')}</label>
-                <select
-                    value={current.birth_month || ''}
-                    onChange={handleChange('birth_month')}
-                    disabled={disabled}
-                    required
-                >
-                    <option value="">{t('settings.admin.gifts.all_months')}</option>
-                    {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                            {t('general.month.' + (i + 1))}
-                        </option>
-                    ))}
-                </select>
-            </div>
+                    <div className="member-detail">
+                        <label>{t('settings.admin.gifts.birth_month')}</label>
+                        <select
+                            value={current.birth_month || ''}
+                            onChange={handleChange('birth_month')}
+                            disabled={disabled}
+                            required
+                        >
+                            <option value="">{t('settings.admin.gifts.all_months')}</option>
+                            {Array.from({ length: 12 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>
+                                    {t('general.month.' + (i + 1))}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </>
+            )}
 
             {type === 'gifteds' && (
                 <TextInput

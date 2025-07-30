@@ -261,12 +261,16 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
                 
                     savedData.forEach(item => {
                         if (item.received) {
-                            newGifts = newGifts.filter(gift => gift.id !== item.gift);
+                            newGifts = newGifts.filter(gift => gift.gift_id !== item.gift_id);
                         } else {
-                            if (!newGifts.some(gift => gift.id === item.gift)) {
-                                const fullGift = allGifts.find(gift => gift.id === item.gift);
+                            if (!newGifts.some(gift => gift.gift_id === item.gift_id)) {
+                                const fullGift = allGifts.find(gift => gift.gift_id === item.gift);
                                 if (fullGift) {
-                                    newGifts.push(fullGift);
+                                    newGifts.push({
+                                        gift_id: fullGift.id,
+                                        gift_name: fullGift.name,
+                                        expires_at: fullGift.expires_at
+                                    });
                                 }
                             }
                         }

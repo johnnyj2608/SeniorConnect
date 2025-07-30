@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.gift_model import Gift
 from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.gifted_model import Gifted
-from ..serializers.gift_serializers import GiftSerializer
+from ..serializers.gift_serializers import GiftSerializer, SimpleGiftSerializer
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 from django.db.models import Q
 from django.utils import timezone
@@ -95,7 +95,7 @@ def getActiveGiftListByMember(sadc, member):
     birth_month = member.birth_date.month
     mltc = member.active_auth.mltc if member.active_auth else None
 
-    gifted_gift_ids = Gifted.objects.filter(
+    received_gift_ids = Gifted.objects.filter(
         member=member
     ).values_list('gift_id', flat=True)
 
@@ -104,7 +104,7 @@ def getActiveGiftListByMember(sadc, member):
     ).filter(
         Q(expires_at__isnull=True) | Q(expires_at__gte=timezone.now().date())
     ).exclude(
-        id__in=gifted_gift_ids
+        id__in=received_gift_ids
     ).filter(
         Q(birth_month__isnull=True) | Q(birth_month=birth_month)
     )
@@ -114,4 +114,4 @@ def getActiveGiftListByMember(sadc, member):
     else:
         gifts = gifts.filter(mltc__isnull=True)
 
-    return GiftSerializer(gifts, many=True).data
+    return SimpleGiftSerializer(gifts, many=True).data

@@ -18,7 +18,8 @@ const MemberGiftedCard = ({ id, data, onEdit }) => {
             const normalizedGifts = gifts.map(gift => ({
                 ...gift,
                 id: 'new',
-                gift: gift.id,
+                gift_id: gift.gift_id,
+                gift_name: gift.gift_name,
                 member: id,
                 received: false,
                 note: ''
@@ -42,7 +43,7 @@ const MemberGiftedCard = ({ id, data, onEdit }) => {
                     <ul className="card-list">
                         {gifts.map((gift, idx) => (
                             <li key={idx} className="card-list-item">
-                                <MemberDetail label={t('member.gifts.name')} value={gift.name} />
+                                <MemberDetail label={t('member.gifts.name')} value={gift.gift_name} />
                                 <MemberDetail label={t('member.gifts.expires_at')} value={formatDate(gift.expires_at)} />
                             </li>
                         ))}

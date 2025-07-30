@@ -13,3 +13,11 @@ class GiftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gift
         exclude = ['created_at', 'updated_at', 'sadc']
+
+class SimpleGiftSerializer(serializers.ModelSerializer):
+    gift_id = serializers.IntegerField(source='id')
+    gift_name = serializers.CharField(source='name')
+
+    class Meta:
+        model = Gift
+        fields = ['gift_id', 'gift_name', 'expires_at']
