@@ -11,16 +11,16 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
     const disabled = data.filter(tab => !tab.deleted).length <= 0 || type === 'gifteds';
     const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
-    const fetchReceivedData = async () => {
+    const fetchGiftedData = async (status = 'received') => {
         try {
-            const response = await fetchWithRefresh(`/core/gifteds/received/${current.id}/`);
+            const response = await fetchWithRefresh(`/core/gifteds/${status}/${current.id}/`);
             if (!response.ok) return;
             const data = await response.json();
-            console.log(data)
+            console.log(data);
         } catch (error) {
             console.error(error);
-            }
-        };
+        }
+    };
 
     return (
         <>
@@ -96,12 +96,12 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                     <div className="switch-container">
                         <button 
                             className="action-button thin"
-                            onClick={fetchReceivedData}>
+                            onClick={() => fetchGiftedData('received')}>
                                 {t('settings.admin.gifts.received_list')}
                         </button>
                         <button 
                             className="action-button thin"
-                            onClick={fetchReceivedData}>
+                            onClick={() => fetchGiftedData('unreceived')}>
                                 {t('settings.admin.gifts.unreceived_list')}
                         </button>
                     </div>

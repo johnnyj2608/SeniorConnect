@@ -13,6 +13,16 @@ class MemberNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         abstract = True
+
+class MemberSimpleSerializer(serializers.ModelSerializer):
+    formal_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Member
+        fields = ['sadc_member_id', 'formal_name', 'birth_date', 'gender']
+
+    def get_formal_name(self, obj):
+        return obj.formal_name
     
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True

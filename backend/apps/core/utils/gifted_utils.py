@@ -2,8 +2,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gifted_model import Gifted
+from backend.apps.tenant.models.gift_model import Gift
 from ..serializers.gifted_serializers import GiftedSerializer, GiftedMemberSerializer
+from ..serializers.member_serializers import MemberSimpleSerializer
 from backend.access.member_access import member_access_filter, member_access_fk
+from django.db.models import Q
 
 @member_access_filter()
 def getGiftedList(request):
@@ -69,4 +72,24 @@ def getGiftedListByMember(request, member_pk):
 def getReceivedMembersByGift(request, pk):
     gifted_entries = Gifted.objects.filter(gift_id=pk).select_related('member')
     serializer = GiftedMemberSerializer(gifted_entries, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@member_access_filter()
+def getUnreceivedMembersByGift(request, pk):
+    gift = get_object_or_404(Gift, id=pk)
+
+    received_member_ids = Gifted.objects.filter(gift_id=pk).values_list('member_id', flat=True)
+    qs = request.accessible_members_qs.exclude(id__in=received_member_ids)
+
+    if gift.birth_month:
+        qs = qs.filter(birth_date__month=gift.birth_month)
+
+    if gift.mltc:
+        qs = qs.filter(active_auth__mltc=gift.mltc)
+    else:
+        qs = qs.filter(active_auth__mltc__isnull=False)
+
+    qs = qs.select_related('active_auth', 'active_auth__mltc')
+
+    serializer = MemberSimpleSerializer(qs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
