@@ -951,6 +951,11 @@ input[type="number"]::-webkit-inner-spin-button {
   padding: 3px 5px;
 }
 
+.member-detail.right {
+  justify-content: right;
+  padding-right: 10px;
+}
+
 .member-detail > label {
   width: 150px;
   flex-shrink: 0;

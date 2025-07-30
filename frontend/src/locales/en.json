@@ -322,7 +322,8 @@
                 "birth_month": "Birth Month",
                 "received": "Received",
                 "received_list": "Received List",
-                "unreceived_list": "Unreceived List"
+                "unreceived_list": "Unreceived List",
+                "expires_delete": "Delete on Expiry"
             },
             "sadc": {
                 "label": "Sadc",

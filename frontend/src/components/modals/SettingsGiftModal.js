@@ -52,14 +52,6 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
 
             {type !== 'gifteds' && (
                 <>
-                    <TextInput
-                        type="date"
-                        label={t('settings.admin.gifts.expires_at')}
-                        value={current.expires_at}
-                        onChange={handleChange('expires_at')}
-                        disabled={disabled}
-                    />
-
                     <div className="member-detail">
                         <label>{t('settings.admin.gifts.mltc')} </label>
                         <select
@@ -93,6 +85,31 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                             ))}
                         </select>
                     </div>
+
+                    <TextInput
+                        type="date"
+                        label={t('settings.admin.gifts.expires_at')}
+                        value={current.expires_at}
+                        onChange={handleChange('expires_at')}
+                        disabled={disabled}
+                    />
+
+                    {current.expires_at && (
+                        <div className="member-detail right">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={!!current.expires_delete}
+                                    onChange={(e) =>
+                                        handleChange('expires_delete')({ target: { value: e.target.checked } })
+                                    }
+                                    disabled={disabled}
+                                />
+                                {t('settings.admin.gifts.expires_delete')}
+                            </label>
+                        </div>
+                    )}
+
                     <div className="switch-container">
                         <button 
                             className="action-button thin"
