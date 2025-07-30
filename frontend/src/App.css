@@ -715,6 +715,7 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   margin-top: 0.3rem;
+  gap: 10px;
 }
 
 .members-count {

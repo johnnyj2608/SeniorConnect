@@ -2,7 +2,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gift_model import Gift
-from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.gifted_model import Gifted
 from ..serializers.gift_serializers import GiftSerializer, SimpleGiftSerializer
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin

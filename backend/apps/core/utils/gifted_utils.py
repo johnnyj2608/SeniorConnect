@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gifted_model import Gifted
-from ..serializers.gifted_serializers import GiftedSerializer
+from ..serializers.gifted_serializers import GiftedSerializer, GiftedMemberSerializer
 from backend.access.member_access import member_access_filter, member_access_fk
 
 @member_access_filter()
@@ -63,4 +63,10 @@ def deleteGifted(request, pk, member_pk):
 def getGiftedListByMember(request, member_pk):
     gifted = Gifted.objects.filter(member=member_pk)
     serializer = GiftedSerializer(gifted, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@member_access_filter()
+def getReceivedMembersByGift(request, pk):
+    gifted_entries = Gifted.objects.filter(gift_id=pk).select_related('member')
+    serializer = GiftedMemberSerializer(gifted_entries, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

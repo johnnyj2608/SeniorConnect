@@ -22,12 +22,6 @@ def getContact(request, pk):
     if request.method == 'GET':
         return getContactDetail(request, pk=pk)
 
-@api_view(['GET'])
-def getContactsByMember(request, pk):
-    if request.method == 'GET':
-        return getContactListByMember(request, member_pk=pk)
-    
-
 @api_view(['PUT', 'DELETE'])
 def getContactWithMember(request, pk, member_pk):
     if request.method == 'PUT':

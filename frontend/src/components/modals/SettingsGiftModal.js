@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TextInput from '../inputs/TextInput';
 import { formatTimestamp } from '../../utils/formatUtils';
+import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
 const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleLimit }) => {
     const { t } = useTranslation();
@@ -9,6 +10,17 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0 || type === 'gifteds';
     const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
+
+    const fetchReceivedData = async () => {
+        try {
+            const response = await fetchWithRefresh(`/core/gifteds/received/${current.id}/`);
+            if (!response.ok) return;
+            const data = await response.json();
+            console.log(data)
+        } catch (error) {
+            console.error(error);
+            }
+        };
 
     return (
         <>
@@ -80,6 +92,18 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                                 </option>
                             ))}
                         </select>
+                    </div>
+                    <div className="switch-container">
+                        <button 
+                            className="action-button thin"
+                            onClick={fetchReceivedData}>
+                                {t('settings.admin.gifts.received_list')}
+                        </button>
+                        <button 
+                            className="action-button thin"
+                            onClick={fetchReceivedData}>
+                                {t('settings.admin.gifts.unreceived_list')}
+                        </button>
                     </div>
                 </>
             )}

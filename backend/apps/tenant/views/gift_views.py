@@ -8,7 +8,6 @@ from ..utils.gift_utils import (
     deleteGift,
     getGiftList,
     createGift,
-    getActiveGiftListByMember,
 )
 
 @api_view(['GET', 'POST'])

@@ -319,7 +319,9 @@
                 "all_mltcs": "所有老人中心保险",
                 "all_months": "所有月份",
                 "birth_month": "出生月份",
-                "received": "已收到"
+                "received": "已收到",
+                "received_list": "已接收列表",
+                "unreceived_list": "未接收列表"
             },
             "sadc": {
                 "label": "老人中心",

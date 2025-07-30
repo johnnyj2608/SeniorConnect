@@ -319,7 +319,9 @@
                 "all_mltcs": "All MLTCs",
                 "all_months": "All Months",
                 "birth_month": "Birth Month",
-                "received": "Received"
+                "received": "Received",
+                "received_list": "Received List",
+                "unreceived_list": "Unreceived List"
             },
             "sadc": {
                 "label": "Sadc",
