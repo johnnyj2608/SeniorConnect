@@ -26,6 +26,19 @@ const formatTime = (time) => {
     timeZone: 'UTC',
   });
 };
+
+const formatTimestamp = (timestamp) => {
+  if (!timestamp) return null;
+  const d = new Date(timestamp);
+  return d.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+  });
+};
   
 const formatPhone = (phone) => {
   if (!phone) return phone;
@@ -199,4 +212,5 @@ export {
   formatStatus,
   normalizeField,
   formatObjectDisplay,
+  formatTimestamp,
 };

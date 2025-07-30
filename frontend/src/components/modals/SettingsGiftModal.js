@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TextInput from '../inputs/TextInput';
+import { formatTimestamp } from '../../utils/formatUtils';
 
 const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleLimit }) => {
     const { t } = useTranslation();
@@ -84,13 +85,23 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
             )}
 
             {type === 'gifteds' && (
-                <TextInput
-                    label={t('general.note')}
-                    value={current.note}
-                    onChange={handleChange('note')}
-                    onLimitExceeded={handleLimit('note')}
-                    maxLength={220}
-                />
+                <>
+                    <TextInput
+                        label={t('settings.admin.gifts.received')}
+                        value={formatTimestamp(current.created_at)}
+                        onChange={handleChange('created_at')}
+                        onLimitExceeded={handleLimit('created_at')}
+                        showDisabled={true}
+                        disabled={true}
+                    />
+                    <TextInput
+                        label={t('general.note')}
+                        value={current.note}
+                        onChange={handleChange('note')}
+                        onLimitExceeded={handleLimit('note')}
+                        maxLength={220}
+                    />
+                </>
             )}
         </>
     );
