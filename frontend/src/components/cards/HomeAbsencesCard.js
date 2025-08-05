@@ -29,24 +29,28 @@ const HomeAbsenceCard = () => {
     <div className="card-full">
       <h2>{t('snapshots.absences')}</h2>
       <div className="card-container">
-        <div className="card-list-container">
-          <div className="card-list">
-            <h3>{t('home.leaving_soon')}</h3>
-            <ul>
-              {leaving.map(absence => (
-                <AbsenceItem key={absence.member} absence={absence} />
-              ))}
-            </ul>
+        {leaving.length === 0 && returning.length === 0 ? (
+          <p>{t('home.no_upcoming_absences')}</p>
+        ) : (
+          <div className="card-list-container">
+            <div className="card-list">
+              <h3>{t('home.leaving_soon')}</h3>
+              <ul>
+                {leaving.map(absence => (
+                  <AbsenceItem key={absence.member} absence={absence} />
+                ))}
+              </ul>
+            </div>
+            <div className="card-list">
+              <h3>{t('home.returning_soon')}</h3>
+              <ul>
+                {returning.map(absence => (
+                  <AbsenceItem key={absence.member} absence={absence} />
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className="card-list">
-            <h3>{t('home.returning_soon')}</h3>
-            <ul>
-              {returning.map(absence => (
-                <AbsenceItem key={absence.member} absence={absence} />
-              ))}
-            </ul>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

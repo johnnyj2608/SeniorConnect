@@ -114,6 +114,7 @@
         "welcome": "欢迎, {{name}}",
         "leaving_soon": "即将离开",
         "returning_soon": "即将返回",
+        "no_upcoming_absences": "没有即将缺席的情况",
         "days": "{{count}}天",
         "no_upcoming_birthdays": "暂无即将到来的生日",
         "tomorrow": "明天",

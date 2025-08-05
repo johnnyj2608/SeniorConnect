@@ -114,6 +114,7 @@
         "welcome": "Welcome, {{name}}",
         "leaving_soon": "Leaving Soon",
         "returning_soon": "Returning Soon",
+        "no_upcoming_absences": "No upcoming absences",
         "days": "{{count}} days",
         "no_upcoming_birthdays": "No upcoming birthdays",
         "tomorrow": "Tomorrow",
