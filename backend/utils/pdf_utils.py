@@ -61,23 +61,32 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members"):
 
     mltc_names = Mltc.objects.filter(sadc=sadc).values_list('name', flat=True)
 
-    data = {
-        mltc_name or "Unknown": {
-            'members': [],
-            'counts': {
-                'enrollment': 0,
-                'disenrollment': 0,
-                'transfer_in': 0,
-                'transfer_out': 0,
-                'net_change': 0,
-                'total': 0,
-            }
+    if snapshot_type == "enrollments":
+        base_counts = {
+            'enrollment': 0,
+            'disenrollment': 0,
+            'transfer_in': 0,
+            'transfer_out': 0,
+            'net_change': 0,
+            'total': 0,
         }
-        for mltc_name in mltc_names
+    else:
+        base_counts = {
+            'total': 0,
+        }
+
+    data = {
+        mltc_name: {
+            'members': [],
+            'counts': base_counts.copy()
+        }
+        for mltc_name in mltc_names if mltc_name
     }
 
     for item in members_qs:
-        mltc = getattr(item, 'mltc_name', None) or "Unknown"
+        mltc = getattr(item, 'mltc_name', None)
+        if not mltc or mltc not in data:
+            continue
 
         if snapshot_type == "enrollments":
             old_mltc_name = item.old_mltc.name if item.old_mltc else None
