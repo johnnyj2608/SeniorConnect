@@ -58,6 +58,11 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members", mltc_names=None, **ext
 
     display_month = query_info.get('display_month', snapshot_date.month)
     display_year = query_info.get('display_year', snapshot_date.year)
+    subtitle = title
+    if 'gifts_' in snapshot_type:
+        subtitle += ' Gift'
+    else:
+        subtitle += f' Snapshot {month_name[display_month]} {display_year}'
 
     if mltc_names is None:
         mltc_names = list(Mltc.objects.filter(sadc=sadc).values_list('name', flat=True))
@@ -130,9 +135,8 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members", mltc_names=None, **ext
     pdf_buffer = generateSnapshot(
         sadc.name, 
         data, 
-        display_month, 
-        display_year,
         title,
+        subtitle,
     )
 
     pdf_buffer.seek(0)
@@ -154,13 +158,13 @@ def checkPageBreak(c, y, height, font="Helvetica", font_size=12):
         c.setFont(font, font_size)
     return y
 
-def drawSadcHeader(c, title, width, height, sadc, month, year):
+def drawSadcHeader(c, subtitle, width, height, sadc):
     y = height - 35
     c.setFont("Helvetica-Bold", 20)
     c.drawCentredString(width / 2, y, sadc)
     y -= 25
     c.setFont("Helvetica-Bold", 16)
-    c.drawCentredString(width / 2, y, f"{title.title()} Snapshot - {month_name[month]} {year}")
+    c.drawCentredString(width / 2, y, subtitle)
     y -= 40
     return y
 
@@ -279,14 +283,13 @@ def classify_enrollment(member, mltc_name):
         "transfer_out": old_mltc is not None and old_mltc.name == mltc_name,
     }
 
-def generateSnapshot(sadc, data, month, year, title):
+def generateSnapshot(sadc, data, title, subtitle):
     buffer = BytesIO()
     c = NumberedCanvas(buffer, pagesize=letter)
-    pdf_title = f"{title.title()} Snapshot {month_name[month]} {year}"
-    c.setTitle(pdf_title)
+    c.setTitle(subtitle)
     width, height = letter
 
-    y = drawSadcHeader(c, title, width, height, sadc, month, year)
+    y = drawSadcHeader(c, subtitle, width, height, sadc)
     y = drawMltcSummary(c, width, y, title, data)
     y -= 20
 
