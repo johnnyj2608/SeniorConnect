@@ -1,0 +1,62 @@
+{
+    "title": "Senior Connect Help Center",
+    "date": "August 5, 2025",
+    "introduction": "Welcome to the Senior Connect Help Center. Here you will find answers to common questions and resources to help you make the most of our electronic health record system.",
+    "sections": [
+        {
+            "title": "Getting Started",
+            "articles": [
+                {
+                    "question": "How do I create an account?",
+                    "answer": "To create an account, please contact your organization's administrator to set up an account using your preferred email address. You will then receive instructions via email to complete the account creation process."
+                },
+                {
+                    "question": "How do I log in?",
+                    "answer": "Enter your email and password on the login page. If you forget your password, use the 'Forgot Password' link to reset it."
+                }
+            ]
+        },
+        {
+            "title": "Managing Members",
+            "articles": [
+                {
+                    "question": "How do I add a new member?",
+                    "answer": "Navigate to the Members section, click 'Add Member', and enter the member's information, including sensitive health data if applicable."
+                },
+                {
+                    "question": "Can I edit or delete member information?",
+                    "answer": "Yes, select a member from your list and use the Edit or Delete options. Please note that deleting data may be permanent."
+                }
+            ]
+        },
+        {
+            "title": "Privacy and Security",
+            "articles": [
+                {
+                    "question": "How is my data protected?",
+                    "answer": "Senior Connect uses encryption, access controls, and secure cloud storage to protect your information."
+                },
+                {
+                    "question": "Who can access the health data I enter?",
+                    "answer": "Only authorized users within your organization have access to sensitive health information you provide."
+                }
+            ]
+        },
+        {
+            "title": "Technical Support",
+            "articles": [
+                {
+                    "question": "What do I do if I experience login issues?",
+                    "answer": "Check your internet connection and try resetting your password if needed. Contact support if problems persist."
+                },
+                {
+                    "question": "How can I report a bug or request a feature?",
+                    "answer": "Please email us at seniorconnect@gmail.com with detailed information about the issue or request."
+                }
+            ]
+        }
+    ],
+    "contact": {
+        "email": "seniorconnect@gmail.com"
+    }
+}

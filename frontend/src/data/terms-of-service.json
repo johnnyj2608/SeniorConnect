@@ -1,0 +1,35 @@
+{
+    "title": "Terms of Service",
+    "date": "August 5, 2025",
+    "introduction": "Welcome to Senior Connect. By accessing or using our services, you agree to comply with and be bound by these Terms of Service.",
+    "sections": [
+        {
+            "title": "1. Use of Our Service",
+            "content": "You agree to use Senior Connect only for lawful purposes and in accordance with these Terms. You may not misuse the service or attempt to access it unlawfully."
+        },
+        {
+            "title": "2. Account Responsibility",
+            "content": "You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account."
+        },
+        {
+            "title": "3. Data Privacy and Security",
+            "content": "Your use of Senior Connect is subject to our Privacy Policy, which describes how we collect, use, and protect your information."
+        },
+        {
+            "title": "4. Limitation of Liability",
+            "content": "Senior Connect is provided \"as is\" and we make no guarantees regarding availability, accuracy, or reliability. We are not liable for any damages resulting from your use of the service."
+        },
+        {
+            "title": "5. Termination",
+            "content": "We may suspend or terminate your access to the service at any time, with or without cause or notice."
+        },
+        {
+            "title": "6. Changes to Terms",
+            "content": "We reserve the right to modify these Terms at any time. Continued use of the service after changes constitutes acceptance of the updated Terms."
+        },
+        {
+            "title": "7. Contact Us",
+            "content": "If you have any questions about these Terms, please contact us at: seniorconnect@gmail.com"
+        }
+    ]
+}

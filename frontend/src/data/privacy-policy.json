@@ -1,0 +1,39 @@
+{
+    "title": "Privacy Policy",
+    "date": "August 5, 2025",
+    "introduction": "This Privacy Policy explains how Senior Connect collects, uses, and protects your personal information when you use our services.",
+    "sections": [
+        {
+            "title": "1. Information We Collect",
+            "content": "Senior Connect collects both personal and sensitive information necessary to deliver and support our services. This includes: personal identifiers (such as name, email address, phone number, and mailing address), account credentials, and any health-related data you input regarding individuals (e.g., patients or members)."
+        },
+        {
+            "title": "2. How We Collect Information",
+            "content": "We collect information directly from users during account creation, profile updates, and while using our platform. Additionally, we use cookies and local storage technologies to manage login sessions and maintain platform functionality."
+        },
+        {
+            "title": "3. How We Use Your Information",
+            "content": "We use the information we collect to provide our services, authenticate users, enable secure access to health records, personalize your experience, ensure data integrity, and meet legal and regulatory obligations. We do not sell or share your personal information with third-party advertisers or data brokers."
+        },
+        {
+            "title": "4. Sensitive Information",
+            "content": "Users may input sensitive health information about other individuals. This data is stored securely and access is strictly limited to authorized users. By submitting this data, you confirm that you have appropriate consent or legal authority to do so."
+        },
+        {
+            "title": "5. Data Storage and Security",
+            "content": "Data is stored securely using cloud-based providers, which may be located outside the United States. We employ industry-standard security measures, including encryption, access controls, and audit logging to protect your data."
+        },
+        {
+            "title": "6. Your Privacy Rights",
+            "content": "You have the right to access, correct, or delete your personal information, and to withdraw consent where applicable. To exercise these rights, contact us at seniorconnect@gmail.com. We will respond to your request in accordance with applicable privacy laws."
+        },
+        {
+            "title": "7. Cookies and Tracking Technologies",
+            "content": "We use cookies and local storage solely to manage sessions and improve user experience. We do not use tracking or advertising cookies. You can manage your cookie preferences through your browser settings."
+        },
+        {
+            "title": "8. Contact Us",
+            "content": "If you have any questions or concerns about this Privacy Policy, please contact us at: seniorconnect@gmail.com"
+        }
+    ]
+}
