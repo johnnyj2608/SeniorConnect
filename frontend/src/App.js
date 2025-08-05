@@ -50,6 +50,11 @@ function Main() {
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         </div>
+        <footer className="app-footer">
+          <p>
+            © {new Date().getFullYear()} Senior Connect. All rights reserved.
+          </p>
+        </footer>
       </div>
     </div>
   );
