@@ -7,6 +7,10 @@ from ..serializers.gift_serializers import GiftSerializer, SimpleGiftSerializer
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin
 from django.db.models import Q
 from django.utils import timezone
+from backend.apps.tenant.models.mltc_model import Mltc
+from backend.utils.pdf_utils import generateSnapshotPdf
+from django.http import FileResponse
+from django.utils.encoding import smart_str
 
 def getGiftList(request):
     gifts = list(
@@ -111,3 +115,50 @@ def getActiveGiftListByMember(sadc, member):
         gifts = gifts.filter(mltc__isnull=True)
 
     return SimpleGiftSerializer(gifts, many=True).data
+
+def getReceivedMembersByGift(request, pk):
+    user = request.user
+    sadc = user.sadc
+    mltcs = Mltc.objects.filter(sadc=sadc)
+
+    if not (user.is_superuser or user.is_org_admin):
+        mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
+
+    mltc_names = list(mltcs.values_list('name', flat=True))
+    file, file_name, pages = generateSnapshotPdf(
+        sadc_id=sadc.id,
+        snapshot_type="gifts_received",
+        mltc_names=mltc_names,
+        gift_id=pk,
+    )
+
+    return FileResponse(
+        file,
+        as_attachment=True,
+        filename=smart_str(file_name),
+        content_type='application/pdf'
+    )
+
+def getUnreceivedMembersByGift(request, pk):
+    user = request.user
+
+    sadc = request.user.sadc
+    mltcs = Mltc.objects.filter(sadc=sadc)
+
+    if not (user.is_superuser or user.is_org_admin):
+        mltcs = mltcs.filter(id__in=user.allowed_mltcs.values_list('id', flat=True))
+
+    mltc_names = list(mltcs.values_list('name', flat=True))
+    file, file_name, pages = generateSnapshotPdf(
+        sadc_id=sadc.id,
+        snapshot_type="gifts_unreceived",
+        mltc_names=mltc_names,
+        gift_id=pk,
+    )
+
+    return FileResponse(
+        file,
+        as_attachment=True,
+        filename=smart_str(file_name),
+        content_type='application/pdf'
+    )

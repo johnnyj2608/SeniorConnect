@@ -13,10 +13,12 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
 
     const fetchGiftedData = async (status = 'received') => {
         try {
-            const response = await fetchWithRefresh(`/core/gifteds/${status}/${current.id}/`);
+            const response = await fetchWithRefresh(`/tenant/gifts/${status}/${current.id}/`);
             if (!response.ok) return;
-            const data = await response.json();
-            console.log(data);
+
+            const blob = await response.blob();
+            const fileUrl = URL.createObjectURL(blob);
+            window.open(fileUrl, '_blank');
         } catch (error) {
             console.error(error);
         }

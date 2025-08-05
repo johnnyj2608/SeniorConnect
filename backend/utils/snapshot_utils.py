@@ -3,11 +3,13 @@ from datetime import date, datetime, timedelta
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 from ..apps.core.models.member_model import Member
 from ..apps.core.models.absence_model import Absence
 from ..apps.audit.models.enrollment_model import Enrollment
 from ..apps.core.models.gifted_model import Gifted
+from ..apps.tenant.models.gift_model import Gift
 
 X_POSITIONS = {
     "POS1": 40,
@@ -101,7 +103,55 @@ def gifts_query(sadc, _, first_day, last_day):
         ),
     }
 
-def default_query(sadc, *_):
+def gifts_received_query(sadc, _, __, ___, gift_id=None):
+    if gift_id is None:
+        raise ValueError("gift_id is required")
+    gift = get_object_or_404(Gift, id=gift_id)
+    return {
+        'title': f'{gift.name} Received',
+        'members': lambda: Gifted.objects.filter(
+            member__sadc=sadc,
+            gift_id=gift_id
+        ).select_related('member', 'member__active_auth__mltc').annotate(
+            first_name=F('member__first_name'),
+            last_name=F('member__last_name'),
+            sadc_member_id=F('member__sadc_member_id'),
+            birth_date=F('member__birth_date'),
+            gender=F('member__gender'),
+            mltc_name=F('member__active_auth__mltc__name'),
+        ),
+    }
+
+def gifts_unreceived_query(sadc, _, __, ___, gift_id=None):
+    if gift_id is None:
+        raise ValueError("gift_id is required")
+
+    gift = Gift.objects.get(id=gift_id)
+
+    received_member_ids = Gifted.objects.filter(gift_id=gift_id).values_list('member_id', flat=True)
+
+    qs = Member.objects.filter(
+        sadc=sadc,
+        active=True,
+        deleted_at__isnull=True
+    ).exclude(id__in=received_member_ids)
+
+    if gift.birth_month:
+        qs = qs.filter(birth_date__month=gift.birth_month)
+
+    if gift.mltc:
+        qs = qs.filter(active_auth__mltc=gift.mltc)
+    else:
+        qs = qs.filter(active_auth__mltc__isnull=False)
+
+    qs = qs.select_related('active_auth__mltc')
+
+    return {
+        'title': f'{gift.name} Unreceived',
+        'members': lambda: qs,
+    }
+
+def default_query(sadc, *args, **kwargs):
     return {
         'title': 'members',
         'members': lambda: Member.objects.filter(
@@ -116,6 +166,8 @@ SNAPSHOT_QUERIES = {
     'absences': absences_query,
     'enrollments': enrollments_query,
     'gifts': gifts_query,
+    'gifts_received': gifts_received_query,
+    'gifts_unreceived': gifts_unreceived_query,
     'members': default_query,
 }
 

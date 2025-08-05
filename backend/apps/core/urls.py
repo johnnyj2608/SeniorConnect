@@ -46,8 +46,6 @@ urlpatterns = [
     path('files/', file_views.getFiles, name="files"),
 
     # Gifted related paths
-    path('gifteds/unreceived/<str:pk>/', gifted_views.getUnreceivedGifts, name="unreceived_gifts"),
-    path('gifteds/received/<str:pk>/', gifted_views.getReceivedGifts, name="received_gifts"),
     path('gifteds/member/<str:pk>/', gifted_views.getGiftedsByMember, name="gifted_by_member"),
     path('gifteds/<str:pk>/', gifted_views.getGifted, name="gifted"),
     path('gifteds/', gifted_views.getGifteds, name="gifteds"),

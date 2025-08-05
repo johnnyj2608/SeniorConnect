@@ -15,6 +15,8 @@ urlpatterns = [
     path('mltcs/', mltc_views.getMltcs, name="mltcs"),
 
     # Gifts related paths
+    path('gifts/unreceived/<str:pk>/', gift_views.getUnreceivedGifts, name="unreceived_gifts"),
+    path('gifts/received/<str:pk>/', gift_views.getReceivedGifts, name="received_gifts"),
     path('gifts/<str:pk>/', gift_views.getGift, name="gift"),
     path('gifts/', gift_views.getGifts, name="gifts"),
 

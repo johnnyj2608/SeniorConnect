@@ -45,21 +45,22 @@ class NumberedCanvas(rl_canvas.Canvas):
         width, height = letter
         self.drawRightString(width - 30, 20, text)
 
-def generateSnapshotPdf(sadc_id, snapshot_type="members"):
+def generateSnapshotPdf(sadc_id, snapshot_type="members", mltc_names=None, **extra):
     sadc = Sadc.objects.get(id=sadc_id)
     today, first_day, last_day, snapshot_date = get_snapshot_dates()
 
     snapshot_type = snapshot_type.lower()
     query_func = SNAPSHOT_QUERIES.get(snapshot_type, SNAPSHOT_QUERIES['members'])
 
-    query_info = query_func(sadc, today, first_day, last_day)
+    query_info = query_func(sadc, today, first_day, last_day, **extra)
     title = query_info['title']
     members_qs = query_info['members']()
 
     display_month = query_info.get('display_month', snapshot_date.month)
     display_year = query_info.get('display_year', snapshot_date.year)
 
-    mltc_names = Mltc.objects.filter(sadc=sadc).values_list('name', flat=True)
+    if mltc_names is None:
+        mltc_names = list(Mltc.objects.filter(sadc=sadc).values_list('name', flat=True))
 
     if snapshot_type == "enrollments":
         base_counts = {
@@ -159,7 +160,7 @@ def drawSadcHeader(c, title, width, height, sadc, month, year):
     c.drawCentredString(width / 2, y, sadc)
     y -= 25
     c.setFont("Helvetica-Bold", 16)
-    c.drawCentredString(width / 2, y, f"{title.capitalize()} Snapshot - {month_name[month]} {year}")
+    c.drawCentredString(width / 2, y, f"{title.title()} Snapshot - {month_name[month]} {year}")
     y -= 40
     return y
 
@@ -191,7 +192,7 @@ def drawMltcSummary(c, width, y, title, data):
         
         c.drawString(X_POSITIONS["POS3"], y, pos3_header)
     else:
-        pos2_header = title.capitalize()
+        pos2_header = title.title()
 
     c.drawString(X_POSITIONS["POS2"], y, pos2_header)
 
@@ -281,7 +282,7 @@ def classify_enrollment(member, mltc_name):
 def generateSnapshot(sadc, data, month, year, title):
     buffer = BytesIO()
     c = NumberedCanvas(buffer, pagesize=letter)
-    pdf_title = f"{title.capitalize()} Snapshot {month_name[month]} {year}"
+    pdf_title = f"{title.title()} Snapshot {month_name[month]} {year}"
     c.setTitle(pdf_title)
     width, height = letter
 

@@ -7,8 +7,6 @@ from ..utils.gifted_utils import (
     getGiftedList,
     createGifted,
     getGiftedListByMember,
-    getReceivedMembersByGift,
-    getUnreceivedMembersByGift,
 )
 
 @api_view(['GET', 'POST'])
@@ -39,13 +37,3 @@ def giftedDelete(request, pk, member_pk):
 def getGiftedsByMember(request, pk):
     if request.method == 'GET':
         return getGiftedListByMember(request, member_pk=pk)
-
-@api_view(['GET'])
-def getReceivedGifts(request, pk):
-    if request.method == 'GET':
-        return getReceivedMembersByGift(request, pk=pk)
-    
-@api_view(['GET'])
-def getUnreceivedGifts(request, pk):
-    if request.method == 'GET':
-        return getUnreceivedMembersByGift(request, pk=pk)

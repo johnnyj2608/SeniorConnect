@@ -8,6 +8,8 @@ from ..utils.gift_utils import (
     deleteGift,
     getGiftList,
     createGift,
+    getReceivedMembersByGift,
+    getUnreceivedMembersByGift,
 )
 
 @api_view(['GET', 'POST'])
@@ -34,3 +36,14 @@ def getGift(request, pk):
 
     if request.method == 'DELETE':
         return deleteGift(request, pk=pk)
+    
+
+@api_view(['GET'])
+def getReceivedGifts(request, pk):
+    if request.method == 'GET':
+        return getReceivedMembersByGift(request, pk=pk)
+    
+@api_view(['GET'])
+def getUnreceivedGifts(request, pk):
+    if request.method == 'GET':
+        return getUnreceivedMembersByGift(request, pk=pk)
