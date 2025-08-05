@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
-import useNavObserver from '../hooks/useNavObserver';
 import SettingsAccount from '../components/settings/SettingsAccount';
 import SettingsAdmin from '../components/settings/SettingsAdmin';
 import SettingsPreferences from '../components/settings/SettingsPreferences';
@@ -96,12 +95,6 @@ const SettingsPage = () => {
         openModal,
         closeModal,
       } = useModalOpen();
-
-    useNavObserver(sections, setActiveSection, {
-        root: null,
-        rootMargin: '-110px 0px -60% 0px',
-        threshold: 0,
-    });
 
     const handleModalOpen = useCallback(
         (type, data) => {

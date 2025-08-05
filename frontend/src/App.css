@@ -168,7 +168,6 @@ input[type="number"]::-webkit-inner-spin-button {
   color: var(--color-text);
   background-color: var(--color-background);
   min-height: 100svh;
-  overflow-x: hidden;
 }
 
 .app-header {
@@ -1752,11 +1751,12 @@ body.modal-open {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .settings-nav {
   position: sticky;
-  top: 100px;
+  top: 122px;
   width: 20%;
   min-width: 225px;
   background-color: var(--color-content);
