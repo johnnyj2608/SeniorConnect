@@ -52,7 +52,7 @@ const SettingsData = ({ onEdit }) => {
   return (
     <div id="settings-data">
       <h3 className="section-title">{t('settings.data.label')}</h3>
-      <div className="section-main">
+      <div className="settings-main">
         <SettingsItem label={t('settings.data.download_members')} onClick={exportMemberCSV} />
         <SettingsItem label={t('settings.data.upload_members')} onClick={() => onEdit('import', {name: '', date: '', file: ''})} />
         <SettingsItem label={t('settings.data.restore_deleted')} onClick={handleDeletedModal} />

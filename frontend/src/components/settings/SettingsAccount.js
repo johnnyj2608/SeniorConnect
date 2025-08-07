@@ -33,7 +33,7 @@ const SettingsAccount = () => {
   return (
     <div id="settings-account">
       <h3 className="section-title">{t('settings.account.label')}</h3>
-      <div className="section-main">
+      <div className="settings-main">
         <SettingsItem label={t('settings.account.reset_password')} onClick={handleResetPassword} />
         <SettingsItem label={t('settings.account.log_out')} onClick={handleLogout} />
       </div>

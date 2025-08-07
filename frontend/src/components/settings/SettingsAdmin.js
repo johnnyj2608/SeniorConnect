@@ -34,7 +34,7 @@ const SettingsAdmin = ({ onEdit }) => {
     return (
         <div id="settings-admin">
             <h3 className="section-title">{t('settings.admin.label')}</h3>
-            <div className="section-main">
+            <div className="settings-main">
                 <SettingsItem
                     label={t('settings.admin.sadc.label')}
                     onClick={() => handleEdit('sadcs')}

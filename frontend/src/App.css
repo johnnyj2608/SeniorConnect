@@ -1835,16 +1835,47 @@ body.modal-open {
   border: 1px solid var(--color-border);
 }
 
-.section-main {
+.settings-main {
   padding: 10px;
 }
 
-.section-main .member-detail span {
+.settings-main .member-detail span {
   width: 100%;
 }
 
-.section-main .member-detail input {
+.settings-main .member-detail input {
   width: 80%;
+}
+
+/* --------------
+  Support
+-------------- */
+.support-content {
+  font-size: 20px;
+}
+
+.support-title, .support-date {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.support-section h4 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.support-section p {
+  margin: 15px;
+}
+
+.support-articles {
+  border-top: 1px solid var(--color-border);
+  padding-bottom: 5px;
+}
+
+.support-article {
+  margin-top: 10px;
 }
 
 .ReactCrop {

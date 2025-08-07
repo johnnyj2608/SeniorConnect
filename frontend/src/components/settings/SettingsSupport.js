@@ -14,7 +14,7 @@ const SettingsSupport = () => {
   return (
     <div id="settings-support">
       <h3 className="section-title">{t('settings.support.label')}</h3>
-      <div className="section-main">
+      <div className="settings-main">
         <SettingsItem
           label={t('settings.support.terms')}
           onClick={() => handleNavigate('/support/terms')}

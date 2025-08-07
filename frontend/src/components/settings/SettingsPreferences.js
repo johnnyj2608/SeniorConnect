@@ -55,7 +55,7 @@ const SettingsPreferences = () => {
   return (
     <div id="settings-preferences">
       <h3 className="section-title">{t('settings.preferences.label')}</h3>
-      <div className="section-main">
+      <div className="settings-main">
         <SettingsItem 
           label={t('settings.preferences.dark_mode')} 
           component={
