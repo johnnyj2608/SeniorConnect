@@ -340,17 +340,17 @@
         },
         "data": {
             "label": "Data",
-            "download_members": "Download members",
+            "download_members": "Download Members",
             "upload_members": "Upload Members",
-            "restore_deleted": "Restore deleted",
+            "restore_deleted": "Restore Deleted",
             "days_left": "{{days}} Days left",
             "no_deleted": "No members to restore"
         },
         "support": {
             "label": "Support",
-            "help_center": "Help center",
-            "terms_of_service": "Terms of service",
-            "privacy_policy": "Privacy policy"
+            "help": "Help Center",
+            "terms": "Terms of Service",
+            "privacy": "Privacy Policy"
         },
         "account": {
             "label": "Account",

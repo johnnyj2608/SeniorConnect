@@ -348,9 +348,9 @@
         },
         "support": {
             "label": "支持",
-            "help_center": "帮助中心",
-            "terms_of_service": "服务条款",
-            "privacy_policy": "隐私政策"
+            "help": "帮助中心",
+            "terms": "服务条款",
+            "privacy": "隐私政策"
         },
         "account": {
             "label": "账户",

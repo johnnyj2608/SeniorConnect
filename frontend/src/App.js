@@ -19,6 +19,7 @@ import MembersListPage from './pages/MembersListPage';
 import MemberPage from './pages/MemberPage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
+import SupportPage from './pages/SupportPage';
 import LoginPage from './pages/LoginPage';
 
 function Main() {
@@ -47,6 +48,7 @@ function Main() {
             <Route path="/member/:id" element={<PrivateRoute><MemberPage /></PrivateRoute>} />
             <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+            <Route path="/support/:section" element={<PrivateRoute><SupportPage /></PrivateRoute>} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         </div>
