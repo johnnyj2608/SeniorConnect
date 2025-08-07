@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import privacyData from '../data/privacy-policy.json';
 import termsData from '../data/terms-of-service.json';
@@ -9,6 +10,7 @@ import helpData from '../data/help-center.json';
 const SupportsPage = () => {
 	const { t } = useTranslation();
 	const { section } = useParams();
+	const navigate = useNavigate();
 
 	const dataMap = {
 		terms: termsData,
@@ -27,6 +29,12 @@ const SupportsPage = () => {
             </div>
 			<div className="content-padding">
 				<div className="support-content card-container">
+					<button
+						className="support-back-button"
+						onClick={() => navigate('/settings')}
+					>
+						← Back
+					</button>
 					<h3 className="support-title">{data.title}</h3>
 					<p className="support-date"><em>{data.date}</em></p>
 					<p>{data.introduction}</p>
