@@ -3,22 +3,18 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import privacyData from '../data/privacy-policy.json';
-import termsData from '../data/terms-of-service.json';
-import helpData from '../data/help-center.json';
-
 const SupportsPage = () => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const { section } = useParams();
 	const navigate = useNavigate();
+	const lang = i18n.language || 'en';
 
-	const dataMap = {
-		terms: termsData,
-		privacy: privacyData,
-		help: helpData,
-	};
-
-	const data = dataMap[section];
+	let data;
+	try {
+		data = require(`../data/${lang}/${section}.json`);
+	} catch (err) {
+		data = require(`../data/en/${section}.json`);
+	}
 
 	return (
 		<>
@@ -33,7 +29,7 @@ const SupportsPage = () => {
 						className="support-back-button"
 						onClick={() => navigate('/settings')}
 					>
-						← Back
+						← {t('general.buttons.back')}
 					</button>
 					<h3 className="support-title">{data.title}</h3>
 					<p className="support-date"><em>{data.date}</em></p>

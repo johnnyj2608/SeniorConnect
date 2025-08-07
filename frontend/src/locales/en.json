@@ -37,7 +37,8 @@
             "add_mltc": "Add MLTC",
             "add_member": "Add Member",
             "add_all": "Add All",
-            "clear_mltc": "Clear MLTC"
+            "clear_mltc": "Clear MLTC",
+            "back": "Back"
         },
         "days_of_week": {
             "monday": "Monday",
@@ -358,6 +359,9 @@
             "log_out": "Log out",
             "password_reset_instructions": "Password instructions was sent to your email"
         }
+    },
+    "footer": {
+        "copyright": "© {{year}} {{title}}. All rights reserved."
     },
     "alerts": {
         "required_fields": "Please fill in the required fields: {{fields}}",

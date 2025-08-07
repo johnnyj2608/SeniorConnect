@@ -37,7 +37,8 @@
             "add_mltc": "添加 MLTC",
             "add_member": "添加会员",
             "add_all": "全部添加",
-            "clear_mltc": "清除 MLTC"
+            "clear_mltc": "清除 MLTC",
+            "back": "返回"
         },
         "days_of_week": {
             "monday": "星期一",
@@ -341,7 +342,7 @@
         "data": {
             "label": "数据",
             "download_members": "下载成员",
-            "upload": "上传成员",
+            "upload_members": "上传成员",
             "restore_deleted": "恢复已删除",
             "days_left": "剩余{{days}}天",
             "no_deleted": "没有可恢复的成员"
@@ -358,6 +359,9 @@
             "log_out": "退出登录",
             "password_reset_instructions": "密码说明已发送至您的邮箱"
         }
+    },
+    "footer": {
+        "copyright": "© {{year}} {{title}}。保留所有权利。"
     },
     "alerts": {
         "required_fields": "请填写以下必填字段：{{fields}}",

@@ -29,7 +29,7 @@ function Main() {
   const isDarkMode = usePreferences("dark_mode");
   const language = usePreferences("language", "en");
 
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (language && i18n.language !== language) {
@@ -54,7 +54,10 @@ function Main() {
         </div>
         <footer className="app-footer">
           <p>
-            © {new Date().getFullYear()} Senior Connect. All rights reserved.
+            {t('footer.copyright', {
+              year: new Date().getFullYear(),
+              title: 'Senior Connect',
+            })}
           </p>
         </footer>
       </div>
