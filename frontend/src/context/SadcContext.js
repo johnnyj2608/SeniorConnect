@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
 export const SadcContext = createContext();
@@ -18,10 +18,6 @@ export const SadcProvider = ({ children }) => {
             return [];
         }
     }, []);
-
-    useEffect(() => {
-        fetchSadc();
-    }, [fetchSadc]);
 
     return (
         <SadcContext.Provider value={{ sadc, refreshSadc: fetchSadc }}>

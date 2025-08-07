@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
 export const UserContext = createContext();
@@ -18,10 +18,6 @@ export const UserProvider = ({ children }) => {
             return [];
         }
     }, []);
-
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
 
     return (
         <UserContext.Provider value={{ users, refreshUser: fetchUsers }}>

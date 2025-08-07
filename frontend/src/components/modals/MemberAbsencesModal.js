@@ -15,17 +15,13 @@ const absenceTypes = [
 
 const MemberAbsencesModal = ({ data, handleChange, activeTab, handleAdd, dragStatus, handleLimit }) => {
     const { t } = useTranslation();
-    const { users, refreshUser } = useContext(UserContext);
+    const { users } = useContext(UserContext);
 
     const current = data[activeTab] || {};
     const disabled = data.filter(tab => !tab.deleted).length <= 0;
     const limitIndex = current.id === 'new' ? data.length - 1 - activeTab : activeTab;
 
     const isAssessment = current.absence_type === 'assessment';
-
-    useEffect(() => {
-        refreshUser();
-    }, [refreshUser]);
 
     const onDropFile = (files) => {
         const file = files[0];

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
 export const GiftContext = createContext();
@@ -18,10 +18,6 @@ export const GiftProvider = ({ children }) => {
             return [];
         }
     }, []);
-
-    useEffect(() => {
-        fetchGifts();
-    }, [fetchGifts]);
 
     return (
         <GiftContext.Provider value={{ gifts, refreshGift: fetchGifts }}>

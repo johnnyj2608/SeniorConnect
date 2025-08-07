@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
 export const MltcContext = createContext();
@@ -18,10 +18,6 @@ export const MltcProvider = ({ children }) => {
             return [];
         }
     }, []);
-
-    useEffect(() => {
-        fetchMltcs();
-    }, [fetchMltcs]);
 
     return (
         <MltcContext.Provider value={{ mltcs, refreshMltc: fetchMltcs }}>

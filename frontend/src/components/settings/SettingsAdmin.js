@@ -14,7 +14,7 @@ const SettingsAdmin = ({ onEdit }) => {
     const { refreshGift } = useContext(GiftContext);
     const { refreshUser } = useContext(UserContext);
     const { refreshSadc } = useContext(SadcContext);
-
+    
     const handleEdit = async (type) => {
         if (type === 'mltcs') {
             const freshMltcs = await refreshMltc();
@@ -26,8 +26,11 @@ const SettingsAdmin = ({ onEdit }) => {
             const freshUsers = await refreshUser();
             onEdit(type, freshUsers);
         } else if (type === 'sadcs') {
+            console.log('1')
             const freshSadcs = await refreshSadc();
+            console.log('2')
             onEdit(type, freshSadcs);
+            console.log('3')
         }
     };
 
