@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.db.models import F, Count
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from ..apps.tenant.models.sadc_model import Sadc
 from ..apps.tenant.models.mltc_model import Mltc
