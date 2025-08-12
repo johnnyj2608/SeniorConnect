@@ -37,7 +37,7 @@ def getGiftDetail(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift.objects.select_related('mltc'), id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(gift, current_user)
     if unauthorized: return unauthorized
 
     serializer = GiftSerializer(gift)
@@ -45,8 +45,6 @@ def getGiftDetail(request, pk):
 
 def createGift(request):
     current_user = request.user
-    unauthorized = require_org_admin(current_user)
-    if unauthorized: return unauthorized
 
     data = request.data
     serializer = GiftSerializer(data=data)
@@ -65,7 +63,7 @@ def updateGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(gift, current_user)
     if unauthorized: return unauthorized
 
     data = request.data
@@ -85,7 +83,7 @@ def deleteGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(gift, current_user)
     if unauthorized: return unauthorized
 
     gift.delete()
