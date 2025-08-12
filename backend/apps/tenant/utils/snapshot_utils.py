@@ -22,7 +22,7 @@ def getSnapshotDetail(request, pk):
     current_user = request.user
     snapshot = get_object_or_404(Snapshot, id=pk)
 
-    unauthorized = require_sadc_ownership(snapshot, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(snapshot, current_user)
     if unauthorized:
         return unauthorized
 
