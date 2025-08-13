@@ -49,6 +49,41 @@ def org_setup(db):
     }
 
 @pytest.fixture
+def other_org_setup(db):
+    """
+    Fixture to set up another organization with its own SADC and MLTCs.
+    Useful for testing unauthorized access or cross-organization scenarios.
+    """
+    other_sadc = Sadc.objects.create(
+        name="Other SADC",
+        email="other@sadc.com",
+        phone="0987654321",
+        address="456 Other St, Other City, OC 67890",
+        npi="0987654321",
+        attendance_template=1,
+        languages=["English"],
+        active=True,
+    )
+    other_mltc_allowed = Mltc.objects.create(
+        sadc=other_sadc,
+        name="Other Allowed MLTC",
+        dx_codes=["DX5", "DX6"],
+        active=True,
+    )
+    other_mltc_denied = Mltc.objects.create(
+        sadc=other_sadc,
+        name="Other Denied MLTC",
+        dx_codes=["DX7", "DX8"],
+        active=True,
+    )
+    return {
+        "other_sadc": other_sadc,
+        "other_mltc_allowed": other_mltc_allowed,
+        "other_mltc_denied": other_mltc_denied,
+    }
+
+
+@pytest.fixture
 def admin_user(org_setup):
     sadc = org_setup['sadc']
     return User.objects.create_user(

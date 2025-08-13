@@ -2,7 +2,7 @@ import pytest
 from django.utils import timezone
 from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.authorization_model import Authorization
-from backend.apps.tenant.tests.conftest import org_setup
+from backend.conftest import org_setup
 
 @pytest.fixture
 def members_setup(db, org_setup):

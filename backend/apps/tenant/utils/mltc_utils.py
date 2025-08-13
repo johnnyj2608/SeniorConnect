@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.mltc_model import Mltc
 from ..serializers.mltc_serializers import MltcSerializer
-from backend.access.ownership_access import require_sadc_ownership, require_org_admin
+from backend.access.ownership_access import require_sadc_ownership, require_org_admin, require_valid_mltc
 
 def getMltcList(request):
     mltcs = Mltc.objects.filter(sadc=request.user.sadc)
@@ -19,7 +19,7 @@ def getMltcDetail(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(mltc, current_user) or require_valid_mltc(mltc, current_user)
     if unauthorized: return unauthorized
 
     serializer = MltcSerializer(mltc)

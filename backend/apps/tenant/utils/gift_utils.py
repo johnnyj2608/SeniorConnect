@@ -4,13 +4,26 @@ from rest_framework.generics import get_object_or_404
 from ..models.gift_model import Gift
 from backend.apps.core.models.gifted_model import Gifted
 from ..serializers.gift_serializers import GiftSerializer, SimpleGiftSerializer
-from backend.access.ownership_access import require_sadc_ownership, require_org_admin
+from backend.access.ownership_access import require_sadc_ownership, require_valid_mltc
 from django.db.models import Q
 from django.utils import timezone
 from backend.apps.tenant.models.mltc_model import Mltc
 from backend.utils.pdf_utils import generateSnapshotPdf
 from django.http import FileResponse
 from django.utils.encoding import smart_str
+
+def require_valid_birth_month(birth_month):
+    if birth_month in (None, ""):
+        return None
+    try:
+        birth_month_int = int(birth_month)
+        if birth_month_int < 1 or birth_month_int > 12:
+            return Response({"birth_month": ["Birth month must be between 1 and 12."]},
+                            status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        return Response({"birth_month": ["Birth month must be an integer."]},
+                        status=status.HTTP_400_BAD_REQUEST)
+    return None
 
 def getGiftList(request):
     gifts = list(
@@ -45,12 +58,17 @@ def getGiftDetail(request, pk):
 
 def createGift(request):
     current_user = request.user
-
     data = request.data
-    serializer = GiftSerializer(data=data)
 
+    birth_month_error = require_valid_birth_month(data.get("birth_month"))
+    if birth_month_error: return birth_month_error
+
+    serializer = GiftSerializer(data=data)
     try:
         if serializer.is_valid():
+            mltc_error = require_valid_mltc(serializer.validated_data.get('mltc'), current_user)
+            if mltc_error: return mltc_error
+
             serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -67,10 +85,16 @@ def updateGift(request, pk):
     if unauthorized: return unauthorized
 
     data = request.data
-    serializer = GiftSerializer(instance=gift, data=data)
 
+    birth_month_error = require_valid_birth_month(data.get("birth_month"))
+    if birth_month_error: return birth_month_error
+
+    serializer = GiftSerializer(instance=gift, data=data)
     try:
         if serializer.is_valid():
+            mltc_error = require_valid_mltc(serializer.validated_data.get('mltc'), current_user)
+            if mltc_error: return mltc_error
+        
             serializer.save(sadc=current_user.sadc)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
