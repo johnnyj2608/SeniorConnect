@@ -165,8 +165,19 @@ def members_setup(db, org_setup):
         gender="M",
     )
 
+    # Member inactive
+    m4 = Member.objects.create(
+        sadc=sadc,
+        sadc_member_id=3,
+        first_name="Inactive",
+        last_name="Member",
+        birth_date="1990-01-01",
+        gender="F",
+        active=False,
+    )
+
     return {
-        "members": (m1, m2, m3),
+        "members": (m1, m2, m3, m4),
         "sadc": sadc,
         "mltc_allowed": mltc_allowed,
         "mltc_denied": mltc_denied,

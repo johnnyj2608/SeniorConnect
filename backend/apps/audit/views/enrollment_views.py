@@ -1,9 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from ..utils.enrollment_utils import (
-    updateEnrollment,
     getEnrollmentDetail,
-    deleteEnrollment,
     getEnrollmentList,
     createEnrollment,
     getCurrentMonthEnrollmentStats,
@@ -20,19 +18,12 @@ def getEnrollments(request):
         return createEnrollment(request)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 def getEnrollment(request, pk):
 
     if request.method == 'GET':
         return getEnrollmentDetail(request,  pk=pk)
-
-    if request.method == 'PUT':
-        return updateEnrollment(request,  pk=pk)
-
-    if request.method == 'DELETE':
-        return deleteEnrollment(request,  pk=pk)
-
-
+    
 @api_view(['GET'])
 def getEnrollmentStats(request):
     if request.method == 'GET':

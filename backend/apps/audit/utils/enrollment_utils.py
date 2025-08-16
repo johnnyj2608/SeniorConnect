@@ -73,28 +73,6 @@ def createEnrollment(request):
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@member_access_fk
-def updateEnrollment(request, pk):
-    data = request.data
-    enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
-    serializer = EnrollmentSerializer(instance=enrollment, data=data)
-    
-    try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        print(e)
-        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@member_access_fk
-def deleteEnrollment(request, pk):
-    enrollment = get_object_or_404(Enrollment, id=pk)
-    enrollment.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-
 @member_access_filter()
 def getCurrentMonthEnrollmentStats(request):
     today = now()
