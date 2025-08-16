@@ -3,6 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from backend.apps.core.models.member_model import Member
 
+def check_member_access(user, member_id):
+    accessible_ids = set(Member.objects.accessible_by(user).values_list('id', flat=True))
+    if member_id not in accessible_ids:
+        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+    return None
+
 def member_access_pk(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
@@ -17,9 +23,8 @@ def member_access_pk(func):
         except Exception:
             return Response({"detail": "Invalid member ID."}, status=status.HTTP_400_BAD_REQUEST)
 
-        accessible_ids = set(Member.objects.accessible_by(request.user).values_list('id', flat=True))
-        if member_id not in accessible_ids:
-            return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+        unauthorized = check_member_access(request.user, member_id)
+        if unauthorized: return unauthorized
 
         return func(request, *args, **kwargs)
 
@@ -38,9 +43,8 @@ def member_access_fk(func):
         except Exception:
             return Response({"detail": "Invalid member ID."}, status=status.HTTP_400_BAD_REQUEST)
 
-        accessible_ids = set(Member.objects.accessible_by(request.user).values_list('id', flat=True))
-        if member_id not in accessible_ids:
-            return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+        unauthorized = check_member_access(request.user, member_id)
+        if unauthorized: return unauthorized
 
         return func(request, *args, **kwargs)
 

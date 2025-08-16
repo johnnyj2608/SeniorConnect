@@ -9,7 +9,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.enrollment_model import Enrollment
 from ..serializers.enrollment_serializers import EnrollmentSerializer
 from backend.apps.core.models.member_model import Member
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import check_member_access, member_access_filter, member_access_fk
 
 @member_access_filter()
 def getEnrollmentList(request):
@@ -26,9 +26,12 @@ def getEnrollmentList(request):
     serializer = EnrollmentSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-@member_access_fk
 def getEnrollmentDetail(request, pk):
     enrollment = get_object_or_404(Enrollment.objects.select_related('member', 'old_mltc', 'new_mltc'), id=pk)
+
+    unauthorized = check_member_access(request.user, enrollment.member_id)
+    if unauthorized: return unauthorized
+
     serializer = EnrollmentSerializer(enrollment)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

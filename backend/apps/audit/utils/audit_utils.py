@@ -8,7 +8,7 @@ from rest_framework.generics import get_object_or_404
 from ..models.audit_model import AuditLog
 from ..serializers.audit_serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import check_member_access, member_access_filter, member_access_fk
 
 @member_access_filter()
 def getAuditList(request):
@@ -23,48 +23,14 @@ def getAuditList(request):
     serializer = AuditLogSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-@member_access_fk
 def getAuditDetail(request, pk):
     audit = get_object_or_404(AuditLog.objects.select_related('user', 'content_type', 'member'), id=pk)
+
+    unauthorized = check_member_access(request.user, audit.member_id)
+    if unauthorized: return unauthorized
+    
     serializer = AuditLogSerializer(audit)
     return Response(serializer.data, status=status.HTTP_200_OK)
-
-@member_access_fk
-def createAudit(request):
-    data = request.data
-    serializer = AuditLogSerializer(data=data)
-    
-    try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        print(e)
-        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@member_access_fk
-def updateAudit(request, pk):
-    data = request.data
-    audit = get_object_or_404(AuditLog, id=pk)
-    serializer = AuditLogSerializer(instance=audit, data=data)
-    
-    try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        print(e)
-        return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@member_access_fk
-def deleteAudit(request, pk):
-    audit = get_object_or_404(AuditLog, id=pk)
-    audit.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @member_access_filter()
 def getRecentAudits(request):
