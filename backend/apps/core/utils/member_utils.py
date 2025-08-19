@@ -323,14 +323,10 @@ def importMembersCsv(request):
                 continue
 
             member_data = {field: row.get(field) for field in member_fields if row.get(field)}
-            member_data['sadc'] = sadc.id
 
-            serializer = MemberSerializer(data=member_data, context={'sadc': sadc})
-            if serializer.is_valid():
-                member_instance = Member(**serializer.validated_data)
-                valid_members.append((member_instance, row))
-            else:
-                member_skipped += 1
+            member_instance = Member(**member_data)
+            member_instance.sadc = sadc
+            valid_members.append((member_instance, row))
         except Exception as e:
             print(f"Member parse error: {e}")
             member_skipped += 1
