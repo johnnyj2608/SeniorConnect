@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view
 from ..utils.gifted_utils import (
     updateGifted,
     getGiftedDetail,
-    deleteGifted,
     getGiftedList,
     createGifted,
     getGiftedListByMember,
@@ -27,11 +26,6 @@ def getGifted(request, pk):
 
     if request.method == 'PUT':
         return updateGifted(request, pk=pk)
-
-@api_view(['DELETE'])
-def giftedDelete(request, pk, member_pk):
-    if request.method == 'DELETE':
-        return deleteGifted(request, pk=pk, member_pk=member_pk)
     
 @api_view(['GET'])
 def getGiftedsByMember(request, pk):

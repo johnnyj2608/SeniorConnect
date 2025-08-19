@@ -3,7 +3,11 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.gifted_model import Gifted
 from ..serializers.gifted_serializers import GiftedSerializer
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import (
+    check_member_access, 
+    member_access_filter, 
+    member_access_fk
+)
 
 @member_access_filter()
 def getGiftedList(request):
@@ -11,9 +15,12 @@ def getGiftedList(request):
     serializer = GiftedSerializer(gifted, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@member_access_fk
 def getGiftedDetail(request, pk):
     gifted = get_object_or_404(Gifted, id=pk)
+
+    unauthorized = check_member_access(request.user, gifted.member_id)
+    if unauthorized: return unauthorized
+
     serializer = GiftedSerializer(gifted)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -53,12 +60,6 @@ def updateGifted(request, pk):
     except Exception as e:
         print(e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@member_access_fk
-def deleteGifted(request, pk, member_pk):
-    gifted = get_object_or_404(Gifted, id=pk)
-    gifted.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @member_access_fk
 def getGiftedListByMember(request, member_pk):

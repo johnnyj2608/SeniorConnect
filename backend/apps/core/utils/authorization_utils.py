@@ -8,13 +8,19 @@ from ..serializers.authorization_serializers import (
     AuthorizationWithServiceSerializer,
     AuthorizationServiceSerializer,
 )
+from backend.apps.tenant.models.mltc_model import Mltc
 from django.db import transaction
 import json
 from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import (
+    check_member_access, 
+    member_access_filter, 
+    member_access_fk
+)
+from backend.access.ownership_access import require_valid_mltc
 
 @member_access_filter()
 def getAuthorizationList(request):
@@ -26,9 +32,12 @@ def getAuthorizationList(request):
     serializer = AuthorizationSerializer(authorizations, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@member_access_fk
 def getAuthorizationDetail(request, pk):
     authorization = get_object_or_404(Authorization.objects.select_related('mltc'), id=pk)
+    
+    unauthorized = check_member_access(request.user, authorization.member_id)
+    if unauthorized: return unauthorized
+    
     serializer = AuthorizationSerializer(authorization)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -37,6 +46,10 @@ def getAuthorizationDetail(request, pk):
 def createAuthorization(request):
     data = request.data.copy()
     public_url = None
+
+    mltc = Mltc.objects.get(name=data.get("mltc"))
+    unauthorized = require_valid_mltc(mltc, request.user)
+    if unauthorized: return unauthorized
 
     file = request.FILES.get('file')
     data.pop('file', None)
@@ -97,6 +110,10 @@ def createAuthorization(request):
 def updateAuthorization(request, pk):
     data = request.data.copy()
     public_url = None
+
+    mltc = Mltc.objects.get(name=data.get("mltc"))
+    unauthorized = require_valid_mltc(mltc, request.user)
+    if unauthorized: return unauthorized
 
     services = json.loads(data.pop('services', [])[0])
 

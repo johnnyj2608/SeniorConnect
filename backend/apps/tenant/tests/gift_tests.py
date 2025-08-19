@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+from rest_framework import status
 from backend.apps.tenant.models.gift_model import Gift
 
 # ==============================
@@ -22,7 +23,7 @@ def test_get_gift_list(api_client_regular, org_setup):
     url = reverse("gifts")
     resp = api_client_regular.get(url)
 
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     data = resp.json()
 
     # Check gift names exist in response
@@ -53,7 +54,7 @@ def test_get_gift_detail_unauthorized(api_client_regular, other_org_setup):
     url = reverse("gift", args=[gift.id])
     resp = api_client_regular.get(url)
 
-    assert resp.status_code == 403
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
 
 # ==============================
 # Gift Creation Tests
@@ -71,7 +72,7 @@ def test_create_gift_success_for_regular_user(api_client_regular, org_setup):
         "birth_month": 5,
     }
     resp = api_client_regular.post(url, new_data, format="json")
-    assert resp.status_code == 201
+    assert resp.status_code == status.HTTP_201_CREATED
     assert resp.data["name"] == "New Gift"
     assert resp.data.get("birth_month") == 5
     assert resp.data["mltc"] == org_setup['mltc_allowed'].name
@@ -88,7 +89,7 @@ def test_create_gift_success_for_admin(api_client_admin, org_setup):
         "birth_month": 5,
     }
     resp = api_client_admin.post(url, new_data, format="json")
-    assert resp.status_code == 201
+    assert resp.status_code == status.HTTP_201_CREATED
     assert resp.data["name"] == "Admin New Gift"
     assert resp.data.get("birth_month") == 5
     assert resp.data["mltc"] == org_setup['mltc_allowed'].name
@@ -105,7 +106,7 @@ def test_create_gift_denied_for_unrelated_mltc(api_client_regular, org_setup):
         "birth_month": 5,
     }
     resp = api_client_regular.post(url, new_data, format="json")
-    assert resp.status_code == 403
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
     assert "detail" in resp.data
 
 @pytest.mark.django_db
@@ -115,7 +116,7 @@ def test_create_gift_missing_required_fields(api_client_admin):
     """
     url = reverse("gifts")
     resp = api_client_admin.post(url, {}, format="json")
-    assert resp.status_code == 400
+    assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert "name" in resp.data
 
 # ==============================
@@ -135,7 +136,7 @@ def test_update_gift_success_for_regular_user(api_client_regular, org_setup):
         "birth_month": 7,
     }
     resp = api_client_regular.put(url, update_data, format="json")
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data["name"] == "Updated Gift"
     assert resp.data.get("birth_month") == 7
     assert resp.data["mltc"] == mltc_allowed.name
@@ -153,7 +154,7 @@ def test_update_gift_success_for_admin(api_client_admin, org_setup):
         "birth_month": 8,
     }
     resp = api_client_admin.put(url, update_data, format="json")
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data["name"] == "Admin Updated Gift"
     assert resp.data.get("birth_month") == 8
     assert resp.data["mltc"] == mltc_allowed.name
@@ -162,7 +163,7 @@ def test_update_gift_success_for_admin(api_client_admin, org_setup):
 def test_update_nonexistent_gift_returns_404(api_client_admin):
     url = reverse("gift", args=[9999])
     resp = api_client_admin.put(url, {"name": "Doesn't Matter", "mltc": None, "birth_month": 6}, format="json")
-    assert resp.status_code == 404
+    assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Gift Deletion Tests
@@ -176,7 +177,7 @@ def test_delete_gift_success_for_regular_user(api_client_regular, org_setup):
 
     url = reverse("gift", args=[gift.id])
     resp = api_client_regular.delete(url)
-    assert resp.status_code == 204
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
     assert not Gift.objects.filter(id=gift.id).exists()
 
 @pytest.mark.django_db
@@ -187,14 +188,14 @@ def test_delete_gift_success_for_admin(api_client_admin, org_setup):
 
     url = reverse("gift", args=[gift.id])
     resp = api_client_admin.delete(url)
-    assert resp.status_code == 204
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
     assert not Gift.objects.filter(id=gift.id).exists()
 
 @pytest.mark.django_db
 def test_delete_nonexistent_gift_returns_404(api_client_admin):
     url = reverse("gift", args=[9999])
     resp = api_client_admin.delete(url)
-    assert resp.status_code == 404
+    assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 @pytest.mark.django_db
 def test_delete_gift_unauthorized(api_client_regular, other_org_setup):
@@ -203,7 +204,7 @@ def test_delete_gift_unauthorized(api_client_regular, other_org_setup):
 
     url = reverse("gift", args=[gift.id])
     resp = api_client_regular.delete(url)
-    assert resp.status_code == 403
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
     assert Gift.objects.filter(id=gift.id).exists()
 
 # ==============================
@@ -218,7 +219,7 @@ def test_birth_month_out_of_range(api_client_admin, org_setup):
         "mltc": org_setup['mltc_allowed'].name,
         "birth_month": 15
     }, format="json")
-    assert resp.status_code == 400
+    assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert "birth_month" in resp.data
 
 @pytest.mark.django_db
@@ -229,5 +230,5 @@ def test_birth_month_non_integer(api_client_admin, org_setup):
         "mltc": org_setup['mltc_allowed'].name,
         "birth_month": "not_an_int"
     }, format="json")
-    assert resp.status_code == 400
+    assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert "birth_month" in resp.data

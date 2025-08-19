@@ -16,7 +16,11 @@ from ....utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import (
+    check_member_access, 
+    member_access_filter, 
+    member_access_fk
+)
 
 @member_access_filter()
 def getAbsenceList(request):
@@ -44,14 +48,18 @@ def getAbsenceList(request):
     serializer = AbsenceSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-@member_access_fk
 def getAbsenceDetail(request, pk):
-    try:
-        instance = Assessment.objects.select_related('member').get(id=pk)
-        serializer = AssessmentSerializer(instance)
-    except Assessment.DoesNotExist:
+    instance = Assessment.objects.filter(id=pk).select_related('member').first()
+    serializer_class = AssessmentSerializer
+
+    if not instance:
         instance = get_object_or_404(Absence.objects.select_related('member'), id=pk)
-        serializer = AbsenceSerializer(instance)
+        serializer_class = AbsenceSerializer
+
+    unauthorized = check_member_access(request.user, instance.member_id)
+    if unauthorized: return unauthorized
+
+    serializer = serializer_class(instance)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_fk

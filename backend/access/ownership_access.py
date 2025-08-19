@@ -29,15 +29,3 @@ def require_valid_mltc(obj, user):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
     return None
-
-def require_valid_mltc(mltc, user):
-    if mltc is None:
-        return None
-
-    if getattr(mltc, 'sadc', None) != getattr(user, 'sadc', None):
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
-    if not getattr(user, 'is_org_admin', False) and mltc not in user.allowed_mltcs.all():
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
-
-    return None

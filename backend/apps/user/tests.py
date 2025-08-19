@@ -8,7 +8,7 @@ from backend.apps.user.models import User
 # ==============================
 
 @pytest.mark.django_db
-def test_get_users_list_as_admin(api_client_admin, admin_user, org_setup):
+def test_get_users_list_as_admin(api_client_admin, admin_user):
     url = reverse('users')
     response = api_client_admin.get(url)
     
@@ -17,7 +17,7 @@ def test_get_users_list_as_admin(api_client_admin, admin_user, org_setup):
     assert any(u['email'] == admin_user.email for u in response.data)
 
 @pytest.mark.django_db
-def test_get_users_list_as_regular_user(api_client_regular, regular_user):
+def test_get_users_list_as_regular_user(api_client_regular):
     url = reverse('users')
     response = api_client_regular.get(url)
     
@@ -25,7 +25,7 @@ def test_get_users_list_as_regular_user(api_client_regular, regular_user):
     assert all(u['email'] for u in response.data)
 
 @pytest.mark.django_db
-def test_regular_user_cannot_see_other_org_users(api_client_regular, regular_user, other_org_setup):
+def test_regular_user_cannot_see_other_org_users(api_client_regular, other_org_setup):
     url = reverse('users')
     response = api_client_regular.get(url)
     

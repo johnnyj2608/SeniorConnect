@@ -6,7 +6,11 @@ from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
 from ....utils.supabase import *
 from django.utils.text import slugify
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import (
+    check_member_access, 
+    member_access_filter, 
+    member_access_fk
+)
 
 @member_access_filter()
 def getFileList(request):
@@ -14,9 +18,12 @@ def getFileList(request):
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@member_access_fk
 def getFileDetail(request, pk):
     file = get_object_or_404(File, id=pk)
+
+    unauthorized = check_member_access(request.user, file.member_id)
+    if unauthorized: return unauthorized
+
     serializer = FileSerializer(file)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

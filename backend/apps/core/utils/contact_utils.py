@@ -4,8 +4,13 @@ from rest_framework.generics import get_object_or_404
 from ..models.contact_model import Contact
 from ..models.member_model import Member
 from ..serializers.contact_serializers import ContactSerializer
-from backend.access.member_access import member_access_filter, member_access_fk
+from backend.access.member_access import (
+    check_member_access, 
+    member_access_filter, 
+    member_access_fk
+)
 
+@member_access_filter()
 def getContactList(request):
     contacts = Contact.objects.prefetch_related('members').all()
     serializer = ContactSerializer(contacts, many=True)
@@ -13,6 +18,11 @@ def getContactList(request):
 
 def getContactDetail(request, pk):
     contact = get_object_or_404(Contact.objects.prefetch_related('members'), id=pk)
+    
+    for member in contact.members.all():
+        unauthorized = check_member_access(request.user, member.id)
+        if unauthorized: return unauthorized
+        
     serializer = ContactSerializer(contact)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 from django.utils import timezone
+from rest_framework import status
 from backend.apps.tenant.models.snapshot_model import Snapshot
 
 # ==============================
@@ -29,7 +30,7 @@ def test_get_snapshot_list(api_client_regular, org_setup):
 
     url = reverse("snapshots")
     resp = api_client_regular.get(url)
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data['count'] == 2
     types = [item['type'] for item in resp.data['results']]
     assert Snapshot.MEMBERS in types
@@ -37,13 +38,13 @@ def test_get_snapshot_list(api_client_regular, org_setup):
 
     # Filter by type
     resp = api_client_regular.get(url + "?filter=birthdays")
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data['count'] == 1
     assert resp.data['results'][0]['type'] == Snapshot.BIRTHDAYS
 
     # Filter with no match
     resp = api_client_regular.get(url + "?filter=assessments")
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data['count'] == 0
 
 @pytest.mark.django_db
@@ -51,7 +52,7 @@ def test_get_snapshot_list_empty(api_client_regular):
     """Return empty list if no snapshots exist."""
     url = reverse("snapshots")
     resp = api_client_regular.get(url)
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data['count'] == 0
 
 @pytest.mark.django_db
@@ -76,7 +77,7 @@ def test_snapshot_list_excludes_other_sadc(api_client_regular, org_setup, other_
 
     url = reverse("snapshots")
     resp = api_client_regular.get(url)
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     names = [s['name'] for s in resp.data['results']]
     assert "Own SADC Snapshot" in names
     assert "Other SADC Snapshot" not in names
@@ -100,7 +101,7 @@ def test_get_snapshot_detail_authorized(api_client_regular, org_setup):
 
     url = reverse("snapshot", args=[snapshot.id])
     resp = api_client_regular.get(url)
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert resp.data['name'] == "Snapshot Detail"
 
 @pytest.mark.django_db
@@ -108,7 +109,7 @@ def test_get_snapshot_detail_invalid_id(api_client_regular):
     """Returns 404 for invalid snapshot ID."""
     url_invalid = reverse("snapshot", args=[999])
     resp_invalid = api_client_regular.get(url_invalid)
-    assert resp_invalid.status_code == 404
+    assert resp_invalid.status_code == status.HTTP_404_NOT_FOUND
 
 @pytest.mark.django_db
 def test_user_cannot_access_other_sadc_snapshot(api_client_regular, other_org_setup):
@@ -124,7 +125,7 @@ def test_user_cannot_access_other_sadc_snapshot(api_client_regular, other_org_se
 
     url = reverse("snapshot", args=[other_snapshot.id])
     resp = api_client_regular.get(url)
-    assert resp.status_code == 403
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
 
 
 # ==============================
@@ -143,20 +144,20 @@ def test_create_snapshot(api_client_regular, api_client_admin, org_setup):
 
     # Forbidden for regular user
     resp = api_client_regular.post(reverse("snapshots"), new_data, format="json")
-    assert resp.status_code == 403
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
     assert resp.data["detail"] == "Admin access required."
 
     # Success for admin
     new_data["type"] = Snapshot.ASSESSMENTS
     resp_admin = api_client_admin.post(reverse("snapshots"), new_data, format="json")
-    assert resp_admin.status_code == 201
+    assert resp_admin.status_code == status.HTTP_201_CREATED
     assert resp_admin.data["name"] == "New Snapshot"
     assert resp_admin.data["type"] == Snapshot.ASSESSMENTS
 
     # Invalid data
     invalid_data = {"date": "not-a-date", "type": 123}
     resp_invalid = api_client_admin.post(reverse("snapshots"), invalid_data, format="json")
-    assert resp_invalid.status_code == 400
+    assert resp_invalid.status_code == status.HTTP_400_BAD_REQUEST
 
 
 # ==============================
@@ -184,23 +185,23 @@ def test_update_snapshot(api_client_regular, api_client_admin, org_setup):
 
     # Forbidden for regular user
     resp_forbidden = api_client_regular.put(reverse("snapshot", args=[snapshot.id]), update_data, format="json")
-    assert resp_forbidden.status_code == 403
+    assert resp_forbidden.status_code == status.HTTP_403_FORBIDDEN
     assert resp_forbidden.data["detail"] == "Admin access required."
 
     # Success for admin
     resp_admin = api_client_admin.put(reverse("snapshot", args=[snapshot.id]), update_data, format="json")
-    assert resp_admin.status_code == 200
+    assert resp_admin.status_code == status.HTTP_200_OK
     assert resp_admin.data["name"] == "Updated Snapshot Name"
     assert resp_admin.data["pages"] == 3
 
     # Invalid ID
     resp_invalid_id = api_client_admin.put(reverse("snapshot", args=[999]), {"name": "Fail"}, format="json")
-    assert resp_invalid_id.status_code == 404
+    assert resp_invalid_id.status_code == status.HTTP_404_NOT_FOUND
 
     # Invalid serializer data
     invalid_data = {"date": "invalid-date", "pages": "not-an-int"}
     resp_invalid = api_client_admin.put(reverse("snapshot", args=[snapshot.id]), invalid_data, format="json")
-    assert resp_invalid.status_code == 400
+    assert resp_invalid.status_code == status.HTTP_400_BAD_REQUEST
 
 
 # ==============================
@@ -220,17 +221,17 @@ def test_delete_snapshot(api_client_regular, api_client_admin, org_setup):
 
     # Forbidden for regular user
     resp_forbidden = api_client_regular.delete(reverse("snapshot", args=[snapshot.id]))
-    assert resp_forbidden.status_code == 403
+    assert resp_forbidden.status_code == status.HTTP_403_FORBIDDEN
     assert resp_forbidden.data["detail"] == "Admin access required."
 
     # Success for admin
     resp_admin = api_client_admin.delete(reverse("snapshot", args=[snapshot.id]))
-    assert resp_admin.status_code == 204
+    assert resp_admin.status_code == status.HTTP_204_NO_CONTENT
     assert not Snapshot.objects.filter(id=snapshot.id).exists()
 
     # Invalid ID
     resp_invalid = api_client_admin.delete(reverse("snapshot", args=[999]))
-    assert resp_invalid.status_code == 404
+    assert resp_invalid.status_code == status.HTTP_404_NOT_FOUND
 
 
 # ==============================
@@ -259,5 +260,5 @@ def test_get_recent_snapshots(api_client_regular, org_setup):
     )
 
     resp = api_client_regular.get(reverse("snapshots_recent"))
-    assert resp.status_code == 200
+    assert resp.status_code == status.HTTP_200_OK
     assert any(s['name'] == "Current Month" for s in resp.data)

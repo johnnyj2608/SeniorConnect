@@ -87,10 +87,18 @@ def other_org_setup(db):
         dx_codes=["DX7", "DX8"],
         active=True,
     )
+    other_member = Member.objects.create(
+        sadc=other_sadc,
+        sadc_member_id=99,
+        first_name="Other",
+        last_name="Member",
+        birth_date="1990-01-01",
+    )
     return {
         "other_sadc": other_sadc,
         "other_mltc_allowed": other_mltc_allowed,
         "other_mltc_denied": other_mltc_denied,
+        "other_member": other_member,
     }
 
 
