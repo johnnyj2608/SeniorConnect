@@ -776,6 +776,7 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out;
+  z-index: 999999;
 }
 
 .floating-button:hover {
