@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.mltc_model import Mltc
+from backend.apps.user.models import User
 from ..serializers.mltc_serializers import MltcSerializer
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin, require_valid_mltc
 
@@ -36,7 +37,9 @@ def createMltc(request):
 
     try:
         if serializer.is_valid():
-            serializer.save(sadc=current_user.sadc)
+            mltc = serializer.save(sadc=current_user.sadc)
+            for user in User.objects.filter(sadc=current_user.sadc):
+                user.allowed_mltcs.add(mltc)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

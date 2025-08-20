@@ -66,6 +66,7 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
         maxLength={220}
         required
         disabled={disabled || adminUser}
+        showDisabled={true}
       />
 
       <div className="member-detail">
