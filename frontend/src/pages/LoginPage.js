@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import PasswordField from '../components/inputs/PasswordField'
 import { AuthContext } from '../context/AuthContext'
 import Loader from '../components/layout/Loader'
@@ -8,43 +8,61 @@ import Loader from '../components/layout/Loader'
 const LoginPage = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const location = useLocation()
     const { user, setUser, loading } = useContext(AuthContext)
+
+    const pathParts = location.pathname.split('/')
+    const isSetPassword = pathParts[2] === 'set-password'
+    const uid = isSetPassword ? pathParts[3] : null
+    const token = isSetPassword ? pathParts[4] : null
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     useEffect(() => {
-        if (!loading && user) {
+        if (!loading && user && !location.hash.startsWith('#/login')) {
             navigate('/')
         }
-    }, [loading, user, navigate])
+    }, [loading, user, navigate, location.hash])
 
     const handleChange = (field) => (event) => {
         const { value } = event.target
-            if (field === 'email') {
-            setEmail(value)
-        } else if (field === 'password') {
-            setPassword(value)
-        }
+        if (field === 'email') setEmail(value)
+        else if (field === 'password') setPassword(value)
+        else if (field === 'confirmPassword') setConfirmPassword(value)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        if (isSetPassword && password !== confirmPassword) {
+            alert('Passwords do not match')
+            return
+        }
+
         try {
-            const response = await fetch('/user/auth/login/', {
+            const endpoint = isSetPassword 
+                ? `/user/auth/set-password/${uid}/${token}/`
+                : '/user/auth/login/'
+
+            const body = isSetPassword 
+                ? { password } 
+                : { email, password }
+
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify(body),
             })
 
             if (!response.ok) {
-                throw new Error('Login failed')
+                throw new Error('Request failed')
             }
 
             const data = await response.json()
-            setUser(data.user)
+            if (!isSetPassword) setUser(data.user)
             navigate('/')
         } catch (error) {
             console.error(error)
@@ -58,19 +76,32 @@ const LoginPage = () => {
         <div className="login-container">
             <h1>Senior Connect</h1>
             <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    placeholder={t('general.email')}
-                    value={email}
-                    onChange={handleChange('email')}
-                    required
-                />
+                {!isSetPassword && (
+                    <input
+                        type="email"
+                        placeholder={t('general.email')}
+                        value={email}
+                        onChange={handleChange('email')}
+                        required
+                    />
+                )}
+
                 <PasswordField
                     value={password}
                     onChange={handleChange('password')}
+                    isConfirm={false}
                 />
+
+                {isSetPassword && (
+                    <PasswordField
+                        value={confirmPassword}
+                        onChange={handleChange('confirmPassword')}
+                        isConfirm={true}
+                    />
+                )}
+
                 <button className="login-submit" type="submit">
-                    {t('general.log_in')}
+                    {isSetPassword ? t('general.set_password') : t('general.log_in')}
                 </button>
             </form>
         </div>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as EyeOpen } from '../../assets/eye-open.svg'
 import { ReactComponent as EyeClose } from '../../assets/eye-close.svg'
 
-const PasswordField = ({ value, onChange }) => {
+const PasswordField = ({ value, onChange, isConfirm=false }) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false)
 
@@ -13,7 +13,7 @@ const PasswordField = ({ value, onChange }) => {
         type={showPassword ? 'text' : 'password'}
         value={value}
         onChange={onChange}
-        placeholder={t('general.password')}
+        placeholder={isConfirm ? t('general.confirm_password') : t('general.password')}
         required
         className="password-input"
       />

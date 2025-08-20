@@ -24,7 +24,7 @@ import LoginPage from './pages/LoginPage';
 
 function Main() {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const isLoginPage = location.pathname.startsWith("/login");
 
   const isDarkMode = usePreferences("dark_mode");
   const language = usePreferences("language", "en");
@@ -49,7 +49,7 @@ function Main() {
             <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/support/:section" element={<PrivateRoute><SupportPage /></PrivateRoute>} />
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login/*" element={<LoginPage />} />
             <Route
               path="*"
               element={

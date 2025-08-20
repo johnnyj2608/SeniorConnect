@@ -7,7 +7,7 @@ from django.conf import settings
 def generateInviteLink(user, request):
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    return f"{settings.FRONTEND_URL}/set-password/{uid}/{token}/"
+    return f"{settings.FRONTEND_URL}/#/login/set-password/{uid}/{token}/"
 
 def sendEmailInvitation(user, request):
     link = generateInviteLink(user, request)
