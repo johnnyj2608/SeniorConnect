@@ -310,7 +310,8 @@
                 "admin": "管理员",
                 "staff": "员工",
                 "can_view_snapshots": "可以查看快照",
-                "cant_view_snapshots": "无法查看快照"
+                "cant_view_snapshots": "无法查看快照",
+                "password_reset": "触发密码重置"
             },
             "mltcs": {
                 "label": "老人中心保险",
@@ -360,7 +361,7 @@
             "label": "账户",
             "reset_password": "重置密码",
             "log_out": "退出登录",
-            "password_reset_instructions": "密码说明已发送至您的邮箱"
+            "password_reset_instructions": "密码说明已发送至邮箱"
         }
     },
     "footer": {

@@ -26,11 +26,8 @@ const SettingsAdmin = ({ onEdit }) => {
             const freshUsers = await refreshUser();
             onEdit(type, freshUsers);
         } else if (type === 'sadcs') {
-            console.log('1')
             const freshSadcs = await refreshSadc();
-            console.log('2')
             onEdit(type, freshSadcs);
-            console.log('3')
         }
     };
 

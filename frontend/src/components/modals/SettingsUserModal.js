@@ -16,6 +16,21 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
     handleChange('allowed_mltcs')({ target: { value: newSelected } });
   };
 
+  const handleResetPassword = async () => {
+    alert(t('settings.account.password_reset_instructions'));
+    try {
+      const response = await fetch('/user/auth/reset-password/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: current.email }),
+      });
+
+      await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <div className="modal-header">
@@ -85,6 +100,15 @@ const SettingsUserModal = ({ data, handleChange, activeTab, mltcs, handleLimit }
           />
         }
       />
+
+      <div className="switch-container">
+        <p 
+          className="modal-text-button"
+          onClick={handleResetPassword}
+        >
+          {t('settings.admin.users.password_reset')}
+        </p>
+      </div>
     </>
   );
 };

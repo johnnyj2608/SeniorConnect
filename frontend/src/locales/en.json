@@ -310,7 +310,8 @@
                 "admin": "Admin",
                 "staff": "Staff",
                 "can_view_snapshots": "Can view snapshots",
-                "cant_view_snapshots": "Can not view snapshots"
+                "cant_view_snapshots": "Can not view snapshots",
+                "password_reset": "Trigger password reset"
             },
             "mltcs": {
                 "label": "Mltcs",
@@ -360,7 +361,7 @@
             "label": "Account",
             "reset_password": "Reset password",
             "log_out": "Log out",
-            "password_reset_instructions": "Password instructions was sent to your email"
+            "password_reset_instructions": "Password instructions was sent to email"
         }
     },
     "footer": {

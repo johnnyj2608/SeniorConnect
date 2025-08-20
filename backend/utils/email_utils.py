@@ -12,5 +12,18 @@ def generateInviteLink(user, request):
 def sendEmailInvitation(user, request):
     link = generateInviteLink(user, request)
     subject = "You're invited to join Senior Connect"
-    message = f"Hello {user.name},\n\nPlease set your password here: {link}\n\nThanks!"
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    
+    message = (
+        f"Hello {user.name},\n\n"
+        f"You have been invited to join Senior Connect. "
+        f"Please set your password using the link below:\n\n"
+        f"{link}\n\n"
+        f"If you did not expect this invitation, please contact your organization administrator."
+    )
+    
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+    )
