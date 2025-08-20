@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { MemberInfoModal, MemberInfoSideModal } from '../components/modals/MemberInfoModal';
 import MemberAuthModal from '../components/modals/MemberAuthModal';
 import MemberContactsModal from '../components/modals/MemberContactsModal';
@@ -25,7 +24,6 @@ const NO_TABS_TYPE = new Set(['info', 'sadcs', 'import']);
 const FULL_WIDTH_TYPES = new Set(['sadcs', 'import']);
 
 const ModalPage = ({ data, onClose }) => {
-    const { t } = useTranslation();
 
     const {
         type,

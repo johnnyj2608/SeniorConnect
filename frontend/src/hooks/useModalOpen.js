@@ -14,7 +14,7 @@ const useModalOpen = () => {
     const { refreshUser } = useContext(UserContext);
 
     const openModal = useCallback(async (type, data = {}) => {
-        if (type === 'authorizations' && refreshMltc) await refreshMltc();
+        if ((type === 'authorizations' || type === 'users') && refreshMltc) await refreshMltc();
         if ((type === 'attendance' || type === 'info') && refreshSadc) await refreshSadc();
         if (type === 'absences' && refreshUser) await refreshUser();
 
