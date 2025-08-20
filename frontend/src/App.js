@@ -50,6 +50,14 @@ function Main() {
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/support/:section" element={<PrivateRoute><SupportPage /></PrivateRoute>} />
             <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="*"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
         <footer className="app-footer">
