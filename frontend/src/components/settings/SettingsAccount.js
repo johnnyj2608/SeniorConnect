@@ -7,7 +7,7 @@ import SettingsItem from '../items/SettingsItem';
 
 const SettingsAccount = () => {
   const { t } = useTranslation();
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = useCallback(async () => {
@@ -26,8 +26,19 @@ const SettingsAccount = () => {
     }
   }, [setUser, navigate, t]);
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     alert(t('settings.account.password_reset_instructions'));
+    try {
+      const response = await fetch('/user/auth/reset-password/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user?.email }),
+      });
+
+      await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

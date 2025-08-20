@@ -14,6 +14,7 @@ from .utils import (
     handleLogin,
     handleLogout,
     handleRefresh,
+    resetPassword,
     setPassword,
 )
 
@@ -48,10 +49,16 @@ def getUser(request, pk):
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])
+def passwordReset(request):
+    if request.method == 'POST':
+        return resetPassword(request)
+    
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def passwordSet(request, uidb64, token):
     if request.method == 'POST':
         return setPassword(request, uidb64, token)
-
 
 @api_view(['GET'])
 def getAuthenticatedUser(request):

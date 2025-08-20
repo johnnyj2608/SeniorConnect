@@ -17,6 +17,7 @@
         "password": "密码",
         "confirm_password": "确认密码",
         "set_password": "设置密码",
+        "forgot_password": "忘记密码",
         "log_in": "登录",
         "required": "必填",
         "loading": "加载中",

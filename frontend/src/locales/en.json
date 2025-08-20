@@ -17,6 +17,7 @@
         "password": "Password",
         "confirm_password": "Confirm Password",
         "set_password": "Set Password",
+        "forgot_password": "Forgot Password",
         "log_in": "Log In",
         "required": "Required",
         "loading": "Loading",

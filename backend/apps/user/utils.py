@@ -99,6 +99,19 @@ def deleteUser(request, pk):
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+def resetPassword(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({'detail': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'detail': 'If this email exists, a reset link has been sent.'}, status=status.HTTP_200_OK)
+
+    sendEmailInvitation(user, request)
+    return Response({'detail': 'If this email exists, a reset link has been sent.'}, status=status.HTTP_200_OK)
+
 def setPassword(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()

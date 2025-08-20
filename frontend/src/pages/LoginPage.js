@@ -19,12 +19,13 @@ const LoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [forgotPassword, setForgotPassword] = useState(false)
 
     useEffect(() => {
-        if (!loading && user && !location.hash.startsWith('#/login')) {
+        if (!loading && user && !isSetPassword) {
             navigate('/')
         }
-    }, [loading, user, navigate, location.hash])
+    }, [loading, user, navigate, isSetPassword])
 
     const handleChange = (field) => (event) => {
         const { value } = event.target
@@ -36,37 +37,63 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (isSetPassword && password !== confirmPassword) {
-            alert('Passwords do not match')
-            return
-        }
-
         try {
-            const endpoint = isSetPassword 
-                ? `/user/auth/set-password/${uid}/${token}/`
-                : '/user/auth/login/'
+            switch (true) {
+                case isSetPassword:
+                    if (password !== confirmPassword) {
+                        alert('Passwords do not match')
+                        return
+                    }
 
-            const body = isSetPassword 
-                ? { password } 
-                : { email, password }
+                    {
+                        const response = await fetch(`/user/auth/set-password/${uid}/${token}/`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ password }),
+                        })
+                        if (!response.ok) throw new Error('Request failed')
+                    }
+                    setPassword('')
+                    setConfirmPassword('')
+                    navigate('/login')
+                    break
 
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify(body),
-            })
+                case forgotPassword:
+                    if (!email) {
+                        alert('Please enter your email')
+                        return
+                    }
+                    alert('If this email exists, a reset link has been sent.')
+                    {
+                        const response = await fetch('/user/auth/reset-password/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ email }),
+                        })
+                        if (!response.ok) throw new Error('Request failed')
+                    }
+                    break
 
-            if (!response.ok) {
-                throw new Error('Request failed')
+                default:
+                    {
+                        const response = await fetch('/user/auth/login/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ email, password }),
+                        })
+                        if (!response.ok) throw new Error('Invalid credentials')
+                        const data = await response.json()
+                        setUser(data.user)
+                        navigate('/')
+                    }
+                    break
             }
-
-            const data = await response.json()
-            if (!isSetPassword) setUser(data.user)
-            navigate('/')
         } catch (error) {
             console.error(error)
-            alert('Invalid credentials')
+            alert(error.message)
         }
     }
 
@@ -74,6 +101,19 @@ const LoginPage = () => {
 
     return (
         <div className="login-container">
+            {(forgotPassword || isSetPassword) && (
+                <button
+                    className="support-back-button"
+                    onClick={() => {
+                        setForgotPassword(false)
+                        setPassword('')
+                        setConfirmPassword('')
+                        if (isSetPassword) navigate('/login')
+                    }}
+                    >
+                    ← {t('general.buttons.back')}
+                </button>
+            )}
             <h1>Senior Connect</h1>
             <form onSubmit={handleSubmit}>
                 {!isSetPassword && (
@@ -86,22 +126,36 @@ const LoginPage = () => {
                     />
                 )}
 
-                <PasswordField
-                    value={password}
-                    onChange={handleChange('password')}
-                    isConfirm={false}
-                />
+                {!forgotPassword && (
+                    <>
+                        <div>
+                        <PasswordField
+                            value={password}
+                            onChange={handleChange('password')}
+                        />
+                        {!isSetPassword && (
+                            <p onClick={() => setForgotPassword(true)}>
+                            {t('general.forgot_password')}
+                            </p>
+                        )}
+                        </div>
 
-                {isSetPassword && (
-                    <PasswordField
-                        value={confirmPassword}
-                        onChange={handleChange('confirmPassword')}
-                        isConfirm={true}
-                    />
+                        {isSetPassword && (
+                        <PasswordField
+                            value={confirmPassword}
+                            onChange={handleChange('confirmPassword')}
+                            isConfirm
+                        />
+                        )}
+                    </>
                 )}
 
                 <button className="login-submit" type="submit">
-                    {isSetPassword ? t('general.set_password') : t('general.log_in')}
+                    {isSetPassword
+                        ? t('general.set_password')
+                        : forgotPassword
+                        ? t('general.forgot_password')
+                        : t('general.log_in')}
                 </button>
             </form>
         </div>
