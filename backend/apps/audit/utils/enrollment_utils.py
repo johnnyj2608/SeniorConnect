@@ -43,6 +43,12 @@ def createEnrollment(request):
     if not member.active:
         return Response({"detail": "Member is inactive; no transition performed."}, status=status.HTTP_400_BAD_REQUEST)
 
+    change_type = data.get('change_type')
+    valid_types = [Enrollment.ENROLLMENT, Enrollment.TRANSFER, Enrollment.DISENROLLMENT]
+
+    if change_type not in valid_types:
+        return Response({"detail": "Invalid change type."}, status=status.HTTP_400_BAD_REQUEST)
+
     change_date = data.get('change_date')
     if member.enrollment_date is None and change_date:
         member.enrollment_date = change_date
@@ -54,6 +60,11 @@ def createEnrollment(request):
 
     old_mltc = data.get('old_mltc')
     new_mltc = data.get('new_mltc')
+    
+    if change_type in [Enrollment.ENROLLMENT, Enrollment.TRANSFER] and not new_mltc:
+        return Response({"detail": "Invalid MLTC or missing data"}, status=status.HTTP_400_BAD_REQUEST)
+    if change_type == Enrollment.DISENROLLMENT and not old_mltc:
+        return Response({"detail": "Invalid MLTC or missing data"}, status=status.HTTP_400_BAD_REQUEST)
     if old_mltc == new_mltc:
         return Response(
             {"detail": "Extension, no action required."},

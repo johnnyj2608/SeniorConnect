@@ -3,98 +3,67 @@ from django.urls import reverse
 from rest_framework import status
 from backend.apps.audit.models.audit_model import AuditLog
 from django.contrib.contenttypes.models import ContentType
+from datetime import timedelta
+from django.utils import timezone
 
 # ==============================
-# Audit List Tests
+# Audit List Test
 # ==============================
 
 @pytest.mark.django_db
-def test_get_audit_list_admin(api_client_admin, admin_user, members_setup):
-    """Admin sees all audits."""
-    member = members_setup['members'][0]
+@pytest.mark.parametrize(
+    "user_fixture,member_index,expected_in_results",
+    [
+        # Admin users
+        ("api_client_admin", 0, True),          # same SADC
+        ("api_client_admin", "other_member", False),  # other SADC
+
+        # Regular users
+        ("api_client_regular", 0, True),   # allowed MLTC
+        ("api_client_regular", 1, False),  # denied MLTC
+        ("api_client_regular", 2, True),   # no active authorization
+        ("api_client_regular", 3, True),   # inactive member
+    ]
+)
+def test_audit_list(
+    request,
+    api_client_admin,
+    api_client_regular,
+    admin_user,
+    members_setup,
+    other_org_setup,
+    user_fixture,
+    member_index,
+    expected_in_results
+):
+    m1, m2, m3, m4 = members_setup["members"]
+    if member_index == "other_member":
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
 
     AuditLog.objects.create(
         user=admin_user,
         action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(admin_user),
-        object_id=admin_user.id,
+        content_type=ContentType.objects.get_for_model(member),
+        object_id=member.id,
         member=member,
-        object_display=str(admin_user)
+        object_display=str(member),
     )
 
-    url = reverse('audits')
+    client = request.getfixturevalue(user_fixture)
+    url = reverse("audits")
+    resp = client.get(url)
+    assert resp.status_code == status.HTTP_200_OK
 
-    api_client_admin.force_authenticate(user=admin_user)
-    response = api_client_admin.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    audit_ids = [a['id'] for a in response.data['results']]
-    assert len(audit_ids) >= 1
-
-@pytest.mark.django_db
-def test_get_audit_list_regular(api_client_regular, regular_user, members_setup, admin_user):
-    """Regular user sees only allowed members' audits."""
-    member = members_setup['members'][0]
-
-    # Create audits by admin for testing
-    AuditLog.objects.create(
-        user=admin_user,
-        action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(admin_user),
-        object_id=admin_user.id,
-        member=member,
-        object_display=str(admin_user)
-    )
-
-    url = reverse('audits')
-
-    api_client_regular.force_authenticate(user=regular_user)
-    response = api_client_regular.get(url)
-    assert response.status_code == status.HTTP_200_OK
-
-    allowed_member_ids = [
-        m.id for m in members_setup['members']
-        if (m.active_auth is None) or (m.active_auth.mltc in regular_user.allowed_mltcs.all())
+    member_ids = [
+        a["member"] if isinstance(a["member"], int) else a["member"]["id"]
+        for a in resp.data["results"]
     ]
-    member_ids_in_response = [
-        a['member'] if isinstance(a['member'], int) else a['member']['id']
-        for a in response.data['results']
-    ]
-    assert all(mid in allowed_member_ids for mid in member_ids_in_response)
-
-@pytest.mark.django_db
-def test_regular_user_cannot_see_denied_mltc(api_client_regular, regular_user, members_setup, admin_user):
-    """Regular user cannot see audits for denied MLTC members."""
-    allowed_member = members_setup['members'][0]
-    denied_member = members_setup['members'][1]
-
-    AuditLog.objects.create(
-        user=admin_user,
-        action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(admin_user),
-        object_id=admin_user.id,
-        member=allowed_member,
-        object_display=str(admin_user)
-    )
-    AuditLog.objects.create(
-        user=admin_user,
-        action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(admin_user),
-        object_id=admin_user.id,
-        member=denied_member,
-        object_display=str(admin_user)
-    )
-
-    url = reverse('audits')
-    api_client_regular.force_authenticate(user=regular_user)
-    response = api_client_regular.get(url)
-    assert response.status_code == status.HTTP_200_OK
-
-    member_ids_in_response = [
-        a['member'] if isinstance(a['member'], int) else a['member']['id']
-        for a in response.data['results']
-    ]
-    assert denied_member.id not in member_ids_in_response
-    assert allowed_member.id in member_ids_in_response
+    if expected_in_results:
+        assert member.id in member_ids
+    else:
+        assert member.id not in member_ids
 
 
 # ==============================
@@ -102,93 +71,170 @@ def test_regular_user_cannot_see_denied_mltc(api_client_regular, regular_user, m
 # ==============================
 
 @pytest.mark.django_db
-def test_get_audit_detail(api_client_admin, admin_user, members_setup):
-    """Admin can get audit detail if member is accessible."""
-    member = members_setup['members'][0]
+@pytest.mark.parametrize(
+    "user_fixture,member_index,audit_exists,expected_status",
+    [
+        # Admin users
+        ("api_client_admin", 0, True, status.HTTP_200_OK),           # same SADC
+        ("api_client_admin", "other_member", True, status.HTTP_403_FORBIDDEN),  # other SADC
+        ("api_client_admin", 0, False, status.HTTP_404_NOT_FOUND),   # object does not exist
+
+        # Regular users
+        ("api_client_regular", 0, True, status.HTTP_200_OK),         # allowed MLTC
+        ("api_client_regular", 1, True, status.HTTP_403_FORBIDDEN),  # denied MLTC
+        ("api_client_regular", 2, True, status.HTTP_200_OK),         # no active authorization
+        ("api_client_regular", 3, True, status.HTTP_200_OK),         # inactive member
+    ]
+)
+def test_audit_detail(
+    request,
+    api_client_admin,
+    api_client_regular,
+    admin_user,
+    members_setup,
+    other_org_setup,
+    user_fixture,
+    member_index,
+    audit_exists,
+    expected_status
+):
+    # Resolve member
+    if member_index == "other_member":
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    # Create audit only if needed
+    if audit_exists:
+        audit = AuditLog.objects.create(
+            user=admin_user,
+            action_type=AuditLog.CREATE,
+            content_type=ContentType.objects.get_for_model(member),
+            object_id=member.id,
+            member=member,
+            object_display=str(member),
+        )
+        audit_id = audit.id
+    else:
+        audit_id = 99999
+
+    client = request.getfixturevalue(user_fixture)
+    url = reverse("audit", kwargs={"pk": audit_id})
+    resp = client.get(url)
+    assert resp.status_code == expected_status
+
+    if expected_status == status.HTTP_200_OK:
+        assert resp.data["id"] == audit_id
+
+
+# ==============================
+# Audit Recent Test
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "user_fixture,member_index,days_ago,expected_visible",
+    [
+        # Admin – same SADC
+        ("api_client_admin", 0, 0, True),       # today
+        ("api_client_admin", 0, 6, True),       # within 7 days
+        ("api_client_admin", 0, 8, False),      # older than 7 days
+
+        # Admin – other SADC
+        ("api_client_admin", "other_member", 0, False),  
+
+        # Regular users
+        ("api_client_regular", 0, 0, True),     # allowed MLTC
+        ("api_client_regular", 1, 0, False),    # denied MLTC
+        ("api_client_regular", 2, 0, True),     # no active auth
+        ("api_client_regular", 3, 0, True),     # inactive member
+    ]
+)
+def test_recent_audits(
+    request,
+    api_client_admin,
+    api_client_regular,
+    admin_user,
+    members_setup,
+    other_org_setup,
+    user_fixture,
+    member_index,
+    days_ago,
+    expected_visible
+):
+    AuditLog.objects.all().delete()
+
+    if member_index == "other_member":
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
     audit = AuditLog.objects.create(
         user=admin_user,
         action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(admin_user),
-        object_id=admin_user.id,
+        content_type=ContentType.objects.get_for_model(member),
+        object_id=member.id,
         member=member,
-        object_display=str(admin_user)
+        object_display=f"audit {days_ago}",
     )
 
-    api_client_admin.force_authenticate(user=admin_user)
-    url = reverse('audit', kwargs={'pk': str(audit.id)})
-    response = api_client_admin.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    assert response.data['id'] == audit.id
+    audit.timestamp = timezone.now() - timedelta(days=days_ago)
+    audit.save(update_fields=["timestamp"])
+
+    client = request.getfixturevalue(user_fixture)
+    url = reverse("audits_recent")
+    resp = client.get(url)
+    all_audits = [a for group in resp.data for a in group["audits"]]
+    member_ids = [
+        a["member"] if isinstance(a["member"], int) else a["member"]["id"]
+        for a in all_audits
+    ]
+
+    if expected_visible:
+        assert member.id in member_ids
+    else:
+        assert member.id not in member_ids
+
 
 # ==============================
-# Recent Audits Test
+# Audit Filtering Test
 # ==============================
 
 @pytest.mark.django_db
-def test_get_recent_audits(api_client_admin, api_client_regular, admin_user, regular_user, members_setup):
-    """Test that recent audits endpoint returns audits grouped by date and filtered by member access."""
-    member1 = members_setup['members'][0]
-    member2 = members_setup['members'][1]
+@pytest.mark.parametrize(
+    "filter_value,expected_types",
+    [
+        # Single types
+        ("create", ["CREATE"]),
+        ("update", ["UPDATE"]),
+        ("delete", ["DELETE"]),
 
-    # Create audits for today
-    audit1 = AuditLog.objects.create(
-        user=admin_user,
-        action_type=AuditLog.CREATE,
-        content_type=ContentType.objects.get_for_model(member1),
-        object_id=member1.id,
-        member=member1,
-        object_display=str(member1)
-    )
-    audit2 = AuditLog.objects.create(
-        user=admin_user,
-        action_type=AuditLog.UPDATE,
-        content_type=ContentType.objects.get_for_model(member2),
-        object_id=member2.id,
-        member=member2,
-        object_display=str(member2)
-    )
+        # Multiple types
+        ("create,update", ["CREATE", "UPDATE"]),
+        ("update,delete", ["UPDATE", "DELETE"]),
 
-    url = reverse('audits_recent')
+        # Case-insensitivity
+        ("CrEaTe", ["CREATE"]),
 
-    # Admin sees both audits
-    api_client_admin.force_authenticate(user=admin_user)
-    response = api_client_admin.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    all_audits = [a for group in response.data for a in group['audits']]
-    audit_ids = [a['id'] for a in all_audits]
-    assert audit1.id in audit_ids
-    assert audit2.id in audit_ids
+        # Empty or missing filter returns all types
+        ("", ["CREATE", "UPDATE", "DELETE"]),
+        (None, ["CREATE", "UPDATE", "DELETE"]),
 
-    # Regular user sees only allowed member audits
-    api_client_regular.force_authenticate(user=regular_user)
-    response = api_client_regular.get(url)
-    member_ids_in_response = [
-        a['member'] if isinstance(a['member'], int) else a['member']['id']
-        for group in response.data for a in group['audits']
+        # Invalid input
+        ("foobar", []),
     ]
-    allowed_member_ids = [
-        m.id for m in members_setup['members']
-        if (m.active_auth is None) or (m.active_auth.mltc in regular_user.allowed_mltcs.all())
-    ]
-    assert all(mid in allowed_member_ids for mid in member_ids_in_response)
+)
+def test_audit_list_filter(api_client_admin, admin_user, members_setup, filter_value, expected_types):
+    member = members_setup["members"][0]
 
-
-# ==============================
-# Audit List Filtering Test
-# ==============================
-
-@pytest.mark.django_db
-def test_audit_list_filter(api_client_admin, admin_user, members_setup):
-    """Test filtering audits by action_type."""
-    member = members_setup['members'][0]
-
+    # Create one of each type
     AuditLog.objects.create(
         user=admin_user,
         action_type=AuditLog.CREATE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
         member=member,
-        object_display=str(member)
+        object_display=str(member),
     )
     AuditLog.objects.create(
         user=admin_user,
@@ -196,11 +242,68 @@ def test_audit_list_filter(api_client_admin, admin_user, members_setup):
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
         member=member,
-        object_display=str(member)
+        object_display=str(member),
+    )
+    AuditLog.objects.create(
+        user=admin_user,
+        action_type=AuditLog.DELETE,
+        content_type=ContentType.objects.get_for_model(member),
+        object_id=member.id,
+        member=member,
+        object_display=str(member),
     )
 
-    url = reverse('audits') + "?filter=create"
-    api_client_admin.force_authenticate(user=admin_user)
+    base_url = reverse("audits")
+    url = f"{base_url}?filter={filter_value}" if filter_value else base_url
+
     response = api_client_admin.get(url)
     assert response.status_code == status.HTTP_200_OK
-    assert all(a['action_type'].lower() == 'create' for a in response.data['results'])
+
+    returned_types = [a["action_type"].upper() for a in response.data["results"]]
+    
+    if not expected_types:
+        assert returned_types == []
+    else:
+        assert all(rt in expected_types for rt in returned_types)
+
+
+# ==============================
+# Audit Pagination Test
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "total_audits,page,expected_status,expected_count,next_exists",
+    [
+        # Multiple pages
+        (25, 1, status.HTTP_200_OK, 20, True),   # first page
+        (25, 2, status.HTTP_200_OK, 5, False),   # second page
+
+        # Requesting page beyond last
+        (5, 2, status.HTTP_404_NOT_FOUND, 0, False),
+    ]
+)
+def test_audit_list_pagination(api_client_admin, admin_user, members_setup, total_audits, page, expected_status, expected_count, next_exists):
+    member = members_setup["members"][0]
+    AuditLog.objects.all().delete()
+
+    for _ in range(total_audits):
+        AuditLog.objects.create(
+            user=admin_user,
+            action_type=AuditLog.CREATE,
+            content_type=ContentType.objects.get_for_model(member),
+            object_id=member.id,
+            member=member,
+            object_display=str(member),
+        )
+
+    url = reverse("audits") + f"?page={page}"
+    resp = api_client_admin.get(url)
+
+    assert resp.status_code == expected_status
+    if expected_status == status.HTTP_200_OK:
+        assert len(resp.data["results"]) == expected_count
+        if next_exists:
+            assert resp.data["next"] is not None
+        else:
+            assert resp.data["next"] is None

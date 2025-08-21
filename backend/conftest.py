@@ -111,6 +111,7 @@ def members_setup(db, org_setup):
       1. Member with an allowed MLTC authorization (active_auth set).
       2. Member with a denied MLTC authorization (active_auth set).
       3. Member with no active authorization (no active_auth).
+      4. Member with inactive status (no active_auth).
     Returns a dictionary containing:
     - 'members': tuple of the three created Member instances.
     - 'sadc': the Sadc instance from org_setup.
