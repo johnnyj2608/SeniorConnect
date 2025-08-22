@@ -1,10 +1,13 @@
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from rest_framework import status
-from backend.apps.tenant.models.mltc_model import Mltc
 
-def require_sadc_ownership(obj, user):
-    if getattr(obj, 'sadc_id', None) != getattr(user, 'sadc_id', None):
+def require_sadc_ownership(sadc_input, user):
+    try:
+        sadc_id = int(sadc_input)
+    except (TypeError, ValueError):
+        return Response({"detail": "Invalid SADC ID."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if sadc_id != getattr(user.sadc, 'id', None):
         return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
     return None
 

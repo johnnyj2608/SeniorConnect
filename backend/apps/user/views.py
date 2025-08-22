@@ -31,7 +31,7 @@ def getUsers(request):
 
 @api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def getUser(request, pk):
-    if request.method in ['PUT', 'PATCH', 'DELETE'] and not IsAdminUser().has_permission(request, None):
+    if request.method in ['PUT', 'DELETE'] and not IsAdminUser().has_permission(request, None):
         return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':

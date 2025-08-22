@@ -17,7 +17,8 @@ const sendRequest = async (url, method, data) => {
         'updated_at', 
         'sadc',
         'edited',
-        'preview_photo'
+        'preview_photo',
+        'is_org_admin',
     ]);
 
     const formData = new FormData();

@@ -21,7 +21,7 @@ def getUserDetail(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
+    unauthorized = require_sadc_ownership(user.sadc.id, current_user) or require_self_or_admin(user, current_user)
     if unauthorized: return unauthorized
 
     serializer = UserReadSerializer(user)
@@ -29,10 +29,14 @@ def getUserDetail(request, pk):
 
 def createUser(request):
     current_user = request.user
-    unauthorized = require_org_admin(current_user)
+    data = request.data
+    unauthorized = require_sadc_ownership(data.get('sadc'), current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    serializer = UserWriteSerializer(data=request.data, context={'request': request})
+    if data.get('is_org_admin'):
+        return Response({'detail': 'Cannot create another admin user.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = UserWriteSerializer(data=data, context={'request': request})
 
     try:
         if serializer.is_valid():
@@ -50,10 +54,10 @@ def updateUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
+    unauthorized = require_sadc_ownership(user.sadc.id, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
-    serializer = UserWriteSerializer(instance=user, data=request.data)
+    serializer = UserWriteSerializer(instance=user, data=request.data, partial=True)
 
     try:
         if serializer.is_valid():
@@ -66,12 +70,14 @@ def updateUser(request, pk):
         print("UPDATE USER ERROR:", e)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# Updating preferences
 def patchUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    unauthorized = require_sadc_ownership(user, current_user) or require_self_or_admin(user, current_user)
-    if unauthorized: return unauthorized
+    unauthorized = require_sadc_ownership(user.sadc.id, current_user) or require_self_or_admin(user, current_user)
+    if unauthorized: 
+        return unauthorized
 
     serializer = UserWriteSerializer(user, data=request.data, partial=True)
 
@@ -90,11 +96,11 @@ def deleteUser(request, pk):
     current_user = request.user
     user = get_object_or_404(User, id=pk)
 
-    unauthorized = require_sadc_ownership(user, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(user.sadc.id, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
     if user.is_org_admin:
-        return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_403_FORBIDDEN)
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

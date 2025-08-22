@@ -48,9 +48,12 @@ class UserWriteSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        validated_data.pop('is_org_admin', None)
+        validated_data.pop('sadc', None)
+
         allowed_mltcs = validated_data.pop('allowed_mltcs', None)
         user = super().update(instance, validated_data)
-        
+
         if instance.is_org_admin:
             user.allowed_mltcs.set(Mltc.objects.all())
         elif allowed_mltcs is not None:
