@@ -270,7 +270,12 @@ def test_recent_enrollments(
         ("invalid", []),
     ]
 )
-def test_enrollment_list_filter(api_client_admin, members_setup, filter_value, expected_types):
+def test_enrollment_list_filter(
+    api_client_admin, 
+    members_setup, 
+    filter_value, 
+    expected_types
+):
     m1, m2, m3, _ = members_setup["members"]
 
     Enrollment.objects.create(member=m1, change_type=Enrollment.ENROLLMENT, new_mltc=members_setup['mltc_allowed'])
@@ -306,7 +311,15 @@ def test_enrollment_list_filter(api_client_admin, members_setup, filter_value, e
         (5, 2, status.HTTP_404_NOT_FOUND, 0, False),
     ]
 )
-def test_enrollment_list_pagination(api_client_admin, members_setup, total_enrollments, page, expected_status, expected_count, next_exists):
+def test_enrollment_list_pagination(
+    api_client_admin, 
+    members_setup, 
+    total_enrollments, 
+    page, 
+    expected_status, 
+    expected_count, 
+    next_exists
+):
     m1 = members_setup["members"][0]
     Enrollment.objects.all().delete()
     for i in range(total_enrollments):
@@ -345,7 +358,13 @@ def test_enrollment_list_pagination(api_client_admin, members_setup, total_enrol
         (2, 2, 0),
     ]
 )
-def test_current_month_enrollment_stats(api_client_admin, members_setup, enroll_count, disenroll_count, expected_count):
+def test_current_month_enrollment_stats(
+    api_client_admin, 
+    members_setup, 
+    enroll_count, 
+    disenroll_count, 
+    expected_count
+):
     m1 = members_setup["members"][0]
     today = date.today()
 

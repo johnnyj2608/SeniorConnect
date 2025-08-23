@@ -6,6 +6,7 @@ class Snapshot(models.Model):
     ABSENCES = 'absences'
     ASSESSMENTS = 'assessments'
     ENROLLMENTS = 'enrollments'
+    GIFTS='gifts'
 
     SNAPSHOT_TYPES = [
         (MEMBERS, 'Members'),
@@ -13,6 +14,7 @@ class Snapshot(models.Model):
         (ABSENCES, 'Absences'),
         (ASSESSMENTS, 'Assessments'),
         (ENROLLMENTS, 'Enrollments'),
+        (GIFTS, 'Gifts'),
     ]
 
     sadc = models.ForeignKey('Sadc', on_delete=models.CASCADE)

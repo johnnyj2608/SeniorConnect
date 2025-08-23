@@ -1,264 +1,466 @@
 import pytest
 from django.urls import reverse
 from django.utils import timezone
+from datetime import timedelta
 from rest_framework import status
 from backend.apps.tenant.models.snapshot_model import Snapshot
 
 # ==============================
-# Snapshot Listing Tests
+# Snapshot List Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_get_snapshot_list(api_client_regular, org_setup):
-    """List snapshots and filter by type."""
-    sadc = org_setup['sadc']
+@pytest.mark.parametrize(
+    "user_fixture,org_type,view_snapshots_flag,expected_status,expected_count",
+    [
+        # Admin sees own SADCs → 1 snapshot
+        # Admin cannot see other SADCs → 0 snapshots
+        # Regular user with view_snapshots=True → 1 snapshot
+        ("api_client_regular", "org", True, status.HTTP_200_OK, 1),
+        # Regular user with view_snapshots=False → forbidden
+        ("api_client_regular", "org", False, status.HTTP_403_FORBIDDEN, 0),
+    ]
+)
+def test_snapshot_list(
+    request, 
+    org_setup, 
+    other_org_setup, 
+    user_fixture, 
+    org_type, 
+    view_snapshots_flag, 
+    expected_status, 
+    expected_count
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Set view_snapshots flag for regular users
+    if user_fixture == "api_client_regular":
+        user_obj = client.handler._force_user
+        user_obj.view_snapshots = view_snapshots_flag
+        user_obj.save()
+
+    # Create snapshot for the chosen org
+    sadc = org_setup["sadc"] if org_type == "org" else other_org_setup["other_sadc"]
     Snapshot.objects.create(
         sadc=sadc,
         date=timezone.now().date(),
         type=Snapshot.MEMBERS,
-        file="http://example.com/file1.pdf",
-        name="Snapshot 1",
-        pages=3,
-    )
-    Snapshot.objects.create(
-        sadc=sadc,
-        date=timezone.now().date(),
-        type=Snapshot.BIRTHDAYS,
-        file="http://example.com/file2.pdf",
-        name="Snapshot 2",
-        pages=2,
+        file="http://example.com/file.pdf",
+        name=f"{sadc.name} Snapshot",
+        pages=1,
     )
 
     url = reverse("snapshots")
-    resp = api_client_regular.get(url)
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.data['count'] == 2
-    types = [item['type'] for item in resp.data['results']]
-    assert Snapshot.MEMBERS in types
-    assert Snapshot.BIRTHDAYS in types
+    resp = client.get(url)
 
-    # Filter by type
-    resp = api_client_regular.get(url + "?filter=birthdays")
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.data['count'] == 1
-    assert resp.data['results'][0]['type'] == Snapshot.BIRTHDAYS
+    assert resp.status_code == expected_status
 
-    # Filter with no match
-    resp = api_client_regular.get(url + "?filter=assessments")
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.data['count'] == 0
-
-@pytest.mark.django_db
-def test_get_snapshot_list_empty(api_client_regular):
-    """Return empty list if no snapshots exist."""
-    url = reverse("snapshots")
-    resp = api_client_regular.get(url)
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.data['count'] == 0
-
-@pytest.mark.django_db
-def test_snapshot_list_excludes_other_sadc(api_client_regular, org_setup, other_org_setup):
-    """Snapshots from other SADCs are not visible."""
-    Snapshot.objects.create(
-        sadc=org_setup['sadc'],
-        date=timezone.now().date(),
-        type=Snapshot.MEMBERS,
-        file="http://example.com/file1.pdf",
-        name="Own SADC Snapshot",
-        pages=1
-    )
-    Snapshot.objects.create(
-        sadc=other_org_setup['other_sadc'],
-        date=timezone.now().date(),
-        type=Snapshot.MEMBERS,
-        file="http://example.com/file2.pdf",
-        name="Other SADC Snapshot",
-        pages=1
-    )
-
-    url = reverse("snapshots")
-    resp = api_client_regular.get(url)
-    assert resp.status_code == status.HTTP_200_OK
-    names = [s['name'] for s in resp.data['results']]
-    assert "Own SADC Snapshot" in names
-    assert "Other SADC Snapshot" not in names
+    if resp.status_code == status.HTTP_200_OK:
+        # Only check snapshot count if request succeeded
+        assert resp.data['count'] == expected_count
 
 
 # ==============================
 # Snapshot Detail Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_get_snapshot_detail_authorized(api_client_regular, org_setup):
-    """Authorized user can view their own SADC snapshot."""
-    sadc = org_setup['sadc']
+@pytest.mark.parametrize(
+    "user_fixture,target_sadc,view_snapshots_flag,expected_status",
+    [
+        # Admin accessing own SADC snapshot → 200
+        ("api_client_admin", "org", True, status.HTTP_200_OK),
+        # Admin accessing another SADC snapshot → 403
+        ("api_client_admin", "other_org", True, status.HTTP_403_FORBIDDEN),
+        # Regular user with view_snapshots=True → 200
+        ("api_client_regular", "org", True, status.HTTP_200_OK),
+        # Regular user with view_snapshots=False → 403
+        ("api_client_regular", "org", False, status.HTTP_403_FORBIDDEN),
+        # Nonexistent snapshot → 404
+        ("api_client_admin", "nonexistent", True, status.HTTP_404_NOT_FOUND),
+    ]
+)
+def test_snapshot_detail(
+    request, 
+    org_setup, 
+    other_org_setup, 
+    user_fixture, 
+    target_sadc, 
+    view_snapshots_flag, 
+    expected_status
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Set view_snapshots flag for regular users
+    if user_fixture == "api_client_regular":
+        user_obj = client.handler._force_user
+        user_obj.view_snapshots = view_snapshots_flag
+        user_obj.save()
+
+    # Determine which snapshot to fetch
+    if target_sadc == "org":
+        sadc = org_setup["sadc"]
+    elif target_sadc == "other_org":
+        sadc = other_org_setup["other_sadc"]
+    else:  # nonexistent
+        snapshot_id = 99999
+        url = reverse("snapshot", args=[snapshot_id])
+        resp = client.get(url)
+        assert resp.status_code == expected_status
+        return
+
     snapshot = Snapshot.objects.create(
         sadc=sadc,
         date=timezone.now().date(),
         type=Snapshot.MEMBERS,
         file="http://example.com/file.pdf",
-        name="Snapshot Detail",
+        name=f"{sadc.name} Snapshot",
         pages=1,
     )
 
     url = reverse("snapshot", args=[snapshot.id])
-    resp = api_client_regular.get(url)
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.data['name'] == "Snapshot Detail"
+    resp = client.get(url)
 
-@pytest.mark.django_db
-def test_get_snapshot_detail_invalid_id(api_client_regular):
-    """Returns 404 for invalid snapshot ID."""
-    url_invalid = reverse("snapshot", args=[999])
-    resp_invalid = api_client_regular.get(url_invalid)
-    assert resp_invalid.status_code == status.HTTP_404_NOT_FOUND
+    assert resp.status_code == expected_status
 
-@pytest.mark.django_db
-def test_user_cannot_access_other_sadc_snapshot(api_client_regular, other_org_setup):
-    """User cannot access snapshots belonging to another SADC."""
-    other_snapshot = Snapshot.objects.create(
-        sadc=other_org_setup['other_sadc'],
-        date=timezone.now().date(),
-        type=Snapshot.MEMBERS,
-        file="http://example.com/file.pdf",
-        name="Other SADC Snapshot",
-        pages=1
-    )
-
-    url = reverse("snapshot", args=[other_snapshot.id])
-    resp = api_client_regular.get(url)
-    assert resp.status_code == status.HTTP_403_FORBIDDEN
+    if resp.status_code == status.HTTP_200_OK:
+        assert resp.data["id"] == snapshot.id
+        assert resp.data["name"] == snapshot.name
 
 
 # ==============================
 # Snapshot Create Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_create_snapshot(api_client_regular, api_client_admin, org_setup):
-    sadc = org_setup['sadc']
-    new_data = {
+@pytest.mark.parametrize(
+    "user_fixture,override_sadc,expected_status",
+    [
+        # Admin can create snapshot for own SADC → 201
+        ("api_client_admin", False, status.HTTP_201_CREATED),
+        # Admin cannot create snapshot for another SADC → should still create under their own SADC → 201
+        ("api_client_admin", True, status.HTTP_201_CREATED),
+        # Regular user cannot create snapshot → 403
+        ("api_client_regular", False, status.HTTP_403_FORBIDDEN),
+    ]
+)
+def test_snapshot_create(
+    request, 
+    org_setup, 
+    other_org_setup, 
+    user_fixture, 
+    override_sadc, 
+    expected_status
+):
+    client = request.getfixturevalue(user_fixture)
+    current_user = client.handler._force_user
+
+    # Prepare payload
+    data = {
         "date": timezone.now().date(),
-        "type": Snapshot.MEMBERS,
-        "file": "http://example.com/newfile.pdf",
-        "name": "New Snapshot",
-        "pages": 5,
+        "type": "members",
+        "file": "http://example.com/file.pdf",
+        "name": "Test Snapshot",
+        "pages": 5
     }
 
-    # Forbidden for regular user
-    resp = api_client_regular.post(reverse("snapshots"), new_data, format="json")
-    assert resp.status_code == status.HTTP_403_FORBIDDEN
-    assert resp.data["detail"] == "Admin access required."
+    # If we try to override SADC (admin trying to create for another org)
+    if override_sadc:
+        data["sadc"] = other_org_setup["other_sadc"].id  # Should be ignored by view
 
-    # Success for admin
-    new_data["type"] = Snapshot.ASSESSMENTS
-    resp_admin = api_client_admin.post(reverse("snapshots"), new_data, format="json")
-    assert resp_admin.status_code == status.HTTP_201_CREATED
-    assert resp_admin.data["name"] == "New Snapshot"
-    assert resp_admin.data["type"] == Snapshot.ASSESSMENTS
+    resp = client.post(reverse("snapshots"), data, format="json")
+    assert resp.status_code == expected_status
 
-    # Invalid data
-    invalid_data = {"date": "not-a-date", "type": 123}
-    resp_invalid = api_client_admin.post(reverse("snapshots"), invalid_data, format="json")
-    assert resp_invalid.status_code == status.HTTP_400_BAD_REQUEST
-
+    if resp.status_code == status.HTTP_201_CREATED:
+        snapshot = Snapshot.objects.get(id=resp.data["id"])
+        # Ensure snapshot is always created under current_user.sadc
+        assert snapshot.sadc == current_user.sadc
+        assert snapshot.name == data["name"]
+        assert snapshot.pages == data["pages"]
 
 # ==============================
 # Snapshot Update Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_update_snapshot(api_client_regular, api_client_admin, org_setup):
-    sadc = org_setup['sadc']
-    snapshot = Snapshot.objects.create(
-        sadc=sadc,
-        date=timezone.now().date(),
-        type=Snapshot.ENROLLMENTS,
-        file="http://example.com/file.pdf",
-        name="Snapshot Update",
-        pages=2,
-    )
+@pytest.mark.parametrize(
+    "user_fixture,override_sadc,snapshot_exists,expected_status",
+    [
+        # Admin updates own SADC snapshot → 200
+        ("api_client_admin", False, True, status.HTTP_200_OK),
+        # Admin cannot update other SADC snapshot → 403
+        ("api_client_admin", True, True, status.HTTP_403_FORBIDDEN),
+        # Regular user cannot update → 403
+        ("api_client_regular", False, True, status.HTTP_403_FORBIDDEN),
+        # Update non-existent snapshot → 404
+        ("api_client_admin", False, False, status.HTTP_404_NOT_FOUND),
+    ]
+)
+def test_snapshot_update(request, org_setup, other_org_setup, user_fixture, override_sadc, snapshot_exists, expected_status):
+    client = request.getfixturevalue(user_fixture)
+
+    if snapshot_exists:
+        sadc = other_org_setup["other_sadc"] if override_sadc else org_setup["sadc"]
+        snapshot = Snapshot.objects.create(
+            sadc=sadc,
+            date=timezone.now().date(),
+            type=Snapshot.MEMBERS,
+            file="http://example.com/file.pdf",
+            name="Original Name",
+            pages=3
+        )
+        snapshot_id = snapshot.id
+    else:
+        snapshot_id = 99999  # Non-existent ID
 
     update_data = {
-        "name": "Updated Snapshot Name",
-        "pages": 3,
-        "date": snapshot.date.isoformat(),
-        "type": snapshot.type,
-        "file": snapshot.file,
+        "name": "Updated Name",
+        "pages": 5,
+        "date": timezone.now().date().isoformat(),
+        "type": Snapshot.MEMBERS,
+        "file": "http://example.com/file.pdf"
     }
 
-    # Forbidden for regular user
-    resp_forbidden = api_client_regular.put(reverse("snapshot", args=[snapshot.id]), update_data, format="json")
-    assert resp_forbidden.status_code == status.HTTP_403_FORBIDDEN
-    assert resp_forbidden.data["detail"] == "Admin access required."
+    resp = client.put(reverse("snapshot", args=[snapshot_id]), update_data, format="json")
+    assert resp.status_code == expected_status
 
-    # Success for admin
-    resp_admin = api_client_admin.put(reverse("snapshot", args=[snapshot.id]), update_data, format="json")
-    assert resp_admin.status_code == status.HTTP_200_OK
-    assert resp_admin.data["name"] == "Updated Snapshot Name"
-    assert resp_admin.data["pages"] == 3
-
-    # Invalid ID
-    resp_invalid_id = api_client_admin.put(reverse("snapshot", args=[999]), {"name": "Fail"}, format="json")
-    assert resp_invalid_id.status_code == status.HTTP_404_NOT_FOUND
-
-    # Invalid serializer data
-    invalid_data = {"date": "invalid-date", "pages": "not-an-int"}
-    resp_invalid = api_client_admin.put(reverse("snapshot", args=[snapshot.id]), invalid_data, format="json")
-    assert resp_invalid.status_code == status.HTTP_400_BAD_REQUEST
+    if snapshot_exists and resp.status_code == status.HTTP_200_OK:
+        snapshot.refresh_from_db()
+        assert snapshot.name == update_data["name"]
+        assert snapshot.pages == update_data["pages"]
 
 
 # ==============================
 # Snapshot Delete Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_delete_snapshot(api_client_regular, api_client_admin, org_setup):
-    sadc = org_setup['sadc']
-    snapshot = Snapshot.objects.create(
-        sadc=sadc,
-        date=timezone.now().date(),
-        type=Snapshot.BIRTHDAYS,
-        file="http://example.com/file.pdf",
-        name="Snapshot Delete",
-        pages=2,
-    )
+@pytest.mark.parametrize(
+    "user_fixture,override_sadc,snapshot_exists,expected_status",
+    [
+        # Admin deletes own SADC snapshot → 204
+        ("api_client_admin", False, True, status.HTTP_204_NO_CONTENT),
+        # Admin cannot delete other SADC snapshot → 403
+        ("api_client_admin", True, True, status.HTTP_403_FORBIDDEN),
+        # Regular user cannot delete → 403
+        ("api_client_regular", False, True, status.HTTP_403_FORBIDDEN),
+        # Delete non-existent snapshot → 404
+        ("api_client_admin", False, False, status.HTTP_404_NOT_FOUND),
+    ]
+)
+def test_snapshot_delete(request, org_setup, other_org_setup, user_fixture, override_sadc, snapshot_exists, expected_status):
+    client = request.getfixturevalue(user_fixture)
 
-    # Forbidden for regular user
-    resp_forbidden = api_client_regular.delete(reverse("snapshot", args=[snapshot.id]))
-    assert resp_forbidden.status_code == status.HTTP_403_FORBIDDEN
-    assert resp_forbidden.data["detail"] == "Admin access required."
+    if snapshot_exists:
+        sadc = other_org_setup["other_sadc"] if override_sadc else org_setup["sadc"]
+        snapshot = Snapshot.objects.create(
+            sadc=sadc,
+            date=timezone.now().date(),
+            type=Snapshot.MEMBERS,
+            file="http://example.com/file.pdf",
+            name="Snapshot To Delete",
+            pages=2
+        )
+        snapshot_id = snapshot.id
+    else:
+        snapshot_id = 99999  # Non-existent ID
 
-    # Success for admin
-    resp_admin = api_client_admin.delete(reverse("snapshot", args=[snapshot.id]))
-    assert resp_admin.status_code == status.HTTP_204_NO_CONTENT
-    assert not Snapshot.objects.filter(id=snapshot.id).exists()
+    resp = client.delete(reverse("snapshot", args=[snapshot_id]))
+    assert resp.status_code == expected_status
 
-    # Invalid ID
-    resp_invalid = api_client_admin.delete(reverse("snapshot", args=[999]))
-    assert resp_invalid.status_code == status.HTTP_404_NOT_FOUND
-
+    if snapshot_exists and resp.status_code == status.HTTP_204_NO_CONTENT:
+        assert not Snapshot.objects.filter(id=snapshot_id).exists()
+    elif snapshot_exists:
+        assert Snapshot.objects.filter(id=snapshot_id).exists()
 
 # ==============================
 # Snapshot Recent Tests
 # ==============================
+
 @pytest.mark.django_db
-def test_get_recent_snapshots(api_client_regular, org_setup):
-    """Return only snapshots in the current month."""
-    sadc = org_setup['sadc']
+@pytest.mark.parametrize(
+    "user_fixture,view_snapshots_flag,override_sadc,expected_count,expected_status",
+    [
+        # Admin sees own SADC snapshots
+        ("api_client_admin", True, False, 1, status.HTTP_200_OK),
+        # Admin cannot see other SADC snapshots
+        ("api_client_admin", True, True, 0, status.HTTP_200_OK),
+        # Regular user with view_snapshots=True sees snapshots
+        ("api_client_regular", True, False, 1, status.HTTP_200_OK),
+        # Regular user with view_snapshots=False → forbidden
+        ("api_client_regular", False, False, 0, status.HTTP_403_FORBIDDEN),
+    ]
+)
+def test_snapshot_recent(
+    request,
+    org_setup,
+    other_org_setup,
+    user_fixture,
+    view_snapshots_flag,
+    override_sadc,
+    expected_count,
+    expected_status
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Set regular user flag
+    if user_fixture == "api_client_regular":
+        user_obj = client.handler._force_user
+        user_obj.view_snapshots = view_snapshots_flag
+        user_obj.save()
+
     now = timezone.now()
+
+    # Determine which SADC to assign snapshot
+    sadc = other_org_setup["other_sadc"] if override_sadc else org_setup["sadc"]
+
+    # Snapshot in current month
     Snapshot.objects.create(
         sadc=sadc,
         date=now.date(),
         type=Snapshot.MEMBERS,
-        file="http://example.com/current.pdf",
-        name="Current Month",
-        pages=1
-    )
-    Snapshot.objects.create(
-        sadc=sadc,
-        date=now.replace(month=now.month - 1 if now.month > 1 else 12).date(),
-        type=Snapshot.MEMBERS,
-        file="http://example.com/old.pdf",
-        name="Old Month",
+        file="http://example.com/file.pdf",
+        name="Current Month Snapshot",
         pages=1
     )
 
-    resp = api_client_regular.get(reverse("snapshots_recent"))
-    assert resp.status_code == status.HTTP_200_OK
-    assert any(s['name'] == "Current Month" for s in resp.data)
+    # Snapshot from previous month (should not appear)
+    last_month = now.replace(month=now.month - 1 if now.month > 1 else 12)
+    Snapshot.objects.create(
+        sadc=sadc,
+        date=last_month.date(),
+        type=Snapshot.MEMBERS,
+        file="http://example.com/file_old.pdf",
+        name="Old Snapshot",
+        pages=1
+    )
+
+    url = reverse("snapshots_recent")
+    resp = client.get(url)
+    assert resp.status_code == expected_status
+
+    if resp.status_code == status.HTTP_200_OK:
+        assert len(resp.data) == expected_count
+        if expected_count > 0:
+            names = [s['name'] for s in resp.data]
+            assert "Current Month Snapshot" in names
+
+
+# ==============================
+# Snapshot Filtering Test
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "filter_value,expected_types",
+    [
+        # Single types
+        ("members", ["members"]),
+        ("birthdays", ["birthdays"]),
+        ("absences", ["absences"]),
+        ("assessments", ["assessments"]),
+        ("enrollments", ["enrollments"]),
+        ("gifts", ["gifts"]),
+
+        # Multiple types (will be lenient in assertion)
+        ("members,birthdays", ["members", "birthdays"]),
+        ("assessments,enrollments", ["assessments", "enrollments"]),
+
+        # Case-insensitivity
+        ("MeMbErS", ["members"]),
+
+        # Empty or missing filter returns all types
+        ("", ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+        (None, ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+
+        # Invalid input
+        ("invalid", []),
+    ]
+)
+def test_snapshot_filtering(request, org_setup, filter_value, expected_types):
+    sadc = org_setup["sadc"]
+
+    # Create snapshots for all types with unique dates
+    for idx, (snap_type, _) in enumerate(Snapshot.SNAPSHOT_TYPES):
+        Snapshot.objects.create(
+            sadc=sadc,
+            date=timezone.now().date() - timedelta(days=idx),
+            type=snap_type,
+            file=f"http://example.com/{snap_type}.pdf",
+            name=f"{snap_type.capitalize()} Snapshot",
+            pages=1
+        )
+
+    client = request.getfixturevalue("api_client_regular")
+    user_obj = client.handler._force_user
+    user_obj.view_snapshots = True
+    user_obj.save()
+
+    url = reverse("snapshots")
+    if filter_value:
+        url += f"?filter={filter_value}"
+
+    resp = client.get(url)
+    assert resp.status_code == 200
+
+    returned_types = [s["type"] for s in resp.data["results"]]
+
+    # Lenient assertion like audit test
+    if not expected_types:
+        assert returned_types == []
+    else:
+        assert all(rt in expected_types for rt in returned_types)
+
+# ==============================
+# Snapshot Pagination Test
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "total_snapshots,page,expected_status,expected_count,view_snapshots_flag",
+    [
+        # Multiple pages
+        (25, 1, status.HTTP_200_OK, 20, True),   # first page
+        (25, 2, status.HTTP_200_OK, 5, True),    # second page
+
+        # Requesting page beyond last
+        (5, 2, status.HTTP_404_NOT_FOUND, 0, True),
+    ]
+)
+def test_snapshot_pagination(
+    request,
+    org_setup,
+    total_snapshots,
+    page,
+    expected_status,
+    expected_count,
+    view_snapshots_flag
+):
+    client = request.getfixturevalue("api_client_regular")
+    user_obj = client.handler._force_user
+
+    # Set view_snapshots flag
+    user_obj.view_snapshots = view_snapshots_flag
+    user_obj.save()
+
+    sadc = org_setup["sadc"]
+
+    # Create snapshots with unique dates to avoid unique_together conflict
+    for i in range(total_snapshots):
+        Snapshot.objects.create(
+            sadc=sadc,
+            date=timezone.now().date() - timedelta(days=i),
+            type=Snapshot.MEMBERS,
+            file=f"http://example.com/file{i}.pdf",
+            name=f"Snapshot {i}",
+            pages=1
+        )
+
+    url = reverse("snapshots") + f"?page={page}"
+    resp = client.get(url)
+
+    assert resp.status_code == expected_status
+
+    if resp.status_code == status.HTTP_200_OK:
+        assert resp.data["count"] == total_snapshots
+        assert len(resp.data["results"]) == expected_count

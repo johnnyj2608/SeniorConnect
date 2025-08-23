@@ -26,10 +26,13 @@ def require_valid_birth_month(birth_month):
     return None
 
 def getGiftList(request):
-    gifts = list(
-        Gift.objects.select_related('mltc')
-        .filter(sadc=request.user.sadc)
-    )
+    current_user = request.user
+    gifts = Gift.objects.select_related('mltc').filter(sadc=request.user.sadc)
+
+    if not (current_user.is_superuser or current_user.is_org_admin):
+        allowed_mltcs = current_user.allowed_mltcs.all()
+        gifts = gifts.filter(Q(mltc__in=allowed_mltcs) | Q(mltc__isnull=True))
+
     today = timezone.now().date()
 
     def sort_key(gift):
@@ -50,7 +53,7 @@ def getGiftDetail(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift.objects.select_related('mltc'), id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user)
+    unauthorized = require_sadc_ownership(gift.sadc.id, current_user) or require_valid_mltc(gift.mltc, current_user)
     if unauthorized: return unauthorized
 
     serializer = GiftSerializer(gift)
@@ -81,7 +84,7 @@ def updateGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user)
+    unauthorized = require_sadc_ownership(gift.sadc.id, current_user) or require_valid_mltc(gift.mltc, current_user)
     if unauthorized: return unauthorized
 
     data = request.data
@@ -89,7 +92,7 @@ def updateGift(request, pk):
     birth_month_error = require_valid_birth_month(data.get("birth_month"))
     if birth_month_error: return birth_month_error
 
-    serializer = GiftSerializer(instance=gift, data=data)
+    serializer = GiftSerializer(instance=gift, data=data, partial=True)
     try:
         if serializer.is_valid():
             mltc_error = require_valid_mltc(serializer.validated_data.get('mltc'), current_user)
@@ -107,7 +110,7 @@ def deleteGift(request, pk):
     current_user = request.user
     gift = get_object_or_404(Gift, id=pk)
 
-    unauthorized = require_sadc_ownership(gift, current_user)
+    unauthorized = require_sadc_ownership(gift.sadc.id, current_user) or require_valid_mltc(gift.mltc, current_user)
     if unauthorized: return unauthorized
 
     gift.delete()

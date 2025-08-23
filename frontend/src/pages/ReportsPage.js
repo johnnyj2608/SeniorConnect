@@ -35,6 +35,7 @@ const reportFilters = {
         'birthdays',
         'absences',
         'enrollments',
+        'gifts',
     ],
 };
 

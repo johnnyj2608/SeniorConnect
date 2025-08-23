@@ -224,7 +224,13 @@ def test_recent_audits(
         ("foobar", []),
     ]
 )
-def test_audit_list_filter(api_client_admin, admin_user, members_setup, filter_value, expected_types):
+def test_audit_list_filter(
+    api_client_admin, 
+    admin_user, 
+    members_setup, 
+    filter_value, 
+    expected_types
+):
     member = members_setup["members"][0]
 
     # Create one of each type
@@ -283,7 +289,16 @@ def test_audit_list_filter(api_client_admin, admin_user, members_setup, filter_v
         (5, 2, status.HTTP_404_NOT_FOUND, 0, False),
     ]
 )
-def test_audit_list_pagination(api_client_admin, admin_user, members_setup, total_audits, page, expected_status, expected_count, next_exists):
+def test_audit_list_pagination(
+    api_client_admin, 
+    admin_user, 
+    members_setup, 
+    total_audits, 
+    page, 
+    expected_status, 
+    expected_count, 
+    next_exists
+):
     member = members_setup["members"][0]
     AuditLog.objects.all().delete()
 

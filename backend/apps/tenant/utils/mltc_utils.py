@@ -20,7 +20,7 @@ def getMltcDetail(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    unauthorized = require_sadc_ownership(mltc, current_user) or require_valid_mltc(mltc, current_user)
+    unauthorized = require_sadc_ownership(mltc.sadc.id, current_user) or require_valid_mltc(mltc, current_user)
     if unauthorized: return unauthorized
 
     serializer = MltcSerializer(mltc)
@@ -51,7 +51,7 @@ def updateMltc(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(mltc.sadc.id, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
     data = request.data
@@ -71,7 +71,7 @@ def deleteMltc(request, pk):
     current_user = request.user
     mltc = get_object_or_404(Mltc, id=pk)
 
-    unauthorized = require_sadc_ownership(mltc, current_user) or require_org_admin(current_user)
+    unauthorized = require_sadc_ownership(mltc.sadc.id, current_user) or require_org_admin(current_user)
     if unauthorized: return unauthorized
 
     mltc.delete()

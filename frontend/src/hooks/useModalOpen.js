@@ -16,6 +16,7 @@ const useModalOpen = () => {
     const openModal = useCallback(async (type, data = {}) => {
         if ((type === 'authorizations' || type === 'users') && refreshMltc) await refreshMltc();
         if ((type === 'attendance' || type === 'info') && refreshSadc) await refreshSadc();
+        if (type === 'gifts' && refreshGift) await refreshGift();
         if (type === 'absences' && refreshUser) await refreshUser();
 
         setModalData({ type, ...data });

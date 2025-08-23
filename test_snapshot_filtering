@@ -1,0 +1,199 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.3.5, pluggy-1.5.0
+django: version: 4.2.17, settings: backend.settings (from ini)
+rootdir: /Users/johnnyjiang/Desktop/seniorconnect
+configfile: pytest.ini
+plugins: anyio-4.9.0, django-4.11.1, mock-3.14.0
+collected 37 items
+
+backend/apps/tenant/tests/snapshot_tests.py ............................ [ 75%]
+FF.......                                                                [100%]
+
+=================================== FAILURES ===================================
+__________ test_snapshot_filtering[members,birthdays-expected_types6] __________
+
+request = <FixtureRequest for <Function test_snapshot_filtering[members,birthdays-expected_types6]>>
+org_setup = {'mltc_allowed': <Mltc: Allowed MLTC>, 'mltc_denied': <Mltc: Denied MLTC>, 'sadc': <Sadc: Test SADC>}
+filter_value = 'members,birthdays', expected_types = ['members', 'birthdays']
+
+    @pytest.mark.django_db
+    @pytest.mark.parametrize(
+        "filter_value,expected_types",
+        [
+            # Single types
+            ("members", ["members"]),
+            ("birthdays", ["birthdays"]),
+            ("absences", ["absences"]),
+            ("assessments", ["assessments"]),
+            ("enrollments", ["enrollments"]),
+            ("gifts", ["gifts"]),
+    
+            # Multiple types
+            ("members,birthdays", ["members", "birthdays"]),
+            ("assessments,enrollments", ["assessments", "enrollments"]),
+    
+            # Case-insensitivity
+            ("MeMbErS", ["members"]),
+    
+            # Empty or missing filter returns all types
+            ("", ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+            (None, ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+    
+            # Invalid input
+            ("invalid", []),
+        ]
+    )
+    def test_snapshot_filtering(
+        request,
+        org_setup,
+        filter_value,
+        expected_types
+    ):
+        sadc = org_setup["sadc"]
+    
+        # Create snapshots for all types with unique dates
+        for idx, (snap_type, _) in enumerate(Snapshot.SNAPSHOT_TYPES):
+            Snapshot.objects.create(
+                sadc=sadc,
+                date=timezone.now().date() - timedelta(days=idx),
+                type=snap_type,
+                file=f"http://example.com/{snap_type}.pdf",
+                name=f"{snap_type.capitalize()} Snapshot",
+                pages=1
+            )
+    
+        client = request.getfixturevalue("api_client_regular")
+        user_obj = client.handler._force_user
+        user_obj.view_snapshots = True
+        user_obj.save()
+    
+        # Construct URL with optional filter
+        url = reverse("snapshots")
+        if filter_value:
+            url += f"?filter={filter_value}"
+    
+        resp = client.get(url)
+        assert resp.status_code == 200
+    
+        # Handle comma-separated filters and case-insensitivity
+        filter_types = []
+        if filter_value:
+            filter_types = [t.strip().lower() for t in filter_value.split(",") if t.strip()]
+        else:
+            filter_types = [t[0] for t in Snapshot.SNAPSHOT_TYPES]
+    
+        # Only return snapshot types that actually exist in DB
+        returned_types = [s["type"] for s in resp.data["results"]]
+        expected_set = set(filter_types).intersection({t[0] for t in Snapshot.SNAPSHOT_TYPES})
+>       assert set(returned_types) == expected_set
+E       AssertionError: assert set() == {'birthdays', 'members'}
+E         
+E         Extra items in the right set:
+E         'birthdays'
+E         'members'
+E         Use -v to get more diff
+
+backend/apps/tenant/tests/snapshot_tests.py:422: AssertionError
+_______ test_snapshot_filtering[assessments,enrollments-expected_types7] _______
+
+request = <FixtureRequest for <Function test_snapshot_filtering[assessments,enrollments-expected_types7]>>
+org_setup = {'mltc_allowed': <Mltc: Allowed MLTC>, 'mltc_denied': <Mltc: Denied MLTC>, 'sadc': <Sadc: Test SADC>}
+filter_value = 'assessments,enrollments'
+expected_types = ['assessments', 'enrollments']
+
+    @pytest.mark.django_db
+    @pytest.mark.parametrize(
+        "filter_value,expected_types",
+        [
+            # Single types
+            ("members", ["members"]),
+            ("birthdays", ["birthdays"]),
+            ("absences", ["absences"]),
+            ("assessments", ["assessments"]),
+            ("enrollments", ["enrollments"]),
+            ("gifts", ["gifts"]),
+    
+            # Multiple types
+            ("members,birthdays", ["members", "birthdays"]),
+            ("assessments,enrollments", ["assessments", "enrollments"]),
+    
+            # Case-insensitivity
+            ("MeMbErS", ["members"]),
+    
+            # Empty or missing filter returns all types
+            ("", ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+            (None, ["members", "birthdays", "absences", "assessments", "enrollments", "gifts"]),
+    
+            # Invalid input
+            ("invalid", []),
+        ]
+    )
+    def test_snapshot_filtering(
+        request,
+        org_setup,
+        filter_value,
+        expected_types
+    ):
+        sadc = org_setup["sadc"]
+    
+        # Create snapshots for all types with unique dates
+        for idx, (snap_type, _) in enumerate(Snapshot.SNAPSHOT_TYPES):
+            Snapshot.objects.create(
+                sadc=sadc,
+                date=timezone.now().date() - timedelta(days=idx),
+                type=snap_type,
+                file=f"http://example.com/{snap_type}.pdf",
+                name=f"{snap_type.capitalize()} Snapshot",
+                pages=1
+            )
+    
+        client = request.getfixturevalue("api_client_regular")
+        user_obj = client.handler._force_user
+        user_obj.view_snapshots = True
+        user_obj.save()
+    
+        # Construct URL with optional filter
+        url = reverse("snapshots")
+        if filter_value:
+            url += f"?filter={filter_value}"
+    
+        resp = client.get(url)
+        assert resp.status_code == 200
+    
+        # Handle comma-separated filters and case-insensitivity
+        filter_types = []
+        if filter_value:
+            filter_types = [t.strip().lower() for t in filter_value.split(",") if t.strip()]
+        else:
+            filter_types = [t[0] for t in Snapshot.SNAPSHOT_TYPES]
+    
+        # Only return snapshot types that actually exist in DB
+        returned_types = [s["type"] for s in resp.data["results"]]
+        expected_set = set(filter_types).intersection({t[0] for t in Snapshot.SNAPSHOT_TYPES})
+>       assert set(returned_types) == expected_set
+E       AssertionError: assert set() == {'assessments', 'enrollments'}
+E         
+E         Extra items in the right set:
+E         'enrollments'
+E         'assessments'
+E         Use -v to get more diff
+
+backend/apps/tenant/tests/snapshot_tests.py:422: AssertionError
+=========================== short test summary info ============================
+FAILED backend/apps/tenant/tests/snapshot_tests.py::test_snapshot_filtering[members,birthdays-expected_types6]
+FAILED backend/apps/tenant/tests/snapshot_tests.py::test_snapshot_filtering[assessments,enrollments-expected_types7]
+======================== 2 failed, 35 passed in 29.48s =========================
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.3.5, pluggy-1.5.0
+django: version: 4.2.17, settings: backend.settings (from ini)
+rootdir: /Users/johnnyjiang/Desktop/seniorconnect
+configfile: pytest.ini
+plugins: anyio-4.9.0, django-4.11.1, mock-3.14.0
+collected 35 items
+
+backend/apps/tenant/tests/snapshot_tests.py ...............
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/utf_8.py:15: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+============================= 15 passed in 13.46s ==============================
