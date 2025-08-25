@@ -100,7 +100,7 @@ def deleteUser(request, pk):
     if unauthorized: return unauthorized
 
     if user.is_org_admin:
-        return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "Cannot delete admin users."}, status=status.HTTP_404_NOT_FOUND)
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

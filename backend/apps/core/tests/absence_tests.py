@@ -139,7 +139,7 @@ def test_absence_detail(
         assert response.data["id"] == absence.id
         assert response.data["absence_type"] == "vacation"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 # ==============================
@@ -225,7 +225,7 @@ def test_absence_create(
             mock_upload.assert_called_once()
     else:
         # unauthorized should either be forbidden or validation fail
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not model_cls.objects.filter(member=member).exists()
 
 
@@ -319,7 +319,7 @@ def test_absence_update(
             assert "supabase.test/newfile.pdf" in instance.file
             mock_upload.assert_called_once()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         instance.refresh_from_db()
         assert instance.absence_type == "personal"
 
@@ -401,7 +401,7 @@ def test_absence_delete(
         if with_file:
             mock_delete_file.assert_called_once_with("supabase/testfile.pdf")
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert Absence.objects.filter(id=absence_id).exists()
 
 

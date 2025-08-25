@@ -123,7 +123,7 @@ def test_contact_detail(
         assert response.data["id"] == contact.id
         assert response.data["name"] == "Detail Contact"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Contact Create Tests
@@ -176,7 +176,7 @@ def test_contact_create(
         contact = Contact.objects.get(name="Alice")
         assert contact.members.filter(id=member.id).exists()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not Contact.objects.filter(name="Alice").exists()
 
 # ==============================
@@ -237,7 +237,7 @@ def test_contact_update(
         contact.refresh_from_db()
         assert contact.name == "David Updated"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Contact Delete Tests
@@ -317,7 +317,7 @@ def test_contact_delete(
                 assert m in contact.members.all()
         assert Contact.objects.filter(id=contact.id).exists()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Contact Search Tests

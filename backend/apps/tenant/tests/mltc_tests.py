@@ -104,7 +104,7 @@ def test_mltc_detail(
         assert resp.status_code == status.HTTP_200_OK
         assert resp.json()["name"] == mltc_obj.name
     else:
-        assert resp.status_code == status.HTTP_403_FORBIDDEN
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 
 # ==============================
@@ -118,7 +118,7 @@ def test_mltc_detail(
         # Admin creating a valid MLTC
         ("api_client_admin", "New MLTC Admin", status.HTTP_201_CREATED),
         # Regular can not create an MLTC
-        ("api_client_regular", "New MLTC Regular", status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "New MLTC Regular", status.HTTP_404_NOT_FOUND),
     ]
 )
 def test_mltc_create(request, user_fixture, mltc_name, expected_status):
@@ -150,7 +150,7 @@ def test_mltc_create(request, user_fixture, mltc_name, expected_status):
         # Admin can update
         ("api_client_admin", "Updated by Admin", status.HTTP_200_OK),
         # Regular user cannot update
-        ("api_client_regular", "Attempted by Regular", status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "Attempted by Regular", status.HTTP_404_NOT_FOUND),
     ]
 )
 def test_mltc_update(request, org_setup, user_fixture, new_name, expected_status):
@@ -182,7 +182,7 @@ def test_mltc_update(request, org_setup, user_fixture, new_name, expected_status
         # Admin can delete
         ("api_client_admin", status.HTTP_204_NO_CONTENT),  
         # Regular can not delete
-        ("api_client_regular", status.HTTP_403_FORBIDDEN), 
+        ("api_client_regular", status.HTTP_404_NOT_FOUND), 
     ]
 )
 def test_delete_mltc(request, org_setup, user_fixture, expected_status):

@@ -62,13 +62,13 @@ def test_user_list(
         ("api_client_admin", "regular_user", True, status.HTTP_200_OK),
 
         # Admin other SADC → forbidden
-        ("api_client_admin", "other_org_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "other_org_user", True, status.HTTP_404_NOT_FOUND),
 
         # Regular user fetching self → allowed
         ("api_client_regular", "regular_user", True, status.HTTP_200_OK),
 
         # Regular user fetching other user → forbidden
-        ("api_client_regular", "admin_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "admin_user", True, status.HTTP_404_NOT_FOUND),
 
         # Fetch non-existent user → 404
         ("api_client_admin", "nonexistent_user", False, status.HTTP_404_NOT_FOUND),
@@ -128,10 +128,10 @@ def test_user_detail(
         ("api_client_admin", "newadmin@example.com", "New Admin", "org_setup", True, status.HTTP_400_BAD_REQUEST),
 
         # 3. Admin tries to create user in another SADC → fail
-        ("api_client_admin", "otheruser@example.com", "Other User", "other_org_setup", False, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "otheruser@example.com", "Other User", "other_org_setup", False, status.HTTP_404_NOT_FOUND),
 
         # 4. Regular user tries to create any user → fail
-        ("api_client_regular", "regularcreate@example.com", "Regular Create", "org_setup", False, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "regularcreate@example.com", "Regular Create", "org_setup", False, status.HTTP_404_NOT_FOUND),
 
         # 5. Missing email → fail
         ("api_client_admin", "", "No Email", "org_setup", False, status.HTTP_400_BAD_REQUEST),
@@ -187,10 +187,10 @@ def test_user_create(
         ("api_client_admin", "regular_user@example.com", "New Admin Name", "org_setup", True, {}, status.HTTP_200_OK, True),
 
         # 3. Admin tries to update user in another SADC → fail
-        ("api_client_admin", "otheruser@example.com", "Hacked Name", "other_org_setup", False, {}, status.HTTP_403_FORBIDDEN, True),
+        ("api_client_admin", "otheruser@example.com", "Hacked Name", "other_org_setup", False, {}, status.HTTP_404_NOT_FOUND, True),
 
         # 4. Regular user tries to update any user → fail
-        ("api_client_regular", "regular_user@example.com", "Hacked Name", "org_setup", False, {}, status.HTTP_403_FORBIDDEN, True),
+        ("api_client_regular", "regular_user@example.com", "Hacked Name", "org_setup", False, {}, status.HTTP_404_NOT_FOUND, True),
 
         # 5. Admin tries to update sadc field → silently ignored (200 but unchanged)
         ("api_client_admin", "regular_user@example.com", "Keep Name", "org_setup", False, {"sadc": 999}, status.HTTP_200_OK, True),
@@ -268,13 +268,13 @@ def test_user_update(
         ("api_client_admin", "regular_user@example.com", "is_org_admin", True, "org_setup", status.HTTP_200_OK, True),
 
         # 3. Admin tries to patch user in another SADC → fail
-        ("api_client_admin", "otheruser@example.com", "name", "Hacked Name", "other_org_setup", status.HTTP_403_FORBIDDEN, True),
+        ("api_client_admin", "otheruser@example.com", "name", "Hacked Name", "other_org_setup", status.HTTP_404_NOT_FOUND, True),
 
         # 4. Regular user patches self → success
         ("api_client_regular", "regular_user@example.com", "name", "My New Name", "org_setup", status.HTTP_200_OK, True),
 
         # 5. Regular user tries to patch another user → fail
-        ("api_client_regular", "admin_user@example.com", "name", "Hacked Name", "org_setup", status.HTTP_403_FORBIDDEN, True),
+        ("api_client_regular", "admin_user@example.com", "name", "Hacked Name", "org_setup", status.HTTP_404_NOT_FOUND, True),
 
         # 6. Admin tries to patch sadc → silently ignored (200 but unchanged)
         ("api_client_admin", "regular_user@example.com", "sadc", 999, "org_setup", status.HTTP_200_OK, True),
@@ -351,16 +351,16 @@ def test_user_patch(
         ("api_client_admin", "regular_user", True, status.HTTP_204_NO_CONTENT),
 
         # 2. Admin tries to delete another admin in same SADC → fail
-        ("api_client_admin", "admin_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "admin_user", True, status.HTTP_404_NOT_FOUND),
 
         # 3. Admin tries to delete user in another SADC → fail
-        ("api_client_admin", "other_org_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "other_org_user", True, status.HTTP_404_NOT_FOUND),
 
         # 4. Admin tries to delete self → fail
-        ("api_client_admin", "admin_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "admin_user", True, status.HTTP_404_NOT_FOUND),
 
         # 5. Regular user tries to delete any user → fail
-        ("api_client_regular", "regular_user", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "regular_user", True, status.HTTP_404_NOT_FOUND),
 
         # 6. Delete non-existent user → 404
         ("api_client_admin", "nonexistent_user", False, status.HTTP_404_NOT_FOUND),

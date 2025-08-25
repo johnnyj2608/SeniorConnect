@@ -143,7 +143,7 @@ def test_file_detail(
         assert response.data["id"] == file_obj.id
         assert response.data["name"] == "Test File"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Files Create Tests
@@ -205,7 +205,7 @@ def test_file_create(
         assert File.objects.filter(member=member, name="Health Form").exists()
         mock_upload.assert_called_once()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Files Update Tests
@@ -279,7 +279,7 @@ def test_file_update(
             mock_upload.assert_called_once()
     else:
         # Unauthorized or forbidden
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Files Delete Tests
@@ -347,6 +347,6 @@ def test_file_delete(
         # Expect the full URL now, not relative path
         mock_delete_file.assert_called_once_with(file_url)
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         if not not_found:
             assert File.objects.filter(id=file_id).exists()

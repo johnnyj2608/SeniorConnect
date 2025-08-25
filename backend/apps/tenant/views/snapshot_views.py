@@ -14,7 +14,7 @@ from ..utils.snapshot_utils import (
 @api_view(['GET', 'POST'])
 def getSnapshots(request):
     if request.method == 'POST' and not IsAdminUser().has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         return getSnapshotList(request)
@@ -25,7 +25,7 @@ def getSnapshots(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def getSnapshot(request, pk):
     if request.method in ['PUT', 'DELETE'] and not IsAdminUser().has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         return getSnapshotDetail(request, pk)

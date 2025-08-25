@@ -132,7 +132,7 @@ def test_member_detail(
         assert response.data["first_name"] == member.first_name
         assert response.data["last_name"] == member.last_name
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Member Create Tests
@@ -212,7 +212,7 @@ def test_member_create(
             mock_upload.assert_called_once()
     else:
         # unauthorized should return 403
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not Member.objects.filter(first_name="Test", last_name="User").exists()
 
 # ==============================
@@ -298,7 +298,7 @@ def test_member_update(
             assert member.photo == "https://supabase.test/photo.jpg"
             mock_upload.assert_called_once()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         member.refresh_from_db()
         assert member.first_name != "Updated"
 
@@ -389,7 +389,7 @@ def test_member_auth(
             # member with no active auth should return empty dict
             assert response.data == {}
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 # ==============================
@@ -453,7 +453,7 @@ def test_member_delete(
         member.refresh_from_db()
         assert member.is_deleted is True
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         if member_index is not None:
             member.refresh_from_db()
             assert member.is_deleted is False
@@ -522,7 +522,7 @@ def test_member_restore(
         member.refresh_from_db()
         assert member.is_deleted is False
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         if member_index is not None:
             member.refresh_from_db()
             assert member.is_deleted is True
@@ -588,7 +588,7 @@ def test_member_active_toggle(
         member.refresh_from_db()
         assert response.data["active"] == member.active
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         if member_index is not None:
             member.refresh_from_db()
 
@@ -652,7 +652,7 @@ def test_member_profile(
         if member_index is not None and not other_sadc_flag:
             assert response.data["info"]["id"] == member.id
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Member Deleted List Tests

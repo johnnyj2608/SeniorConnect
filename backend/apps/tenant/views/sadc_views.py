@@ -10,7 +10,7 @@ from ..utils.sadc_utils import (
 @api_view(['GET', 'PUT'])
 def getSadc(request):
     if request.method == 'PUT' and not IsAdminUser().has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
         return getSadcDetail(request)

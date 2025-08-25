@@ -14,7 +14,7 @@ def getSnapshotList(request):
         if not current_user.view_snapshots:
             return Response(
                 {"detail": "Not authorized to view snapshots."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_404_NOT_FOUND
             )
 
     snapshots = Snapshot.objects.filter(sadc=current_user.sadc)
@@ -38,7 +38,7 @@ def getSnapshotDetail(request, pk):
         if not current_user.view_snapshots:
             return Response(
                 {"detail": "Not authorized to view snapshots."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_404_NOT_FOUND
             )
 
     serializer = SnapshotSerializer(snapshot)
@@ -100,7 +100,7 @@ def getRecentSnapshots(request):
         if not current_user.view_snapshots:
             return Response(
                 {"detail": "Not authorized to view snapshots."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_404_NOT_FOUND
             )
         
     now = timezone.now()

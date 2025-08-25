@@ -169,7 +169,7 @@ def test_authorization_detail(
         assert response.data["mltc_member_id"] == "AUTH001"
         assert response.data["mltc"] == mltc_obj.name
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Authorization Create Tests
@@ -247,7 +247,7 @@ def test_authorization_create(
             assert auth.file == "supabase/path/fakefile.pdf"
         assert auth.mltc == mltc
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Authorization Update Tests
@@ -347,7 +347,7 @@ def test_authorization_update(
         if file_upload:
             assert auth.file == "https://supabase.test/updated.pdf"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         auth.refresh_from_db()
         assert auth.mltc_member_id == "INIT1"
 
@@ -430,7 +430,7 @@ def test_authorization_delete(
         if with_file:
             mock_delete_file.assert_called_once_with("supabase/testfile.pdf")
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         if not not_found:
             assert Authorization.objects.filter(id=auth_id).exists()
 
@@ -447,13 +447,13 @@ def test_authorization_delete(
         ("api_client_admin", 1, "mltc_denied", status.HTTP_200_OK),
 
         # 2. Admin cannot get from other SADC
-        ("api_client_admin", "other", "mltc_allowed", status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "other", "mltc_allowed", status.HTTP_404_NOT_FOUND),
 
         # 3. Regular can get from MLTC allowed
         ("api_client_regular", 0, "mltc_allowed", status.HTTP_200_OK),
 
         # 4. Regular cannot get from MLTC denied
-        ("api_client_regular", 1, "mltc_denied", status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", 1, "mltc_denied", status.HTTP_404_NOT_FOUND),
 
         # 5. Regular cannot see member with no active authorization
         ("api_client_regular", 2, None, status.HTTP_200_OK),

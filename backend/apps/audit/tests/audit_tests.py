@@ -76,12 +76,12 @@ def test_audit_list(
     [
         # Admin users
         ("api_client_admin", 0, True, status.HTTP_200_OK),           # same SADC
-        ("api_client_admin", "other_member", True, status.HTTP_403_FORBIDDEN),  # other SADC
+        ("api_client_admin", "other_member", True, status.HTTP_404_NOT_FOUND),  # other SADC
         ("api_client_admin", 0, False, status.HTTP_404_NOT_FOUND),   # object does not exist
 
         # Regular users
         ("api_client_regular", 0, True, status.HTTP_200_OK),         # allowed MLTC
-        ("api_client_regular", 1, True, status.HTTP_403_FORBIDDEN),  # denied MLTC
+        ("api_client_regular", 1, True, status.HTTP_404_NOT_FOUND),  # denied MLTC
         ("api_client_regular", 2, True, status.HTTP_200_OK),         # no active authorization
         ("api_client_regular", 3, True, status.HTTP_200_OK),         # inactive member
     ]

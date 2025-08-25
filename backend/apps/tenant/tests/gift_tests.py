@@ -113,7 +113,7 @@ def test_gift_detail(
         assert resp.status_code == status.HTTP_200_OK
         assert resp.json()["name"] == gift_name
     else:
-        assert resp.status_code == status.HTTP_403_FORBIDDEN
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Gift Create Tests
@@ -181,7 +181,7 @@ def test_gift_create(
             assert resp.status_code == status.HTTP_400_BAD_REQUEST
         else:
             # Unauthorized MLTC/SADC → 403
-            assert resp.status_code == status.HTTP_403_FORBIDDEN
+            assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Gift Update Tests
@@ -267,7 +267,7 @@ def test_gift_update(
             assert resp.status_code == status.HTTP_400_BAD_REQUEST
         else:
             # Unauthorized MLTC/SADC → 403
-            assert resp.status_code == status.HTTP_403_FORBIDDEN
+            assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
 # Gift Delete Tests
@@ -330,7 +330,7 @@ def test_gift_delete(
         assert resp.status_code == status.HTTP_204_NO_CONTENT
         assert not Gift.objects.filter(id=gift_id).exists()
     else:
-        assert resp.status_code == status.HTTP_403_FORBIDDEN
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
         assert Gift.objects.filter(id=gift_id).exists()
 
 # ==============================

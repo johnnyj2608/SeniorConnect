@@ -147,7 +147,7 @@ def test_gifted_detail(
         assert response.data["id"] == gifted.id
         assert response.data["name"] == "Gloves"
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 @pytest.mark.django_db
 def test_get_gifted_detail(api_client_regular, members_setup):
@@ -221,7 +221,7 @@ def test_gifted_create(
         assert response.status_code == status.HTTP_201_CREATED
         assert Gifted.objects.filter(member=member, gift_id=123).exists()
     else:
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not Gifted.objects.filter(member=member, gift_id=123).exists()
 
 # ==============================
@@ -290,7 +290,7 @@ def test_gifted_update(
         assert updated.name == "Updated Gloves"
     else:
         # Not authorized to update
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         unchanged = Gifted.objects.get(id=gifted.id)
         assert unchanged.name == "Gloves"
 
@@ -306,13 +306,13 @@ def test_gifted_update(
         ("api_client_admin", 1, "mltc_denied", status.HTTP_200_OK),
 
         # 2. Admin cannot get from other SADC
-        ("api_client_admin", "other", "mltc_allowed", status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "other", "mltc_allowed", status.HTTP_404_NOT_FOUND),
 
         # 3. Regular can get from MLTC allowed
         ("api_client_regular", 0, "mltc_allowed", status.HTTP_200_OK),
 
         # 4. Regular cannot get from MLTC denied
-        ("api_client_regular", 1, "mltc_denied", status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", 1, "mltc_denied", status.HTTP_404_NOT_FOUND),
 
         # 5. Regular can see member with no active authorization
         ("api_client_regular", 2, None, status.HTTP_200_OK),

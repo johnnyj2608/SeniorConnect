@@ -13,7 +13,7 @@ from ..utils.mltc_utils import (
 @api_view(['GET', 'POST'])
 def getMltcs(request):
     if request.method == 'POST' and not IsAdminUser().has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
         return getMltcList(request)
@@ -24,7 +24,7 @@ def getMltcs(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def getMltc(request, pk):
     if request.method in ['PUT', 'DELETE'] and not IsAdminUser().has_permission(request, None):
-        return Response({'detail': 'Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'detail': 'Admin access required.'}, status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
         return getMltcDetail(request, pk=pk)

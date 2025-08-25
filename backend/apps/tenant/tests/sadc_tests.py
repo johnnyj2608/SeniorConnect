@@ -56,11 +56,11 @@ def test_sadc_detail(
         ("api_client_admin", "attendance_template", 2, status.HTTP_200_OK),
        
         # Regular user updates name → fail
-        ("api_client_regular", "name", "Attempt Name Change", status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "name", "Attempt Name Change", status.HTTP_404_NOT_FOUND),
         # Regular user updates languages → fail
-        ("api_client_regular", "languages", ["French"], status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "languages", ["French"], status.HTTP_404_NOT_FOUND),
         # Regular user updates attendance_template → fail
-        ("api_client_regular", "attendance_template", 3, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "attendance_template", 3, status.HTTP_404_NOT_FOUND),
     ]
 )
 def test_sadc_update(

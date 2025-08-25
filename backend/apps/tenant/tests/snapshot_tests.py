@@ -18,7 +18,7 @@ from backend.apps.tenant.models.snapshot_model import Snapshot
         # Regular user with view_snapshots=True → 1 snapshot
         ("api_client_regular", "org", True, status.HTTP_200_OK, 1),
         # Regular user with view_snapshots=False → forbidden
-        ("api_client_regular", "org", False, status.HTTP_403_FORBIDDEN, 0),
+        ("api_client_regular", "org", False, status.HTTP_404_NOT_FOUND, 0),
     ]
 )
 def test_snapshot_list(
@@ -71,11 +71,11 @@ def test_snapshot_list(
         # Admin accessing own SADC snapshot → 200
         ("api_client_admin", "org", True, status.HTTP_200_OK),
         # Admin accessing another SADC snapshot → 403
-        ("api_client_admin", "other_org", True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", "other_org", True, status.HTTP_404_NOT_FOUND),
         # Regular user with view_snapshots=True → 200
         ("api_client_regular", "org", True, status.HTTP_200_OK),
         # Regular user with view_snapshots=False → 403
-        ("api_client_regular", "org", False, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", "org", False, status.HTTP_404_NOT_FOUND),
         # Nonexistent snapshot → 404
         ("api_client_admin", "nonexistent", True, status.HTTP_404_NOT_FOUND),
     ]
@@ -141,7 +141,7 @@ def test_snapshot_detail(
         # Admin cannot create snapshot for another SADC → should still create under their own SADC → 201
         ("api_client_admin", True, status.HTTP_201_CREATED),
         # Regular user cannot create snapshot → 403
-        ("api_client_regular", False, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", False, status.HTTP_404_NOT_FOUND),
     ]
 )
 def test_snapshot_create(
@@ -189,9 +189,9 @@ def test_snapshot_create(
         # Admin updates own SADC snapshot → 200
         ("api_client_admin", False, True, status.HTTP_200_OK),
         # Admin cannot update other SADC snapshot → 403
-        ("api_client_admin", True, True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", True, True, status.HTTP_404_NOT_FOUND),
         # Regular user cannot update → 403
-        ("api_client_regular", False, True, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", False, True, status.HTTP_404_NOT_FOUND),
         # Update non-existent snapshot → 404
         ("api_client_admin", False, False, status.HTTP_404_NOT_FOUND),
     ]
@@ -241,9 +241,9 @@ def test_snapshot_update(request, org_setup, other_org_setup, user_fixture, over
         # Admin deletes own SADC snapshot → 204
         ("api_client_admin", False, True, status.HTTP_204_NO_CONTENT),
         # Admin cannot delete other SADC snapshot → 403
-        ("api_client_admin", True, True, status.HTTP_403_FORBIDDEN),
+        ("api_client_admin", True, True, status.HTTP_404_NOT_FOUND),
         # Regular user cannot delete → 403
-        ("api_client_regular", False, True, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", False, True, status.HTTP_404_NOT_FOUND),
         # Delete non-existent snapshot → 404
         ("api_client_admin", False, False, status.HTTP_404_NOT_FOUND),
     ]
@@ -288,7 +288,7 @@ def test_snapshot_delete(request, org_setup, other_org_setup, user_fixture, over
         # Regular user with view_snapshots=True sees snapshots
         ("api_client_regular", True, False, 1, status.HTTP_200_OK),
         # Regular user with view_snapshots=False → forbidden
-        ("api_client_regular", False, False, 0, status.HTTP_403_FORBIDDEN),
+        ("api_client_regular", False, False, 0, status.HTTP_404_NOT_FOUND),
     ]
 )
 def test_snapshot_recent(

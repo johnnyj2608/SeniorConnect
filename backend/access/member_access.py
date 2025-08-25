@@ -6,7 +6,7 @@ from backend.apps.core.models.member_model import Member
 def check_member_access(user, member_id):
     accessible_ids = set(Member.objects.accessible_by(user).values_list('id', flat=True))
     if member_id not in accessible_ids:
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "Not authorized."}, status=status.HTTP_404_NOT_FOUND)
     return None
 
 def member_access_pk(func):
