@@ -3,89 +3,163 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from backend.apps.core.models.contact_model import Contact
+from backend.apps.core.models.member_model import Member
 
 # ==============================
-# Contact Listing Tests
+# Contact List Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_get_contact_list(api_client_regular, members_setup):
-    member = members_setup["members"][0]
-    Contact.objects.create(
-        name="Bob",
-        phone="9998887777",
+@pytest.mark.parametrize(
+    "user_fixture,other_sadc_flag,should_see,member_index",
+    [
+        # 1. Admin can see contact for own SADC member
+        ("api_client_admin", False, True, 0),
+
+        # 2. Admin cannot see contact for other SADC member
+        ("api_client_admin", True, False, 0),
+
+        # 3. Regular user can see contact for accessible member
+        ("api_client_regular", False, True, 0),
+
+        # 4. Regular user cannot see contact for member in other SADC
+        ("api_client_regular", True, False, 0),
+    ]
+)
+def test_contact_list(
+    request,
+    user_fixture,
+    other_sadc_flag,
+    should_see,
+    member_index,
+    members_setup,
+    other_org_setup,
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Pick member based on flag
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    # Create contact linked to that member
+    contact = Contact.objects.create(
+        name="Test Contact",
+        phone="1234567890",
         contact_type=Contact.PHARMACY
-    ).members.add(member)
+    )
+    contact.members.add(member)
 
     url = reverse("contacts")
-    response = api_client_regular.get(url)
+    response = client.get(url)
     assert response.status_code == status.HTTP_200_OK
-    assert any(c["name"] == "Bob" for c in response.data)
+
+    results = response.data
+    if should_see:
+        assert any(c["id"] == contact.id for c in results)
+    else:
+        assert all(c["id"] != contact.id for c in results)
 
 # ==============================
 # Contact Detail Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_get_contact_detail(api_client_regular, members_setup):
-    member = members_setup["members"][0]
+@pytest.mark.parametrize(
+    "user_fixture,other_sadc_flag,should_see,not_found,member_index",
+    [
+        # 1. Admin can get contact for own SADC member
+        ("api_client_admin", False, True, False, 0),
+
+        # 2. Admin cannot get contact for other SADC member
+        ("api_client_admin", True, False, False, 0),
+
+        # 3. Regular can get contact for accessible member
+        ("api_client_regular", False, True, False, 0),
+
+        # 4. Contact does not exist
+        ("api_client_regular", False, False, True, None),
+    ]
+)
+def test_contact_detail(
+    request,
+    user_fixture,
+    other_sadc_flag,
+    should_see,
+    not_found,
+    member_index,
+    members_setup,
+    other_org_setup,
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Handle not found case
+    if not_found:
+        url = reverse("contact", args=[9999])  # Non-existent ID
+        response = client.get(url)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        return
+
+    # Pick member based on flag
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    # Create contact linked to that member
     contact = Contact.objects.create(
-        name="Charlie",
-        phone="5554443333",
+        name="Detail Contact",
+        phone="1112223333",
         contact_type=Contact.HOME_AID
     )
     contact.members.add(member)
 
     url = reverse("contact", args=[contact.id])
-    response = api_client_regular.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    assert response.data["name"] == "Charlie"
+    response = client.get(url)
 
-@pytest.mark.django_db
-def test_regular_user_cannot_access_other_org_contact(api_client_regular, other_org_setup):
-    other_member = other_org_setup["other_member"]
-    contact = Contact.objects.create(
-        name="Unauthorized Contact",
-        phone="4445556666",
-        contact_type=Contact.EMERGENCY,
-        relationship_type=Contact.FRIEND
-    )
-    contact.members.add(other_member)
-
-    url = reverse("contact", args=[contact.id])
-    response = api_client_regular.get(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
-
-    url_update = reverse("contact_with_member", args=[contact.id, other_member.id])
-    payload = {"members": [other_member.id], "name": "Hacker Update", "phone": "0001112222"}
-    response = api_client_regular.put(url_update, data=payload, format="json")
-    assert response.status_code == status.HTTP_403_FORBIDDEN
-
-    response = api_client_regular.delete(url_update)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
-
-
-@pytest.mark.django_db
-def test_admin_cannot_access_other_org_contact(api_client_admin, other_org_setup):
-    other_member = other_org_setup["other_member"]
-    contact = Contact.objects.create(
-        name="Other Org Contact",
-        phone="7778889999",
-        contact_type=Contact.PHARMACY
-    )
-    contact.members.add(other_member)
-
-    url = reverse("contact", args=[contact.id])
-    response = api_client_admin.get(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    if should_see:
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["id"] == contact.id
+        assert response.data["name"] == "Detail Contact"
+    else:
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
 # ==============================
 # Contact Create Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_create_contact(api_client_regular, members_setup):
-    member = members_setup["members"][0]
+@pytest.mark.parametrize(
+    "user_fixture,other_sadc_flag,should_create,member_index",
+    [
+        # 1. Admin can create contact for own SADC member
+        ("api_client_admin", False, True, 0),
+
+        # 2. Admin cannot create contact for other SADC member
+        ("api_client_admin", True, False, 0),
+
+        # 3. Regular can create contact for accessible member
+        ("api_client_regular", False, True, 0),
+    ]
+)
+def test_contact_create(
+    request,
+    user_fixture,
+    other_sadc_flag,
+    should_create,
+    member_index,
+    members_setup,
+    other_org_setup
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Pick member
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
     url = reverse("contacts")
     payload = {
         "name": "Alice",
@@ -95,18 +169,52 @@ def test_create_contact(api_client_regular, members_setup):
         "members": [member.id],
     }
 
-    response = api_client_regular.post(url, data=payload)
-    assert response.status_code == status.HTTP_201_CREATED
-    contact = Contact.objects.get(name="Alice")
-    assert contact.members.filter(id=member.id).exists()
+    response = client.post(url, data=payload)
+
+    if should_create:
+        assert response.status_code == status.HTTP_201_CREATED
+        contact = Contact.objects.get(name="Alice")
+        assert contact.members.filter(id=member.id).exists()
+    else:
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert not Contact.objects.filter(name="Alice").exists()
 
 # ==============================
 # Contact Update Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_update_contact(api_client_regular, members_setup):
-    member = members_setup["members"][0]
+@pytest.mark.parametrize(
+    "user_fixture,other_sadc_flag,should_update,member_index",
+    [
+        # 1. Admin can update contact for own SADC member
+        ("api_client_admin", False, True, 0),
+
+        # 2. Admin cannot update contact for other SADC member
+        ("api_client_admin", True, False, 0),
+
+        # 3. Regular can update contact for accessible member
+        ("api_client_regular", False, True, 0),
+    ]
+)
+def test_contact_update(
+    request,
+    user_fixture,
+    other_sadc_flag,
+    should_update,
+    member_index,
+    members_setup,
+    other_org_setup
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Pick member
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    # Create contact
     contact = Contact.objects.create(
         name="David",
         phone="2223334444",
@@ -122,72 +230,156 @@ def test_update_contact(api_client_regular, members_setup):
         "contact_type": Contact.HOME_CARE,
     }
 
-    response = api_client_regular.put(url, data=payload, format="json")
-    assert response.status_code == status.HTTP_200_OK
-    contact.refresh_from_db()
-    assert contact.name == "David Updated"
+    response = client.put(url, data=payload, format="json")
+
+    if should_update:
+        assert response.status_code == status.HTTP_200_OK
+        contact.refresh_from_db()
+        assert contact.name == "David Updated"
+    else:
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
 # ==============================
 # Contact Delete Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_delete_contact_last_member_deletes_contact(api_client_regular, members_setup):
-    member = members_setup["members"][0]
+@pytest.mark.parametrize(
+    "user_fixture,other_sadc_flag,member_index,members_to_add,should_delete_contact",
+    [
+        # 1. Admin deletes last member -> contact deleted
+        ("api_client_admin", False, 0, [0], True),
+
+        # 2. Admin deletes member (multi-member) -> association deleted
+        ("api_client_admin", False, 0, [0,1], False),
+
+        # 3. Admin deletes last member of other SADC -> forbidden
+        ("api_client_admin", True, 0, [0], None),
+
+        # 4. Admin deletes member of other SADC (multi-member) -> forbidden
+        ("api_client_admin", True, 0, [0,1], None),
+
+        # 5. Regular deletes last member -> contact deleted
+        ("api_client_regular", False, 0, [0], True),
+        
+        # 6. Regular deletes member (multi-member) -> association deleted
+        ("api_client_regular", False, 0, [0,1], False),
+    ]
+)
+def test_contact_delete(
+    request,
+    user_fixture,
+    other_sadc_flag,
+    member_index,
+    members_to_add,
+    should_delete_contact,
+    members_setup,
+    other_org_setup
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Pick member to delete
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    # Create contact and add members
+    contact_members = []
+    for i in members_to_add:
+        if other_sadc_flag:
+            # If any member in other SADC, create a separate contact for that SADC
+            contact_members.append(other_org_setup["other_member"])
+        else:
+            contact_members.append(members_setup["members"][i])
+
     contact = Contact.objects.create(
-        name="Eve",
-        phone="1110002222",
-        contact_type=Contact.OTHER
+        name="Bob Combined",
+        phone="9998887777",
+        contact_type=Contact.PHARMACY
     )
-    contact.members.add(member)
+    contact.members.add(*contact_members)
 
     url = reverse("contact_with_member", args=[contact.id, member.id])
-    response = api_client_regular.delete(url)
+    response = client.delete(url)
 
-    assert response.status_code == status.HTTP_204_NO_CONTENT
-    assert not Contact.objects.filter(id=contact.id).exists()
-
-
-@pytest.mark.django_db
-def test_delete_contact_with_multiple_members_removes_association_only(api_client_regular, members_setup):
-    member1 = members_setup["members"][0]
-    member2 = members_setup["members"][1]
-
-    contact = Contact.objects.create(
-        name="Alice",
-        phone="9998887777",
-        contact_type=Contact.EMERGENCY,
-        relationship_type=Contact.SON
-    )
-    contact.members.add(member1, member2)
-
-    url = reverse("contact_with_member", args=[contact.id, member1.id])
-    response = api_client_regular.delete(url)
-
-    assert response.status_code == status.HTTP_200_OK
-    contact.refresh_from_db()
-    assert member1 not in contact.members.all()
-    assert member2 in contact.members.all()
-    assert Contact.objects.filter(id=contact.id).exists()
+    if should_delete_contact is True:
+        # Last member deleted -> contact gone
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not Contact.objects.filter(id=contact.id).exists()
+    elif should_delete_contact is False:
+        # Multi-member -> association removed only
+        assert response.status_code == status.HTTP_200_OK
+        contact.refresh_from_db()
+        assert member not in contact.members.all()
+        for m in contact_members:
+            if m != member:
+                assert m in contact.members.all()
+        assert Contact.objects.filter(id=contact.id).exists()
+    else:
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
 # ==============================
 # Contact Search Tests
 # ==============================
 
 @pytest.mark.django_db
-def test_search_contacts_by_name_and_type(api_client_regular, members_setup):
-    member = members_setup["members"][0]
-    c1 = Contact.objects.create(name="Alice Smith", phone="1231231234", contact_type=Contact.EMERGENCY)
-    c1.members.add(member)
-    c2 = Contact.objects.create(name="Bob Jones", phone="5555555555", contact_type=Contact.PHARMACY)
-    c2.members.add(member)
+@pytest.mark.parametrize(
+    "user_fixture,member_index,search_name,expected_count",
+    [
+        # 1. Admin searches for exact name match
+        ("api_client_admin", 0, "Bob", 1),
+        # 2. Admin searches for partial name match
+        ("api_client_admin", 0, "Bo", 1),
+        # 3. Admin searches for non-existent name
+        ("api_client_admin", 0, "Nonexistent", 0),
+        # 4. Regular searches for exact name
+        ("api_client_regular", 1, "Bob", 1),
+        # 5. Regular searches for non-existent name
+        ("api_client_regular", 1, "Alice", 0),
+    ]
+)
+def test_contact_search(
+    request,
+    user_fixture,
+    member_index,
+    search_name,
+    expected_count,
+    members_setup,
+    admin_user,
+    regular_user
+):
+    # Get client and corresponding user
+    client = request.getfixturevalue(user_fixture)
+    user_map = {
+        "api_client_admin": admin_user,
+        "api_client_regular": regular_user,
+    }
+    current_user = user_map[user_fixture]
 
-    url = reverse("contact_search") + f"?name=Alice&contact_type={Contact.EMERGENCY}"
-    response = api_client_regular.get(url)
+    # Create a contact for testing
+    member = members_setup["members"][member_index]
+    contact = Contact.objects.create(
+        name="Bob",
+        phone="9998887777",
+        contact_type=Contact.PHARMACY
+    )
+    contact.members.add(member)
+
+    url = reverse("contact_search")
+    response = client.get(url, {"name": search_name})
+
     assert response.status_code == status.HTTP_200_OK
-    assert len(response.data) == 1
-    assert response.data[0]["name"] == "Alice Smith"
+    assert len(response.data) == expected_count
 
+    if expected_count > 0:
+        for c in response.data:
+            # Name contains search query
+            assert search_name.lower() in c["name"].lower()
+            # Ensure contact members belong to the same SADC as current user
+            for m_id in c["members"]:
+                member_obj = Member.objects.get(id=m_id)
+                assert member_obj.sadc == current_user.sadc
 
 # ==============================
 # Contact Validation Tests

@@ -95,7 +95,7 @@ def updateFile(request, pk):
 
             data['file'] = public_url
 
-        serializer = FileSerializer(instance=file, data=data)
+        serializer = FileSerializer(instance=file, data=data, partial=True)
         try:
             if serializer.is_valid():
                 serializer.save()
@@ -115,7 +115,8 @@ def updateFile(request, pk):
 def deleteFile(request, pk, member_pk):
     file = get_object_or_404(File, id=pk)
     if file.file:
-        file_path = get_relative_path_of_supabase(file.file)
-        delete_file_from_supabase(file_path)
+        delete_file_from_supabase(file.file)
+    else:
+        print(f"No file URL to delete for File ID {file.id}")
     file.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

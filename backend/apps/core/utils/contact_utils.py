@@ -12,8 +12,9 @@ from backend.access.member_access import (
 
 @member_access_filter()
 def getContactList(request):
-    contacts = Contact.objects.prefetch_related('members').all()
-    serializer = ContactSerializer(contacts, many=True)
+    accessible_members = request.accessible_members_qs
+    contacts = Contact.objects.filter(members__in=accessible_members).distinct()
+    serializer = ContactSerializer(contacts.prefetch_related('members'), many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def getContactDetail(request, pk):
@@ -30,6 +31,10 @@ def createContact(request):
     data = request.data
     member_pks = data.getlist('members')
     member = get_object_or_404(Member, id=member_pks[-1])
+
+    unauthorized = check_member_access(request.user, member.id)
+    if unauthorized: return unauthorized
+
     contact, created = Contact.objects.get_or_create(
         name=data['name'],
         phone=data['phone'],
@@ -81,8 +86,10 @@ def searchContactList(request):
     contact_type = request.query_params.get('contact_type', '')
     name_query = request.query_params.get('name', '')
     member_pk = request.query_params.get('member_pk', None)
+
+    current_user=request.user
     
-    contacts = Contact.objects.all()
+    contacts = Contact.objects.filter(members__sadc=current_user.sadc).distinct()
 
     if name_query:
         contacts = contacts.filter(name__icontains=name_query)

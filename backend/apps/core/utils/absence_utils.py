@@ -42,6 +42,8 @@ def getAbsenceList(request):
         absences = absences.filter(start_date__gt=now)
     elif filter_param == 'completed':
         absences = absences.filter(end_date__lt=now)
+    else:
+        pass
 
     paginator = PageNumberPagination()
     result_page = paginator.paginate_queryset(absences, request)
@@ -160,6 +162,13 @@ def updateAbsence(request, pk):
 @member_access_fk
 def deleteAbsence(request, pk, member_pk):
     absence = get_object_or_404(Absence, id=pk)
+
+    if absence.file:
+        try:
+            delete_file_from_supabase(absence.file)
+        except Exception as e:
+            print(f"Error deleting file from Supabase: {e}")
+
     absence.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
