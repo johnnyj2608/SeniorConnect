@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
+import datetime
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from ..tenant.models.mltc_model import Mltc
 from ..tenant.models.sadc_model import Sadc
@@ -54,3 +57,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.name
+    
+class TwoFactorCode(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['expires_at']),
+        ]
+
+    @classmethod
+    def create_code(cls, user):
+        import random
+        code = str(random.randint(100000, 999999))
+        cls.objects.filter(user=user).delete()
+        return cls.objects.create(
+            user=user,
+            code=code,
+            expires_at=timezone.now() + datetime.timedelta(minutes=15)
+        )

@@ -27,3 +27,20 @@ def sendEmailInvitation(user, request):
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
     )
+
+def sendEmailCode(email, code):
+    subject = "Your Senior Connect 2FA Code"
+    message = (
+        f"Hello,\n\n"
+        f"Your 2-factor authentication (2FA) code is:\n\n"
+        f"{code}\n\n"
+        f"This code will expire in 15 minutes.\n\n"
+        f"If you did not request this code, please contact support."
+    )
+    
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+    )

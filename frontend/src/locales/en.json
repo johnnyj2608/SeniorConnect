@@ -19,6 +19,8 @@
         "set_password": "Set Password",
         "forgot_password": "Forgot Password",
         "log_in": "Log In",
+        "enter_verification_code": "Enter Verification Code",
+        "verify_code": "Verify Code",
         "required": "Required",
         "loading": "Loading",
         "buttons": {

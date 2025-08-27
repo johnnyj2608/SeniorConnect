@@ -1,5 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.generics import get_object_or_404
 from django.contrib.auth import authenticate
 from django.conf import settings
@@ -7,9 +9,9 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
-from .models import User
+from .models import User, TwoFactorCode
 from .serializers import UserReadSerializer, UserWriteSerializer, PasswordSerializer
-from backend.utils.email_utils import sendEmailInvitation
+from backend.utils.email_utils import sendEmailInvitation, sendEmailCode
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin, require_self_or_admin
 
 def getUserList(request):
@@ -142,42 +144,73 @@ def getAuthUser(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 def handleLogin(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not email or not password:
+        return Response({'detail': 'Email and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    email = email.lower()
+    user = authenticate(request, username=email, password=password)
+
+    if not user:
+        return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    two_fa = TwoFactorCode.create_code(user)
+    sendEmailCode(user.email, two_fa.code)
+
+    return Response(
+        {'detail': 'A verification code has been sent to your email.'}, 
+        status=status.HTTP_200_OK
+    )
+
+def handleVerify(request):
+    email = request.data.get('email')
+    code = request.data.get('code')
+
+    if not email or not code:
+        return Response({'detail': 'Email and code are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    email = email.lower()
     try:
-        email = request.data.get('email')
-        password = request.data.get('password')
-        user = authenticate(request, username=email, password=password)
+        user = User.objects.get(email=email)
+        two_fa = TwoFactorCode.objects.filter(user=user, code=code).first()
 
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            serializer = UserReadSerializer(user)
-            res = Response({
-                'message': 'Logged in successfully',
-                'user': serializer.data
-            }, status=200)
+        if not two_fa or two_fa.expires_at < timezone.now():
+            return Response({'detail': 'Invalid or expired code.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            res.set_cookie(
-                key='access',
-                value=str(refresh.access_token),
-                httponly=True,
-                secure=not settings.DEBUG,
-                samesite='Lax',
-            )
-            res.set_cookie(
-                key='refresh',
-                value=str(refresh),
-                httponly=True,
-                secure=not settings.DEBUG,
-                samesite='Lax',
-            )
-            return res
-    except Exception as e:
-        print("LOGIN ERROR:", e)
-        return Response({'detail': str(e)}, status=500)
+        # Code is valid: delete it
+        two_fa.delete()
 
-    return Response({'detail': 'Invalid credentials'}, status=401)
+        # Issue JWT tokens
+        refresh = RefreshToken.for_user(user)
+        serializer = UserReadSerializer(user)
+        res = Response({
+            'message': 'Logged in successfully',
+            'user': serializer.data
+        }, status=status.HTTP_200_OK)
+
+        res.set_cookie(
+            key='access',
+            value=str(refresh.access_token),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+        )
+        res.set_cookie(
+            key='refresh',
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+        )
+        return res
+
+    except User.DoesNotExist:
+        return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 def handleLogout(request):
-    res = Response({'message': 'Logged out successfully'}, status=200)
+    res = Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
     res.delete_cookie('access')
     res.delete_cookie('refresh')
     return res
@@ -186,13 +219,13 @@ def handleRefresh(request):
     refresh_token = request.COOKIES.get('refresh')
 
     if not refresh_token:
-        return Response({'detail': 'Refresh token missing.'}, status=401)
+        return Response({'detail': 'Refresh token missing.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     try:
         refresh = RefreshToken(refresh_token)
         access_token = str(refresh.access_token)
 
-        res = Response({'access': access_token}, status=200)
+        res = Response({'access': access_token}, status=status.HTTP_200_OK)
         res.set_cookie(
             key='access',
             value=access_token,
@@ -203,4 +236,4 @@ def handleRefresh(request):
         return res
 
     except TokenError:
-        return Response({'detail': 'Invalid refresh token.'}, status=401)
+        return Response({'detail': 'Invalid refresh token.'}, status=status.HTTP_401_UNAUTHORIZED)

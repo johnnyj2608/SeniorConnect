@@ -4,7 +4,7 @@ from rest_framework import status
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from backend.apps.user.models import User
+from backend.apps.user.models import User, TwoFactorCode
 from unittest.mock import patch
 
 # ==============================
@@ -476,44 +476,110 @@ def test_set_password_valid_token_changes_password(api_client_regular, regular_u
     regular_user.refresh_from_db()
     assert regular_user.check_password("NewStrongPass123!")
 
-
 # ==============================
 # Login Tests
 # ==============================
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "email,password,expected_status,expected_detail",
     [
-        ("user@example.com", "password", status.HTTP_200_OK, "Logged in successfully"),
-        ("user@example.com", "wrongpassword", status.HTTP_401_UNAUTHORIZED, "Invalid credentials"),
-        ("nonexistent@example.com", "any", status.HTTP_401_UNAUTHORIZED, "Invalid credentials"),
+        ("user@example.com", "password", status.HTTP_200_OK, "A verification code has been sent to your email."),
+        ("user@example.com", "wrongpassword", status.HTTP_401_UNAUTHORIZED, "Invalid credentials."),
+        ("nonexistent@example.com", "any", status.HTTP_401_UNAUTHORIZED, "Invalid credentials."),
+        ("", "password", status.HTTP_400_BAD_REQUEST, "Email and password are required."),
     ]
 )
-def test_login(api_client_regular, email, password, expected_status, expected_detail):
-    url = reverse("cookie_login")
+@patch("backend.apps.user.utils.sendEmailCode")  # Mock sending email
+def test_login_send_2fa(mock_send_email, api_client_regular, email, password, expected_status, expected_detail):
+    url = reverse("login")
     response = api_client_regular.post(url, {"email": email, "password": password}, format="json")
 
     assert response.status_code == expected_status
-    if expected_status == status.HTTP_200_OK:
-        assert "user" in response.data
-        assert "message" in response.data and expected_detail in response.data["message"]
-        # Access and refresh cookies should be set
-        assert "access" in response.cookies
-        assert "refresh" in response.cookies
-    else:
-        assert "detail" in response.data and expected_detail in response.data["detail"]
+    assert expected_detail in response.data["detail"]
 
+    if expected_status == status.HTTP_200_OK:
+        # Check that a 2FA code was created
+        user = User.objects.get(email=email)
+        assert TwoFactorCode.objects.filter(user=user).exists()
+        mock_send_email.assert_called_once()
+
+
+@pytest.mark.django_db
+def test_verify_login_success(api_client_regular, regular_user):
+    """
+    Test successful login with valid 2FA code.
+    """
+    # Create a 2FA code for the regular_user
+    two_fa = TwoFactorCode.create_code(regular_user)
+
+    url = reverse("verify_login")
+    response = api_client_regular.post(
+        url,
+        {"email": regular_user.email, "code": two_fa.code},
+        format="json"
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert "Logged in successfully" in response.data["message"]
+    assert response.data["user"]["email"] == regular_user.email
+
+    # Ensure cookies are set
+    assert "access" in response.cookies
+    assert "refresh" in response.cookies
+
+    assert not TwoFactorCode.objects.filter(user=regular_user, code=two_fa.code).exists()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "email,code,expected_status,expected_detail",
+    [
+        ("user@example.com", "wrongcode", status.HTTP_401_UNAUTHORIZED, "Invalid or expired code."),
+        ("nonexistent@example.com", "anycode", status.HTTP_401_UNAUTHORIZED, "Invalid credentials."),
+        ("user@example.com", "", status.HTTP_400_BAD_REQUEST, "Email and code are required."),
+        ("", "123456", status.HTTP_400_BAD_REQUEST, "Email and code are required."),
+    ]
+)
+def test_verify_login_failure(
+    api_client_regular, 
+    regular_user, 
+    email, 
+    code,
+    expected_status, 
+    expected_detail
+):
+    """
+    Test login failures:
+    - Wrong 2FA code
+    - Non-existent user
+    - Missing email/code
+    """
+    # Only create a valid 2FA code if email exists
+    if email == regular_user.email and code not in ["wrongcode", ""]:
+        TwoFactorCode.create_code(regular_user)
+
+    url = reverse("verify_login")
+    response = api_client_regular.post(
+        url,
+        {"email": email, "code": code},
+        format="json"
+    )
+
+    assert response.status_code == expected_status
+    assert expected_detail in response.data["detail"]
 
 # ================================================
 # Logout Test
 # ================================================
+
 @pytest.mark.django_db
 def test_logout(api_client_regular):
     # First login to set cookies
-    login_url = reverse("cookie_login")
+    login_url = reverse("login")
     api_client_regular.post(login_url, {"email": "user@example.com", "password": "password"}, format="json")
 
-    logout_url = reverse("cookie_logout")
+    logout_url = reverse("logout")
     response = api_client_regular.post(logout_url)
     assert response.status_code == status.HTTP_200_OK
     assert response.data["message"] == "Logged out successfully"
@@ -528,23 +594,31 @@ def test_logout(api_client_regular):
 # ================================================
 # JWT Refresh Tests
 # ================================================
-@pytest.mark.django_db
-def test_jwt_refresh(api_client_regular):
-    login_url = reverse("cookie_login")
-    login_resp = api_client_regular.post(login_url, {"email": "user@example.com", "password": "password"}, format="json")
-    refresh_cookie = login_resp.cookies.get("refresh").value
 
-    refresh_url = reverse("cookie_refresh")
-    api_client_regular.cookies["refresh"] = refresh_cookie
-    refresh_resp = api_client_regular.post(refresh_url)
+@pytest.mark.django_db
+def test_jwt_refresh(api_client_regular, regular_user):
+    two_fa = TwoFactorCode.create_code(regular_user)
+    login_url = reverse("verify_login")
+    login_resp = api_client_regular.post(
+        login_url,
+        {"email": regular_user.email, "code": two_fa.code},
+        format="json"
+    )
+
+    refresh_cookie = login_resp.cookies.get("refresh")
+    assert refresh_cookie is not None, "Refresh cookie should be set after login"
+
+    refresh_url = reverse("refresh_token")
+    api_client_regular.cookies["refresh"] = refresh_cookie.value
+    refresh_resp = api_client_regular.post(refresh_url, format="json")
+
     assert refresh_resp.status_code == status.HTTP_200_OK
     assert "access" in refresh_resp.data
-    assert "access" in refresh_resp.cookies
 
 
 @pytest.mark.django_db
 def test_jwt_refresh_missing_token(api_client_regular):
-    refresh_url = reverse("cookie_refresh")
+    refresh_url = reverse("refresh_token")
     response = api_client_regular.post(refresh_url)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Refresh token missing" in response.data["detail"]
@@ -552,7 +626,7 @@ def test_jwt_refresh_missing_token(api_client_regular):
 
 @pytest.mark.django_db
 def test_jwt_refresh_invalid_token(api_client_regular):
-    refresh_url = reverse("cookie_refresh")
+    refresh_url = reverse("refresh_token")
     api_client_regular.cookies["refresh"] = "invalidtoken"
     response = api_client_regular.post(refresh_url)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED

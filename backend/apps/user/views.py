@@ -11,6 +11,7 @@ from .utils import (
     createUser,
     patchUser,
     getAuthUser,
+    handleVerify,
     handleLogin,
     handleLogout,
     handleRefresh,
@@ -65,22 +66,29 @@ def getAuthenticatedUser(request):
     
     if request.method == 'GET':
         return getAuthUser(request)
-
+    
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])
-def cookieLogin(request):
+def login(request):
     if request.method == 'POST':
         return handleLogin(request)
 
 @api_view(['POST'])
-def cookieLogout(request):
+@authentication_classes([])
+@permission_classes([AllowAny])
+def loginVerify(request):
+    if request.method == 'POST':
+        return handleVerify(request)
+
+@api_view(['POST'])
+def logout(request):
     if request.method == 'POST':
         return handleLogout(request)
 
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])
-def cookieRefresh(request):
+def refreshToken(request):
     if request.method == 'POST':
         return handleRefresh(request)
