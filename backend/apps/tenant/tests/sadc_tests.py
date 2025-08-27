@@ -2,7 +2,6 @@ import pytest
 import json
 from django.urls import reverse
 from rest_framework import status
-from backend.apps.tenant.models.sadc_model import Sadc
 
 # ==============================
 # SADC Detail Tests

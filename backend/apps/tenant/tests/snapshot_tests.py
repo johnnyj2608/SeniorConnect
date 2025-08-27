@@ -13,10 +13,18 @@ from backend.apps.tenant.models.snapshot_model import Snapshot
 @pytest.mark.parametrize(
     "user_fixture,org_type,view_snapshots_flag,expected_status,expected_count",
     [
-        # Admin sees own SADCs → 1 snapshot
-        # Admin cannot see other SADCs → 0 snapshots
-        # Regular user with view_snapshots=True → 1 snapshot
+        # Admin can see snapshots from their own SADC → 1 snapshot
+        ("api_client_admin", "org", True, status.HTTP_200_OK, 1),
+
+        # Admin cannot see snapshots from other SADC → 0 snapshots
+        ("api_client_admin", "other_org", True, status.HTTP_200_OK, 0),
+
+        # Regular user with view_snapshots=True → can see their own → 1 snapshot
         ("api_client_regular", "org", True, status.HTTP_200_OK, 1),
+
+        # Regular user with view_snapshots=True but trying other org → 0 snapshots
+        ("api_client_regular", "other_org", True, status.HTTP_200_OK, 0),
+
         # Regular user with view_snapshots=False → forbidden
         ("api_client_regular", "org", False, status.HTTP_404_NOT_FOUND, 0),
     ]
@@ -39,8 +47,10 @@ def test_snapshot_list(
         user_obj.view_snapshots = view_snapshots_flag
         user_obj.save()
 
-    # Create snapshot for the chosen org
+    # Choose SADC depending on org_type
     sadc = org_setup["sadc"] if org_type == "org" else other_org_setup["other_sadc"]
+
+    # Create a snapshot for that SADC
     Snapshot.objects.create(
         sadc=sadc,
         date=timezone.now().date(),
@@ -56,8 +66,8 @@ def test_snapshot_list(
     assert resp.status_code == expected_status
 
     if resp.status_code == status.HTTP_200_OK:
-        # Only check snapshot count if request succeeded
         assert resp.data['count'] == expected_count
+
 
 
 # ==============================
