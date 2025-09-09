@@ -1,0 +1,63 @@
+name: Django CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_BUCKET: ${{ secrets.SUPABASE_BUCKET }}
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      DEBUG: "True"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-xdist  # for parallel test execution
+
+      - name: Debug env
+        run: |
+          echo "SUPABASE_URL=${SUPABASE_URL:0:10}..."
+          echo "SUPABASE_KEY=${SUPABASE_KEY:0:10}..."
+          echo "SUPABASE_BUCKET=${SUPABASE_BUCKET:0:10}..."
+          echo "DATABASE_URL=${DATABASE_URL:0:10}..."
+
+      - name: Run migrations
+        run: python manage.py migrate
+
+      - name: Run tests in parallel
+        run: pytest -n auto --maxfail=1 --disable-warnings
