@@ -15,6 +15,7 @@ const HomeSnapshotCard = () => {
     if (!user?.view_snapshots) return;
 
     const getSnapshots = async () => {
+      if (!user.view_snapshots && !user.is_org_admin) return;
       try {
         const response = await fetchWithRefresh('/tenant/snapshots/recent/');
         if (!response.ok) return;
@@ -32,7 +33,7 @@ const HomeSnapshotCard = () => {
   const now = new Date();
   const monthIndex = now.getMonth();
 
-  if (!user?.view_snapshots) return null;
+  if (!user.view_snapshots && !user.is_org_admin) return null;
 
   return (
     <div className="card-full">
