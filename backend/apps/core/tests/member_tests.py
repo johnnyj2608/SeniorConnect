@@ -215,31 +215,35 @@ def test_member_create(
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not Member.objects.filter(first_name="Test", last_name="User").exists()
 
+
 # ==============================
 # Member Update Tests
 # ==============================
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_update,with_file",
+    "user_fixture,mltc_attr,other_sadc_flag,should_update,with_file,not_found",
     [
         # 1. Admin can update own SADC
-        ("api_client_admin", "mltc_denied", False, True, False),
+        ("api_client_admin", "mltc_denied", False, True, False, False),
 
         # 2. Admin cannot update other SADC
-        ("api_client_admin", "mltc_allowed", True, False, False),
+        ("api_client_admin", "mltc_allowed", True, False, False, False),
 
         # 3. Regular can update allowed MLTC
-        ("api_client_regular", "mltc_allowed", False, True, False),
+        ("api_client_regular", "mltc_allowed", False, True, False, False),
 
         # 4. Regular cannot update denied MLTC
-        ("api_client_regular", "mltc_denied", False, False, False),
+        ("api_client_regular", "mltc_denied", False, False, False, False),
 
         # 5. File upload (regular, allowed MLTC)
-        ("api_client_regular", "mltc_allowed", False, True, True),
+        ("api_client_regular", "mltc_allowed", False, True, True, False),
 
         # 6. Admin can update with file
-        ("api_client_admin", "mltc_denied", False, True, True),
+        ("api_client_admin", "mltc_denied", False, True, True, False),
+
+        # 7. Member not found
+        ("api_client_admin", "mltc_denied", False, False, False, True),
     ]
 )
 @patch("backend.apps.core.utils.member_utils.upload_file_to_supabase")
@@ -251,27 +255,31 @@ def test_member_update(
     other_sadc_flag,
     should_update,
     with_file,
+    not_found,
     members_setup,
     org_setup,
     other_org_setup,
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Pick the correct member from fixtures
-    if other_sadc_flag:
-        member = other_org_setup["other_member"]
+    if not_found:
+        member_id = 9999  # non-existent
     else:
-        member = members_setup["members"][0] if mltc_attr == "mltc_allowed" else members_setup["members"][1]
+        if other_sadc_flag:
+            member = other_org_setup["other_member"]
+        else:
+            member = members_setup["members"][0] if mltc_attr == "mltc_allowed" else members_setup["members"][1]
+        member_id = member.id
 
-    url = reverse("member", args=[member.id])
+    url = reverse("member", args=[member_id])
     payload = {
-        "sadc": member.sadc.id,
-        "sadc_member_id": member.sadc_member_id,
+        "sadc": member.sadc.id if not not_found else org_setup["sadc"].id,
+        "sadc_member_id": member.sadc_member_id if not not_found else 999,
         "first_name": "Updated",
-        "last_name": member.last_name,
-        "birth_date": str(member.birth_date),
-        "gender": member.gender,
-        "active": member.active,
+        "last_name": member.last_name if not not_found else "Test",
+        "birth_date": str(member.birth_date) if not not_found else "1990-01-01",
+        "gender": member.gender if not not_found else "M",
+        "active": member.active if not not_found else True,
     }
 
     files = None
@@ -290,7 +298,9 @@ def test_member_update(
         format="multipart" if with_file else "json"
     )
 
-    if should_update:
+    if not_found:
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+    elif should_update:
         assert response.status_code == status.HTTP_200_OK
         member.refresh_from_db()
         assert member.first_name == "Updated"
@@ -302,24 +312,6 @@ def test_member_update(
         member.refresh_from_db()
         assert member.first_name != "Updated"
 
-
-@pytest.mark.django_db
-def test_update_member(api_client_admin, members_setup):
-    member = members_setup["members"][0]
-    url = reverse("member", args=[member.id])
-    payload = {
-        "sadc": member.sadc.id,
-        "sadc_member_id": member.sadc_member_id,
-        "first_name": "Updated",
-        "last_name": member.last_name,
-        "birth_date": member.birth_date,
-        "gender": member.gender,
-        "active": member.active,
-    }
-    response = api_client_admin.put(url, data=payload)
-    assert response.status_code == status.HTTP_200_OK
-    member.refresh_from_db()
-    assert member.first_name == "Updated"
 
 # ==============================
 # Member Active Auth Tests

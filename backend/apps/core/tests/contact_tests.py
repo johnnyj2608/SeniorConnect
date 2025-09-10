@@ -185,16 +185,19 @@ def test_contact_create(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,other_sadc_flag,should_update,member_index",
+    "user_fixture,other_sadc_flag,should_update,member_index,not_found",
     [
         # 1. Admin can update contact for own SADC member
-        ("api_client_admin", False, True, 0),
+        ("api_client_admin", False, True, 0, False),
 
         # 2. Admin cannot update contact for other SADC member
-        ("api_client_admin", True, False, 0),
+        ("api_client_admin", True, False, 0, False),
 
         # 3. Regular can update contact for accessible member
-        ("api_client_regular", False, True, 0),
+        ("api_client_regular", False, True, 0, False),
+
+        # 4. Contact does not exist
+        ("api_client_regular", False, False, 0, True),
     ]
 )
 def test_contact_update(
@@ -203,6 +206,7 @@ def test_contact_update(
     other_sadc_flag,
     should_update,
     member_index,
+    not_found,
     members_setup,
     other_org_setup
 ):
@@ -214,15 +218,20 @@ def test_contact_update(
     else:
         member = members_setup["members"][member_index]
 
-    # Create contact
-    contact = Contact.objects.create(
-        name="David",
-        phone="2223334444",
-        contact_type=Contact.HOME_CARE
-    )
-    contact.members.add(member)
+    # Handle "contact not found" case
+    if not_found:
+        contact_id = 9999  # non-existent
+    else:
+        # Create contact
+        contact = Contact.objects.create(
+            name="David",
+            phone="2223334444",
+            contact_type=Contact.HOME_CARE
+        )
+        contact.members.add(member)
+        contact_id = contact.id
 
-    url = reverse("contact_with_member", args=[contact.id, member.id])
+    url = reverse("contact_with_member", args=[contact_id, member.id])
     payload = {
         "members": [member.id],
         "name": "David Updated",
@@ -239,31 +248,35 @@ def test_contact_update(
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
+
 # ==============================
 # Contact Delete Tests
 # ==============================
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,other_sadc_flag,member_index,members_to_add,should_delete_contact",
+    "user_fixture,other_sadc_flag,member_index,members_to_add,should_delete_contact,not_found",
     [
         # 1. Admin deletes last member -> contact deleted
-        ("api_client_admin", False, 0, [0], True),
+        ("api_client_admin", False, 0, [0], True, False),
 
         # 2. Admin deletes member (multi-member) -> association deleted
-        ("api_client_admin", False, 0, [0,1], False),
+        ("api_client_admin", False, 0, [0,1], False, False),
 
         # 3. Admin deletes last member of other SADC -> forbidden
-        ("api_client_admin", True, 0, [0], None),
+        ("api_client_admin", True, 0, [0], None, False),
 
         # 4. Admin deletes member of other SADC (multi-member) -> forbidden
-        ("api_client_admin", True, 0, [0,1], None),
+        ("api_client_admin", True, 0, [0,1], None, False),
 
         # 5. Regular deletes last member -> contact deleted
-        ("api_client_regular", False, 0, [0], True),
+        ("api_client_regular", False, 0, [0], True, False),
         
         # 6. Regular deletes member (multi-member) -> association deleted
-        ("api_client_regular", False, 0, [0,1], False),
+        ("api_client_regular", False, 0, [0,1], False, False),
+
+        # 7. Contact not found
+        ("api_client_regular", False, 0, [0], None, True),
     ]
 )
 def test_contact_delete(
@@ -273,6 +286,7 @@ def test_contact_delete(
     member_index,
     members_to_add,
     should_delete_contact,
+    not_found,
     members_setup,
     other_org_setup
 ):
@@ -284,29 +298,35 @@ def test_contact_delete(
     else:
         member = members_setup["members"][member_index]
 
-    # Create contact and add members
-    contact_members = []
-    for i in members_to_add:
-        if other_sadc_flag:
-            # If any member in other SADC, create a separate contact for that SADC
-            contact_members.append(other_org_setup["other_member"])
-        else:
-            contact_members.append(members_setup["members"][i])
+    # If testing not found, set a non-existent contact id
+    if not_found:
+        contact_id = 9999
+    else:
+        # Create contact and add members
+        contact_members = []
+        for i in members_to_add:
+            if other_sadc_flag:
+                contact_members.append(other_org_setup["other_member"])
+            else:
+                contact_members.append(members_setup["members"][i])
 
-    contact = Contact.objects.create(
-        name="Bob Combined",
-        phone="9998887777",
-        contact_type=Contact.PHARMACY
-    )
-    contact.members.add(*contact_members)
+        contact = Contact.objects.create(
+            name="Bob Combined",
+            phone="9998887777",
+            contact_type=Contact.PHARMACY
+        )
+        contact.members.add(*contact_members)
+        contact_id = contact.id
 
-    url = reverse("contact_with_member", args=[contact.id, member.id])
+    url = reverse("contact_with_member", args=[contact_id, member.id])
     response = client.delete(url)
 
-    if should_delete_contact is True:
+    if not_found:
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+    elif should_delete_contact is True:
         # Last member deleted -> contact gone
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert not Contact.objects.filter(id=contact.id).exists()
+        assert not Contact.objects.filter(id=contact_id).exists()
     elif should_delete_contact is False:
         # Multi-member -> association removed only
         assert response.status_code == status.HTTP_200_OK
@@ -315,7 +335,7 @@ def test_contact_delete(
         for m in contact_members:
             if m != member:
                 assert m in contact.members.all()
-        assert Contact.objects.filter(id=contact.id).exists()
+        assert Contact.objects.filter(id=contact_id).exists()
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
