@@ -27,6 +27,17 @@ class AuthorizationSerializer(serializers.ModelSerializer, DateRangeValidationMi
             if dx_code not in valid_codes:
                 attrs['dx_code'] = None
 
+        member = attrs.get('member')
+        start_date = attrs.get('start_date')
+        if member and start_date:
+            qs = Authorization.objects.filter(member=member, start_date=start_date)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError(
+                    {"start_date": "This member already has an authorization starting on this date."}
+                )
+
         return attrs
 
 class AuthorizationWithServiceSerializer(serializers.ModelSerializer):

@@ -1,1 +1,0 @@
-0 4 1 * * /Users/johnnyjiang/Desktop/seniorconnect/venv/bin/python /Users/johnnyjiang/Desktop/seniorconnect/manage.py generateSnapshot > /dev/null 2>&1
