@@ -207,24 +207,27 @@ def test_file_create(
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
+
 # ==============================
 # Files Update Tests
 # ==============================
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_update,file_upload",
+    "user_fixture,mltc_attr,other_sadc_flag,should_update,file_upload,not_found",
     [
         # 1. Admin updates own SADC file, with new file
-        ("api_client_admin", "mltc_denied", False, True, True),
+        ("api_client_admin", "mltc_denied", False, True, True, False),
         # 2. Admin cannot update file in another SADC
-        ("api_client_admin", "mltc_allowed", True, False, True),
+        ("api_client_admin", "mltc_allowed", True, False, True, False),
         # 3. Regular user updates allowed MLTC file, metadata only
-        ("api_client_regular", "mltc_allowed", False, True, False),
+        ("api_client_regular", "mltc_allowed", False, True, False, False),
         # 4. Regular user cannot update denied MLTC file
-        ("api_client_regular", "mltc_denied", False, False, True),
+        ("api_client_regular", "mltc_denied", False, False, True, False),
         # 5. Regular user attempts update with missing file but allowed otherwise
-        ("api_client_regular", "mltc_allowed", False, True, False),
+        ("api_client_regular", "mltc_allowed", False, True, False, False),
+        # 6. File not found
+        ("api_client_regular", "mltc_allowed", False, False, False, True),
     ]
 )
 @patch("backend.apps.core.utils.file_utils.upload_file_to_supabase")
@@ -236,25 +239,31 @@ def test_file_update(
     other_sadc_flag,
     should_update,
     file_upload,
+    not_found,
     members_setup,
     other_org_setup,
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Pick member and existing file
+    # Pick member
     if other_sadc_flag:
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][1] if mltc_attr == "mltc_denied" else members_setup["members"][0]
 
-    existing_file = File.objects.create(
-        member=member,
-        name="Old Form",
-        date="2024-01-01",
-        file="https://supabase.test/oldfile.pdf",
-    )
+    # Either create file or simulate not found
+    if not_found:
+        file_id = 9999
+    else:
+        existing_file = File.objects.create(
+            member=member,
+            name="Old Form",
+            date="2024-01-01",
+            file="https://supabase.test/oldfile.pdf",
+        )
+        file_id = existing_file.id
 
-    url = reverse("file", args=[existing_file.id])
+    url = reverse("file", args=[file_id])
     payload = {
         "member": member.id,
         "name": "Updated Form",
@@ -269,10 +278,11 @@ def test_file_update(
 
     response = client.put(url, data=payload, format="multipart")
 
-    # Assertions
-    if should_update:
+    if not_found:
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+    elif should_update:
         assert response.status_code == status.HTTP_200_OK
-        updated_file = File.objects.get(id=existing_file.id)
+        updated_file = File.objects.get(id=file_id)
         assert updated_file.name == "Updated Form"
         if file_upload:
             assert updated_file.file == "https://supabase.test/newfile.pdf"
@@ -280,6 +290,7 @@ def test_file_update(
     else:
         # Unauthorized or forbidden
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
 
 # ==============================
 # Files Delete Tests

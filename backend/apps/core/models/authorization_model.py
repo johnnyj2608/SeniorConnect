@@ -19,6 +19,9 @@ class Authorization(models.Model):
 
     class Meta:
         ordering = ['-start_date', '-end_date']
+        constraints = [
+            models.UniqueConstraint(fields=['member', 'start_date'], name='unique_member_start_date')
+        ]
 
     def __str__(self):
         start = self.start_date.strftime('%m/%d/%Y')

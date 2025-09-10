@@ -224,28 +224,32 @@ def test_gifted_create(
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert not Gifted.objects.filter(member=member, gift_id=123).exists()
 
+
 # ==============================
 # Gifted Update Tests
 # ==============================
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_update,received_value",
+    "user_fixture,mltc_attr,other_sadc_flag,should_update,received_value,not_found",
     [
         # 1. Admin updates gifted for own SADC, received=True
-        ("api_client_admin", "mltc_denied", False, True, True),
+        ("api_client_admin", "mltc_denied", False, True, True, False),
 
         # 2. Admin cannot update gifted in other SADC
-        ("api_client_admin", "mltc_allowed", True, False, True),
+        ("api_client_admin", "mltc_allowed", True, False, True, False),
 
         # 3. Regular updates allowed MLTC, received=True
-        ("api_client_regular", "mltc_allowed", False, True, True),
+        ("api_client_regular", "mltc_allowed", False, True, True, False),
 
         # 4. Regular cannot update denied MLTC
-        ("api_client_regular", "mltc_denied", False, False, True),
+        ("api_client_regular", "mltc_denied", False, False, True, False),
 
         # 5. Regular updates but sets received=False → 204 No Content
-        ("api_client_regular", "mltc_allowed", False, False, False),
+        ("api_client_regular", "mltc_allowed", False, False, False, False),
+
+        # 6. Gifted not found
+        ("api_client_regular", "mltc_allowed", False, False, True, True),
     ]
 )
 def test_gifted_update(
@@ -255,6 +259,7 @@ def test_gifted_update(
     other_sadc_flag,
     should_update,
     received_value,
+    not_found,
     members_setup,
     org_setup,
     other_org_setup,
@@ -267,10 +272,14 @@ def test_gifted_update(
     else:
         member = members_setup["members"][0] if mltc_attr == "mltc_allowed" else members_setup["members"][1]
 
-    # Create initial gifted
-    gifted = Gifted.objects.create(member=member, gift_id=123, name="Gloves", received=True)
+    # Create initial gifted unless testing not found
+    if not not_found:
+        gifted = Gifted.objects.create(member=member, gift_id=123, name="Gloves", received=True)
+        gifted_id = gifted.id
+    else:
+        gifted_id = 9999  # non-existent
 
-    url = reverse("gifted", args=[gifted.id])
+    url = reverse("gifted", args=[gifted_id])
     payload = {
         "member": member.id,
         "gift_id": 123,
@@ -280,19 +289,22 @@ def test_gifted_update(
 
     response = client.put(url, data=payload, format="json")
 
-    if received_value in ['false', False]:
+    if not_found:
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+    elif received_value in ['false', False]:
         # received=False → delete the object
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert not Gifted.objects.filter(id=gifted.id).exists()
+        assert not Gifted.objects.filter(id=gifted_id).exists()
     elif should_update:
         assert response.status_code == status.HTTP_200_OK
-        updated = Gifted.objects.get(id=gifted.id)
+        updated = Gifted.objects.get(id=gifted_id)
         assert updated.name == "Updated Gloves"
     else:
         # Not authorized to update
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        unchanged = Gifted.objects.get(id=gifted.id)
+        unchanged = Gifted.objects.get(id=gifted_id)
         assert unchanged.name == "Gloves"
+
 
 # ==============================
 # Gifted Member Tests

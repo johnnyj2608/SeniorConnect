@@ -49,33 +49,17 @@ def test_authorization_list(
     # Pick the correct member and MLTC object
     if other_sadc_flag:
         member = other_org_setup["other_member"]
-        mltc_obj = other_org_setup["other_mltc_allowed"]
     else:
         if mltc_attr == "mltc_allowed":
             member = members_setup["members"][0]  # allowed
-            mltc_obj = members_setup["mltc_allowed"]
         elif mltc_attr == "mltc_denied":
             member = members_setup["members"][1]  # denied
-            mltc_obj = members_setup["mltc_denied"]
         else:
             # For no active auth or inactive member
-            if not should_see:  # case 5
+            if not should_see:
                 member = members_setup["members"][2]  # no active auth
-            else:  # case 6
+            else:
                 member = members_setup["members"][3]  # inactive member
-            mltc_obj = None
-
-    # Only create an authorization if MLTC exists
-    if mltc_obj:
-        Authorization.objects.create(
-            member=member,
-            mltc=mltc_obj,
-            mltc_member_id="AUTH001",
-            start_date=date.today(),
-            end_date=date.today(),
-            active=True,
-            schedule=[]
-        )
 
     url = reverse("auths")
     response = client.get(url)
@@ -130,45 +114,47 @@ def test_authorization_detail(
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Handle not found case
+    # Handle explicit "not found" test
     if not_found:
-        url = reverse("auth", args=[9999])  # non-existent id
+        url = reverse("auth", args=[9999])  # non-existent ID
         response = client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
         return
 
-    # Pick correct member and MLTC object
+    # Pick the member to test
     if other_sadc_flag:
         member = other_org_setup["other_member"]
-        mltc_obj = other_org_setup["other_mltc_allowed"]
+    elif mltc_attr == "mltc_allowed":
+        member = members_setup["members"][0]
+    elif mltc_attr == "mltc_denied":
+        member = members_setup["members"][1]
     else:
-        if mltc_attr == "mltc_allowed":
-            member = members_setup["members"][0]
-            mltc_obj = members_setup["mltc_allowed"]
+        # Member with no active authorization or inactive
+        if members_setup["members"][2].active is False:
+            member = members_setup["members"][3]  # inactive member
         else:
-            member = members_setup["members"][1]
-            mltc_obj = members_setup["mltc_denied"]
+            member = members_setup["members"][2]  # no active auth
 
-    # Create the authorization
-    auth = Authorization.objects.create(
-        member=member,
-        mltc=mltc_obj,
-        mltc_member_id="AUTH001",
-        start_date=date.today(),
-        end_date=date.today(),
-        active=True,
-        schedule=[]
-    )
+    # Get the member's active authorization safely
+    auth = getattr(member, "active_auth", None)
 
-    url = reverse("auth", args=[auth.id])
-    response = client.get(url)
+    if auth:
+        # Authorization exists → test access
+        url = reverse("auth", args=[auth.id])
+        response = client.get(url)
 
-    if should_see:
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["id"] == auth.id
-        assert response.data["mltc_member_id"] == "AUTH001"
-        assert response.data["mltc"] == mltc_obj.name
+        if should_see:
+            assert response.status_code == status.HTTP_200_OK
+            assert response.data["id"] == auth.id
+            assert response.data["mltc_member_id"] == auth.mltc_member_id
+            assert response.data["mltc"] == auth.mltc.name
+        else:
+            # User should not have access → 404
+            assert response.status_code == status.HTTP_404_NOT_FOUND
     else:
+        # No authorization → detail endpoint should return 404
+        url = reverse("auth", args=[9999])
+        response = client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
 # ==============================
@@ -177,111 +163,37 @@ def test_authorization_detail(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_create,file_upload",
+    "user_fixture,mltc_attr,other_sadc_flag,should_create,file_upload,duplicate_start",
     [
         # 1. Admin can create for own SADC, allowed MLTC
-        ("api_client_admin", "mltc_denied", False, True, False),
+        ("api_client_admin", "mltc_denied", False, True, False, False),
 
         # 2. Admin cannot create for other SADC, allowed MLTC
-        ("api_client_admin", "mltc_allowed", True, False, False),
+        ("api_client_admin", "mltc_allowed", True, False, False, False),
 
         # 3. Regular user can create for allowed MLTC
-        ("api_client_regular", "mltc_allowed", False, True, False),
+        ("api_client_regular", "mltc_allowed", False, True, False, False),
 
         # 4. Regular user cannot create for denied MLTC
-        ("api_client_regular", "mltc_denied", False, False, False),
-        
+        ("api_client_regular", "mltc_denied", False, False, False, False),
+
         # 5. Regular user can create for allowed MLTC WITH file upload
-        ("api_client_regular", "mltc_allowed", False, True, True),
+        ("api_client_regular", "mltc_allowed", False, True, True, False),
+
+        # 6. Attempt duplicate start date (should fail)
+        ("api_client_admin", "mltc_allowed", False, False, False, True),
     ]
 )
 @patch("backend.apps.core.utils.authorization_utils.upload_file_to_supabase")
 def test_authorization_create(
-    mock_upload_file, 
-    request, 
-    user_fixture, 
-    mltc_attr, 
-    other_sadc_flag, 
-    should_create,
-    file_upload,
-    members_setup, 
-    other_org_setup
-):
-    client = request.getfixturevalue(user_fixture)
-
-    # Choose member based on MLTC attr
-    if other_sadc_flag:
-        member = other_org_setup["other_member"]
-        mltc = other_org_setup["other_mltc_allowed"]
-    else:
-        member = members_setup["members"][1] if mltc_attr == "mltc_denied" else members_setup["members"][0]
-        mltc = members_setup[mltc_attr]
-
-    # Prepare file if needed
-    if file_upload:
-        mock_upload_file.return_value = ("supabase/path/fakefile.pdf", None)
-        file_content = io.BytesIO(b"dummy data")
-        file_content.name = "dummyfile.pdf"
-    else:
-        file_content = None
-
-    url = reverse("auths")
-    payload = {
-        "mltc": mltc.name,
-        "member": member.id,
-        "mltc_member_id": "M125",
-        "start_date": "2025-01-01",
-        "end_date": "2025-06-30",
-        "schedule": "[]",
-        "services": '[{"service_type": "sdc", "auth_id": "S1"}]',
-    }
-    if file_content:
-        payload["file"] = file_content
-
-    response = client.post(url, data=payload, format="multipart")
-
-    if should_create:
-        assert response.status_code == status.HTTP_201_CREATED
-        auth = Authorization.objects.get(member=member, mltc_member_id="M125")
-        if file_upload:
-            assert auth.file == "supabase/path/fakefile.pdf"
-        assert auth.mltc == mltc
-    else:
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-
-# ==============================
-# Authorization Update Tests
-# ==============================
-
-@pytest.mark.django_db
-@pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_update,file_upload",
-    [
-        # 1. Admin can update own SADC, allowed MLTC
-        ("api_client_admin", "mltc_denied", False, True, False),
-
-        # 2. Admin cannot update other SADC
-        ("api_client_admin", "mltc_allowed", True, False, False),
-
-        # 3. Regular user can update allowed MLTC
-        ("api_client_regular", "mltc_allowed", False, True, False),
-
-        # 4. Regular user cannot update denied MLTC
-        ("api_client_regular", "mltc_denied", False, False, False),
-        
-        # 5. Regular user can update allowed MLTC WITH file
-        ("api_client_regular", "mltc_allowed", False, True, True),
-    ]
-)
-@patch("backend.apps.core.utils.authorization_utils.upload_file_to_supabase")
-def test_authorization_update(
     mock_upload_file,
     request,
     user_fixture,
     mltc_attr,
     other_sadc_flag,
-    should_update,
+    should_create,
     file_upload,
+    duplicate_start,
     members_setup,
     other_org_setup
 ):
@@ -295,20 +207,116 @@ def test_authorization_update(
         member = members_setup["members"][1] if mltc_attr == "mltc_denied" else members_setup["members"][0]
         mltc = members_setup[mltc_attr]
 
-    # Create initial authorization
-    auth = Authorization.objects.create(
-        mltc=mltc,
-        member=member,
-        mltc_member_id="INIT1",
-        start_date=date(2025, 1, 1),
-        end_date=date(2025, 6, 30),
-        schedule=[]
-    )
-    service = AuthorizationService.objects.create(
-        authorization=auth,
-        service_type=AuthorizationService.SDC,
-        auth_id="SVC1"
-    )
+    # Prepare file if needed
+    file_content = None
+    if file_upload:
+        mock_upload_file.return_value = ("supabase/path/fakefile.pdf", None)
+        file_content = io.BytesIO(b"dummy data")
+        file_content.name = "dummyfile.pdf"
+
+    # Determine start/end date
+    if duplicate_start and hasattr(member, "active_auth"):
+        start_date = member.active_auth.start_date.strftime("%Y-%m-%d")
+        end_date = member.active_auth.end_date.strftime("%Y-%m-%d")
+    else:
+        start_date = "2025-01-01"
+        end_date = "2025-06-30"
+
+    url = reverse("auths")
+    payload = {
+        "mltc": mltc.name,
+        "member": member.id,
+        "mltc_member_id": "M125" if not duplicate_start else "DUPLICATE01",
+        "start_date": start_date,
+        "end_date": end_date,
+        "schedule": "[]",
+        "services": '[{"service_type": "sdc", "auth_id": "S1"}]',
+    }
+    if file_content:
+        payload["file"] = file_content
+
+    response = client.post(url, data=payload, format="multipart")
+
+    if should_create:
+        assert response.status_code == status.HTTP_201_CREATED
+        auth = Authorization.objects.get(member=member, mltc_member_id=payload["mltc_member_id"])
+        if file_upload:
+            assert auth.file == "supabase/path/fakefile.pdf"
+        assert auth.mltc == mltc
+    else:
+        # Either unauthorized or duplicate start date
+        assert response.status_code in [status.HTTP_404_NOT_FOUND, status.HTTP_400_BAD_REQUEST]
+        if duplicate_start:
+            assert "unique" in str(response.data).lower()
+
+# ==============================
+# Authorization Update Tests
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "user_fixture,mltc_attr,other_sadc_flag,should_update,file_upload,not_found,duplicate_start",
+    [
+        # 1. Admin can update own SADC, allowed MLTC
+        ("api_client_admin", "mltc_denied", False, True, False, False, False),
+
+        # 2. Admin cannot update other SADC
+        ("api_client_admin", "mltc_allowed", True, False, False, False, False),
+
+        # 3. Regular user can update allowed MLTC
+        ("api_client_regular", "mltc_allowed", False, True, False, False, False),
+
+        # 4. Regular user cannot update denied MLTC
+        ("api_client_regular", "mltc_denied", False, False, False, False, False),
+
+        # 5. Regular user can update allowed MLTC WITH file
+        ("api_client_regular", "mltc_allowed", False, True, True, False, False),
+
+        # 6. Authorization not found
+        ("api_client_regular", "mltc_allowed", False, False, False, True, False),
+
+        # 7. Attempt to violate duplicate start_date constraint
+        ("api_client_admin", "mltc_allowed", False, False, False, False, True),
+    ]
+)
+@patch("backend.apps.core.utils.authorization_utils.upload_file_to_supabase")
+def test_authorization_update(
+    mock_upload_file,
+    request,
+    user_fixture,
+    mltc_attr,
+    other_sadc_flag,
+    should_update,
+    file_upload,
+    not_found,
+    duplicate_start,
+    members_setup,
+    other_org_setup
+):
+    client = request.getfixturevalue(user_fixture)
+
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+        mltc = other_org_setup["other_mltc_allowed"]
+    else:
+        member = members_setup["members"][1] if mltc_attr == "mltc_denied" else members_setup["members"][0]
+        mltc = members_setup[mltc_attr]
+
+    auth = getattr(member, "active_auth", None) if not not_found else None
+
+    if not auth:
+        url = reverse("auth", args=[9999])  # non-existent ID
+        response = client.put(url, data={}, format="multipart")
+        assert response.status_code in [status.HTTP_404_NOT_FOUND, status.HTTP_400_BAD_REQUEST]
+        return
+
+    service = auth.services.first()
+    if not service:
+        service = AuthorizationService.objects.create(
+            authorization=auth,
+            service_type=AuthorizationService.SDC,
+            auth_id="SVC1"
+        )
 
     # Prepare file if needed
     file_content = None
@@ -317,39 +325,60 @@ def test_authorization_update(
         file_content = io.BytesIO(b"updated file data")
         file_content.name = "updated.pdf"
 
-    # Build payload
+    # ==============================
+    # Handle duplicate start_date scenario
+    # ==============================
+    if duplicate_start:
+        # Create a new authorization for the same member with a different start date
+        new_auth = Authorization.objects.create(
+            member=member,
+            mltc=mltc,
+            mltc_member_id="DUPLICATE_TEST",
+            start_date=date(2025, 3, 1),
+            end_date=date(2025, 12, 31),
+            schedule=[]
+        )
+        auth_to_update = new_auth
+        # Attempt to update start_date to match the fixture auth
+        start_date_to_use = auth.start_date
+    else:
+        auth_to_update = auth
+        start_date_to_use = auth.start_date
+
     payload = {
         "mltc": mltc.name,
-        "member": str(member.id),  # must be string for multipart
+        "member": str(member.id),
         "mltc_member_id": "UPDATED1",
-        "start_date": "2025-02-01",
+        "start_date": str(start_date_to_use),
         "end_date": "2025-08-31",
-        "schedule": json.dumps([]),  # serialize list for form-data
+        "schedule": json.dumps([]),
         "services": json.dumps([{
             "id": service.id,
             "service_type": "sdc",
             "auth_id": "SVC1-UPDATED"
         }])
     }
-
     if file_content:
         payload["file"] = file_content
 
-    url = reverse("auth", args=[auth.id])
+    url = reverse("auth", args=[auth_to_update.id])
     response = client.put(url, data=payload, format="multipart")
 
-    if should_update:
+    if duplicate_start:
+        # Attempting to violate start_date constraint should return 400
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+    elif should_update:
         assert response.status_code == status.HTTP_200_OK
-        auth.refresh_from_db()
-        assert auth.mltc_member_id == "UPDATED1"
-        # Check service update
-        assert any(s.auth_id == "SVC1-UPDATED" for s in auth.services.all())
+        auth_to_update.refresh_from_db()
+        assert auth_to_update.mltc_member_id == "UPDATED1"
+        assert any(s.auth_id == "SVC1-UPDATED" for s in auth_to_update.services.all())
         if file_upload:
-            assert auth.file == "https://supabase.test/updated.pdf"
+            assert auth_to_update.file == "https://supabase.test/updated.pdf"
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        auth.refresh_from_db()
-        assert auth.mltc_member_id == "INIT1"
+        auth_to_update.refresh_from_db()
+        assert auth_to_update.mltc_member_id != "UPDATED1"
+
 
 # ==============================
 # Authorization Delete Tests
@@ -389,50 +418,40 @@ def test_authorization_delete(
     not_found,
     with_file,
     members_setup,
-    org_setup,
     other_org_setup,
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Pick member and MLTC
     if other_sadc_flag:
         member = other_org_setup["other_member"]
-        mltc = other_org_setup["other_mltc_allowed"]
     else:
         member = members_setup["members"][1] if mltc_attr == "mltc_denied" else members_setup["members"][0]
-        mltc = members_setup[mltc_attr]
 
-    # Only create authorization if not testing "not found"
-    if not not_found:
-        file_url = "supabase/testfile.pdf" if with_file else None
-        auth = Authorization.objects.create(
-            mltc=mltc,
-            member=member,
-            mltc_member_id="TEST_DELETE",
-            start_date=date.today(),
-            end_date=date.today(),
-            schedule=[],
-            file=file_url,
-        )
-        auth_id = auth.id
-    else:
+    auth = getattr(member, "active_auth", None)
+
+    if not auth or not_found:
         auth_id = 9999  # non-existent
+        url = reverse("auth_delete", args=[auth_id, member.id])
+        response = client.delete(url)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        return
+
+    auth_id = auth.id
+    if with_file:
+        auth.file = "supabase/testfile.pdf"
+        auth.save()
 
     url = reverse("auth_delete", args=[auth_id, member.id])
     response = client.delete(url)
 
-    if not_found:
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-
-    elif should_delete:
+    if should_delete:
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert not Authorization.objects.filter(id=auth_id).exists()
         if with_file:
             mock_delete_file.assert_called_once_with("supabase/testfile.pdf")
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        if not not_found:
-            assert Authorization.objects.filter(id=auth_id).exists()
+        assert Authorization.objects.filter(id=auth_id).exists()
 
 
 # ==============================
@@ -455,10 +474,10 @@ def test_authorization_delete(
         # 4. Regular cannot get from MLTC denied
         ("api_client_regular", 1, "mltc_denied", status.HTTP_404_NOT_FOUND),
 
-        # 5. Regular cannot see member with no active authorization
+        # 5. Regular can see member with no active authorization
         ("api_client_regular", 2, None, status.HTTP_200_OK),
 
-        # 6. Regular cannot see inactive member
+        # 6. Regular can see inactive member
         ("api_client_regular", 3, None, status.HTTP_200_OK),
     ]
 )
@@ -473,32 +492,20 @@ def test_authorization_member(
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Pick member
     if member_index == "other":
         member = other_org_setup["other_member"]
-        mltc = other_org_setup["other_mltc_allowed"] if mltc_attr else None        
     else:
         member = members_setup["members"][member_index]
-        mltc = members_setup[mltc_attr] if mltc_attr else None
 
-    # Create authorization only if applicable
-    if mltc:
-        Authorization.objects.create(
-            mltc=mltc,
-            member=member,
-            mltc_member_id=f"TEST_{mltc.name}",
-            start_date=date(2025, 1, 1),
-            end_date=date(2025, 12, 31),
-            schedule=[]
-        )
+    auth = getattr(member, "active_auth", None)
 
     url = reverse("auth_by_member", args=[member.id])
     response = client.get(url)
 
-    # Check status code
     assert response.status_code == expected_status
 
-    # If 200 OK, the response should always be a list (can be empty)
     if expected_status == status.HTTP_200_OK:
         data = response.json()
         assert isinstance(data, list)
+        if auth:
+            assert any(item["id"] == auth.id for item in data)

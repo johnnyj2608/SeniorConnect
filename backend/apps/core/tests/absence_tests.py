@@ -235,25 +235,28 @@ def test_absence_create(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "user_fixture,mltc_attr,other_sadc_flag,should_update,with_file,absence_type",
+    "user_fixture,mltc_attr,other_sadc_flag,should_update,with_file,absence_type,not_found",
     [
         # 1. Admin can update own sadc
-        ("api_client_admin", "mltc_denied", False, True, False, "vacation"),
+        ("api_client_admin", "mltc_denied", False, True, False, "vacation", False),
 
         # 2. Admin cannot update other sadc
-        ("api_client_admin", "mltc_allowed", True, False, False, "vacation"),
+        ("api_client_admin", "mltc_allowed", True, False, False, "vacation", False),
 
         # 3. Regular can update mltc allowed
-        ("api_client_regular", "mltc_allowed", False, True, False, "vacation"),
+        ("api_client_regular", "mltc_allowed", False, True, False, "vacation", False),
 
         # 4. Regular cannot update mltc denied
-        ("api_client_regular", "mltc_denied", False, False, False, "vacation"),
+        ("api_client_regular", "mltc_denied", False, False, False, "vacation", False),
 
         # 5. File upload (regular, allowed mltc)
-        ("api_client_regular", "mltc_allowed", False, True, True, "vacation"),
+        ("api_client_regular", "mltc_allowed", False, True, True, "vacation", False),
 
         # 6. Assessment update (regular, allowed mltc)
-        ("api_client_regular", "mltc_allowed", False, True, False, "assessment"),
+        ("api_client_regular", "mltc_allowed", False, True, False, "assessment", False),
+
+        # 7. Absence does not exist
+        ("api_client_regular", "mltc_allowed", False, False, False, "vacation", True),
     ]
 )
 @patch("backend.apps.core.utils.absence_utils.upload_file_to_supabase")
@@ -266,31 +269,33 @@ def test_absence_update(
     should_update,
     with_file,
     absence_type,
+    not_found,
     members_setup,
     other_org_setup,
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # pick correct member
+    # Pick member
     if other_sadc_flag:
         member = other_org_setup["other_member"]
     else:
-        if mltc_attr == "mltc_allowed":
-            member = members_setup["members"][0]  # allowed
-        else:
-            member = members_setup["members"][1]  # denied
+        member = members_setup["members"][0] if mltc_attr == "mltc_allowed" else members_setup["members"][1]
 
     # Determine model class
     model_cls = Assessment if absence_type == "assessment" else Absence
 
-    # Create initial record to update
-    instance = model_cls.objects.create(
-        member=member,
-        absence_type="personal",
-        start_date=date.today(),
-    )
+    # Create initial record unless testing not_found
+    if not not_found:
+        instance = model_cls.objects.create(
+            member=member,
+            absence_type="personal",
+            start_date=date.today(),
+        )
+        instance_id = instance.id
+    else:
+        instance_id = 9999  # non-existent
 
-    url = reverse("absence", args=[instance.id])
+    url = reverse("absence", args=[instance_id])
     payload = {
         "member": member.id,
         "absence_type": "vacation" if absence_type == "vacation" else "assessment",
@@ -314,14 +319,14 @@ def test_absence_update(
         assert response.status_code == status.HTTP_200_OK
         instance.refresh_from_db()
         assert instance.absence_type == payload["absence_type"]
-
         if with_file:
             assert "supabase.test/newfile.pdf" in instance.file
             mock_upload.assert_called_once()
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
-        instance.refresh_from_db()
-        assert instance.absence_type == "personal"
+        if not not_found:
+            instance.refresh_from_db()
+            assert instance.absence_type == "personal"
 
 
 # ==============================
