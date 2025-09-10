@@ -50,4 +50,4 @@ jobs:
         run: python manage.py migrate
 
       - name: Generate & upload snapshots
-        run: python manage.py generate_snapshots
+        run: python manage.py generateSnapshots
