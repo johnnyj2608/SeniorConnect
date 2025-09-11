@@ -31,7 +31,7 @@ class MemberManager(models.Manager):
 class Member(models.Model):
     sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='members')
     sadc_member_id = models.IntegerField(null=False, blank=False)
-    photo = models.URLField(null=True, blank=True)
+    photo = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=50, null=False, blank=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
     alt_name = models.CharField(max_length=50, null=True, blank=True)

@@ -28,7 +28,7 @@ class Absence(models.Model):
     end_date = models.DateField(null=True, blank=True)
     called = models.BooleanField(default=False)
     note = models.CharField(max_length=220, blank=True, null=True)
-    file = models.URLField(null=True, blank=True)
+    file = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

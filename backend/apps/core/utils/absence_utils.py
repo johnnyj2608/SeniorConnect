@@ -12,7 +12,7 @@ from ..serializers.absence_serializers import (
     AssessmentSerializer
 )
 from django.db import transaction
-from ....utils.supabase import (
+from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
@@ -68,7 +68,7 @@ def getAbsenceDetail(request, pk):
 @transaction.atomic
 def createAbsence(request):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     file = request.FILES.get('file')
     data.pop('file', None)
@@ -87,7 +87,7 @@ def createAbsence(request):
                 member_sadc = request.user.sadc.id
                 new_path = f"{member_sadc}/members/{member_id}/absences/{instance.id}"
 
-                public_url, error = upload_file_to_supabase(
+                file_path, error = upload_file_to_supabase(
                     file, 
                     new_path,
                     instance.file,
@@ -95,7 +95,7 @@ def createAbsence(request):
                 if error:
                     raise Exception(f"File upload failed: {error}")
 
-            instance.file = public_url
+            instance.file = file_path
             instance.save()
 
             serializer = serializer_class(instance)
@@ -105,15 +105,15 @@ def createAbsence(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
 @transaction.atomic
 def updateAbsence(request, pk):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     file = request.FILES.get('file')
     data.pop('file', None)
@@ -131,7 +131,7 @@ def updateAbsence(request, pk):
             member_sadc = request.user.sadc.id
             new_path = f"{member_sadc}/members/{member_id}/absences/{instance.id}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 file, 
                 new_path,
                 instance.file,
@@ -140,7 +140,7 @@ def updateAbsence(request, pk):
             if error:
                 raise Exception(f"File upload failed: {error}")
 
-            data['file'] = public_url
+            data['file'] = file_path
 
         elif data.get('file') == '' and instance.file:
             delete_file_from_supabase(instance.file)
@@ -155,8 +155,8 @@ def updateAbsence(request, pk):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk

@@ -11,7 +11,7 @@ class Authorization(models.Model):
     schedule = models.JSONField(default=list)
     cm_name = models.CharField(max_length=50, null=True, blank=True)
     cm_phone = models.CharField(max_length=10, null=True, blank=True)
-    file = models.URLField(null=True, blank=True)
+    file = models.CharField(max_length=255, null=True, blank=True)
 
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)

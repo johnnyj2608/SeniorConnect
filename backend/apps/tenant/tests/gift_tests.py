@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from backend.apps.tenant.models.gift_model import Gift
 from backend.apps.core.models.gifted_model import Gifted
-from backend.utils.snapshot_utils import gifts_received_query, gifts_unreceived_query
+from backend.apps.common.utils.snapshot_utils import gifts_received_query, gifts_unreceived_query
 
 # ==============================
 # Gift List Tests

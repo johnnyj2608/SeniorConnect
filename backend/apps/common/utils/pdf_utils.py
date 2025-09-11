@@ -8,9 +8,9 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas as rl_canvas
 from pypdf import PdfReader
 
-from ..apps.tenant.models.sadc_model import Sadc
-from ..apps.tenant.models.mltc_model import Mltc
-from ..apps.core.models.member_model import Member
+from backend.apps.tenant.models.sadc_model import Sadc
+from backend.apps.tenant.models.mltc_model import Mltc
+from backend.apps.core.models.member_model import Member
 
 from .snapshot_utils import (
     X_POSITIONS,

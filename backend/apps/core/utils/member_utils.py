@@ -22,7 +22,7 @@ from ..serializers.authorization_serializers import AuthorizationWithServiceSeri
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
 from django.utils.text import slugify
-from ....utils.supabase import (
+from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
     delete_folder_from_supabase
@@ -55,7 +55,7 @@ def getMemberDetail(request, pk):
 @transaction.atomic
 def createMember(request):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     photo = request.FILES.get('photo')
     data.pop('photo', None)
@@ -72,7 +72,7 @@ def createMember(request):
             member_name = slugify(f"{first_name} {last_name}")
             new_path = f"{request.user.sadc.id}/members/{member.id}/{member_name}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 photo, 
                 new_path,
                 member.photo,
@@ -82,14 +82,14 @@ def createMember(request):
             if error:
                 raise Exception(f"Photo upload failed: {error}")
 
-            member.photo = public_url
+            member.photo = file_path
             member.save()
 
             serializer = MemberSerializer(member)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
     except Exception as e:
-        if public_url and 'member' in locals():
+        if file_path and 'member' in locals():
             delete_folder_from_supabase(f"{member.id}/")
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -98,7 +98,7 @@ def createMember(request):
 def updateMember(request, pk):
     data = request.data.copy()
     member = get_object_or_404(Member, id=pk)
-    public_url = None
+    file_path = None
     sadc = request.user.sadc
 
     try:
@@ -109,7 +109,7 @@ def updateMember(request, pk):
             member_name = slugify(f"{first_name} {last_name}")
             new_path = f"{sadc.id}/members/{member.id}/{member_name}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 photo, 
                 new_path,
                 member.photo,
@@ -119,7 +119,7 @@ def updateMember(request, pk):
             if error:
                 raise Exception(f"Photo upload failed: {error}")
             
-            data['photo'] = public_url
+            data['photo'] = file_path
 
         elif data.get('photo') == '' and member.photo:
             delete_file_from_supabase(member.photo)
@@ -134,8 +134,8 @@ def updateMember(request, pk):
 
     except Exception as e:
         print(e)
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_pk

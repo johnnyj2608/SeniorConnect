@@ -14,6 +14,17 @@ def get_supabase_client() -> Client:
         _supabase_client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
     return _supabase_client
 
+def get_signed_url(file_path, expires_in=300):
+    """Generates a short-lived signed URL for a private Supabase object."""
+    supabase = get_supabase_client()
+    try:
+        result = supabase.storage.from_(settings.SUPABASE_BUCKET).create_signed_url(file_path, expires_in)
+        if isinstance(result, dict) and 'signedURL' in result:
+            return result['signedURL']
+    except Exception as e:
+        print(f"Error generating signed URL: {e}")
+    return None
+
 def upload_file_to_supabase(file_obj, new_path, old_path=None, photo=False):
     """Uploads a file (image or other type) to Supabase and returns the public URL."""
     supabase = get_supabase_client()
@@ -69,8 +80,7 @@ def upload_file_to_supabase(file_obj, new_path, old_path=None, photo=False):
         if isinstance(response, dict) and 'error' in response:
             return None, response['error']
 
-        public_url = f"{settings.SUPABASE_URL}/storage/v1/object/public/{settings.SUPABASE_BUCKET}/{file_path}"
-        return public_url, None
+        return file_path, None
 
     except Exception as e:
         return None, str(e)
