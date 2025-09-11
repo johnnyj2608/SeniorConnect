@@ -58,7 +58,7 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members", mltc_names=None, **ext
 
     display_month = query_info.get('display_month', snapshot_date.month)
     display_year = query_info.get('display_year', snapshot_date.year)
-    subtitle = title
+    subtitle = title.capitalize()
     if 'gifts_' in snapshot_type:
         subtitle += ' Gift'
     else:
