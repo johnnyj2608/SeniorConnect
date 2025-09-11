@@ -5,7 +5,7 @@ from .utils.supabase import get_signed_url
 from urllib.parse import unquote
 
 @api_view(['GET'])
-def getFile(request, file_path):
+def viewFile(request, file_path):
     file_path = unquote(file_path)
     if not file_path:
         return Response({"detail": "Missing file_path."}, status=status.HTTP_400_BAD_REQUEST)
