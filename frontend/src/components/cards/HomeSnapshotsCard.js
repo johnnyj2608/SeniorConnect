@@ -12,8 +12,6 @@ const HomeSnapshotCard = () => {
   const [snapshots, setSnapshots] = useState([]);
 
   useEffect(() => {
-    if (!user?.view_snapshots) return;
-
     const getSnapshots = async () => {
       if (!user.view_snapshots && !user.is_org_admin) return;
       try {
