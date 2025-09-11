@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
 import TextInput from '../inputs/TextInput';
@@ -111,6 +111,18 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const { t } = useTranslation();
     const [crop, setCrop] = useState();
 
+    useEffect(() => {
+        async function loadPhoto() {
+            const file = data.preview_photo;
+            if (file && !(file instanceof File)) {
+                const url = await formatPhoto(file);
+                handleChange('preview_photo')({ target: { value: url } });
+            }
+        }
+
+        loadPhoto();
+    }, [data.preview_photo]);
+
     const handlePhotoUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -140,7 +152,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
                     >
                         <img
                             ref={imgRef}
-                            src={formatPhoto(data.preview_photo)}
+                            src={data.preview_photo}
                             alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
                             className="preview-photo"
                             crossOrigin="anonymous"

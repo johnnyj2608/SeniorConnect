@@ -56,6 +56,7 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data.copy()
     file_path = None
+    sadc = request.user.sadc
 
     photo = request.FILES.get('photo')
     data.pop('photo', None)
@@ -64,13 +65,11 @@ def createMember(request):
         serializer = MemberSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        member = serializer.save(sadc=request.user.sadc)
+        member = serializer.save(sadc=sadc)
 
         if photo:
-            first_name = data.get("first_name", "")
-            last_name = data.get("last_name", "")
-            member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{request.user.sadc.id}/members/{member.id}/{member_name}"
+            new_path = f"{sadc.id}/members/{member.id}/photo_{member.id}"
+
 
             file_path, error = upload_file_to_supabase(
                 photo, 
@@ -104,10 +103,7 @@ def updateMember(request, pk):
     try:
         if 'photo' in request.FILES:
             photo = request.FILES['photo']
-            first_name = data.get("first_name")
-            last_name = data.get("last_name")
-            member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{sadc.id}/members/{member.id}/{member_name}"
+            new_path = f"{sadc.id}/members/{member.id}/photo_{member.id}"
 
             file_path, error = upload_file_to_supabase(
                 photo, 
