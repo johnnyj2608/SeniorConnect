@@ -30,7 +30,7 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       SUPABASE_BUCKET: ${{ secrets.SUPABASE_BUCKET }}
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DEBUG: "True"
 
     steps:
@@ -39,7 +39,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: 3.13
 
       - name: Install dependencies
         run: |
