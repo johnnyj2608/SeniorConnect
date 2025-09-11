@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from ..models.file_model import File
 from ..serializers.file_serializers import FileSerializer
-from ....utils.supabase import *
+from backend.apps.common.utils.supabase import *
 from django.utils.text import slugify
 from backend.access.member_access import (
     check_member_access, 
@@ -31,7 +31,7 @@ def getFileDetail(request, pk):
 @transaction.atomic
 def createFile(request):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     try:
         if 'file' in request.FILES:
@@ -41,7 +41,7 @@ def createFile(request):
             member_sadc = request.user.sadc.id
             new_path = f"{member_sadc}/members/{member_id}/files/{file_name}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 file_obj, 
                 new_path,
                 None,
@@ -50,7 +50,7 @@ def createFile(request):
             if error:
                 raise Exception(f"File upload failed: {error}")
 
-            data['file'] = public_url
+            data['file'] = file_path
 
         serializer = FileSerializer(data=data)
         
@@ -65,8 +65,8 @@ def createFile(request):
             return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
@@ -74,7 +74,7 @@ def createFile(request):
 def updateFile(request, pk):
     data = request.data.copy()
     file = get_object_or_404(File, id=pk)
-    public_url = None
+    file_path = None
 
     try:
         if 'file' in request.FILES:
@@ -84,7 +84,7 @@ def updateFile(request, pk):
             member_sadc = request.user.sadc.id
             new_path = f"{member_sadc}/members/{member_id}/files/{file_name}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 file_obj,
                 new_path, 
                 file.file,
@@ -93,7 +93,7 @@ def updateFile(request, pk):
             if error:
                 raise Exception(f"File upload failed: {error}")
 
-            data['file'] = public_url
+            data['file'] = file_path
 
         serializer = FileSerializer(instance=file, data=data, partial=True)
         try:
@@ -107,8 +107,8 @@ def updateFile(request, pk):
             return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     except Exception as e:
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk

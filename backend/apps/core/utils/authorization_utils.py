@@ -11,7 +11,7 @@ from ..serializers.authorization_serializers import (
 from backend.apps.tenant.models.mltc_model import Mltc
 from django.db import transaction
 import json
-from ....utils.supabase import (
+from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
 )
@@ -45,7 +45,7 @@ def getAuthorizationDetail(request, pk):
 @transaction.atomic
 def createAuthorization(request):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     mltc = Mltc.objects.get(name=data.get("mltc"))
     unauthorized = require_valid_mltc(mltc, request.user)
@@ -72,7 +72,7 @@ def createAuthorization(request):
                 member_sadc = request.user.sadc.id
                 new_path = f"{member_sadc}/members/{member_id}/auths/{authorization.id}"
 
-                public_url, error = upload_file_to_supabase(
+                file_path, error = upload_file_to_supabase(
                     file, 
                     new_path,
                     authorization.file,
@@ -80,8 +80,7 @@ def createAuthorization(request):
             
                 if error:
                     raise Exception(f"File upload failed: {error}")
-            
-            authorization.file = public_url
+            authorization.file = file_path
             authorization.save()
 
             for service_data in services:
@@ -101,15 +100,15 @@ def createAuthorization(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk
 @transaction.atomic
 def updateAuthorization(request, pk):
     data = request.data.copy()
-    public_url = None
+    file_path = None
 
     mltc = Mltc.objects.get(name=data.get("mltc"))
     unauthorized = require_valid_mltc(mltc, request.user)
@@ -130,7 +129,7 @@ def updateAuthorization(request, pk):
             member_sadc = request.user.sadc.id
             new_path = f"{member_sadc}/members/{member_id}/auths/{authorization.id}"
 
-            public_url, error = upload_file_to_supabase(
+            file_path, error = upload_file_to_supabase(
                 file, 
                 new_path,
                 authorization.file,
@@ -138,8 +137,7 @@ def updateAuthorization(request, pk):
 
             if error:
                 raise Exception(f"Photo upload failed: {error}")
-            
-            data['file'] = public_url
+            data['file'] = file_path
 
         elif data.get('file') == '' and authorization.file:
             delete_file_from_supabase(authorization.file)
@@ -176,8 +174,8 @@ def updateAuthorization(request, pk):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
-        if public_url:
-            delete_file_from_supabase(public_url)
+        if file_path:
+            delete_file_from_supabase(file_path)
         return Response({"detail": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @member_access_fk

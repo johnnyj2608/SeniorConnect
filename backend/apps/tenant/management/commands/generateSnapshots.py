@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from backend.utils.supabase import upload_file_to_supabase
-from backend.utils.pdf_utils import generateSnapshotPdf
+from backend.apps.common.utils.supabase import upload_file_to_supabase
+from backend.apps.common.utils.pdf_utils import generateSnapshotPdf
 from backend.apps.tenant.models.sadc_model import Sadc
 from backend.apps.tenant.models.snapshot_model import Snapshot
 

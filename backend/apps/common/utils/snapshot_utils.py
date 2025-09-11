@@ -5,11 +5,11 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
-from ..apps.core.models.member_model import Member
-from ..apps.core.models.absence_model import Absence
-from ..apps.audit.models.enrollment_model import Enrollment
-from ..apps.core.models.gifted_model import Gifted
-from ..apps.tenant.models.gift_model import Gift
+from backend.apps.core.models.member_model import Member
+from backend.apps.core.models.absence_model import Absence
+from backend.apps.audit.models.enrollment_model import Enrollment
+from backend.apps.core.models.gifted_model import Gifted
+from backend.apps.tenant.models.gift_model import Gift
 
 X_POSITIONS = {
     "POS1": 40,

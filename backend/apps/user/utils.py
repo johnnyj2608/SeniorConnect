@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 from .models import User, TwoFactorCode
 from .serializers import UserReadSerializer, UserWriteSerializer, PasswordSerializer
-from backend.utils.email_utils import sendEmailInvitation, sendEmailCode
+from backend.apps.common.utils.email_utils import sendEmailInvitation, sendEmailCode
 from backend.access.ownership_access import require_sadc_ownership, require_org_admin, require_self_or_admin
 
 def getUserList(request):

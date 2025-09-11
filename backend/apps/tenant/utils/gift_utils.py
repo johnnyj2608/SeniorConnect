@@ -8,7 +8,7 @@ from backend.access.ownership_access import require_sadc_ownership, require_vali
 from django.db.models import Q
 from django.utils import timezone
 from backend.apps.tenant.models.mltc_model import Mltc
-from backend.utils.pdf_utils import generateSnapshotPdf
+from backend.apps.common.utils.pdf_utils import generateSnapshotPdf
 from django.http import FileResponse
 from django.utils.encoding import smart_str
 
