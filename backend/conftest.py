@@ -6,6 +6,7 @@ from backend.apps.core.models.member_model import Member
 from backend.apps.core.models.authorization_model import Authorization
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from unittest.mock import patch
 
 User = get_user_model()
 
@@ -216,3 +217,20 @@ def regular_user(org_setup):
     )
     user.allowed_mltcs.add(mltc_allowed)
     return user
+
+@pytest.fixture(autouse=True)
+def mock_supabase(monkeypatch):
+    # Mock Supabase client creation
+    patcher_client = patch(
+        "backend.apps.common.utils.supabase.create_client",
+        return_value=object()  # <-- simple dummy object
+    )
+    patcher_signed_url = patch(
+        "backend.apps.common.utils.supabase.get_signed_url",
+        return_value="https://supabase.test/file.pdf"
+    )
+    patcher_client.start()
+    patcher_signed_url.start()
+    yield
+    patcher_client.stop()
+    patcher_signed_url.stop()
