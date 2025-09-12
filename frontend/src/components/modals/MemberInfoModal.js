@@ -110,24 +110,22 @@ const MemberInfoModal = ({ data, handleChange, handleLimit }) => {
 const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const { t } = useTranslation();
     const [crop, setCrop] = useState();
+    const [previewPhoto, setPreviewPhoto] = useState("/default-profile.jpg");
 
     useEffect(() => {
         async function loadPhoto() {
-            const file = data.preview_photo;
-            if (file && !(file instanceof File)) {
-                const url = await formatPhoto(file);
-                handleChange('preview_photo')({ target: { value: url } });
-            }
+            if (!data.photo) return;
+            const result = await formatPhoto(data.photo);
+            setPreviewPhoto(result); 
         }
-
         loadPhoto();
-    }, [data.preview_photo]);
+    }, [])
 
     const handlePhotoUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
             setCrop(undefined);
-            handleChange('preview_photo')({ target: { value: file } });
+            setPreviewPhoto(URL.createObjectURL(file));
             handleChange('photo')({ target: { value: file } });
         }
     };
@@ -152,7 +150,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
                     >
                         <img
                             ref={imgRef}
-                            src={data.preview_photo}
+                            src={previewPhoto}
                             alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
                             className="preview-photo"
                             crossOrigin="anonymous"
