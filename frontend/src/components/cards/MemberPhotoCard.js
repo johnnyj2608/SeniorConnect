@@ -23,6 +23,8 @@ const MemberPhotoCard = ({ data, small }) => {
         fetchPhoto();
     }, [info.photo])
 
+    if (!info.photo) return null;
+
     return (
         <div className="photo-container">
             <img

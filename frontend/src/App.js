@@ -15,8 +15,7 @@ import PrivateRoute from './components/routes/PrivateRoute';
 import ScrollUp from './components/routes/ScrollUp';
 import Navbar from './components/layout/Navbar';
 import HomePage from './pages/HomePage';
-import MembersListPage from './pages/MembersListPage';
-import MemberPage from './pages/MemberPage';
+import MembersPage from './pages/MembersPage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
 import SupportPage from './pages/SupportPage';
@@ -44,8 +43,7 @@ function Main() {
         <div className="app-content">
           <Routes>
             <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-            <Route path="/members" element={<PrivateRoute><MembersListPage /></PrivateRoute>} />
-            <Route path="/member/:id" element={<PrivateRoute><MemberPage /></PrivateRoute>} />
+            <Route path="/members/:id?" element={<PrivateRoute><MembersPage /></PrivateRoute>} />
             <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/support/:section" element={<PrivateRoute><SupportPage /></PrivateRoute>} />

@@ -21,7 +21,6 @@ from ..serializers.absence_serializers import Absence, AbsenceSerializer, Assess
 from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer, AuthorizationSerializer
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
-from django.utils.text import slugify
 from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
@@ -32,19 +31,23 @@ import csv
 
 @member_access_filter()
 def getMemberList(request):
-    members = (
-        request.accessible_members_qs
-        .select_related('active_auth', 'active_auth__mltc')
-        .order_by('active_auth__mltc__name', 'sadc_member_id')
-    )
+    members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
+
+    mltc_filter = request.GET.get('mltc')
+    if mltc_filter:
+        if mltc_filter.lower() == "unknown":
+            members = members.filter(active_auth__isnull=True)
+        else:
+            members = members.filter(active_auth__mltc__name=mltc_filter)
+
+    active_filter = request.GET.get('active')
+    if active_filter is not None:
+        members = members.filter(active=(active_filter.lower() == 'true'))
+
+    members = members.order_by('sadc_member_id')
     serializer = MemberListSerializer(members, many=True)
 
-    data = defaultdict(list)
-    for member_data in serializer.data:
-        mltc_name = member_data['mltc_name'] if member_data.get('mltc_name') else "unknown"
-        data[mltc_name].append(member_data)
-
-    return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_pk
 def getMemberDetail(request, pk):
