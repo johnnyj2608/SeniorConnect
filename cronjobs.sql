@@ -3,9 +3,9 @@ SELECT cron.schedule(
     'delete_soft_deleted_members',
     '0 1 * * *',  -- 1:00 AM daily
     $$
-    DELETE FROM member
-    WHERE deleted_at IS NOT NULL
-        AND deleted_at < NOW() - INTERVAL '30 days';
+        DELETE FROM core_member
+        WHERE deleted_at IS NOT NULL
+          AND deleted_at < NOW() - INTERVAL '30 days';
     $$
 );
 
@@ -14,30 +14,29 @@ SELECT cron.schedule(
     'delete_expired_gifts',
     '30 1 * * *',  -- 1:30 AM daily
     $$
-    DELETE FROM gift
-    WHERE expires_delete = TRUE
-        AND expires_at IS NOT NULL
-        AND expires_at < NOW()::date;
+        DELETE FROM tenant_gift
+        WHERE expires_delete = TRUE
+          AND expires_at IS NOT NULL
+          AND expires_at < NOW()::date;
     $$
 );
 
--- Activate authorizations starting today
 SELECT cron.schedule(
-    'activate_authorizations_unique',
+    'activate_authorization',
     '0 2 * * *',  -- 2:00 AM daily
     $$
     -- Step 1: Activate authorization(s) starting today
-    UPDATE authorization
+    UPDATE core_authorization
     SET active = TRUE
     WHERE start_date = NOW()::date
         AND active = FALSE;
 
     -- Step 2: Deactivate all other authorizations for the same members
-    UPDATE authorization AS a
+    UPDATE core_authorization AS a
     SET active = FALSE
     FROM (
         SELECT member_id, id
-        FROM authorization
+        FROM core_authorization
         WHERE start_date = NOW()::date
     ) AS active_today
     WHERE a.member_id = active_today.member_id
