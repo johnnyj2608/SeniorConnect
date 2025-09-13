@@ -46,7 +46,6 @@ def test_member_list(
 ):
     client = request.getfixturevalue(user_fixture)
 
-    # Pick member
     if other_sadc_flag:
         member = other_org_setup["other_member"]
     else:
@@ -56,15 +55,12 @@ def test_member_list(
     response = client.get(url)
     assert response.status_code == status.HTTP_200_OK
 
-    # Flatten the members dict
-    flat_members = sum(response.data.values(), [])
+    members = response.data
 
     if should_see:
-        # Check that the expected member is included
-        assert any(m["id"] == member.id for m in flat_members)
+        assert any(m["id"] == member.id for m in members)
     else:
-        # Check that the expected member is NOT included
-        assert all(m["id"] != member.id for m in flat_members)
+        assert all(m["id"] != member.id for m in members)
 
 # ==============================
 # Member Detail Tests
@@ -706,6 +702,60 @@ def test_member_deleted_list(
     else:
         # the member should NOT appear
         assert all(m['id'] != member.id for m in response.data)
+
+# ==============================
+# Member Attendance List Tests
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "user_fixture,mltc_attr,other_sadc_flag,should_see,member_index",
+    [
+        # 1. Admin can see members in their own SADC
+        ("api_client_admin", "mltc_denied", False, True, 0),
+
+        # 2. Admin cannot see members from another SADC
+        ("api_client_admin", "mltc_allowed", True, False, 0),
+
+        # 3. Regular user can see members from MLTC allowed
+        ("api_client_regular", "mltc_allowed", False, True, 0),
+
+        # 4. Regular user cannot see members from MLTC denied
+        ("api_client_regular", "mltc_denied", False, False, 1),
+
+        # 5. Regular user should NOT see unknown MLTC (excluded in view)
+        ("api_client_regular", None, False, False, 2),
+    ]
+)
+def test_member_attendance_list(
+    request,
+    user_fixture,
+    mltc_attr,
+    other_sadc_flag,
+    should_see,
+    member_index,
+    members_setup,
+    org_setup,
+    other_org_setup
+):
+    client = request.getfixturevalue(user_fixture)
+
+    # Pick member from fixtures
+    if other_sadc_flag:
+        member = other_org_setup["other_member"]
+    else:
+        member = members_setup["members"][member_index]
+
+    url = reverse("members_attendance")
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+
+    flat_members = sum(response.data.values(), [])
+
+    if should_see:
+        assert any(m["id"] == member.id for m in flat_members)
+    else:
+        assert all(m["id"] != member.id for m in flat_members)
 
 # ==============================
 # Member Reports Tests

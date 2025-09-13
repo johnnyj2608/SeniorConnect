@@ -75,13 +75,14 @@ function useModalQueue(data) {
     
     const clearMltcQueue = (mltcName) => {
         setAvailableMembers((prev) => {
-            const updatedAvailable = { ...prev };
-            const queued = queuedMembers[mltcName] || [];
-    
-            updatedAvailable[mltcName] = [...queued];
-    
-            return updatedAvailable;
-        });
+        const updatedAvailable = { ...prev };
+        const queued = queuedMembers[mltcName] || [];
+        const existing = updatedAvailable[mltcName] || [];
+
+        updatedAvailable[mltcName] = [...queued, ...existing];
+
+        return updatedAvailable;
+    });
     
         setQueuedMembers((prev) => {
             const updatedQueued = { ...prev };

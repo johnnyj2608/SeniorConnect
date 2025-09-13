@@ -27,7 +27,6 @@ const MemberPage = () => {
   const navigate = useNavigate();
 
   const [memberData, setMemberData] = useState(null);
-  const [members, setMembers] = useState({});
   const [mltcFilter, setMltcFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showInactive, setShowInactive] = useState(false);
@@ -87,15 +86,26 @@ const MemberPage = () => {
     [id, openModal]
   );
 
+  const handleOpenAttendance = async () => {
+    try {
+      const response = await fetchWithRefresh('/core/members/attendance');
+      if (!response.ok) return;
+      const data = await response.json();
+
+      openModal('attendance', { data });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <div className="page-header">
         <div className="page-title-row">
 					<h2 className="page-title">&#9782; {t('general.members')}</h2>
 					<AttendanceButton 
-						onClick={() => openModal('attendance', {data: members })} 
-						disabled={Object.keys(members || {}).length === 0}
-					/>
+            onClick={handleOpenAttendance} 
+          />
 				</div>
 
         <div className="filter-row">

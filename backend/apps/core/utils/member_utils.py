@@ -16,6 +16,7 @@ from ..serializers.member_serializers import (
     MemberListSerializer,
     MemberBirthdaySerializer,
     MemberDeletedSerializer,
+    MemberAttendanceSerializer,
 )
 from ..serializers.absence_serializers import Absence, AbsenceSerializer, AssessmentSerializer
 from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer, AuthorizationSerializer
@@ -220,6 +221,22 @@ def getUpcomingBirthdays(request):
     serializer = MemberBirthdaySerializer(upcoming, many=True)
     sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])[:20]
     return Response(sorted_data, status=status.HTTP_200_OK)
+
+@member_access_filter()
+def getMemberAttendance(request):
+    members = (
+        request.accessible_members_qs
+        .select_related('active_auth', 'active_auth__mltc')
+        .exclude(active_auth__mltc__isnull=True)
+        .order_by('active_auth__mltc__name', 'sadc_member_id')
+    )
+    serializer = MemberAttendanceSerializer(members, many=True)
+
+    grouped = defaultdict(list)
+    for member_data in serializer.data:
+        grouped[member_data['mltc_name']].append(member_data)
+
+    return Response(grouped, status=status.HTTP_200_OK)
 
 @member_access_pk
 def toggleMemberStatus(request, pk):
