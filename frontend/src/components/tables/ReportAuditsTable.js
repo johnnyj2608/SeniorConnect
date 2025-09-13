@@ -38,7 +38,7 @@ const ReportAuditsTable = ({ report }) => {
                     <Fragment key={entry.id}>
                         <tr className={isExpanded ? 'expanded' : ''}>
                             <td>
-                                <Link to={`/member/${entry.member}`} className="report-link">
+                                <Link to={`/members/${entry.member}`} className="report-link">
                                     <NameDisplay
                                         sadcId={entry.sadc_member_id}
                                         memberName={entry.member_name}

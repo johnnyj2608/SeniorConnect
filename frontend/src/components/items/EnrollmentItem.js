@@ -21,7 +21,7 @@ const AuditItem = ({ enrollment }) => {
 
   return (
     <li>
-      <Link to={`/member/${enrollment.member}`} className="home-item">
+      <Link to={`/members/${enrollment.member}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay

@@ -7,7 +7,7 @@ const AssessmentItem = ({ assessment }) => {
 
     return (
         <li>
-            <Link to={`/member/${assessment.member}`} className="home-item">
+            <Link to={`/members/${assessment.member}`} className="home-item">
                 <span className="home-item-primary">
                     <p>
                         <NameDisplay
