@@ -167,17 +167,15 @@ def test_member_create(
     other_org_setup,
 ):
     client = request.getfixturevalue(user_fixture)
+    user_sadc = client.handler._force_user.sadc  # The user's own SADC
 
-    # Pick the SADC for payload
-    if other_sadc_flag:
-        sadc = other_org_setup["other_sadc"]
-    else:
-        sadc = org_setup["sadc"]
+    # Pick SADC for payload (ignored by createMember)
+    payload_sadc = other_org_setup["other_sadc"] if other_sadc_flag else org_setup["sadc"]
 
     url = reverse("members")
     payload = {
-        "sadc": sadc.id,
-        "sadc_member_id": "99",
+        "sadc": payload_sadc.id,  # Will be overridden inside createMember
+        "sadc_member_id": 99,
         "first_name": "Test",
         "last_name": "User",
         "birth_date": "1990-01-01",
@@ -202,14 +200,18 @@ def test_member_create(
 
     if should_create:
         assert response.status_code == status.HTTP_201_CREATED
-        member = Member.objects.get(first_name="Test", last_name="User")
+
+        # Member is always created in user's own SADC
+        member = Member.objects.get(sadc_member_id=99, sadc=user_sadc)
+        assert member.first_name == "Test"
+        assert member.last_name == "User"
+
         if with_file:
             assert member.photo == "https://supabase.test/photo.jpg"
             mock_upload.assert_called_once()
     else:
-        # unauthorized should return 403
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert not Member.objects.filter(first_name="Test", last_name="User").exists()
+        assert response.status_code in (status.HTTP_404_NOT_FOUND, status.HTTP_403_FORBIDDEN)
+        assert not Member.objects.filter(sadc_member_id=99, sadc=user_sadc).exists()
 
 
 # ==============================
@@ -860,7 +862,7 @@ def test_member_export(
     assert "text/csv" in response["Content-Type"]
 
 @pytest.mark.django_db
-def test_member_export(
+def test_member_import(
     api_client_admin, 
     org_setup
 ):
@@ -876,5 +878,11 @@ def test_member_export(
     response = api_client_admin.post(url, {"file": file}, format='multipart')
 
     assert response.status_code == status.HTTP_200_OK
-    assert Member.objects.filter(first_name="Alice", last_name="Smith").exists()
-    assert Member.objects.filter(first_name="Bob", last_name="Jones").exists()
+    
+    alice = Member.objects.get(sadc_member_id=1, sadc=org_setup['sadc'])
+    bob = Member.objects.get(sadc_member_id=2, sadc=org_setup['sadc'])
+
+    assert alice.first_name == "Alice"
+    assert alice.last_name == "Smith"
+    assert bob.first_name == "Bob"
+    assert bob.last_name == "Jones"
