@@ -22,7 +22,7 @@ class Command(BaseCommand):
                     file, file_name, pages = generateSnapshotPdf(sadc.id, snapshot_type)
 
                     new_path = f"{sadc.id}/snapshots/{snapshot_type}/{file.name}"
-                    file_path, error = upload_file_to_supabase(
+                    public_url, error = upload_file_to_supabase(
                         file,
                         new_path,
                         old_path=None,
@@ -34,7 +34,7 @@ class Command(BaseCommand):
                             sadc=sadc,
                             date=snapshot_date,
                             type=snapshot_type,
-                            file=file_path,
+                            file=public_url,
                             name=file_name,
                             pages=pages,
                         )

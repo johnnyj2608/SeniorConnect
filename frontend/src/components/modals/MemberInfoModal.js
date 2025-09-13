@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPhoto } from '../../utils/formatUtils';
 import TextInput from '../inputs/TextInput';
@@ -110,22 +110,12 @@ const MemberInfoModal = ({ data, handleChange, handleLimit }) => {
 const MemberInfoSideModal = ({ data, handleChange, languages }) => {
     const { t } = useTranslation();
     const [crop, setCrop] = useState();
-    const [previewPhoto, setPreviewPhoto] = useState("/default-profile.jpg");
-
-    useEffect(() => {
-        async function loadPhoto() {
-            if (!data.photo) return;
-            const result = await formatPhoto(data.photo);
-            setPreviewPhoto(result); 
-        }
-        loadPhoto();
-    }, [])
 
     const handlePhotoUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
             setCrop(undefined);
-            setPreviewPhoto(URL.createObjectURL(file));
+            handleChange('preview_photo')({ target: { value: file } });
             handleChange('photo')({ target: { value: file } });
         }
     };
@@ -150,7 +140,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
                     >
                         <img
                             ref={imgRef}
-                            src={previewPhoto}
+                            src={formatPhoto(data.preview_photo)}
                             alt={data.first_name ? `${data.first_name} ${data.last_name}` : t('member.info.label')}
                             className="preview-photo"
                             crossOrigin="anonymous"

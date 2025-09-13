@@ -28,6 +28,12 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
     const effectiveData = useMemo(() => {
         if (type === 'sadcs') return sadc;
+        if (type === 'info' ) {
+            return {
+            ...data.data,
+            preview_photo: data.data.photo,
+            };
+        }
         return data.data || {};
     }, [type, sadc, data.data]);
 

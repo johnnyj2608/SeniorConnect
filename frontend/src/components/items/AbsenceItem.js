@@ -14,7 +14,7 @@ const AbsenceItem = ({ absence }) => {
 
   return (
     <li>
-      <Link to={`/members/${absence.member}`} className="home-item">
+      <Link to={`/member/${absence.member}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay

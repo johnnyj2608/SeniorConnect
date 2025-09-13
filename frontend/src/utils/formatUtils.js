@@ -99,23 +99,14 @@ const formatSSN = (ssn) => {
   return ssn.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
 };
 
-const formatPhoto = async (photo) => {
-  if (!photo) return "/default-profile.jpg";
-
+const formatPhoto = (photo) => {
   if (photo instanceof File) {
       return URL.createObjectURL(photo);
   }
-
-  try {
-      const encodedPath = encodeURIComponent(photo);
-      const response = await fetch(`/common/${encodedPath}/`);
-      if (!response.ok) throw new Error("Could not get signed URL");
-      const data = await response.json();
-      return data.url || "/default-profile.jpg";
-  } catch (err) {
-      console.error("Error fetching photo:", err);
-      return "/default-profile.jpg";
+  if (photo) {
+      return photo;
   }
+  return "/default-profile.jpg";
 };
 
 function formatStatus(startDateStr, endDateStr) {

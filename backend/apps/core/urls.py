@@ -14,7 +14,6 @@ urlpatterns = [
     path('members/stats/', member_views.getMembersStats, name="members_stats"),
     path('members/birthdays/', member_views.getMembersBirthdays, name="members_birthdays"),
     path('members/deleted/', member_views.getMembersDeleted, name="members_deleted"),
-    path('members/attendance/', member_views.getMembersAttendance, name="members_attendance"),
     path('members/<str:pk>/auth/', member_views.getMemberAuth, name="member_auth"),
     path('members/<str:pk>/profile/', member_views.getMemberDetailFull, name="member_profile"),
     path('members/<str:pk>/status/', member_views.toggleStatus, name="member_status"),

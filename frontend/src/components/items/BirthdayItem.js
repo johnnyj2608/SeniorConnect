@@ -14,7 +14,7 @@ const BirthdayItem = ({ birthday }) => {
 
   return (
     <li>
-      <Link to={`/members/${birthday.id}`} className="home-item">
+      <Link to={`/member/${birthday.id}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay

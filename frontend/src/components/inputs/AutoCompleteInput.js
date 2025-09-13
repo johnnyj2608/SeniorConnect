@@ -4,7 +4,7 @@ import useDebounce from '../../hooks/useDebounce';
 import { formatPhone, normalizeField } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const SearchContacts = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
+const AutoCompleteInput = ({ value, onChange, contactType, memberId, onSelect, disabled }) => {
   const { t } = useTranslation();
   const [searchResults, setSearchResults] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState(true);
@@ -81,4 +81,4 @@ const SearchContacts = ({ value, onChange, contactType, memberId, onSelect, disa
   );
 };
 
-export default SearchContacts;
+export default AutoCompleteInput;

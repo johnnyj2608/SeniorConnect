@@ -46,7 +46,7 @@ def birthdays_query(sadc, today, *_):
             sadc=sadc,
             active=True,
             deleted_at__isnull=True,
-            birth_month=today.month,
+            birth_date__month=today.month
         ),
         'display_month': today.month,
         'display_year': today.year,

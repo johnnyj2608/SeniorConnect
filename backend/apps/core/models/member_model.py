@@ -3,11 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
 from backend.apps.tenant.models.sadc_model import Sadc
-from encrypted_model_fields.fields import (
-    EncryptedCharField, 
-    EncryptedEmailField, 
-    EncryptedDateField,
-)
 
 class MemberQuerySet(models.QuerySet):
     def accessible_by(self, user):
@@ -36,22 +31,17 @@ class MemberManager(models.Manager):
 class Member(models.Model):
     sadc = models.ForeignKey(Sadc, on_delete=models.CASCADE, related_name='members')
     sadc_member_id = models.IntegerField(null=False, blank=False)
-
-    # PHI Fields
-    first_name = EncryptedCharField(max_length=50, null=False, blank=False)
-    last_name = EncryptedCharField(max_length=50, null=False, blank=False)
-    alt_name = EncryptedCharField(max_length=50, null=True, blank=True)
-    birth_date = EncryptedDateField(null=False, blank=False)
-    address = EncryptedCharField(max_length=220, null=True, blank=True)
-    phone = EncryptedCharField(max_length=10, null=True, blank=True)
-    email = EncryptedEmailField(max_length=220, null=True, blank=True)
-    medicaid = EncryptedCharField(max_length=8, null=True, blank=True)
-    ssn = EncryptedCharField(max_length=9, null=True, blank=True)
-
     photo = models.CharField(max_length=255, null=True, blank=True)
-    birth_month = models.PositiveSmallIntegerField(null=True, blank=True)
-    birth_day = models.PositiveSmallIntegerField(null=True, blank=True)
+    first_name = models.CharField(max_length=50, null=False, blank=False)
+    last_name = models.CharField(max_length=50, null=False, blank=False)
+    alt_name = models.CharField(max_length=50, null=True, blank=True)
+    birth_date = models.DateField(null=False, blank=False)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=False, blank=False)
+    address = models.CharField(max_length=220, null=True, blank=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
+    email = models.EmailField(max_length=220, null=True, blank=True)
+    medicaid = models.CharField(max_length=8, null=True, blank=True)
+    ssn = models.CharField(max_length=9, null=True, blank=True)
     language = models.CharField(max_length=50, blank=True, null=True)
     enrollment_date = models.DateField(null=True, blank=True) 
     note = models.CharField(max_length=220, blank=True, null=True)
@@ -73,9 +63,6 @@ class Member(models.Model):
         ordering = ['sadc_member_id']
         verbose_name = "Member"
         verbose_name_plural = "Members"
-        indexes = [
-            models.Index(fields=['birth_month', 'birth_day']),
-        ]
 
     def __str__(self):
         return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"

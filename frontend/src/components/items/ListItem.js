@@ -9,7 +9,7 @@ const ListItem = ({ member }) => {
 
   return (
     <div className="members-list-item">
-      <Link to={`/members/${member.id}`}>
+      <Link to={`/member/${member.id}`}>
         <div className="members-list-photo-container">
           {member.new && <span className="members-list-item-new">{t('members.new')}</span>}
           <img 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TextInput from '../inputs/TextInput';
-import SearchContacts from '../inputs/SearchContacts';
+import AutoCompleteInput from '../inputs/AutoCompleteInput';
 
 const contactTypes = [
     'emergency_contact',
@@ -84,7 +84,7 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLi
 
             <div className="member-detail">
                 <label>{t('member.contacts.name')} *</label>
-                <SearchContacts
+                <AutoCompleteInput
                     value={disableFields ? '' : current.name}
                     contactType={disableFields ? '' : current.contact_type}
                     memberId={memberID}

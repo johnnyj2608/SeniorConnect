@@ -8,7 +8,7 @@ const AuditItem = ({ audit }) => {
 
   return (
     <li>
-      <Link to={`/members/${audit.member}`} className="home-item">
+      <Link to={`/member/${audit.member}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay
