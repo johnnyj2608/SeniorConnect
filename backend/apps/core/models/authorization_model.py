@@ -1,10 +1,14 @@
 from django.db import models
 from backend.apps.tenant.models.mltc_model import Mltc
+from encrypted_model_fields.fields import EncryptedCharField
 
 class Authorization(models.Model):
     mltc = models.ForeignKey(Mltc, null=True, blank=False, on_delete=models.SET_NULL)
     member = models.ForeignKey('Member', null=True, blank=False, on_delete=models.SET_NULL)
-    mltc_member_id = models.CharField(max_length=50, null=False, blank=False)
+
+    # PHI
+    mltc_member_id = EncryptedCharField(max_length=50, null=False, blank=False)
+
     start_date = models.DateField(null=False, blank=False)
     end_date = models.DateField(null=False, blank=False)
     dx_code = models.CharField(max_length=50, choices=[], null=True, blank=True)
