@@ -205,18 +205,19 @@ def getActiveMemberStats(request):
 
 @member_access_filter()
 def getUpcomingBirthdays(request):
-    today = timezone.now().date()
-    members_qs = request.accessible_members_qs.filter(active=True)
-    upcoming = []
+    today = timezone.localdate()
+    upcoming_q = request.accessible_members_qs.filter(
+        active=True,
+        birth_month__isnull=False,
+        birth_day__isnull=False
+    )
 
-    for m in members_qs:
-        if not m.birth_date:
-            continue
-        for i in range(7):
-            future_day = today + timedelta(days=i)
-            if m.birth_date.month == future_day.month and m.birth_date.day == future_day.day:
-                upcoming.append(m)
-                break
+    days_q = Q()
+    for i in range(7):
+        future_day = today + timedelta(days=i)
+        days_q |= Q(birth_month=future_day.month, birth_day=future_day.day)
+
+    upcoming = upcoming_q.filter(days_q)
 
     serializer = MemberBirthdaySerializer(upcoming, many=True)
     sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])[:20]

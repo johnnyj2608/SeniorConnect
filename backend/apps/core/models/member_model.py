@@ -49,6 +49,8 @@ class Member(models.Model):
     ssn = EncryptedCharField(max_length=9, null=True, blank=True)
 
     photo = models.CharField(max_length=255, null=True, blank=True)
+    birth_month = models.PositiveSmallIntegerField(null=True, blank=True)
+    birth_day = models.PositiveSmallIntegerField(null=True, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=False, blank=False)
     language = models.CharField(max_length=50, blank=True, null=True)
     enrollment_date = models.DateField(null=True, blank=True) 
@@ -71,6 +73,9 @@ class Member(models.Model):
         ordering = ['sadc_member_id']
         verbose_name = "Member"
         verbose_name_plural = "Members"
+        indexes = [
+            models.Index(fields=['birth_month', 'birth_day']),
+        ]
 
     def __str__(self):
         return f"{self.sadc_member_id}. {self.first_name} {self.last_name}"
