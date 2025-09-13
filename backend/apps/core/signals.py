@@ -17,10 +17,12 @@ def handle_member_change(sender, instance, created, **kwargs):
         active_auth.save(update_fields=['active'])
 
         Enrollment.objects.create(
-            member=instance,
+            member_id=instance.id,
+            member_name=f"{instance.last_name}, {instance.first_name}",
+            member_alt_name=getattr(instance, "alt_name", None),
             change_type=Enrollment.DISENROLLMENT,
+            old_mltc=active_auth.mltc.name if active_auth.mltc else None,
             new_mltc=None,
-            old_mltc=active_auth.mltc,
         )
 
         Member.objects.filter(pk=instance.pk).update(active_auth=None)

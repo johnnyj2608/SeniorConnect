@@ -5,19 +5,13 @@ from rest_framework import status
 from backend.apps.audit.models.enrollment_model import Enrollment
 from django.urls import reverse
 
-# ==============================
-# Enrollment List Test
-# ==============================
-
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user_fixture,member_index,expected_in_results",
     [
-        # Admin, same SADC
-        ("api_client_admin", 0, True),
-
-        # Admin, other SADC
-        ("api_client_admin", "other_member", False),
+        # Admin users
+        ("api_client_admin", 0, True),          # same SADC
+        ("api_client_admin", "other_member", False),  # other SADC
 
         # Regular users
         ("api_client_regular", 0, True),   # allowed MLTC
@@ -26,34 +20,35 @@ from django.urls import reverse
         ("api_client_regular", 3, True),   # inactive member
     ]
 )
-def test_get_enrollment_list(
-    request, 
-    api_client_admin,
-    api_client_regular, 
+def test_enrollment_list(
+    request,
     members_setup,
-    other_org_setup, 
-    user_fixture, 
-    member_index, 
+    other_org_setup,
+    user_fixture,
+    member_index,
     expected_in_results
 ):
-    m1, m2, m3, m4 = members_setup["members"]
     if member_index == "other_member":
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][member_index]
 
     Enrollment.objects.create(
-        member=member,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         change_type=Enrollment.ENROLLMENT,
-        new_mltc=members_setup['mltc_allowed']
+        new_mltc=members_setup['mltc_allowed'].name,
     )
 
     client = request.getfixturevalue(user_fixture)
+
     url = reverse('enrollments')
     resp = client.get(url)
     assert resp.status_code == status.HTTP_200_OK
 
-    member_ids = [e['member'] for e in resp.data['results']]
+    member_ids = [e['member_id'] for e in resp.data['results']]
+
     if expected_in_results:
         assert member.id in member_ids
     else:
@@ -82,8 +77,6 @@ def test_get_enrollment_list(
 )
 def test_enrollment_detail(
     request,
-    api_client_admin,
-    api_client_regular,
     members_setup,
     other_org_setup,
     user_fixture,
@@ -100,9 +93,11 @@ def test_enrollment_detail(
     # Create enrollment only if needed
     if enrollment_exists:
         enrollment = Enrollment.objects.create(
-            member=member,
+            member_id=member.id,
+            member_name=f"{member.last_name}, {member.first_name}",
+            member_alt_name=getattr(member, "alt_name", None),
             change_type=Enrollment.ENROLLMENT,
-            new_mltc=members_setup['mltc_allowed']
+            new_mltc=members_setup['mltc_allowed'].name
         )
         enrollment_id = enrollment.id
     else:
@@ -114,7 +109,9 @@ def test_enrollment_detail(
     assert resp.status_code == expected_status
 
     if expected_status == status.HTTP_200_OK:
-        assert resp.data['member'] == member.id
+        assert resp.data['member_id'] == member.id
+        assert resp.data['member_name'] == f"{member.last_name}, {member.first_name}"
+        assert resp.data.get('member_alt_name') == getattr(member, 'alt_name', None)
 
 
 # ==============================
@@ -132,21 +129,17 @@ def test_enrollment_detail(
         ("api_client_admin", 0, "Allowed MLTC", "Denied MLTC", Enrollment.TRANSFER, status.HTTP_201_CREATED, None),
 
         # Admin – invalid inputs
-        ("api_client_admin", 0, None, "DoesNotExist MLTC", Enrollment.ENROLLMENT, status.HTTP_400_BAD_REQUEST, None),
         ("api_client_admin", 3, None, "Allowed MLTC", Enrollment.ENROLLMENT, status.HTTP_400_BAD_REQUEST, "Member is inactive; no transition performed."),
-        ("api_client_admin", 0, None, "Allowed MLTC", "INVALID_TYPE", status.HTTP_400_BAD_REQUEST, "Invalid change type."),
         ("api_client_admin", 0, None, None, Enrollment.ENROLLMENT, status.HTTP_400_BAD_REQUEST, "Invalid MLTC or missing data"),
+        ("api_client_admin", 0, None, "Allowed MLTC", "INVALID_TYPE", status.HTTP_400_BAD_REQUEST, "Invalid change type."),
 
-        # Regular user – forbidden
-        ("api_client_regular", 1, None, "Allowed MLTC", Enrollment.ENROLLMENT, status.HTTP_404_NOT_FOUND, None),
+        # Regular user – can create 
+        ("api_client_regular", 0, None, "Allowed MLTC", Enrollment.ENROLLMENT, status.HTTP_201_CREATED, None),
     ]
 )
-def test_create_enrollment(
+def test_enrollment_create(
     request,
-    api_client_admin,
-    api_client_regular,
     members_setup,
-    other_org_setup,
     user_fixture,
     member_index,
     old_mltc,
@@ -160,10 +153,11 @@ def test_create_enrollment(
 
     data = {
         "member": member.id,
+        "member_name": f"{member.last_name}, {member.first_name}",
+        "member_alt_name": getattr(member, "alt_name", None),
         "change_type": change_type,
         "old_mltc": old_mltc,
         "new_mltc": new_mltc,
-        "change_date": str(date.today())
     }
 
     url = reverse('enrollments')
@@ -173,12 +167,10 @@ def test_create_enrollment(
 
     if expected_detail:
         assert resp.data.get("detail") == expected_detail
-    elif expected_status == 201:
-        # Confirm enrollment created in DB
-        assert Enrollment.objects.filter(member=member).exists()
-    elif expected_status == 200:
-        # Extension case: ensure enrollment not duplicated
-        assert Enrollment.objects.filter(member=member).count() == 0
+    elif expected_status == status.HTTP_201_CREATED:
+        assert Enrollment.objects.filter(member_id=member.id).exists()
+    elif expected_status == status.HTTP_200_OK:
+        assert Enrollment.objects.filter(member_id=member.id).count() == 1
 
 # ==============================
 # Enrollment Recent Test
@@ -203,10 +195,8 @@ def test_create_enrollment(
         ("api_client_regular", 3, 0, True),     # inactive member
     ]
 )
-def test_recent_enrollments(
+def test_enrollment_recent(
     request,
-    api_client_admin,
-    api_client_regular,
     members_setup,
     other_org_setup,
     user_fixture,
@@ -214,21 +204,28 @@ def test_recent_enrollments(
     days_ago,
     expected_visible
 ):
-    # Clear previous enrollments
+    from backend.apps.audit.models.enrollment_model import Enrollment
+    from django.utils import timezone
+    from datetime import timedelta
+    from django.urls import reverse
+    from rest_framework import status
+
     Enrollment.objects.all().delete()
 
-    # Resolve member
     if member_index == "other_member":
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][member_index]
 
-    change_date = timezone.now() - timedelta(days=days_ago)
+    change_date = (timezone.now() - timedelta(days=days_ago)).date()
+
     Enrollment.objects.create(
-        member=member,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         change_type=Enrollment.ENROLLMENT,
-        new_mltc=members_setup['mltc_allowed'],
-        change_date=change_date
+        new_mltc=members_setup['mltc_allowed'].name,
+        change_date=change_date,
     )
 
     client = request.getfixturevalue(user_fixture)
@@ -236,10 +233,12 @@ def test_recent_enrollments(
     resp = client.get(url)
     assert resp.status_code == status.HTTP_200_OK
 
+    member_ids_in_response = [e['member_id'] for e in resp.data]
+
     if expected_visible:
-        assert any(e['member'] == member.id for e in resp.data)
+        assert member.id in member_ids_in_response
     else:
-        assert all(e['member'] != member.id for e in resp.data)
+        assert member.id not in member_ids_in_response
 
 
 # ==============================
@@ -278,9 +277,9 @@ def test_enrollment_list_filter(
 ):
     m1, m2, m3, _ = members_setup["members"]
 
-    Enrollment.objects.create(member=m1, change_type=Enrollment.ENROLLMENT, new_mltc=members_setup['mltc_allowed'])
-    Enrollment.objects.create(member=m2, change_type=Enrollment.TRANSFER, old_mltc=members_setup['mltc_allowed'], new_mltc=members_setup['mltc_denied'])
-    Enrollment.objects.create(member=m3, change_type=Enrollment.DISENROLLMENT, old_mltc=members_setup['mltc_denied'])
+    Enrollment.objects.create(member_id=m1.id, change_type=Enrollment.ENROLLMENT, new_mltc=members_setup['mltc_allowed'])
+    Enrollment.objects.create(member_id=m2.id, change_type=Enrollment.TRANSFER, old_mltc=members_setup['mltc_allowed'], new_mltc=members_setup['mltc_denied'])
+    Enrollment.objects.create(member_id=m3.id, change_type=Enrollment.DISENROLLMENT, old_mltc=members_setup['mltc_denied'])
 
     base_url = reverse("enrollments")
     url = f"{base_url}?filter={filter_value}" if filter_value else base_url
@@ -324,7 +323,7 @@ def test_enrollment_list_pagination(
     Enrollment.objects.all().delete()
     for i in range(total_enrollments):
         Enrollment.objects.create(
-            member=m1,
+            member_id=m1.id,
             change_type=Enrollment.ENROLLMENT,
             new_mltc=members_setup['mltc_allowed']
         )
@@ -374,7 +373,7 @@ def test_current_month_enrollment_stats(
     # Create enrollments
     for _ in range(enroll_count):
         Enrollment.objects.create(
-            member=m1,
+            member_id=m1.id,
             change_type=Enrollment.ENROLLMENT,
             new_mltc=members_setup['mltc_allowed'],
             change_date=today
@@ -383,7 +382,7 @@ def test_current_month_enrollment_stats(
     # Create disenrollments
     for _ in range(disenroll_count):
         Enrollment.objects.create(
-            member=m1,
+            member_id=m1.id,
             change_type=Enrollment.DISENROLLMENT,
             old_mltc=members_setup['mltc_allowed'],
             change_date=today

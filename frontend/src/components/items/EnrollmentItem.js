@@ -21,13 +21,13 @@ const AuditItem = ({ enrollment }) => {
 
   return (
     <li>
-      <Link to={`/members/${enrollment.member}`} className="home-item">
+      <Link to={`/members/${enrollment.member_id}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay
               sadcId={enrollment.sadc_member_id}
               memberName={enrollment.member_name}
-              altName={enrollment.alt_name}
+              altName={enrollment.member_alt_name}
             />
           </p>
           <p>— {formatDate(enrollment.change_date)}</p>

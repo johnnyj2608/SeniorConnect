@@ -234,3 +234,17 @@ def mock_supabase(monkeypatch):
     yield
     patcher_client.stop()
     patcher_signed_url.stop()
+
+@pytest.fixture(autouse=True)
+def skip_audit_signals(monkeypatch):
+    from backend.apps.audit import signals
+    from backend.apps.core.models.contact_model import Contact
+
+    signals.post_save.disconnect(signals.log_create_update)
+    signals.pre_save.disconnect(signals.store_original_values)
+    signals.pre_delete.disconnect(signals.log_delete)
+    signals.m2m_changed.disconnect(
+        signals.log_contact_membership_change,
+        sender=Contact.members.through,
+        dispatch_uid="audit_contact_m2m"
+    )

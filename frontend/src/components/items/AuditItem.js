@@ -8,13 +8,13 @@ const AuditItem = ({ audit }) => {
 
   return (
     <li>
-      <Link to={`/members/${audit.member}`} className="home-item">
+      <Link to={`/members/${audit.member_id}`} className="home-item">
         <span className="home-item-primary">
           <p>
             <NameDisplay
               sadcId={audit.sadc_member_id}
               memberName={audit.member_name}
-              altName={audit.alt_name}
+              altName={audit.member_alt_name}
             />
           </p>
           <p>— {audit.user_name}</p>
