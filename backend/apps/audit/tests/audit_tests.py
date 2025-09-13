@@ -6,10 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from datetime import timedelta
 from django.utils import timezone
 
-# ==============================
-# Audit List Test
-# ==============================
-
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user_fixture,member_index,expected_in_results",
@@ -27,8 +23,6 @@ from django.utils import timezone
 )
 def test_audit_list(
     request,
-    api_client_admin,
-    api_client_regular,
     admin_user,
     members_setup,
     other_org_setup,
@@ -36,35 +30,40 @@ def test_audit_list(
     member_index,
     expected_in_results
 ):
-    m1, m2, m3, m4 = members_setup["members"]
+    from backend.apps.audit.models.audit_model import AuditLog
+    from django.contrib.contenttypes.models import ContentType
+    from django.urls import reverse
+
     if member_index == "other_member":
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][member_index]
 
     AuditLog.objects.create(
-        user=admin_user,
+        user_id=admin_user.id,
+        user_name=admin_user.name,
         action_type=AuditLog.CREATE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
-        member=member,
-        object_display=str(member),
+        object_name=str(member),
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
+        changes=None,
     )
 
     client = request.getfixturevalue(user_fixture)
     url = reverse("audits")
     resp = client.get(url)
-    assert resp.status_code == status.HTTP_200_OK
+    assert resp.status_code == 200
 
-    member_ids = [
-        a["member"] if isinstance(a["member"], int) else a["member"]["id"]
-        for a in resp.data["results"]
-    ]
+    # Extract member_ids from response
+    member_ids = [a["member_id"] for a in resp.data["results"]]
+
     if expected_in_results:
         assert member.id in member_ids
     else:
         assert member.id not in member_ids
-
 
 # ==============================
 # Audit Detail Test
@@ -88,8 +87,6 @@ def test_audit_list(
 )
 def test_audit_detail(
     request,
-    api_client_admin,
-    api_client_regular,
     admin_user,
     members_setup,
     other_org_setup,
@@ -98,21 +95,22 @@ def test_audit_detail(
     audit_exists,
     expected_status
 ):
-    # Resolve member
     if member_index == "other_member":
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][member_index]
 
-    # Create audit only if needed
     if audit_exists:
         audit = AuditLog.objects.create(
-            user=admin_user,
+            user_id=admin_user.id,
+            user_name=admin_user.name,
+            member_id=member.id,
+            member_name=f"{member.last_name}, {member.first_name}",
+            member_alt_name=getattr(member, "alt_name", None),
             action_type=AuditLog.CREATE,
             content_type=ContentType.objects.get_for_model(member),
             object_id=member.id,
-            member=member,
-            object_display=str(member),
+            object_name=str(member),
         )
         audit_id = audit.id
     else:
@@ -122,7 +120,6 @@ def test_audit_detail(
     url = reverse("audit", kwargs={"pk": audit_id})
     resp = client.get(url)
     assert resp.status_code == expected_status
-
     if expected_status == status.HTTP_200_OK:
         assert resp.data["id"] == audit_id
 
@@ -152,8 +149,6 @@ def test_audit_detail(
 )
 def test_recent_audits(
     request,
-    api_client_admin,
-    api_client_regular,
     admin_user,
     members_setup,
     other_org_setup,
@@ -163,19 +158,21 @@ def test_recent_audits(
     expected_visible
 ):
     AuditLog.objects.all().delete()
-
     if member_index == "other_member":
         member = other_org_setup["other_member"]
     else:
         member = members_setup["members"][member_index]
 
     audit = AuditLog.objects.create(
-        user=admin_user,
+        user_id=admin_user.id,
+        user_name=admin_user.name,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         action_type=AuditLog.CREATE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
-        member=member,
-        object_display=f"audit {days_ago}",
+        object_name=f"audit {days_ago}",
     )
 
     audit.timestamp = timezone.now() - timedelta(days=days_ago)
@@ -185,10 +182,7 @@ def test_recent_audits(
     url = reverse("audits_recent")
     resp = client.get(url)
     all_audits = [a for group in resp.data for a in group["audits"]]
-    member_ids = [
-        a["member"] if isinstance(a["member"], int) else a["member"]["id"]
-        for a in all_audits
-    ]
+    member_ids = [a["member_id"] for a in all_audits]
 
     if expected_visible:
         assert member.id in member_ids
@@ -233,40 +227,46 @@ def test_audit_list_filter(
 ):
     member = members_setup["members"][0]
 
-    # Create one of each type
     AuditLog.objects.create(
-        user=admin_user,
+        user_id=admin_user.id,
+        user_name=admin_user.name,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         action_type=AuditLog.CREATE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
-        member=member,
-        object_display=str(member),
+        object_name=str(member),
     )
     AuditLog.objects.create(
-        user=admin_user,
+        user_id=admin_user.id,
+        user_name=admin_user.name,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         action_type=AuditLog.UPDATE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
-        member=member,
-        object_display=str(member),
+        object_name=str(member),
     )
     AuditLog.objects.create(
-        user=admin_user,
+        user_id=admin_user.id,
+        user_name=admin_user.name,
+        member_id=member.id,
+        member_name=f"{member.last_name}, {member.first_name}",
+        member_alt_name=getattr(member, "alt_name", None),
         action_type=AuditLog.DELETE,
         content_type=ContentType.objects.get_for_model(member),
         object_id=member.id,
-        member=member,
-        object_display=str(member),
+        object_name=str(member),
     )
 
     base_url = reverse("audits")
     url = f"{base_url}?filter={filter_value}" if filter_value else base_url
-
     response = api_client_admin.get(url)
     assert response.status_code == status.HTTP_200_OK
 
     returned_types = [a["action_type"].upper() for a in response.data["results"]]
-    
     if not expected_types:
         assert returned_types == []
     else:
@@ -304,12 +304,15 @@ def test_audit_list_pagination(
 
     for _ in range(total_audits):
         AuditLog.objects.create(
-            user=admin_user,
+            user_id=admin_user.id,
+            user_name=admin_user.name,
+            member_id=member.id,
+            member_name=f"{member.last_name}, {member.first_name}",
+            member_alt_name=getattr(member, "alt_name", None),
             action_type=AuditLog.CREATE,
             content_type=ContentType.objects.get_for_model(member),
             object_id=member.id,
-            member=member,
-            object_display=str(member),
+            object_name=str(member),
         )
 
     url = reverse("audits") + f"?page={page}"
