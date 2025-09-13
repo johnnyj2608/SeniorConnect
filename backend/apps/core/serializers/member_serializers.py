@@ -4,6 +4,7 @@ from rest_framework import serializers
 from ..models.member_model import Member
 from django.utils import timezone
 from .mixins import DaysUntilMixin
+from dateutil.relativedelta import relativedelta
 import re
 
 class MemberNameSerializer(serializers.ModelSerializer):
@@ -13,23 +14,13 @@ class MemberNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         abstract = True
-
-class MemberSimpleSerializer(serializers.ModelSerializer):
-    formal_name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Member
-        fields = ['sadc_member_id', 'formal_name', 'birth_date', 'gender']
-
-    def get_formal_name(self, obj):
-        return obj.formal_name
     
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True
 
     class Meta:
         model = Member
-        exclude = ['created_at', 'updated_at', 'sadc']
+        exclude = ['created_at', 'updated_at', 'sadc', 'birth_month', 'birth_day']
 
     def validate_gender(self, value):
         value = value.upper()
@@ -76,57 +67,34 @@ class MemberSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f"Language '{value}' not supported.")
             return value.capitalize()
         return value
+    
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+
+        if getattr(instance, 'birth_date', None):
+            instance.birth_day = instance.birth_date.day
+            instance.birth_month = instance.birth_date.month
+            instance.save(update_fields=['birth_month', 'birth_day'])
+
+        return instance
 
 class MemberListSerializer(serializers.ModelSerializer):
-    new = serializers.ReadOnlyField(source='is_new') 
-    
-    mltc_member_id = serializers.ReadOnlyField(source='active_auth.mltc_member_id')
     mltc_name = serializers.ReadOnlyField(source='active_auth.mltc.name')
-    dx_code = serializers.ReadOnlyField(source='active_auth.dx_code')
-    start_date = serializers.ReadOnlyField(source='active_auth.start_date')
-    end_date = serializers.ReadOnlyField(source='active_auth.end_date')
     schedule = serializers.ReadOnlyField(source='active_auth.schedule')
-
-    sdc_auth_id = serializers.SerializerMethodField()
-    transportation_auth_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
         fields = (
             'id',
             'sadc_member_id',
-            'photo',
             'first_name',
             'last_name',
             'alt_name',
             'birth_date',
-            'phone',
-            'gender',
-            'address',
             'active',
-            'new',
-            'mltc_member_id',
             'mltc_name',
-            'dx_code',
-            'start_date',
-            'end_date',
             'schedule',
-            'sdc_auth_id',
-            'transportation_auth_id',
         )
-
-    def get_service_auth_id(self, obj, service_type):
-        auth = obj.active_auth
-        if not auth:
-            return None
-        service = auth.services.filter(service_type=service_type).first()
-        return service.auth_id if service else None
-
-    def get_sdc_auth_id(self, obj):
-        return self.get_service_auth_id(obj, 'sdc')
-
-    def get_transportation_auth_id(self, obj):
-        return self.get_service_auth_id(obj, 'transportation')
 
 class MemberDeletedSerializer(serializers.ModelSerializer):
     days_until_30 = serializers.ReadOnlyField()
@@ -170,10 +138,53 @@ class MemberBirthdaySerializer(DaysUntilMixin, serializers.ModelSerializer):
     
     def get_age_turning(self, obj):
         today = timezone.now().date()
-        birth_date = obj.birth_date
-        next_birthday_year = today.year
-        next_birthday = birth_date.replace(year=next_birthday_year)
+        next_birthday = obj.birth_date.replace(year=today.year)
         if next_birthday < today:
-            next_birthday_year += 1
-            next_birthday = birth_date.replace(year=next_birthday_year)
-        return next_birthday_year - birth_date.year
+            next_birthday = next_birthday.replace(year=today.year + 1)
+        return relativedelta(next_birthday, obj.birth_date).years
+    
+class MemberAttendanceSerializer(serializers.ModelSerializer):
+    mltc_member_id = serializers.ReadOnlyField(source='active_auth.mltc_member_id')
+    mltc_name = serializers.ReadOnlyField(source='active_auth.mltc.name')
+    dx_code = serializers.ReadOnlyField(source='active_auth.dx_code')
+    start_date = serializers.ReadOnlyField(source='active_auth.start_date')
+    end_date = serializers.ReadOnlyField(source='active_auth.end_date')
+    schedule = serializers.ReadOnlyField(source='active_auth.schedule')
+
+    sdc_auth_id = serializers.SerializerMethodField()
+    transportation_auth_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Member
+        fields = (
+            'id',
+            'sadc_member_id',
+            'first_name',
+            'last_name',
+            'birth_date',
+            'phone',
+            'gender',
+            'address',
+            'active',
+            'mltc_member_id',
+            'mltc_name',
+            'dx_code',
+            'start_date',
+            'end_date',
+            'schedule',
+            'sdc_auth_id',
+            'transportation_auth_id',
+        )
+
+    def get_service_auth_id(self, obj, service_type):
+        auth = obj.active_auth
+        if not auth:
+            return None
+        service = auth.services.filter(service_type=service_type).first()
+        return service.auth_id if service else None
+
+    def get_sdc_auth_id(self, obj):
+        return self.get_service_auth_id(obj, 'sdc')
+
+    def get_transportation_auth_id(self, obj):
+        return self.get_service_auth_id(obj, 'transportation')

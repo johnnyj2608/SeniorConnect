@@ -13,6 +13,7 @@ from ..utils.member_utils import (
     getMemberProfile,
     restoreMember,
     getDeletedMembers,
+    getMemberAttendance,
     exportMembersCsv,
     importMembersCsv,
 )
@@ -71,6 +72,11 @@ def getMemberDetailFull(request, pk):
 def getMembersDeleted(request):
     if request.method == 'GET':
         return getDeletedMembers(request)
+    
+@api_view(['GET'])
+def getMembersAttendance(request):
+    if request.method == 'GET':
+        return getMemberAttendance(request)
     
 @api_view(['GET', 'POST'])
 def getMembersCsv(request):

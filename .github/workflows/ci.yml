@@ -28,6 +28,7 @@ jobs:
 
     env:
       SECRET_KEY: "test-secret-key"
+      FIELD_ENCRYPTION_KEY: "7OUx2ccq2SJHQXxjLdefmXWbKXbaMPPI73Xpj83FN28=" # <-- TEST KEY
       SUPABASE_URL: "http://localhost/test-supabase"
       SUPABASE_KEY: "test-supabase-key"
       SUPABASE_BUCKET: "test-bucket"

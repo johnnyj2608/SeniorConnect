@@ -16,12 +16,12 @@ from ..serializers.member_serializers import (
     MemberListSerializer,
     MemberBirthdaySerializer,
     MemberDeletedSerializer,
+    MemberAttendanceSerializer,
 )
 from ..serializers.absence_serializers import Absence, AbsenceSerializer, AssessmentSerializer
 from ..serializers.authorization_serializers import AuthorizationWithServiceSerializer, AuthorizationSerializer
 from ..serializers.contact_serializers import Contact, ContactSerializer
 from ..serializers.file_serializers import File, FileSerializer
-from django.utils.text import slugify
 from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
@@ -32,19 +32,23 @@ import csv
 
 @member_access_filter()
 def getMemberList(request):
-    members = (
-        request.accessible_members_qs
-        .select_related('active_auth', 'active_auth__mltc')
-        .order_by('active_auth__mltc__name', 'sadc_member_id')
-    )
+    members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
+
+    mltc_filter = request.GET.get('mltc')
+    if mltc_filter:
+        if mltc_filter.lower() == "unknown":
+            members = members.filter(active_auth__isnull=True)
+        else:
+            members = members.filter(active_auth__mltc__name=mltc_filter)
+
+    active_filter = request.GET.get('active')
+    if active_filter is not None:
+        members = members.filter(active=(active_filter.lower() == 'true'))
+
+    members = members.order_by('sadc_member_id')
     serializer = MemberListSerializer(members, many=True)
 
-    data = defaultdict(list)
-    for member_data in serializer.data:
-        mltc_name = member_data['mltc_name'] if member_data.get('mltc_name') else "unknown"
-        data[mltc_name].append(member_data)
-
-    return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @member_access_pk
 def getMemberDetail(request, pk):
@@ -56,6 +60,7 @@ def getMemberDetail(request, pk):
 def createMember(request):
     data = request.data.copy()
     file_path = None
+    sadc = request.user.sadc
 
     photo = request.FILES.get('photo')
     data.pop('photo', None)
@@ -64,13 +69,11 @@ def createMember(request):
         serializer = MemberSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        member = serializer.save(sadc=request.user.sadc)
+        member = serializer.save(sadc=sadc)
 
         if photo:
-            first_name = data.get("first_name", "")
-            last_name = data.get("last_name", "")
-            member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{request.user.sadc.id}/members/{member.id}/{member_name}"
+            new_path = f"{sadc.id}/members/{member.id}/photo_{member.id}"
+
 
             file_path, error = upload_file_to_supabase(
                 photo, 
@@ -104,10 +107,7 @@ def updateMember(request, pk):
     try:
         if 'photo' in request.FILES:
             photo = request.FILES['photo']
-            first_name = data.get("first_name")
-            last_name = data.get("last_name")
-            member_name = slugify(f"{first_name} {last_name}")
-            new_path = f"{sadc.id}/members/{member.id}/{member_name}"
+            new_path = f"{sadc.id}/members/{member.id}/photo_{member.id}"
 
             file_path, error = upload_file_to_supabase(
                 photo, 
@@ -205,22 +205,39 @@ def getActiveMemberStats(request):
 
 @member_access_filter()
 def getUpcomingBirthdays(request):
-    today = timezone.now().date()
-
-    birthday_queries = Q()
-    for i in range(7):
-        future_day = today + timedelta(days=i)
-        birthday_queries |= Q(birth_date__month=future_day.month, birth_date__day=future_day.day)
-
-    members = (
-        request.accessible_members_qs
-        .filter(active=True)
-        .filter(birthday_queries)
+    today = timezone.localdate()
+    upcoming_q = request.accessible_members_qs.filter(
+        active=True,
+        birth_month__isnull=False,
+        birth_day__isnull=False
     )
 
-    serializer = MemberBirthdaySerializer(members, many=True)
+    days_q = Q()
+    for i in range(7):
+        future_day = today + timedelta(days=i)
+        days_q |= Q(birth_month=future_day.month, birth_day=future_day.day)
+
+    upcoming = upcoming_q.filter(days_q)
+
+    serializer = MemberBirthdaySerializer(upcoming, many=True)
     sorted_data = sorted(serializer.data, key=lambda x: x['days_until'])[:20]
     return Response(sorted_data, status=status.HTTP_200_OK)
+
+@member_access_filter()
+def getMemberAttendance(request):
+    members = (
+        request.accessible_members_qs
+        .select_related('active_auth', 'active_auth__mltc')
+        .exclude(active_auth__mltc__isnull=True)
+        .order_by('active_auth__mltc__name', 'sadc_member_id')
+    )
+    serializer = MemberAttendanceSerializer(members, many=True)
+
+    grouped = defaultdict(list)
+    for member_data in serializer.data:
+        grouped[member_data['mltc_name']].append(member_data)
+
+    return Response(grouped, status=status.HTTP_200_OK)
 
 @member_access_pk
 def toggleMemberStatus(request, pk):
