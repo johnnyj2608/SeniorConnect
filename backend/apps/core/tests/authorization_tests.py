@@ -239,10 +239,12 @@ def test_authorization_create(
 
     if should_create:
         assert response.status_code == status.HTTP_201_CREATED
-        auth = Authorization.objects.get(member=member, mltc_member_id=payload["mltc_member_id"])
+        auth_id = response.data["id"]
+        auth = Authorization.objects.get(id=auth_id)
+        assert auth.member == member
+        assert auth.mltc == mltc
         if file_upload:
             assert auth.file == "supabase/path/fakefile.pdf"
-        assert auth.mltc == mltc
     else:
         # Either unauthorized or duplicate start date
         assert response.status_code in [status.HTTP_404_NOT_FOUND, status.HTTP_400_BAD_REQUEST]

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from encrypted_model_fields.fields import EncryptedCharField
 
 class Contact(models.Model):
     
@@ -45,7 +46,10 @@ class Contact(models.Model):
     members = models.ManyToManyField('Member', related_name='contacts')
     contact_type = models.CharField(max_length=30, choices=CONTACT_TYPES)
     name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=10)
+
+    # PHI Fields
+    phone = EncryptedCharField(max_length=10)
+
     relationship_type = models.CharField(
         max_length=20,
         choices=RELATIONSHIP_TYPES,
