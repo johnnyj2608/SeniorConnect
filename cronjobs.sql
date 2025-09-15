@@ -3,6 +3,19 @@ SELECT cron.schedule(
     'delete_soft_deleted_members',
     '0 1 * * *',  -- 1:00 AM daily
     $$
+        DELETE FROM core_contact_members
+        WHERE member_id IN (
+            SELECT id FROM core_member
+            WHERE deleted_at IS NOT NULL
+              AND deleted_at < NOW() - INTERVAL '30 days'
+        );
+
+        DELETE FROM core_contact c
+        WHERE NOT EXISTS (
+            SELECT 1 FROM core_contact_members ccm
+            WHERE ccm.contact_id = c.id
+        );
+
         DELETE FROM core_member
         WHERE deleted_at IS NOT NULL
           AND deleted_at < NOW() - INTERVAL '30 days';
@@ -44,3 +57,9 @@ SELECT cron.schedule(
         AND a.active = TRUE;
     $$
 );
+
+-- Remove on delete restriction for cron jobs
+ALTER TABLE core_table
+DROP CONSTRAINT core_table_member_id_111zz1zz_fk_core_member_id,
+ADD CONSTRAINT core_table_member_id_111zz1zz_fk_core_member_id
+FOREIGN KEY (member_id) REFERENCES core_member(id) ON DELETE SET NULL;
