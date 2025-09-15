@@ -20,7 +20,7 @@ import AddButton from '../components/buttons/AddButton';
 import AttendanceButton from '../components/buttons/AttendanceButton';
 import { MltcContext } from '../context/MltcContext';
 
-const MemberPage = () => {
+const MembersPage = () => {
   const { t } = useTranslation();
   const { mltcs, refreshMltc } = useContext(MltcContext)
   const { id } = useParams();
@@ -195,4 +195,4 @@ const MemberPage = () => {
   );
 };
 
-export default MemberPage;
+export default MembersPage;
