@@ -17,7 +17,6 @@ class MemberNameSerializer(serializers.ModelSerializer):
     
 class MemberSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(required=False, default=True) # Active default to True
-    is_new = serializers.ReadOnlyField()
 
     class Meta:
         model = Member
