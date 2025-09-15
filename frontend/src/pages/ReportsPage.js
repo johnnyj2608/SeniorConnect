@@ -136,7 +136,7 @@ const ReportsPage = () => {
                             setCurrentPage={setCurrentPage}
                         />
                     </div>
-                    <p className="members-count">
+                    <p className="filter-text">
                         {report.length} {report.length === 1 ? t('general.result') : t('general.results')}
                     </p>
                 </div>

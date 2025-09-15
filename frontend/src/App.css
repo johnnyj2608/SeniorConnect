@@ -707,6 +707,11 @@ input[type="number"]::-webkit-inner-spin-button {
   color: var(--color-text-sub)
 }
 
+.snapshot-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 /* --------------
   Filter Row
 -------------- */
@@ -748,16 +753,21 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 10px;
 }
 
-.members-count {
+.filter-text {
   font-size: 20px;
   color: var(--color-text-sub);
   white-space: nowrap;
   margin-top: 1.6rem;
 }
 
-.snapshot-group {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.filter-text.clickable {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.filter-text.clickable:hover {
+  text-decoration: underline;
+  color: var(--color-main-light)
 }
 
 /* --------------

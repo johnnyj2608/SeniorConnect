@@ -68,6 +68,18 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        <div>
+          <p
+            className="filter-text clickable"
+            onClick={() => {
+              setMltcFilter('');
+              setSearchQuery('');
+              setShowInactive(false);
+            }}
+          >
+            {t('general.buttons.clear_filters')}
+          </p>
+        </div>
       </div>
     </div>
   );

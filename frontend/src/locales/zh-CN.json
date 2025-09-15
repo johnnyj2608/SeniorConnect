@@ -43,6 +43,7 @@
             "add_member": "添加会员",
             "add_all": "全部添加",
             "clear_mltc": "清除 MLTC",
+            "clear_filters": "清除过滤器",
             "back": "返回"
         },
         "days_of_week": {
