@@ -103,8 +103,7 @@
         "label": "Status",
         "active": "Active",
         "future": "Future",
-        "expired": "Expired",
-        "member_is_inactive": "Member is inactive"
+        "expired": "Expired"
     },
     "snapshots": {
         "label": "Snapshots",
@@ -141,7 +140,6 @@
         "search_members": "Search Members",
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",
-        "new": "New",
         "all_mltcs": "All MLTCs",
         "no_members": "No members added to queue"
     },

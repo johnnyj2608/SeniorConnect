@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 import { useNavigate } from 'react-router-dom';
 
-const useMembers = (id, setMemberData, t) => {
+const useMembers = (id, setMemberData) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleDelete = useCallback(async () => {
@@ -19,12 +21,13 @@ const useMembers = (id, setMemberData, t) => {
       });
 
       if (response.ok) {
+        setMemberData(null);
         navigate('/members');
       }
     } catch (error) {
       console.error(error);
     }
-  }, [id, navigate, t]);
+  }, [id, navigate, t, setMemberData]);
 
   const handleStatus = useCallback(async () => {
     if (!id) return;

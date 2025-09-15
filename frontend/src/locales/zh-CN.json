@@ -103,8 +103,7 @@
         "label": "状态",
         "active": "活跃",
         "future": "未来",
-        "expired": "已过期",
-        "member_is_inactive": "成员处于非活跃状态"
+        "expired": "已过期"
     },
     "snapshots": {
         "label": "快照",
@@ -141,7 +140,6 @@
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
-        "new": "新会员",
         "all_mltcs": "所有 MLTC",
         "no_members": "没有成员添加到队列"
     },

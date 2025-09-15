@@ -11,9 +11,7 @@ import MemberAbsencesCard from '../components/cards/MemberAbsencesCard';
 import MemberFilesCard from '../components/cards/MemberFilesCard';
 import MemberGiftedCard from '../components/cards/MemberGiftedCard';
 import MemberPhotoCard from '../components/cards/MemberPhotoCard';
-import MemberStatusBanner from '../components/layout/StatusBanner';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
-
 import SearchMembers from '../components/inputs/SearchMembers';
 import Switch from 'react-switch';
 import AddButton from '../components/buttons/AddButton';
@@ -41,7 +39,7 @@ const MembersPage = () => {
   const { 
     handleDelete, 
     handleStatus 
-  } = useMembers(id, setMemberData, t);
+  } = useMembers(id, setMemberData);
 
 	useEffect(() => {
 		refreshMltc();
@@ -156,7 +154,6 @@ const MembersPage = () => {
       </div>
 
       <div className="member content-padding">
-        <MemberStatusBanner status={memberData?.info?.active} />
         <div className="member-row">
           <MemberPhotoCard data={memberData?.info} />
         </div>

@@ -13,7 +13,10 @@ const MemberPhotoCard = ({ data, small }) => {
     const primaryName = useAltName && altName ? altName : fullName;
     const secondaryName = useAltName && altName ? fullName : altName;
 
-    const imgClass = small ? 'member-photo small' : 'member-photo';
+    const status = data?.active === false 
+        ? 'inactive' 
+        : null
+    const imgClass = `member-photo${small ? ' small' : ''}${status ? ` ${status}` : ''}`;
 
     useEffect(() => {
         async function fetchPhoto() {
@@ -23,7 +26,7 @@ const MemberPhotoCard = ({ data, small }) => {
         fetchPhoto();
     }, [info.photo])
 
-    if (!info.photo) return null;
+    if (!info || Object.keys(info).length === 0) return null;
 
     return (
         <div className="photo-container">

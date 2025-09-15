@@ -128,6 +128,7 @@ class Member(models.Model):
 
     def restore(self):
         self.deleted_at = None
+        self.active = True
         self.save()
 
     def toggle_active(self):
