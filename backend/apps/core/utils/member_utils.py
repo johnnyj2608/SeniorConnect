@@ -25,7 +25,8 @@ from ..serializers.file_serializers import File, FileSerializer
 from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
-    delete_folder_from_supabase
+    delete_folder_from_supabase,
+    get_signed_url,
 )
 from backend.access.member_access import member_access_filter, member_access_pk
 import csv
@@ -261,8 +262,10 @@ def getMemberProfile(request, pk):
             absences_data.append(AbsenceSerializer(absence).data)
 
     gifts_data = getActiveGiftListByMember(request.user.sadc, member)
+    photo_url = get_signed_url(member.photo) if member.photo else None
 
     return Response({
+        'photo': photo_url,
         'info': MemberSerializer(member).data,
         'auth': AuthorizationWithServiceSerializer(member.active_auth).data if member.active_auth else None,
         'absences': absences_data,

@@ -92,7 +92,10 @@ const MembersPage = () => {
       />
       <div className="member content-padding">
         <div className="member-row">
-          <MemberPhotoCard data={memberData?.info} />
+          <MemberPhotoCard 
+            photo={memberData?.photo}
+            data={memberData?.info} 
+          />
         </div>
         {memberData && (
           <>
