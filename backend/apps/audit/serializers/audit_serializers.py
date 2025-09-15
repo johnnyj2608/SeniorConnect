@@ -6,4 +6,4 @@ class AuditLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuditLog
-        exclude = ['content_type', 'object_id']
+        exclude = ['user_id', 'content_type', 'object_id']
