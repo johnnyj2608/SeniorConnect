@@ -36,6 +36,7 @@ const MembersPage = () => {
   useEffect(() => {
     if (!id) return;
     if (id === 'new') {
+      setMemberData(null);
       openModal('info', { id, data: {}, setData: setMemberData });
     } else {
       const fetchMemberData = async () => {
