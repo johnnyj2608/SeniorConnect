@@ -34,7 +34,7 @@ const AuditItem = ({ enrollment }) => {
         </span>
         <span className="home-item-secondary">
           <p>{t(`reports.enrollments.${enrollment.change_type}`)}</p> 
-          <p>{renderEnrollmentMessage(enrollment.old_mltc_name, enrollment.new_mltc_name)}</p>
+          <p>{renderEnrollmentMessage(enrollment.old_mltc, enrollment.new_mltc)}</p>
         </span>
       </Link>
     </li>

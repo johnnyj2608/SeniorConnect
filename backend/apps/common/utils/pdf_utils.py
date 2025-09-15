@@ -95,8 +95,9 @@ def generateSnapshotPdf(sadc_id, snapshot_type="members", mltc_names=None, **ext
             continue
 
         if snapshot_type == "enrollments":
-            old_mltc_name = item.old_mltc.name if item.old_mltc else None
-            new_mltc_name = item.new_mltc.name if item.new_mltc else None
+            old_mltc_name = item.old_mltc if item.old_mltc else None
+            new_mltc_name = item.new_mltc if item.new_mltc else None
+
 
             if old_mltc_name:
                 data[old_mltc_name]['members'].append(item)
