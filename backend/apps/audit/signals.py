@@ -39,14 +39,15 @@ def log_create_update(sender, instance, created, **kwargs):
         return
 
     user = get_current_user()
-    if isinstance(user, AnonymousUser) or not getattr(user, 'is_authenticated', False):
-        user = None
+    user_id, user_name = None, None
+    if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
+        user_id = user.id
+        user_name = user.name
 
-    content_type = ContentType.objects.get_for_model(sender)
     member = get_related_member(instance)
-
-    if sender == Contact and created:
-        return  # Handled by m2m signal
+    member_id = member.id if member else None
+    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_alt_name = member.alt_name if member and member.alt_name else None
 
     changes = {}
     if not created:
@@ -80,12 +81,15 @@ def log_create_update(sender, instance, created, **kwargs):
             return
 
     AuditLog.objects.create(
-        user=user,
-        content_type=content_type,
+        user_id=user_id,
+        user_name=user_name,
+        member_id=member_id,
+        member_name=member_name,
+        member_alt_name=member_alt_name,
+        content_type=ContentType.objects.get_for_model(sender),
         object_id=instance.pk,
+        object_name=str(instance),
         action_type=AuditLog.CREATE if created else AuditLog.UPDATE,
-        member=member,
-        object_display=str(instance),
         changes=changes,
     )
 
@@ -98,22 +102,29 @@ def log_delete(sender, instance, **kwargs):
         return  # Handled by m2m signal
 
     user = get_current_user()
-    if isinstance(user, AnonymousUser) or not getattr(user, 'is_authenticated', False):
-        user = None
+    user_id, user_name = None, None
+    if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
+        user_id = user.id
+        user_name = user.name
 
-    content_type = ContentType.objects.get_for_model(sender)
     member = get_related_member(instance)
+    member_id = member.id if member else None
+    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_alt_name = member.alt_name if member and member.alt_name else None
 
     AuditLog.objects.create(
-        user=user,
-        content_type=content_type,
+        user_id=user_id,
+        user_name=user_name,
+        member_id=member_id,
+        member_name=member_name,
+        member_alt_name=member_alt_name,
+        content_type=ContentType.objects.get_for_model(sender),
         object_id=instance.pk,
+        object_name=str(instance),
         action_type=AuditLog.DELETE,
-        member=member,
-        object_display=str(instance),
     )
 
-@receiver(m2m_changed, sender=Contact.members.through)
+@receiver(m2m_changed, sender=Contact.members.through, dispatch_uid="audit_contact_m2m")
 def log_contact_membership_change(sender, instance, action, reverse, model, pk_set, **kwargs):
     if action not in ['post_add', 'post_remove']:
         return
@@ -122,18 +133,24 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
         return
 
     user = get_current_user()
-    if isinstance(user, AnonymousUser) or not getattr(user, 'is_authenticated', False):
-        user = None
+    user_id, user_name = None, None
+    if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
+        user_id = user.id
+        user_name = f"{user.last_name}, {user.first_name}"
 
     content_type = ContentType.objects.get_for_model(Contact)
     action_type = AuditLog.CREATE if action == 'post_add' else AuditLog.DELETE
 
     for member_id in pk_set:
+        member = Member.objects.filter(id=member_id).first()
         AuditLog.objects.create(
-            user=user,
+            user_id=user_id,
+            user_name=user_name,
+            member_id=member_id,
+            member_name = f"{member.last_name}, {member.first_name}" if member else None,
+            member_alt_name = member.alt_name if member and member.alt_name else None,
             content_type=content_type,
             object_id=instance.pk,
+            object_name=str(instance),
             action_type=action_type,
-            member_id=member_id,
-            object_display=str(instance),
         )

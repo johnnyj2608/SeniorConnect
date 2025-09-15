@@ -1,6 +1,4 @@
 from django.db import models
-from backend.apps.tenant.models.mltc_model import Mltc
-from backend.apps.core.models.member_model import Member
 import datetime
 
 class Enrollment(models.Model):
@@ -13,23 +11,14 @@ class Enrollment(models.Model):
         (TRANSFER, 'Transfer'),
         (DISENROLLMENT, 'Disenrollment'),
     ]
-    member = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL)
+    member_id = models.PositiveIntegerField()
+    member_name = models.CharField(max_length=50)
+    member_alt_name = models.CharField(max_length=50, null=True, blank=True)
+
+    old_mltc = models.CharField(max_length=50, null=True, blank=True)
+    new_mltc = models.CharField(max_length=50, null=True, blank=True)
+
     change_type = models.CharField(max_length=20, choices=CHANGE_TYPES)
-    new_mltc = models.ForeignKey(
-        Mltc,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='new_enrollments'
-    )
-    
-    old_mltc = models.ForeignKey(
-        Mltc,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='old_enrollments'
-    )
     change_date = models.DateField(default=datetime.date.today)
     created_at = models.DateTimeField(auto_now_add=True)
 

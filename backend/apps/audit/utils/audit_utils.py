@@ -8,12 +8,12 @@ from rest_framework.generics import get_object_or_404
 from ..models.audit_model import AuditLog
 from ..serializers.audit_serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
-from backend.access.member_access import check_member_access, member_access_filter, member_access_fk
+from backend.access.member_access import check_member_access, member_access_filter
 
 @member_access_filter()
 def getAuditList(request):
-    audits = AuditLog.objects.select_related('user', 'content_type', 'member').filter(
-        member__in=request.accessible_members_qs
+    audits = AuditLog.objects.select_related('content_type').filter(
+        member_id__in=request.accessible_members_qs
     )
     filter_param = request.GET.get('filter')
     if filter_param:
@@ -24,7 +24,7 @@ def getAuditList(request):
     return paginator.get_paginated_response(serializer.data)
 
 def getAuditDetail(request, pk):
-    audit = get_object_or_404(AuditLog.objects.select_related('user', 'content_type', 'member'), id=pk)
+    audit = get_object_or_404(AuditLog.objects.select_related('content_type'), id=pk)
 
     unauthorized = check_member_access(request.user, audit.member_id)
     if unauthorized: return unauthorized
@@ -37,11 +37,11 @@ def getRecentAudits(request):
     seven_days_ago = timezone.now() - timedelta(days=7)
     recent_audits = (
         AuditLog.objects
-        .select_related('user', 'content_type', 'member')
+        .select_related('content_type')
         .filter(
             timestamp__gte=seven_days_ago,
-            member__isnull=False,
-            member__in=request.accessible_members_qs,
+            member_id__isnull=False,
+            member_id__in=request.accessible_members_qs.values_list('id', flat=True)
         )
         .annotate(date=TruncDate('timestamp'))
         .order_by('-timestamp')[:20]
