@@ -33,7 +33,7 @@
 ---
 
 <a name="overview"></a>
-## Overview
+## 📖 Overview
 In many adult day care centers, patient data is still recorded on paper. This results in **inconsistent records across departments** and **slow retrieval** when information needs to be shared.
 
 This system provides a **centralized, secure, and digital Electronic Health Record (EHR) platform** that ensures:
