@@ -13,6 +13,13 @@
    - [Billing Page](#billing-page)
    - [Settings Page](#settings-page)
 4. [Challenges & Lessons Learned](#challenges--lessons-learned)
+   - [Data Consistency Across Departments](#data-consistency-across-departments)
+   - [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
+   - [Security & Privacy](#security--privacy)
+   - [Frontend Usability & UX](#frontend-usability--ux)
+   - [Data Validation & Integrity](#data-validation--integrity)
+   - [Automated Reporting & Snapshots](#automated-reporting--snapshots)
+   - [Data Consistency During Concurrent Updates](#data-consistency-during-concurrent-updates)
 5. [Q&A](#qa)
    - [Architecture & Design](#architecture--design)
    - [Security & Privacy](#security--privacy)
@@ -25,7 +32,8 @@
 
 ---
 
-## 📖 Overview
+<a name="overview"></a>
+## Overview
 In many adult day care centers, patient data is still recorded on paper. This results in **inconsistent records across departments** and **slow retrieval** when information needs to be shared.
 
 This system provides a **centralized, secure, and digital Electronic Health Record (EHR) platform** that ensures:
@@ -42,6 +50,7 @@ The platform is designed for **social adult day care office workers**, providing
 
 ---
 
+<a name="tech-stack"></a>
 ## 🛠️ Tech Stack
 - **Backend**: Python, Django, Django REST Framework
 - **Frontend**: React with **protected routes** and **mobile-friendly navigation**
@@ -53,6 +62,7 @@ The platform is designed for **social adult day care office workers**, providing
 
 ---
 
+<a name="key-features"></a>
 ## ✨ Key Features
 
 ### **General**
@@ -100,40 +110,67 @@ The platform is designed for **social adult day care office workers**, providing
 
 ---
 
+<a name="challenges--lessons-learned"></a>
 ## ⚡ Challenges & Lessons Learned
 
-1. **Data Consistency Across Departments**
-   - **Challenge:** Moving from paper records and separate Excel files caused **inconsistent data across departments**, duplicate entries, and slow information retrieval. Each staff member had their own version of patient data, which often didn’t match.
-   - **Approach:** Created a **centralized PostgreSQL database** with clear rules to prevent duplicates. Optimized queries and added indexes so the system stays fast as data grows.
-   - **Lesson Learned / Impact:** Now, all staff can access **accurate, up-to-date patient records** from any workstation. Errors are minimized, and looking up data is much faster, even with thousands of members.
+### Data Consistency Across Departments
+- **Challenge:** Moving from paper records and separate Excel files caused **inconsistent data across departments**, duplicate entries, and slow information retrieval. Each staff member had their own version of patient data, which often didn’t match.
+- **Approach:**
+  - Created a **centralized PostgreSQL database** with unique constraints on key fields (e.g., SSN, member ID).
+  - Added **indexes** on frequently queried fields to optimize performance.
+  - Implemented **transactional integrity** for all member updates to avoid partial or conflicting changes.
+- **Lesson Learned / Impact:** Staff can now access **accurate, up-to-date patient records** from any workstation. Errors are minimized, and queries remain fast even with thousands of members.
 
-2. **Role-Based Access Control (RBAC)**  
-   - **Challenge:** Certain actions, like creating or deleting users, should only be done by **organization admins**, while MLTC staff should only see data relevant to them.
-   - **Approach:** Built a **permissions system** using Django, and added **Row-Level Security (RLS) in PostgreSQL** so each MLTC can only access their own data. Restrictions are enforced both on the backend and frontend.
-   - **Lesson Learned / Impact:** This ensures **secure access**, prevents unauthorized changes, and keeps workflows smooth for staff.
+### Role-Based Access Control (RBAC)
+- **Challenge:** Certain actions, like creating or deleting users, should only be done by **organization admins**, while MLTC staff should only see data relevant to them.
+- **Approach:**
+  - Centralized the access logic in `MemberQuerySet` and `MemberManager` to **avoid accidental bypass**.
+  - Frontend routes are protected based on roles to hide unauthorized UI.
+  - Database-level relationships (`sadc` and `active_auth.mltc`) ensure proper scoping.
+- **Lesson Learned / Impact:** Provides **secure, maintainable, and scalable RBAC**, ensuring staff see only the data they are authorized to access.
 
-3. **Security & Privacy**
-   - **Challenge:** Protecting sensitive patient information while keeping the system usable. Risks included unauthorized access, password leaks, and untracked changes.
-   - **Approach:** Implemented **JWT authentication**, **2FA via email**, **encrypted fields**, and **audit logs** to track all user-made changes.
-   - **Lesson Learned / Impact:** Data is secure, changes are accountable, and staff can trust the system without unnecessary hurdles.
+### Security & Privacy
+- **Challenge:** Protecting sensitive patient information while keeping the system usable. Risks included unauthorized access, password leaks, and untracked changes.
+- **Approach:**
+  - Implemented **two-factor authentication (2FA)** via email.
+  - Enforced **HTTPS** for all client-server communications.
+  - Regularly rotated encryption keys and monitored audit logs for anomalies.
+- **Lesson Learned / Impact:** Sensitive data is secured, and all user actions are accountable without impacting usability.
 
-4. **Frontend Usability & UX**
-   - **Challenge:** The system needed to handle many features but still be **easy for non-technical staff** to navigate on desktop and mobile.
-   - **Approach:** Added a **mobile-friendly navigation bar**, **protected routes**, **modals for updating member profiles**, **debounced search**, **drag-and-drop file uploads**, and **profile picture cropping**.
-   - **Lesson Learned / Impact:** Staff can complete tasks faster, with fewer mistakes, and the system feels intuitive to use.
+### Frontend Usability & UX
+- **Challenge:** The system needed to handle many features but still be **easy for non-technical staff** to navigate on desktop and mobile.
+- **Approach:**
+  - Added **debounced search** to reduce API calls and improve performance.
+  - Used **protected routes** to prevent unauthorized access while maintaining smooth navigation.
+  - Implemented clear error alerts and success notifications for UX feedback.
+- **Lesson Learned / Impact:** Staff complete tasks faster, with fewer mistakes, and the system feels intuitive across devices.
 
-5. **Data Validation & Integrity**
-   - **Challenge:** Important fields like **SSN, phone numbers, and emails** needed to be correct to avoid errors and stay compliant.
-   - **Approach:** Added **checks in both the frontend (React) and backend (Django)**, with clear error messages when something is wrong.
-   - **Lesson Learned / Impact:** Fewer mistakes, higher trust in the data, and reliable records for reporting and decision-making.
+### Data Validation & Integrity
+- **Challenge:** Important fields like **SSN, phone numbers, and emails** needed to be correct to avoid errors and stay compliant.
+- **Approach:**
+  - Frontend: Inline error messages and input masks for key fields.
+  - Backend: Validators raise exceptions for invalid or duplicate entries, caught by API responses.
+- **Lesson Learned / Impact:** Fewer mistakes, higher data trustworthiness, and reliable records for reporting and billing.
 
-6. **Automated Reporting & Snapshots**
-   - **Challenge:** Monthly reports (birthdays, absences, gifts, enrollments, members) used to be **manual and time-consuming**, which often led to mistakes.
-   - **Approach:** Used **GitHub Actions** to automatically generate PDFs every month, including all relevant data and formatting.
-   - **Lesson Learned / Impact:** Staff now get **accurate, timely reports automatically**, freeing up time for patient care and other priorities.
+### Automated Reporting & Snapshots
+- **Challenge:** Monthly reports (birthdays, absences, gifts, enrollments, members) used to be **manual and time-consuming**, which often led to mistakes.
+- **Approach:**
+  - Used **GitHub Actions** to trigger monthly jobs generating PDFs automatically.
+  - Backend scripts aggregate data, format it, and save to a secure location.
+  - Snapshots include automated totals, attendance summaries, and upcoming birthdays.
+- **Lesson Learned / Impact:** Staff now receive **accurate, timely reports** without manual effort, freeing time for patient care.
+
+### Data Consistency During Concurrent Updates
+- **Challenge:** Multiple staff members might attempt to update the same member record simultaneously, risking **race conditions**.
+- **Approach:**
+  - All member updates wrapped in **atomic database transactions**.
+  - Combined with **optimistic concurrency control** using `updated_at` or `version` fields to detect concurrent modifications.
+  - Users are prompted to reconcile changes if the record was updated by another staff member during their transaction.
+- **Lesson Learned / Impact:** Ensures **data integrity**, prevents accidental overwrites, and allows multiple staff to work simultaneously without conflicts.
 
 ---
 
+<a name="qa"></a>
 ## ❓ Q&A
 
 ### **Architecture & Design**
@@ -244,7 +281,9 @@ The platform is designed for **social adult day care office workers**, providing
 - **Real-time updates** so multiple staff see changes immediately without refreshing.
 - **Enhanced security features**, such as IP whitelisting or rate limiting.
 - **Improved error handling** with centralized logging and alerts, beyond simple on-screen notifications.
+- **Audit log scalability improvements** to efficiently store and query large volumes of user activity, including partitioned tables, indexing, and archiving older logs to cloud storage for performance.
 
 ---
 
+<a name="project-screenshots"></a>
 ## 📸 Project Screenshots
