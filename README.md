@@ -174,51 +174,51 @@ The platform is designed for **social adult day care office workers**, providing
 ## ❓ Q&A
 
 ### **Architecture & Design**
-**Q:** How is the system organized?
+**Q:** How is the system organized?  
 **A:** It uses a **modularly monolithic architecture**. All core logic is in a single Django project, but the app is divided into modules (e.g., members, reports, settings). This keeps the codebase maintainable without the overhead of microservices.
 
-**Q:** Why Django for the backend?
+**Q:** Why Django for the backend?  
 **A:** Django is **powerful and easy to start with**:
 - Built-in authentication, ORM, and admin tools.
 - **Django REST Framework** for secure API endpoints.
 - Strong ecosystem for **security features** (encrypted fields, JWT, role-based permissions).
 - Large community and documentation for fast development.
 
-**Q:** Why React for the frontend?
+**Q:** Why React for the frontend?  
 **A:** React provides:
 - **Responsive, component-based UI** for mobile and desktop.
 - **Dynamic rendering** for features like debounced search, drag-and-drop uploads, and modals.  
 - Access to libraries like **image cropping**.
 
-**Q:** Why PostgreSQL for the database?
+**Q:** Why PostgreSQL for the database?  
 **A:** PostgreSQL is **robust and beginner-friendly**:
 - Production-grade relational database with ACID compliance.
 - Handles **complex queries and aggregations** for reporting.
 - Built-in **JSON support** for hybrid structured/unstructured data.
 - Integrates seamlessly with Django ORM and Supabase.
 
-**Q:** Why not use a microservices architecture?
+**Q:** Why not use a microservices architecture?  
 **A:** Microservices add complexity and deployment overhead. The **modularly monolithic** approach maintains separation of concerns while keeping development and deployment simpler.
 
-**Q:** Why not a NoSQL database?
+**Q:** Why not a NoSQL database?  
 **A:** Patient records are **highly structured**, require **ACID compliance**, and need **complex queries** for reporting. PostgreSQL is best suited for these requirements.
 
 ---
 
 ### **Security & Privacy**
-**Q:** How is role-based access implemented?
+**Q:** How is role-based access implemented?  
 **A:** Via Django’s permissions system. **Organization admins** manage users, while **MLTC roles** only access their assigned data.
 
-**Q:** How does 2FA via email work?
+**Q:** How does 2FA via email work?  
 **A:** After login with email and password, a unique code is sent to the user’s email. The code must be entered to complete authentication.
 
-**Q:** What do audit logs track?
+**Q:** What do audit logs track?  
 **A:** Only **user-made changes** — edits, deletions, and creations of records — ensuring accountability without cluttering logs with system actions.
 
-**Q:** How is sensitive data protected?
+**Q:** How is sensitive data protected?  
 **A:** Using **encrypted model fields**, HTTPS, JWT authentication, and role-based access control.
 
-**Q:** How long do user sessions last, and what happens when they’re inactive? 
+**Q:** How long do user sessions last, and what happens when they’re inactive?  
 **A:** Sessions are handled via **JWT tokens**:
 - **Access tokens** expire after **15 minutes** of inactivity.
 - **Refresh tokens** last **7 days** and can automatically issue new access tokens without requiring the user to log in again.
@@ -227,52 +227,52 @@ The platform is designed for **social adult day care office workers**, providing
 ---
 
 ### **Frontend & UX**
-**Q:** How is the app mobile-friendly?
+**Q:** How is the app mobile-friendly?  
 **A:** Navigation and layouts are fully responsive and tested on desktop and mobile devices.
 
-**Q:** How are member updates handled?
+**Q:** How are member updates handled?  
 **A:** Each profile section opens in a **modal**, isolating changes to prevent accidental edits.
 
-**Q:** What UX improvements were implemented?
+**Q:** What UX improvements were implemented?  
 **A:** Debounced search, drag-and-drop file uploads, profile picture cropping, show/hide password toggle, protected routes, and mobile-friendly navigation.
 
-**Q:** How are errors handled?
+**Q:** How are errors handled?  
 **A:** Errors, such as failed uploads or invalid input, are displayed to the user via **alerts** that clearly explain what went wrong.
 
 ---
 
 ### **Backend & Data Management**
-**Q:** How are snapshots automated?
+**Q:** How are snapshots automated?  
 **A:** **GitHub Actions** triggers monthly jobs generating PDFs for birthdays, absences, gifts, enrollments, and member totals.
 
-**Q:** How are files handled?
+**Q:** How are files handled?  
 **A:** Files are uploaded via drag-and-drop, securely stored in **buckets**, and linked to the correct member profile. **Relative links** are used internally, and files are retrieved via **signed URLs** for secure access.
 
-**Q:** How is data validation enforced?
+**Q:** How is data validation enforced?  
 **A:** Both **frontend (React forms)** and **backend (Django validators)** enforce checks on fields like SSN and phone numbers.
 
 ---
 
 ### **Testing & CI/CD**
-**Q:** How is testing done?
+**Q:** How is testing done?  
 **A:** Using **pytest** for unit and integration tests. GitHub Actions automatically runs the test suite on every push.
 
-**Q:** How is deployment or automation handled?
+**Q:** How is deployment or automation handled?  
 **A:** GitHub Actions also manages **monthly snapshot generation**, ensuring automated reporting without manual intervention.
 
 ---
 
 ### **Performance & Scalability**
-**Q:** How does the system handle many members?
+**Q:** How does the system handle many members?  
 **A:** Efficient queries, indexed database fields, and pagination (up to 20 items per page) ensure fast retrieval.
 
-**Q:** How easy is it to extend the system?
+**Q:** How easy is it to extend the system?  
 **A:** The modularly monolithic design allows new features or modules to be added without affecting unrelated parts of the codebase.
 
 ---
 
 ### **Future**
-**Q:** What improvements or features could be added next?
+**Q:** What improvements or features could be added next?  
 **A:** Some potential enhancements for future versions include:
 - **Analytics dashboards** to visualize trends in member data, absences, enrollments, and other metrics.
 - **Role-specific notifications** for things like upcoming birthdays, expiring authorizations, or important alerts.
