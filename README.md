@@ -282,6 +282,7 @@ The platform is designed for **social adult day care office workers**, providing
 - **Enhanced security features**, such as IP whitelisting or rate limiting.
 - **Improved error handling** with centralized logging and alerts, beyond simple on-screen notifications.
 - **Audit log scalability improvements** to efficiently store and query large volumes of user activity, including partitioned tables, indexing, and archiving older logs to cloud storage for performance.
+- **Multi-tenant support** to allow the platform to securely host multiple organizations while keeping their data isolated, enabling expansion to multiple adult day care centers without deploying separate instances.
 
 ---
 
