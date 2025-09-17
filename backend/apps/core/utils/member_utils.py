@@ -37,16 +37,20 @@ def getMemberList(request):
     members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
     mltc_filter = request.GET.get('filter')
-    if mltc_filter:
-        normalized = mltc_filter.lower()
-        if normalized == "unknown":
-            members = members.filter(active_auth__isnull=True)
-        elif normalized == "inactive":
-            members = members.filter(active=False)
-        else:
-            members = members.filter(active_auth__mltc__name=mltc_filter)
+
+    if mltc_filter and mltc_filter.lower() == "inactive":
+        members = members.filter(active=False)
     else:
-        members = members.filter(active_auth__isnull=False)
+        members = members.filter(active=True)
+
+        if mltc_filter:
+            normalized = mltc_filter.lower()
+            if normalized == "unknown":
+                members = members.filter(active_auth__isnull=True)
+            else:
+                members = members.filter(active_auth__mltc__name=mltc_filter)
+        else:
+            members = members.filter(active_auth__isnull=False)
 
     members = members.order_by('sadc_member_id')
     unpaginated = request.GET.get('unpaginated', 'false').lower() == 'true'

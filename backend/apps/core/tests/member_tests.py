@@ -2,6 +2,7 @@ import io
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from datetime import date, timedelta
 from rest_framework import status
 from backend.apps.core.models.member_model import Member
 from unittest.mock import patch
@@ -29,8 +30,8 @@ from unittest.mock import patch
         # 5. Regular can get from member with no active authorization
         ("api_client_regular", "mltc_allowed", False, True, 2),
 
-        # 6. Regular can get from inactive member
-        ("api_client_regular", "mltc_allowed", False, True, 3),
+        # 6. Regular can not get from inactive member (unless inactive=True)
+        ("api_client_regular", "mltc_allowed", False, False, 3),
     ]
 )
 def test_member_list(
@@ -52,15 +53,24 @@ def test_member_list(
         member = members_setup["members"][member_index]
 
     url = reverse("members")
-    response = client.get(url)
+    mltc_filter = getattr(member.active_auth.mltc, "name", None) if member.active_auth else None
+    params = {}
+    if member.active_auth is None:
+        params["filter"] = "unknown"
+    elif not member.active:
+        params["filter"] = "inactive"
+    elif member.active_auth.mltc:
+        params["filter"] = member.active_auth.mltc.name
+
+    response = client.get(url, params)
     assert response.status_code == status.HTTP_200_OK
 
-    members = response.data
+    members_data = response.data.get("results", response.data)
 
     if should_see:
-        assert any(m["id"] == member.id for m in members)
+        assert any(m["id"] == member.id for m in members_data)
     else:
-        assert all(m["id"] != member.id for m in members)
+        assert all(m["id"] != member.id for m in members_data)
 
 # ==============================
 # Member Detail Tests
@@ -643,6 +653,103 @@ def test_member_profile(
             assert response.data["info"]["id"] == member.id
     else:
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+# ==============================
+# Member Filtering Tests
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "user_type,filter_value,expected_member_indexes",
+    [
+        # Admin user tests
+        ("admin", "", [0, 1]),
+        ("admin", None, [0, 1]),
+        ("admin", "unknown", [2]),
+        ("admin", "inactive", [3]), 
+        ("admin", "Allowed MLTC", [0]),
+        ("admin", "Denied MLTC", [1]),
+        ("admin", "invalid", []),
+
+        # Regular user tests
+        ("regular", "", [0]),
+        ("regular", None, [0]),
+        ("regular", "unknown", [2]),
+        ("regular", "inactive", [3]),
+        ("regular", "Allowed MLTC", [0]),
+        ("regular", "Denied MLTC", []),
+        ("regular", "invalid", []),
+    ]
+)
+def test_member_filter(
+    api_client_admin,
+    api_client_regular,
+    members_setup,
+    user_type,
+    filter_value,
+    expected_member_indexes
+):
+    members = members_setup["members"]
+    base_url = reverse("members")
+    url = f"{base_url}?filter={filter_value}" if filter_value is not None else base_url
+
+    client = api_client_admin if user_type == "admin" else api_client_regular
+    resp = client.get(url)
+    assert resp.status_code == status.HTTP_200_OK
+
+    returned_ids = [m["id"] for m in resp.data.get("results", resp.data)]
+    expected_ids = [members[i].id for i in expected_member_indexes]
+
+    assert set(returned_ids) == set(expected_ids)
+
+# ==============================
+# Member Pagination Tests
+# ==============================
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "total_members,page,expected_status,expected_count,next_exists",
+    [
+        # Multiple pages
+        (25, 1, status.HTTP_200_OK, 20, True),   # first page has 20 items
+        (25, 2, status.HTTP_200_OK, 5, False),   # second page has 5 items
+        # Requesting page beyond last
+        (5, 2, status.HTTP_404_NOT_FOUND, 0, False),
+    ]
+)
+def test_member_pagination(
+    api_client_regular,
+    org_setup,
+    total_members,
+    page,
+    expected_status,
+    expected_count,
+    next_exists
+):
+    sadc = org_setup["sadc"]
+    Member.objects.all().delete()
+
+    # Create members WITHOUT active authorization
+    for i in range(total_members):
+        Member.objects.create(
+            sadc=sadc,
+            sadc_member_id=100 + i,
+            first_name=f"Member{i}",
+            last_name="Test",
+            birth_date=date(1990, 1, 1),
+        )
+
+    url = reverse("members") + "?filter=unknown&page=" + str(page)
+    resp = api_client_regular.get(url)
+
+    assert resp.status_code == expected_status
+    if expected_status == status.HTTP_200_OK:
+        assert len(resp.data["results"]) == expected_count
+        if next_exists:
+            assert resp.data["next"] is not None
+        else:
+            assert resp.data["next"] is None
 
 # ==============================
 # Member Deleted List Tests
