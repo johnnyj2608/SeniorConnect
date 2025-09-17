@@ -27,7 +27,7 @@ const MemberHeader = ({ navigate, handleOpenAttendance }) => {
             />
           </div>
 
-          <div className="filter-option">
+          <div className="filter-option large">
             <label>{t('members.search_members')}</label>
             <SearchMembers
               value={searchQuery}
