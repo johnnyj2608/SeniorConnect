@@ -12,16 +12,14 @@ const MemberAuthCard = ({ id, data, onEdit }) => {
     const { t } = useTranslation();
     const auth = data || {};
 
-    const handleEdit = async () => {
-        try {
-            const response = await fetchWithRefresh(`/core/auths/member/${id}`);
-            if (!response.ok) return;
-
-            const auths = await response.json();
-            onEdit('authorizations', auths);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleEdit = () => {
+        onEdit('authorizations', {
+            fetchData: async () => {
+                const response = await fetchWithRefresh(`/core/auths/member/${id}`);
+                if (!response.ok) return {};
+                return await response.json();
+            }
+        });
     };
 
     return (

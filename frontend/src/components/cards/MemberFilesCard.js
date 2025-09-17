@@ -8,7 +8,7 @@ const MemberFilesCard = ({ data, onEdit }) => {
     const files = data || [];
 
     const handleEdit = () => {
-        onEdit('files', files);
+        onEdit('files', { data: files });
     };
 
     return (

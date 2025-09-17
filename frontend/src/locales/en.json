@@ -142,7 +142,8 @@
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",
         "all_mltcs": "All MLTCs",
-        "no_members": "No members added to queue"
+        "no_members": "No members added to queue",
+        "unknown": "Unknown"
     },
     "member": {
         "confirm_update": "Are you sure you want to {{action}} this member?",

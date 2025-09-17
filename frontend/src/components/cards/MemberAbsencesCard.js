@@ -10,7 +10,7 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
 	const absences = data || [];
 
 	const handleEdit = () => {
-		onEdit('absences', absences);
+		onEdit('absences', { data: absences });
 	};
 
 	const today = new Date();

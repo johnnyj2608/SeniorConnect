@@ -8,7 +8,7 @@ const MemberContactsCard = ({ data, onEdit }) => {
     const contacts = data || [];
 
     const handleEdit = () => {
-        onEdit('contacts', contacts);
+        onEdit('contacts', { data: contacts });
     };
 
     return (

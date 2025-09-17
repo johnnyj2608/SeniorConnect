@@ -67,22 +67,25 @@ const MemberPage = () => {
   );
 
   const handleModalOpen = useCallback(
-    (type, data) => {
-      openModal(type, { id, data, setData: setMember });
+    (type, options) => {
+        openModal({
+            type,
+            data: options?.data ? { id, ...options.data, setData: setMember } : null,
+            fetchData: options?.fetchData
+        });
     },
     [id, openModal]
   );
 
-  const handleOpenAttendance = async () => {
-    try {
-      const response = await fetchWithRefresh('/core/members/attendance');
-      if (!response.ok) return;
-      const data = await response.json();
-
-      openModal('attendance', { data });
-    } catch (err) {
-      console.error(err);
-    }
+  const handleOpenAttendance = () => {
+    openModal({
+      type: 'attendance',
+      fetchData: async () => {
+        const response = await fetchWithRefresh('/core/members/attendance');
+        if (!response.ok) throw new Error('Failed fetch');
+        return await response.json();
+      }
+    });
   };
 
   return (

@@ -9,27 +9,33 @@ const MemberGiftedCard = ({ id, data, onEdit }) => {
     const { t } = useTranslation();
     const gifts = data || [];
 
-    const handleEdit = async () => {
-        try {
-            const response = await fetchWithRefresh(`/core/gifteds/member/${id}/`);
-            if (!response.ok) return;
-            const giftedData = await response.json();
+    const handleEdit = () => {
+        onEdit({
+            type: 'gifteds',
+            fetchData: async () => {
+                try {
+                    const response = await fetchWithRefresh(`/core/gifteds/member/${id}/`);
+                    if (!response.ok) return [];
 
-            const normalizedGifts = gifts.map(gift => ({
-                ...gift,
-                id: 'new',
-                gift_id: gift.gift_id,
-                name: gift.name,
-                member: id,
-                received: false,
-                note: ''
-            }));
+                    const giftedData = await response.json();
 
-            const updatedGifts = [...normalizedGifts, ...giftedData];
-            onEdit('gifteds', updatedGifts);
-        } catch (error) {
-            console.error(error);
-        }
+                    const normalizedGifts = gifts.map(gift => ({
+                        ...gift,
+                        id: 'new',
+                        gift_id: gift.gift_id,
+                        name: gift.name,
+                        member: id,
+                        received: false,
+                        note: ''
+                    }));
+
+                    return [...normalizedGifts, ...giftedData];
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            }
+        });
     };
 
     return (

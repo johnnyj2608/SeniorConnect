@@ -10,7 +10,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
 	const info = data || [];
 
 	const handleEdit = () => {
-		onEdit('info', info);
+		onEdit('info', { data: info });
 	};
 
 	return (
