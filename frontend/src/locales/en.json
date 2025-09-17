@@ -2,7 +2,7 @@
     "general": {
         "home": "Home",
         "members": "Members",
-        "reports": "Reports",
+        "registry": "Registry",
         "settings": "Settings",
         "select_an_option": "Select an option",
         "result": "Result",
@@ -114,7 +114,7 @@
         "enrollments": "Enrollments",
         "gifts": "Gifts",
         "month_snapshot_ready": "{{month}} snapshot is ready to view",
-        "see_archived": "See archived snapshots in reports"
+        "see_archived": "See archived snapshots in registry"
     },
     "home": {
         "welcome": "Welcome, {{name}}",
@@ -245,8 +245,8 @@
             "modal_tooltip": "Create new gifts in settings"
         }
     },
-    "reports": {
-        "report_type": "Report Type",
+    "registry": {
+        "registry_type": "Registry Type",
         "status_filter": "Status Filter",
         "absences": {
             "label": "Absences",

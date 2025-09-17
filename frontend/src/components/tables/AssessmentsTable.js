@@ -3,24 +3,24 @@ import { Link } from 'react-router-dom';
 import { formatDate, formatTime } from '../../utils/formatUtils';
 import NameDisplay from '../layout/NameDisplay';
 
-const ReportAssesmentsTable = ({ report }) => {
+const AssesmentsTable = ({ registry }) => {
     const { t } = useTranslation()
 
     return (
-        <table className="report-table">
+        <table className="registry-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>{t('reports.table.member')}</th>
-                <th style={{ width: '20%' }}>{t('reports.table.user')}</th>
-                <th style={{ width: '25%' }}>{t('reports.table.start_date')}</th>
-                <th style={{ width: '25%' }}>{t('reports.table.time')}</th>
+                <th style={{ width: '30%' }}>{t('registry.table.member')}</th>
+                <th style={{ width: '20%' }}>{t('registry.table.user')}</th>
+                <th style={{ width: '25%' }}>{t('registry.table.start_date')}</th>
+                <th style={{ width: '25%' }}>{t('registry.table.time')}</th>
             </tr>
         </thead>
         <tbody>
-            {report.map((entry) => (
+            {registry.map((entry) => (
             <tr key={entry.id}>
                 <td>
-                    <Link to={`/members/${entry.member}`} className="report-link">
+                    <Link to={`/members/${entry.member}`} className="registry-link">
                         <NameDisplay
                             sadcId={entry.sadc_member_id}
                             memberName={entry.member_name}
@@ -38,4 +38,4 @@ const ReportAssesmentsTable = ({ report }) => {
     );
 };
 
-export default ReportAssesmentsTable;
+export default AssesmentsTable;

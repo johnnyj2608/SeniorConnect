@@ -1622,69 +1622,69 @@ body.modal-open {
 }
 
 /* --------------
-  Reports
+  Registry
 -------------- */
 
-.reports-content {
+.registry-content {
   overflow-x: auto;
   overscroll-behavior: auto;
 }
 
-.reports-content::-webkit-scrollbar {
+.registry-content::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.reports-content::-webkit-scrollbar-thumb {
+.registry-content::-webkit-scrollbar-thumb {
   background-color: var(--color-border);
   border-radius: 4px;
 }
 
-.report-table {
+.registry-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.report-table tr {
+.registry-table tr {
   font-size: 22px;
   border-bottom: 1px solid var(--color-border);
 }
 
-.report-table th, .report-table td {
+.registry-table th, .registry-table td {
   padding: 15px;
   text-align: left;
   background-color: var(--color-content);
 }
 
-.report-table th {
+.registry-table th {
   padding-top: 0;
   background-color: var(--color-background);
   white-space: nowrap;
 }
 
-.report-table tbody {
+.registry-table tbody {
   border: 1px solid var(--color-border);
 }
 
-.report-link:hover {
+.registry-link:hover {
   color: var(--color-main);
   text-decoration: underline;
 }
 
-.report-dropdown {
+.registry-dropdown {
   display: flex;
   gap: 10px;
 }
 
-.report-table tr.expanded {
+.registry-table tr.expanded {
   border-bottom: none;
 }
 
-.report-table tr.expanded td {
+.registry-table tr.expanded td {
   padding-bottom: 5px;
 }
 
-.report-table tr.expanded + tr td {
+.registry-table tr.expanded + tr td {
   padding-top: 5px;
 }
 

@@ -15,7 +15,7 @@ import fetchWithRefresh from '../utils/fetchWithRefresh';
 import AddButton from '../components/buttons/AddButton';
 import MemberHeader from '../components/layout/MemberHeader';
 
-const MembersPage = () => {
+const MemberPage = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -133,4 +133,4 @@ const MembersPage = () => {
   );
 };
 
-export default MembersPage;
+export default MemberPage;

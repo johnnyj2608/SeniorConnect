@@ -71,7 +71,7 @@ const HomeSnapshotCard = () => {
         )}
         <div 
           className="home-item"
-          onClick={() => navigate('/reports?type=snapshots')}
+          onClick={() => navigate('/registry?type=snapshots')}
         >
           {t('snapshots.see_archived')}
         </div>

@@ -4,14 +4,14 @@ import { AuthContext } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
-import ReportAbsencesTable from '../components/tables/ReportAbsencesTable';
-import ReportAssessmentsTable from '../components/tables/ReportAssessmentsTable';
-import ReportAuditsTable from '../components/tables/ReportAuditsTable';
-import ReportEnrollmentsTable from '../components/tables/ReportEnrollmentsTable';
-import ReportSnapshotsTable from '../components/tables/ReportSnapshotsTable';
-import useFilteredReports from '../hooks/useFilteredReports';
+import AbsencesTable from '../components/tables/AbsencesTable';
+import AssessmentsTable from '../components/tables/AssessmentsTable';
+import AuditsTable from '../components/tables/AuditsTable';
+import EnrollmentsTable from '../components/tables/EnrollmentsTable';
+import SnapshotsTable from '../components/tables/SnapshotsTable';
+import useFilteredRegistry from '../hooks/useFilteredRegistry';
 
-const reportFilters = {
+const registryFilters = {
     absences: [
         'ongoing',
         'upcoming',
@@ -39,42 +39,42 @@ const reportFilters = {
     ],
 };
 
-const ReportsPage = () => {
+const RegistryPage = () => {
     const { t } = useTranslation();
     const { user } = useContext(AuthContext);
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const typeQueryParam = queryParams.get('type');
 
-    const [reportType, setReportType] = useState(typeQueryParam || 'absences');
-    const [reportFilter, setReportFilter] = useState('');
+    const [registryType, setRegistryType] = useState(typeQueryParam || 'absences');
+    const [registryFilter, setRegistryFilter] = useState('');
 
     const {
-        report,
+        registry,
         currentPage,
         totalPages,
         setCurrentPage,
-        fetchReport
-    } = useFilteredReports(reportType, reportFilter);
+        fetchRegistry
+    } = useFilteredRegistry(registryType, registryFilter);
 
-    const getReportContent = () => {
-        switch (reportType) {
+    const getRegistryContent = () => {
+        switch (registryType) {
             case 'absences':
-                return <ReportAbsencesTable key={currentPage} report={report} />;
+                return <AbsencesTable key={currentPage} registry={registry} />;
             case 'enrollments':
-                return <ReportEnrollmentsTable key={currentPage} report={report} />;
+                return <EnrollmentsTable key={currentPage} registry={registry} />;
             case 'audit_log':
-                return <ReportAuditsTable key={currentPage} report={report} />;
+                return <AuditsTable key={currentPage} registry={registry} />;
             case 'assessments':
-                return <ReportAssessmentsTable key={currentPage} report={report} />;
+                return <AssessmentsTable key={currentPage} registry={registry} />;
             case 'snapshots':
-                return <ReportSnapshotsTable key={currentPage} report={report} />;
+                return <SnapshotsTable key={currentPage} registry={registry} />;
             default:
                 return null;
         }
     };
 
-    const reportTypes = [
+    const registryTypes = [
         'absences', 
         'assessments',
         'audit_log', 
@@ -82,49 +82,49 @@ const ReportsPage = () => {
     ];
 
     if (user?.is_org_admin || user?.view_snapshots) {
-        reportTypes.push('snapshots');
+        registryTypes.push('snapshots');
     }
 
     useEffect(() => {
-        setReportFilter('');
-    }, [reportType]);
+        setRegistryFilter('');
+    }, [registryType]);
 
     return (
         <>
             <div className="page-header">
                 <div className="page-title-row">
-                    <h2 className="page-title">&#9782; {t('general.reports')}</h2>
-                    <SwitchButton onClick={fetchReport} />
+                    <h2 className="page-title">&#9782; {t('general.registry')}</h2>
+                    <SwitchButton onClick={fetchRegistry} />
                 </div>
                 <div className="filter-row">
                     <div className="filter-content">
                         <div className="filter-option">
-                            <label>{t('reports.report_type')}</label>
+                            <label>{t('registry.registry_type')}</label>
                             <select
                                 required
-                                value={reportType}
-                                onChange={(e) => setReportType(e.target.value)}
+                                value={registryType}
+                                onChange={(e) => setRegistryType(e.target.value)}
                             >
                                 <option value="">{t('general.select_an_option')}</option>
-                                {reportTypes.map((type) => (
+                                {registryTypes.map((type) => (
                                     <option key={type} value={type}>
-                                        {t(`reports.${type}.label`)}
+                                        {t(`registry.${type}.label`)}
                                     </option>
                                 ))}
                             </select>
                         </div>
 
                         <div className="filter-option">
-                            <label>{t('reports.status_filter')}</label>
+                            <label>{t('registry.status_filter')}</label>
                             <select
                                 required
-                                value={reportFilter}
-                                onChange={(e) => setReportFilter(e.target.value)}
+                                value={registryFilter}
+                                onChange={(e) => setRegistryFilter(e.target.value)}
                             >
                                 <option value="">{t('general.select_an_option')}</option>
-                                {reportFilters[reportType]?.map((filterOption) => (
+                                {registryFilters[registryType]?.map((filterOption) => (
                                     <option key={filterOption} value={filterOption}>
-                                        {t(`reports.${reportType}.${filterOption}`)}
+                                        {t(`registry.${registryType}.${filterOption}`)}
                                     </option>
                                 ))}
                             </select>
@@ -137,16 +137,16 @@ const ReportsPage = () => {
                         />
                     </div>
                     <p className="filter-text">
-                        {report.length} {report.length === 1 ? t('general.result') : t('general.results')}
+                        {registry.length} {registry.length === 1 ? t('general.result') : t('general.results')}
                     </p>
                 </div>
             </div>
 
-            <div className="reports-content content-padding">
-                {report.length > 0 && getReportContent()}
+            <div className="registry-content content-padding">
+                {registry.length > 0 && getRegistryContent()}
             </div>
         </>
     );
 };
 
-export default ReportsPage;
+export default RegistryPage;

@@ -7,11 +7,11 @@ const colorBoolean = (status, t) => {
 const colorAbsence = (status, t) => {
     switch (status) {
         case 'ongoing':
-            return <span className="green">{t('reports.absences.ongoing')}</span>;
+            return <span className="green">{t('registry.absences.ongoing')}</span>;
         case 'completed':
-            return <span>{t('reports.absences.completed')}</span>;
+            return <span>{t('registry.absences.completed')}</span>;
         case 'upcoming':
-            return <span className="yellow">{t('reports.absences.upcoming')}</span>;
+            return <span className="yellow">{t('registry.absences.upcoming')}</span>;
         default:
             return null;
     }
@@ -22,19 +22,19 @@ const colorEnrollment = (status, old_mltc, new_mltc, t) => {
         case 'enrollment':
             return (
                 <>
-                    <span className="green">{t('reports.enrollments.enrollment')}:</span> {new_mltc}
+                    <span className="green">{t('registry.enrollments.enrollment')}:</span> {new_mltc}
                 </>
             );
         case 'disenrollment':
             return (
                 <>
-                    <span className="red">{t('reports.enrollments.disenrollment')}:</span> {old_mltc}
+                    <span className="red">{t('registry.enrollments.disenrollment')}:</span> {old_mltc}
                 </>
             );
         case 'transfer':
             return (
                 <>
-                    <span className="yellow">{t('reports.enrollments.transfer')}:</span> {old_mltc} → {new_mltc}
+                    <span className="yellow">{t('registry.enrollments.transfer')}:</span> {old_mltc} → {new_mltc}
                 </>
             );
         default:
@@ -45,11 +45,11 @@ const colorEnrollment = (status, old_mltc, new_mltc, t) => {
 const colorAudit = (status, t) => {
     switch (status) {
         case 'create':
-            return <span className="green">{t('reports.audit_log.create')}</span>;
+            return <span className="green">{t('registry.audit_log.create')}</span>;
         case 'delete':
-            return <span className="red">{t('reports.audit_log.delete')}</span>;
+            return <span className="red">{t('registry.audit_log.delete')}</span>;
         case 'update':
-            return <span className="yellow">{t('reports.audit_log.update')}</span>;
+            return <span className="yellow">{t('registry.audit_log.update')}</span>;
         default:
             return null;
     }

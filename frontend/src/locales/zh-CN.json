@@ -2,7 +2,7 @@
     "general": {
         "home": "首页",
         "members": "成员",
-        "reports": "报告",
+        "registry": "报告",
         "settings": "设置",
         "select_an_option": "请选择一个选项",
         "result": "结果",
@@ -245,8 +245,8 @@
             "modal_tooltip": "在设置中创建新的礼品"
         }
     },
-    "reports": {
-        "report_type": "报告类型",
+    "registry": {
+        "registry_type": "报告类型",
         "status_filter": "状态筛选",
         "absences": {
             "label": "缺勤",

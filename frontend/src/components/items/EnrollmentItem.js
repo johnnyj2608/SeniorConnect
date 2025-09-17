@@ -33,7 +33,7 @@ const AuditItem = ({ enrollment }) => {
           <p>— {formatDate(enrollment.change_date)}</p>
         </span>
         <span className="home-item-secondary">
-          <p>{t(`reports.enrollments.${enrollment.change_type}`)}</p> 
+          <p>{t(`registry.enrollments.${enrollment.change_type}`)}</p> 
           <p>{renderEnrollmentMessage(enrollment.old_mltc, enrollment.new_mltc)}</p>
         </span>
       </Link>

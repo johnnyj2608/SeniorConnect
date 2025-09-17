@@ -760,7 +760,7 @@ def test_member_attendance_list(
         assert all(m["id"] != member.id for m in flat_members)
 
 # ==============================
-# Member Reports Tests
+# Member Registry Tests
 # ==============================
 
 @pytest.mark.django_db

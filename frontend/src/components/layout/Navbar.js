@@ -6,7 +6,7 @@ import { ReactComponent as MenuIcon } from '../../assets/menu.svg';
 const navLinks = [
   { path: '/', label: 'home' },
   { path: '/members', label: 'members' },
-  { path: '/reports', label: 'reports' },
+  { path: '/registry', label: 'registry' },
   { path: '/settings', label: 'settings' },
 ];
 
