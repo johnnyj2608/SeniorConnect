@@ -9,7 +9,7 @@
    - [Login Page](#login-page)
    - [Home Page](#home-page)
    - [Member Page](#member-page)
-   - [Report Page](#report-page)
+   - [Registry Page](#registry-page)
    - [Billing Page](#billing-page)
    - [Settings Page](#settings-page)
 4. [Challenges & Lessons Learned](#challenges--lessons-learned)
@@ -91,7 +91,7 @@ The platform is designed for **social adult day care office workers**, providing
 - **Print attendance sheets** directly from the profile page.
 - **Data validation** on key fields such as SSN and phone number.
 
-### **Report Page**
+### **Registry Page**
 - View **absences, enrollments, audits, and snapshots** in tabular form.
 - Supports **pagination up to 20 items per page**.
 
@@ -175,7 +175,7 @@ The platform is designed for **social adult day care office workers**, providing
 
 ### **Architecture & Design**
 **Q:** How is the system organized?  
-**A:** It uses a **modularly monolithic architecture**. All core logic is in a single Django project, but the app is divided into modules (e.g., members, reports, settings). This keeps the codebase maintainable without the overhead of microservices.
+**A:** It uses a **modularly monolithic architecture**. All core logic is in a single Django project, but the app is divided into modules (e.g., members, analytics, settings). This keeps the codebase maintainable without the overhead of microservices.
 
 **Q:** Why Django for the backend?  
 **A:** Django is **powerful and easy to start with**:
@@ -193,7 +193,7 @@ The platform is designed for **social adult day care office workers**, providing
 **Q:** Why PostgreSQL for the database?  
 **A:** PostgreSQL is **robust and beginner-friendly**:
 - Production-grade relational database with ACID compliance.
-- Handles **complex queries and aggregations** for reporting.
+- Handles **complex queries and aggregations** for analytics.
 - Built-in **JSON support** for hybrid structured/unstructured data.
 - Integrates seamlessly with Django ORM and Supabase.
 
