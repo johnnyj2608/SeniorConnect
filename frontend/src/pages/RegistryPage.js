@@ -11,14 +11,9 @@ import AuditsTable from '../components/tables/AuditsTable';
 import EnrollmentsTable from '../components/tables/EnrollmentsTable';
 import SnapshotsTable from '../components/tables/SnapshotsTable';
 import useFilteredRegistry from '../hooks/useFilteredRegistry';
+import MltcDropdown from '../components/inputs/MltcFilter';
 
 const registryFilters = {
-    members: [
-        'mltc1',
-        'mltc2',
-        'inactive',
-        'no_mltc'
-    ],
     absences: [
         'ongoing',
         'upcoming',
@@ -32,7 +27,7 @@ const registryFilters = {
         'transfer',
         'disenrollment'
     ],
-    'audit_log': [
+    audit_log: [
         'create', 
         'update', 
         'delete'
@@ -125,18 +120,25 @@ const RegistryPage = () => {
 
                         <div className="filter-option">
                             <label>{t('registry.status_filter')}</label>
-                            <select
-                                required
-                                value={registryFilter}
-                                onChange={(e) => setRegistryFilter(e.target.value)}
-                            >
-                                <option value="">{t('general.select_an_option')}</option>
-                                {registryFilters[registryType]?.map((filterOption) => (
-                                    <option key={filterOption} value={filterOption}>
-                                        {t(`registry.${registryType}.${filterOption}`)}
-                                    </option>
-                                ))}
-                            </select>
+                            {registryType === 'members' ? (
+                                <MltcDropdown
+                                    value={registryFilter}
+                                    onChange={setRegistryFilter}
+                                />
+                            ) : (
+                                <select
+                                    required
+                                    value={registryFilter}
+                                    onChange={(e) => setRegistryFilter(e.target.value)}
+                                >
+                                    <option value="">{t('general.select_an_option')}</option>
+                                    {registryFilters[registryType]?.map((filterOption) => (
+                                        <option key={filterOption} value={filterOption}>
+                                            {t(`registry.${registryType}.${filterOption}`)}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
 
                         <PaginationButtons

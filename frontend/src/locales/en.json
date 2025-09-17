@@ -137,7 +137,7 @@
     },
     "members": {
         "mltc_filter": "MLTC Filter",
-        "unknown": "No MLTC",
+        "no_mltc": "No MLTC",
         "search_members": "Search Members",
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",

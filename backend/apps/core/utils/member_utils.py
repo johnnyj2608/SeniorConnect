@@ -36,16 +36,17 @@ import csv
 def getMemberList(request):
     members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
-    mltc_filter = request.GET.get('mltc')
+    mltc_filter = request.GET.get('filter')
     if mltc_filter:
-        if mltc_filter.lower() == "unknown":
+        normalized = mltc_filter.lower()
+        if normalized == "unknown":
             members = members.filter(active_auth__isnull=True)
+        elif normalized == "inactive":
+            members = members.filter(active=False)
         else:
             members = members.filter(active_auth__mltc__name=mltc_filter)
-
-    active_filter = request.GET.get('active')
-    if active_filter is not None:
-        members = members.filter(active=(active_filter.lower() == 'true'))
+    else:
+        members = members.filter(active_auth__isnull=False)
 
     members = members.order_by('sadc_member_id')
     unpaginated = request.GET.get('unpaginated', 'false').lower() == 'true'
