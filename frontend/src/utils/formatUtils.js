@@ -75,7 +75,7 @@ const formatSchedule = (schedule, digits = false) => {
       .map(day => dayMap[day] || day);
     return digits ? formattedDays.join(".") : formattedDays.join(", ");
   }
-  return "N/A";
+  return "";
 }
 
 const sortSchedule = (schedule) => {

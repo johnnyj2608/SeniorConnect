@@ -39,7 +39,7 @@ useEffect(() => {
                   {option.name}
                 </option>
               ))}
-              <option value="unknown">{t('members.unknown')}</option>
+              <option value="unknown">{t('members.no_mltc')}</option>
             </select>
           </div>
 

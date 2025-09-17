@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
+import MembersTable from '../components/tables/MembersTable';
 import AbsencesTable from '../components/tables/AbsencesTable';
 import AssessmentsTable from '../components/tables/AssessmentsTable';
 import AuditsTable from '../components/tables/AuditsTable';
@@ -12,6 +13,12 @@ import SnapshotsTable from '../components/tables/SnapshotsTable';
 import useFilteredRegistry from '../hooks/useFilteredRegistry';
 
 const registryFilters = {
+    members: [
+        'mltc1',
+        'mltc2',
+        'inactive',
+        'no_mltc'
+    ],
     absences: [
         'ongoing',
         'upcoming',
@@ -46,7 +53,7 @@ const RegistryPage = () => {
     const queryParams = new URLSearchParams(location.search);
     const typeQueryParam = queryParams.get('type');
 
-    const [registryType, setRegistryType] = useState(typeQueryParam || 'absences');
+    const [registryType, setRegistryType] = useState(typeQueryParam || 'members');
     const [registryFilter, setRegistryFilter] = useState('');
 
     const {
@@ -59,6 +66,8 @@ const RegistryPage = () => {
 
     const getRegistryContent = () => {
         switch (registryType) {
+            case 'members':
+                return <MembersTable key={currentPage} registry={registry} />;
             case 'absences':
                 return <AbsencesTable key={currentPage} registry={registry} />;
             case 'enrollments':
@@ -75,6 +84,7 @@ const RegistryPage = () => {
     };
 
     const registryTypes = [
+        'members', 
         'absences', 
         'assessments',
         'audit_log', 
@@ -105,7 +115,6 @@ const RegistryPage = () => {
                                 value={registryType}
                                 onChange={(e) => setRegistryType(e.target.value)}
                             >
-                                <option value="">{t('general.select_an_option')}</option>
                                 {registryTypes.map((type) => (
                                     <option key={type} value={type}>
                                         {t(`registry.${type}.label`)}

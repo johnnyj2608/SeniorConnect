@@ -1,7 +1,7 @@
 {
     "general": {
         "home": "首页",
-        "members": "成员",
+        "members": "会员",
         "registry": "报告",
         "settings": "设置",
         "select_an_option": "请选择一个选项",
@@ -91,7 +91,7 @@
     },
     "model": {
         "mltc": "老人中心保险",
-        "member": "成员",
+        "member": "会员",
         "authorization": "授权",
         "absence": "缺勤",
         "contact": "联系人",
@@ -137,7 +137,7 @@
     },
     "members": {
         "mltc_filter": "老人中心保险",
-        "unknown": "未知",
+        "unknown": "没有保险",
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
@@ -248,6 +248,9 @@
     "registry": {
         "registry_type": "报告类型",
         "status_filter": "状态筛选",
+        "members": {
+            "label": "会员"
+        },
         "absences": {
             "label": "缺勤",
             "ongoing": "进行中",
@@ -279,6 +282,10 @@
         },
         "table": {
             "member": "成员",
+            "birth_date": "出生日期",
+            "mltc": "MLTC",
+            "schedule": "日程",
+            "days": "天数",
             "status": "状态",
             "start_date": "开始日期",
             "end_date": "结束日期",

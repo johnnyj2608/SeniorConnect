@@ -137,7 +137,7 @@
     },
     "members": {
         "mltc_filter": "MLTC Filter",
-        "unknown": "Unknown",
+        "unknown": "No MLTC",
         "search_members": "Search Members",
         "search_id_or_name": "Search ID or Name",
         "inactive": "Inactive",
@@ -248,6 +248,9 @@
     "registry": {
         "registry_type": "Registry Type",
         "status_filter": "Status Filter",
+        "members": {
+            "label": "Members"
+        },
         "absences": {
             "label": "Absences",
             "ongoing": "Ongoing",
@@ -279,6 +282,10 @@
         },
         "table": {
             "member": "Member",
+            "birth_date": "DoB",
+            "mltc": "MLTC",
+            "schedule": "Schedule",
+            "days": "Days",
             "status": "Status",
             "start_date": "Start Date",
             "end_date": "End Date",

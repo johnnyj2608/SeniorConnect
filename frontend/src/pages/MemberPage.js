@@ -20,7 +20,7 @@ const MemberPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [memberData, setMemberData] = useState(null);
+  const [member, setMember] = useState(null);
   const {
     modalOpen,
     modalData,
@@ -31,20 +31,20 @@ const MemberPage = () => {
   const { 
     handleDelete, 
     handleStatus 
-  } = useMembers(id, setMemberData);
+  } = useMembers(id, setMember);
 
   useEffect(() => {
     if (!id) return;
     if (id === 'new') {
-      setMemberData(null);
-      openModal('info', { id, data: {}, setData: setMemberData });
+      setMember(null);
+      openModal('info', { id, data: {}, setData: setMember });
     } else {
       const fetchMemberData = async () => {
         try {
           const response = await fetchWithRefresh(`/core/members/${id}/profile/`);
           if (!response.ok) return;
           const data = await response.json();
-          setMemberData(data);
+          setMember(data);
         } catch (error) {
           console.error(error);
         }
@@ -68,7 +68,7 @@ const MemberPage = () => {
 
   const handleModalOpen = useCallback(
     (type, data) => {
-      openModal(type, { id, data, setData: setMemberData });
+      openModal(type, { id, data, setData: setMember });
     },
     [id, openModal]
   );
@@ -94,27 +94,27 @@ const MemberPage = () => {
       <div className="member content-padding">
         <div className="member-row">
           <MemberPhotoCard 
-            photo={memberData?.photo}
-            data={memberData?.info} 
+            photo={member?.photo}
+            data={member?.info} 
           />
         </div>
-        {memberData && (
+        {member && (
           <>
             <div className="member-row">
-              <MemberInfoCard data={memberData.info} onEdit={handleModalOpen} />
-              <MemberAuthCard id={id} data={memberData.auth} onEdit={handleModalOpen} />
+              <MemberInfoCard data={member.info} onEdit={handleModalOpen} />
+              <MemberAuthCard id={id} data={member.auth} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
-              <MemberContactsCard data={memberData.contacts} onEdit={handleModalOpen} />
-              <MemberAbsencesCard data={memberData.absences} onEdit={handleModalOpen} />
-              <MemberGiftedCard id={id} data={memberData.gifts} onEdit={handleModalOpen} />
+              <MemberContactsCard data={member.contacts} onEdit={handleModalOpen} />
+              <MemberAbsencesCard data={member.absences} onEdit={handleModalOpen} />
+              <MemberGiftedCard id={id} data={member.gifts} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
-              <MemberFilesCard data={memberData.files} onEdit={handleModalOpen} />
+              <MemberFilesCard data={member.files} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
               <button className="action-button" onClick={handleStatus}>
-                {memberData.info.active
+                {member.info.active
                   ? t('general.buttons.deactivate')
                   : t('general.buttons.activate')}
               </button>

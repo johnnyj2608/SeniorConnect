@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.db.models import Count, Q
+from rest_framework.pagination import PageNumberPagination
 from datetime import timedelta
 from django.http import HttpResponse
 from django.utils import timezone
@@ -47,9 +48,16 @@ def getMemberList(request):
         members = members.filter(active=(active_filter.lower() == 'true'))
 
     members = members.order_by('sadc_member_id')
-    serializer = MemberListSerializer(members, many=True)
+    unpaginated = request.GET.get('unpaginated', 'false').lower() == 'true'
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if unpaginated:
+        serializer = MemberListSerializer(members, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    paginator = PageNumberPagination()
+    result_page = paginator.paginate_queryset(members, request)
+    serializer = MemberListSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @member_access_pk
 def getMemberDetail(request, pk):

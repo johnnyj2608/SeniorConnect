@@ -12,7 +12,9 @@ const useFilteredRegistry = (registryType, registryFilter) => {
         let endpoint;
         let api = 'core';
 
-        if (registryType === 'absences') {
+        if (registryType === 'members') {
+            endpoint = 'members';
+        } else if (registryType === 'absences') {
             endpoint = 'absences';
         } else if (registryType === 'assessments') {
             endpoint = 'assessments';

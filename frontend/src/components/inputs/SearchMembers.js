@@ -17,6 +17,7 @@ const SearchMembers = ({ value, onChange, onSelect, showInactive, mltcFilter }) 
 
         if (mltcFilter) params.append('mltc', mltcFilter);
         if (!showInactive) params.append('active', 'true');
+        params.append('unpaginated', 'true');
 
         if ([...params].length > 0) {
           url += `?${params.toString()}`;
