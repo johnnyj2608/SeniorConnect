@@ -25,6 +25,7 @@
         "loading": "Loading",
         "buttons": {
             "save": "Save",
+            "saving": "Saving",
             "cancel": "Cancel",
             "delete": "Delete",
             "activate": "Activate",
@@ -164,6 +165,7 @@
             "language": "Language",
             "enrollment": "Enrollment",
             "active": "Active",
+            "deleted_at": "Deleted At",
             "no_info": "No information available"
         },
         "authorizations": {

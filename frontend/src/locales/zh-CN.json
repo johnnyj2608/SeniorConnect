@@ -25,6 +25,7 @@
         "loading": "加载中",
         "buttons": {
             "save": "保存",
+            "saving": "正在保存",
             "cancel": "取消",
             "delete": "删除",
             "activate": "激活",
@@ -164,6 +165,7 @@
             "language": "语言",
             "enrollment": "注册",
             "active": "活跃",
+            "deleted_at": "删除于",
             "no_info": "无可用信息"
         },
         "authorizations": {
