@@ -11,9 +11,8 @@ from ..core.models.authorization_model import Authorization
 from ..core.models.absence_model import Absence
 from ..core.models.file_model import File
 from ..core.models.gifted_model import Gifted
-from ..tenant.models.mltc_model import Mltc
 
-WHITELISTED_MODELS = (Member, Contact, Authorization, Mltc, Absence, File, Gifted)
+WHITELISTED_MODELS = (Member, Contact, Authorization, Absence, File, Gifted)
 
 def get_related_member(instance):
     if hasattr(instance, '_acting_member'):
