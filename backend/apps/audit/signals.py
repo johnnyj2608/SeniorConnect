@@ -48,36 +48,39 @@ def log_create_update(sender, instance, created, **kwargs):
     member_name = f"{member.last_name}, {member.first_name}" if member else None
     member_alt_name = member.alt_name if member and member.alt_name else None
 
+    action_type = AuditLog.CREATE if created else AuditLog.UPDATE
     changes = {}
+
     if not created:
         original = getattr(instance, '_original_values', {})
-        for field in instance._meta.fields:
-            field_name = field.name
-            if isinstance(field, DateTimeField) and (field.auto_now or field.auto_now_add):
-                continue
 
-            old_value = original.get(field_name)
-            new_value = getattr(instance, field_name)
+        deleted_at_old = original.get('deleted_at')
+        deleted_at_new = getattr(instance, 'deleted_at', None)
+        if deleted_at_old in [None, ''] and deleted_at_new not in [None, '']:
+            action_type = AuditLog.DELETE
+        else:
+            for field in instance._meta.fields:
+                field_name = field.name
+                if isinstance(field, DateTimeField) and (field.auto_now or field.auto_now_add):
+                    continue
 
-            if field.is_relation and hasattr(field, 'related_model'):
-                if old_value and hasattr(old_value, 'name'):
-                    old_value = old_value.name
-                elif old_value:
-                    old_value = str(old_value)
+                old_value = original.get(field_name)
+                new_value = getattr(instance, field_name)
 
-                if new_value and hasattr(new_value, 'name'):
-                    new_value = new_value.name
-                elif new_value:
-                    new_value = str(new_value)
+                if field.is_relation and hasattr(field, 'related_model'):
+                    old_value = getattr(old_value, 'name', str(old_value)) if old_value else old_value
+                    new_value = getattr(new_value, 'name', str(new_value)) if new_value else new_value
 
-            if old_value in [None, ''] and new_value in [None, '']:
-                continue
+                if old_value in [None, ''] and new_value in [None, '']:
+                    continue
 
-            if old_value != new_value:
-                changes[field_name] = {'old': old_value, 'new': new_value}
+                if old_value != new_value:
+                    changes[field_name] = {'old': old_value, 'new': new_value}
 
-        if sender == Authorization and changes.keys() == {'active'}:
-            return
+            if sender == Authorization and changes.keys() == {'active'}:
+                return
+            if not changes:
+                return
 
     AuditLog.objects.create(
         user_id=user_id,
@@ -88,8 +91,8 @@ def log_create_update(sender, instance, created, **kwargs):
         content_type=ContentType.objects.get_for_model(sender),
         object_id=instance.pk,
         object_name=str(instance),
-        action_type=AuditLog.CREATE if created else AuditLog.UPDATE,
-        changes=changes,
+        action_type=action_type,
+        changes=None if action_type == AuditLog.DELETE else changes,
     )
 
 @receiver(pre_delete)

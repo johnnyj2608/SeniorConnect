@@ -37,7 +37,7 @@ const AuditsTable = ({ registry }) => {
                     <Fragment key={entry.id}>
                         <tr className={isExpanded ? 'expanded' : ''}>
                             <td>
-                                <Link to={`/members/${entry.member}`} className="registry-link">
+                                <Link to={`/members/${entry.member_id}`} className="registry-link">
                                     <NameDisplay
                                         sadcId={entry.sadc_member_id}
                                         memberName={entry.member_name}
@@ -72,7 +72,7 @@ const AuditsTable = ({ registry }) => {
 
 const AuditsExpanded = ({ entry }) => {
     const { t } = useTranslation();
-  
+
     const baseKey = entry.model_name === 'member'
         ? 'info'
         : `${entry.model_name}s`;
@@ -93,19 +93,26 @@ const AuditsExpanded = ({ entry }) => {
                             const label = t(`member.${baseKey}.${field}`);
             
                             const formatChange = (val) => {
-                                if (!val) return '—';
-                            
-                                const isTimeString = (v) => /^\d{2}:\d{2}:\d{2}$/.test(v);
-                                const date = new Date(val);
+                                if (val === null || val === undefined) return '';
 
-                                if (!isNaN(date) && val.length === 10) return formatDate(date);
-                                if (isTimeString(val)) return formatTime(val); 
+                                const isTimeString = (v) => /^\d{2}:\d{2}:\d{2}$/.test(v);
+                                const dateOnly = typeof val === 'string' && val.includes('T')
+                                    ? val.split('T')[0]
+                                    : val;
+
+                                const date = new Date(dateOnly);
+
+                                if (!isNaN(date) && dateOnly.length === 10) return formatDate(date);
+                                if (isTimeString(val)) return formatTime(val);
                                 return translateBool(val);
                             };
-                                
+
                             return (
                                 <Fragment key={i}>
-                                    — {label}: {formatChange(old)} → {formatChange(newVal)}
+                                    • {label}: {formatChange(old)}
+                                    {newVal !== null && newVal !== undefined && (
+                                        <> → {formatChange(newVal)}</>
+                                    )}
                                     <br />
                                 </Fragment>
                             );

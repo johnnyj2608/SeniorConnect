@@ -165,7 +165,7 @@
             "language": "Language",
             "enrollment": "Enrollment",
             "active": "Active",
-            "deleted_at": "Deleted At",
+            "deleted_at": "Restored At",
             "no_info": "No information available"
         },
         "authorizations": {

@@ -23,7 +23,7 @@ const EnrollmentsTable = ({ registry }) => {
                 return (
                     <tr key={entry.id}>
                         <td>
-                            <Link to={`/members/${entry.member}`} className="registry-link">
+                            <Link to={`/members/${entry.member_id}`} className="registry-link">
                                 <NameDisplay
                                     sadcId={entry.sadc_member_id}
                                     memberName={entry.member_name}

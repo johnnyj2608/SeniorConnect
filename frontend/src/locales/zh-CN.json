@@ -165,7 +165,7 @@
             "language": "语言",
             "enrollment": "注册",
             "active": "活跃",
-            "deleted_at": "删除于",
+            "deleted_at": "恢复于",
             "no_info": "无可用信息"
         },
         "authorizations": {
