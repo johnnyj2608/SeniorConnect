@@ -1,35 +1,29 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import EditButton from '../buttons/EditButton';
 import ContactDetail from '../layout/ContactDetail';
+import CardMember from '../layout/CardMember';
 
 const MemberContactsCard = ({ data, onEdit }) => {
     const { t } = useTranslation();
     const contacts = data || [];
 
-    const handleEdit = () => {
-        onEdit('contacts', { data: contacts });
-    };
-
     return (
-        <div className="card-400">
-            <h2>{t('member.contacts.label')}</h2>
-            <div className="card-container">
-                <EditButton onClick={handleEdit} />
-                {contacts.length === 0 ? (
-                    <p>{t('member.contacts.no_contacts')}</p>
-                ) : (
-                    contacts.map((contact) => (
-                        <ContactDetail
-                            key={contact.id}
-                            label={t(`member.contacts.${contact.contact_type}`)}
-                            name={contact.name}
-                            contact={contact.phone}
-                        />
-                    ))
-                )}
-            </div>
-        </div>
+        <CardMember
+            title={t('member.contacts.label')}
+            data={contacts}
+            emptyMessage={t('member.contacts.no_contacts')}
+            onEdit={onEdit}
+            editKey="contacts"
+        >
+            {contacts.map(contact => (
+                <ContactDetail
+                    key={contact.id}
+                    label={t(`member.contacts.${contact.contact_type}`)}
+                    name={contact.name}
+                    contact={contact.phone}
+                />
+            ))}
+        </CardMember>
     );
 };
 

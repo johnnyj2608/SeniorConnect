@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 
 const SettingsData = ({ openModal }) => {
     const { t } = useTranslation();

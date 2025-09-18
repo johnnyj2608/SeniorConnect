@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 
 const SettingsAccount = () => {
   const { t } = useTranslation();

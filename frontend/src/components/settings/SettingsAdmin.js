@@ -5,7 +5,7 @@ import { MltcContext } from '../../context/MltcContext';
 import { GiftContext } from '../../context/GiftContext';
 import { UserContext } from '../../context/UserContext';
 import { SadcContext } from '../../context/SadcContext';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 
 const SettingsAdmin = ({ openModal }) => {
     const { t } = useTranslation();

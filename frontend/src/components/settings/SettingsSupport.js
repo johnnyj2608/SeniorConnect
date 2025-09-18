@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 
 const SettingsSupport = () => {
   const { t } = useTranslation();

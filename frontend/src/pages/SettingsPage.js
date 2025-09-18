@@ -8,7 +8,7 @@ import SettingsAdmin from '../components/settings/SettingsAdmin';
 import SettingsPreferences from '../components/settings/SettingsPreferences';
 import SettingsData from '../components/settings/SettingsData';
 import SettingsSupport from '../components/settings/SettingsSupport';
-import SettingsItem from '../components/items/SettingsItem';
+import SettingsItem from '../components/layout/SettingsItem';
 
 const scrollToSection = (id) => {
     const section = document.getElementById(id);
