@@ -7,7 +7,7 @@ import { formatDate, formatGender, formatPhone, formatSSN } from '../../utils/fo
 
 const MemberInfoCard = ({ data, onEdit }) => {
 	const { t } = useTranslation();
-	const info = data || [];
+	const info = data || {};
 
 	const handleEdit = () => {
 		onEdit('info', { data: info });

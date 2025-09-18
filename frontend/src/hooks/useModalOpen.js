@@ -15,7 +15,7 @@ const useModalOpen = () => {
     const { refreshGift } = useContext(GiftContext);
     const { refreshUser } = useContext(UserContext);
 
-    const openModal = useCallback(async ({ type, data = null, fetchData = null }) => {
+    const openModal = useCallback(async ({ id, type, setData, data = null, fetchData = null }) => {
         if (loadingRef.current) return;
         loadingRef.current = true;
 
@@ -27,7 +27,7 @@ const useModalOpen = () => {
             if (type === 'gifts' && refreshGift) await refreshGift();
             if (type === 'absences' && refreshUser) await refreshUser();
 
-            setModalData({ type, data: resolvedData });
+            setModalData({ id, type, setData, data: resolvedData });
             setModalOpen(true);
         } catch (err) {
             console.error(err);

@@ -10,51 +10,58 @@ const MemberGiftedCard = ({ id, data, onEdit }) => {
     const gifts = data || [];
 
     const handleEdit = () => {
-        onEdit({
-            type: 'gifteds',
+        if (!gifts.length) return;
+        onEdit('gifteds', {
             fetchData: async () => {
-                try {
-                    const response = await fetchWithRefresh(`/core/gifteds/member/${id}/`);
-                    if (!response.ok) return [];
+            try {
+                const response = await fetchWithRefresh(`/core/gifteds/member/${id}/`);
+                if (!response.ok) return [];
 
-                    const giftedData = await response.json();
+                const giftedData = await response.json();
 
-                    const normalizedGifts = gifts.map(gift => ({
-                        ...gift,
-                        id: 'new',
-                        gift_id: gift.gift_id,
-                        name: gift.name,
-                        member: id,
-                        received: false,
-                        note: ''
-                    }));
+                const normalizedGifts = gifts.map(gift => ({
+                    ...gift,
+                    id: 'new',
+                    gift_id: gift.gift_id,
+                    name: gift.name,
+                    member: id,
+                    received: false,
+                    note: ''
+                }));
 
-                    return [...normalizedGifts, ...giftedData];
-                } catch (error) {
-                    console.error(error);
-                    return [];
-                }
+                return [...normalizedGifts, ...giftedData];
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
             }
         });
     };
+
+    if (gifts.length === 0) {
+        return (
+            <div className="card-400">
+                <h2>{t('member.gifts.label')}</h2>
+                <div className="card-container">
+                    <p>{t('member.gifts.no_gifts')}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="card-400">
             <h2>{t('member.gifts.label')}</h2>
             <div className="card-container">
                 <EditButton onClick={handleEdit} />
-                {gifts.length === 0 ? (
-                    <p>{t('member.gifts.no_gifts')}</p>
-                ) : (
-                    <ul className="card-list">
-                        {gifts.map((gift, idx) => (
-                            <li key={idx} className="card-list-item">
-                                <MemberDetail label={t('member.gifts.name')} value={gift.name} />
-                                <MemberDetail label={t('member.gifts.expires_at')} value={formatDate(gift.expires_at)} />
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <ul className="card-list">
+                    {gifts.map((gift, idx) => (
+                        <li key={idx} className="card-list-item">
+                            <MemberDetail label={t('member.gifts.name')} value={gift.name} />
+                            <MemberDetail label={t('member.gifts.expires_at')} value={formatDate(gift.expires_at)} />
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );

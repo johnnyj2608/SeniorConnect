@@ -37,7 +37,12 @@ const MemberPage = () => {
     if (!id) return;
     if (id === 'new') {
       setMember(null);
-      openModal('info', { id, data: {}, setData: setMember });
+      openModal({
+          id,
+          type: 'info',
+          setData: setMember,
+          data: {},
+      });
     } else {
       const fetchMemberData = async () => {
         try {
@@ -67,12 +72,14 @@ const MemberPage = () => {
   );
 
   const handleModalOpen = useCallback(
-    (type, options) => {
-        openModal({
-            type,
-            data: options?.data ? { id, ...options.data, setData: setMember } : null,
-            fetchData: options?.fetchData
-        });
+    (type, options = {}) => {
+      openModal({
+        id,
+        type,
+        setData: setMember,
+        data: options.data,
+        fetchData: options.fetchData,
+      });
     },
     [id, openModal]
   );
