@@ -1,44 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import EnrollmentItem from '../items/EnrollmentItem';
+import { Link } from 'react-router-dom';
+import NameDisplay from '../layout/NameDisplay';
+import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
+import CardHome from '../layout/CardHome';
 
 const HomeEnrollmentsCard = () => {
-  const { t } = useTranslation();
-  const [enrollments, setEnrollments] = useState([]);
+    const { t } = useTranslation();
+    const [enrollments, setEnrollments] = useState([]);
 
-  useEffect(() => {
-    const getEnrollments = async () => {
-      try {
-        const response = await fetchWithRefresh('/audit/enrollments/recent/');
-        if (!response.ok) return;
+    useEffect(() => {
+        const getEnrollments = async () => {
+            try {
+                const response = await fetchWithRefresh('/audit/enrollments/recent/');
+                if (!response.ok) return;
 
-        const data = await response.json();
-        setEnrollments(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+                const data = await response.json();
+                setEnrollments(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-    getEnrollments();
-  }, []);
+        getEnrollments();
+    }, []);
 
-  return (
-    <div className="card-full">
-      <h2>{t('snapshots.enrollments')}</h2>
-      <div className="card-container">
-        {enrollments.length === 0 ? (
-          <p>{t('home.no_recent_enrollments')}</p>
-        ) : (
+    return (
+        <CardHome
+            title={t('snapshots.enrollments')}
+            data={enrollments}
+            emptyMessage={t('home.no_recent_enrollments')}
+        >
             <ul>
                 {enrollments.map(enrollment => (
                     <EnrollmentItem key={enrollment.id} enrollment={enrollment} />
                 ))}
-             </ul>
-        )}
-      </div>
-    </div>
-  );
+            </ul>
+        </CardHome>
+    );
 };
 
 export default HomeEnrollmentsCard;
+
+const EnrollmentItem = memo(({ enrollment }) => {
+    const { t } = useTranslation();
+
+    const renderEnrollmentMessage = (old_mltc, new_mltc) => {
+        if (old_mltc && new_mltc) return `${old_mltc} → ${new_mltc}`;
+        if (new_mltc) return new_mltc;
+        if (old_mltc) return old_mltc;
+        return '';
+    };
+
+    return (
+        <li>
+            <Link to={`/members/${enrollment.member_id}`} className="home-item">
+                <span className="home-item-primary">
+                    <p>
+                        <NameDisplay
+                            sadcId={enrollment.sadc_member_id}
+                            memberName={enrollment.member_name}
+                            altName={enrollment.member_alt_name}
+                        />
+                    </p>
+                    <p>— {formatDate(enrollment.change_date)}</p>
+                </span>
+                <span className="home-item-secondary">
+                    <p>{t(`registry.enrollments.${enrollment.change_type}`)}</p>
+                    <p>{renderEnrollmentMessage(enrollment.old_mltc, enrollment.new_mltc)}</p>
+                </span>
+            </Link>
+        </li>
+    );
+});

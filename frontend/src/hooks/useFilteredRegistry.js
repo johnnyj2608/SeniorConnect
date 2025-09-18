@@ -1,28 +1,30 @@
 import { useState, useEffect, useCallback } from 'react';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
 
-const useFilteredReports = (reportType, reportFilter) => {
-    const [report, setReport] = useState([]);
+const useFilteredRegistry = (registryType, registryFilter) => {
+    const [registry, setregistry] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const fetchReport = useCallback(async () => {
-        if (!reportType) return;
+    const fetchregistry = useCallback(async () => {
+        if (!registryType) return;
 
         let endpoint;
         let api = 'core';
 
-        if (reportType === 'absences') {
+        if (registryType === 'members') {
+            endpoint = 'members';
+        } else if (registryType === 'absences') {
             endpoint = 'absences';
-        } else if (reportType === 'assessments') {
+        } else if (registryType === 'assessments') {
             endpoint = 'assessments';
-        } else if (reportType === 'enrollments') {
+        } else if (registryType === 'enrollments') {
             endpoint = 'enrollments';
             api = 'audit';
-        } else if (reportType === 'audit_log') {
+        } else if (registryType === 'audit_log') {
             endpoint = 'audits';
             api = 'audit';
-         } else if (reportType === 'snapshots') {
+         } else if (registryType === 'snapshots') {
             endpoint = 'snapshots';
             api = 'tenant';
         } else {
@@ -30,7 +32,7 @@ const useFilteredReports = (reportType, reportFilter) => {
         }
 
         const params = new URLSearchParams({ page: currentPage });
-        if (reportFilter) params.append('filter', reportFilter);
+        if (registryFilter) params.append('filter', registryFilter);
 
         const url = `/${api}/${endpoint}?${params.toString()}`;
 
@@ -39,28 +41,28 @@ const useFilteredReports = (reportType, reportFilter) => {
             if (!response.ok) return;
 
             const data = await response.json();
-            setReport(data.results);
+            setregistry(data.results);
             setTotalPages(Math.ceil(data.count / 20));
         } catch (error) {
             console.error(error);
         }
-    }, [reportType, reportFilter, currentPage]);
+    }, [registryType, registryFilter, currentPage]);
 
     useEffect(() => {
-        fetchReport();
-    }, [fetchReport]);
+        fetchregistry();
+    }, [fetchregistry]);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [reportFilter]);
+    }, [registryFilter]);
 
     useEffect(() => {
-        setReport([]);
+        setregistry([]);
         setTotalPages(1);
         setCurrentPage(1);
-    }, [reportType]);
+    }, [registryType]);
 
-    return { report, currentPage, totalPages, setCurrentPage, fetchReport };
+    return { registry, currentPage, totalPages, setCurrentPage, fetchregistry };
 };
 
-export default useFilteredReports;
+export default useFilteredRegistry;

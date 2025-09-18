@@ -119,7 +119,7 @@ const MemberInfoSideModal = ({ data, handleChange, languages }) => {
             setPreviewPhoto(result); 
         }
         loadPhoto();
-    }, [])
+    }, [data.photo])
 
     const handlePhotoUpload = (e) => {
         const file = e.target.files?.[0];

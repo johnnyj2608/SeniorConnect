@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import Switch from 'react-switch';
 

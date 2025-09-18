@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.db.models import Count, Q
+from rest_framework.pagination import PageNumberPagination
 from datetime import timedelta
 from django.http import HttpResponse
 from django.utils import timezone
@@ -25,7 +26,8 @@ from ..serializers.file_serializers import File, FileSerializer
 from backend.apps.common.utils.supabase import (
     upload_file_to_supabase,
     delete_file_from_supabase,
-    delete_folder_from_supabase
+    delete_folder_from_supabase,
+    get_signed_url,
 )
 from backend.access.member_access import member_access_filter, member_access_pk
 import csv
@@ -34,21 +36,33 @@ import csv
 def getMemberList(request):
     members = request.accessible_members_qs.select_related('active_auth', 'active_auth__mltc')
 
-    mltc_filter = request.GET.get('mltc')
-    if mltc_filter:
-        if mltc_filter.lower() == "unknown":
-            members = members.filter(active_auth__isnull=True)
-        else:
-            members = members.filter(active_auth__mltc__name=mltc_filter)
+    mltc_filter = request.GET.get('filter')
 
-    active_filter = request.GET.get('active')
-    if active_filter is not None:
-        members = members.filter(active=(active_filter.lower() == 'true'))
+    if mltc_filter and mltc_filter.lower() == "inactive":
+        members = members.filter(active=False)
+    else:
+        members = members.filter(active=True)
+
+        if mltc_filter:
+            normalized = mltc_filter.lower()
+            if normalized == "unknown":
+                members = members.filter(active_auth__isnull=True)
+            else:
+                members = members.filter(active_auth__mltc__name=mltc_filter)
+        else:
+            members = members.filter(active_auth__isnull=False)
 
     members = members.order_by('sadc_member_id')
-    serializer = MemberListSerializer(members, many=True)
+    unpaginated = request.GET.get('unpaginated', 'false').lower() == 'true'
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if unpaginated:
+        serializer = MemberListSerializer(members, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    paginator = PageNumberPagination()
+    result_page = paginator.paginate_queryset(members, request)
+    serializer = MemberListSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @member_access_pk
 def getMemberDetail(request, pk):
@@ -261,8 +275,10 @@ def getMemberProfile(request, pk):
             absences_data.append(AbsenceSerializer(absence).data)
 
     gifts_data = getActiveGiftListByMember(request.user.sadc, member)
+    photo_url = get_signed_url(member.photo) if member.photo else None
 
     return Response({
+        'photo': photo_url,
         'info': MemberSerializer(member).data,
         'auth': AuthorizationWithServiceSerializer(member.active_auth).data if member.active_auth else None,
         'absences': absences_data,

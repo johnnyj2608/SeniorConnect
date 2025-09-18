@@ -4,26 +4,26 @@ import { formatDate } from '../../utils/formatUtils';
 import { colorEnrollment } from '../../utils/colorUtils';
 import NameDisplay from '../layout/NameDisplay';
 
-const ReportEnrollmentsTable = ({ report }) => {
+const EnrollmentsTable = ({ registry }) => {
     const { t } = useTranslation();
 
     return (
-        <table className="report-table">
+        <table className="registry-table">
         <thead>
             <tr>
-                <th style={{ width: '30%' }}>{t('reports.table.member')}</th>
-                <th style={{ width: '55%' }}>{t('reports.table.status')}</th>
-                <th style={{ width: '15%' }}>{t('reports.table.date')}</th>
+                <th style={{ width: '30%' }}>{t('registry.table.member')}</th>
+                <th style={{ width: '55%' }}>{t('registry.table.status')}</th>
+                <th style={{ width: '15%' }}>{t('registry.table.date')}</th>
             </tr>
         </thead>
         <tbody>
-            {report.map((entry) => {
+            {registry.map((entry) => {
                 const { change_type, old_mltc, new_mltc } = entry;
 
                 return (
                     <tr key={entry.id}>
                         <td>
-                            <Link to={`/members/${entry.member}`} className="report-link">
+                            <Link to={`/members/${entry.member}`} className="registry-link">
                                 <NameDisplay
                                     sadcId={entry.sadc_member_id}
                                     memberName={entry.member_name}
@@ -41,4 +41,4 @@ const ReportEnrollmentsTable = ({ report }) => {
     );
 };
 
-export default ReportEnrollmentsTable;
+export default EnrollmentsTable;

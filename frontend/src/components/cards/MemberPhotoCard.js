@@ -2,50 +2,59 @@ import React, { memo, useState, useEffect } from 'react';
 import { formatPhoto } from '../../utils/formatUtils';
 import usePreferences from '../../hooks/usePreferences';
 
-const MemberPhotoCard = ({ data, small }) => {
-    const [photoURL, setPhotoURL] = useState("/default-profile.jpg");
-    const info = data || [];
-    const useAltName = usePreferences("alt_name", false);
+const MemberPhotoCard = ({ photo, data, small }) => {
+  const [photoURL, setPhotoURL] = useState("/default-profile.jpg");
+  const info = data || {};
+  const useAltName = usePreferences("alt_name", false);
 
-    const altName = info.alt_name;
-    const fullName = `${info.last_name}, ${info.first_name}`;
-  
-    const primaryName = useAltName && altName ? altName : fullName;
-    const secondaryName = useAltName && altName ? fullName : altName;
+  const altName = info.alt_name;
+  const fullName = `${info.last_name}, ${info.first_name}`;
+  const primaryName = useAltName && altName ? altName : fullName;
+  const secondaryName = useAltName && altName ? fullName : altName;
 
-    const imgClass = small ? 'member-photo small' : 'member-photo';
+  const status = info?.active === false ? 'inactive' : null;
+  const imgClass = `member-photo${small ? ' small' : ''}${status ? ` ${status}` : ''}`;
 
-    useEffect(() => {
-        async function fetchPhoto() {
-            const result = await formatPhoto(info.photo);
-            setPhotoURL(result); 
-        }
-        fetchPhoto();
-    }, [info.photo])
+  const photoPath = photo || info.photo;
 
-    if (!info.photo) return null;
+  useEffect(() => {
+    if (!photoPath) return;
 
-    return (
-        <div className="photo-container">
-            <img
-                src={photoURL}
-                alt="Member"
-                className={imgClass}
-                onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = '/default-profile.jpg';
-                }}
-            />
-            {Object.keys(info).length === 0 ? (
-                <h1>...</h1>
-            ) : (
-            <>
-                <h1>{primaryName}</h1>
-                {secondaryName && <h2>{secondaryName}</h2>}
-            </>
-            )}
-        </div>
-    );
+    const fetchPhoto = async () => {
+      // if backend already gave us a signed URL, just use it
+      if (photo) {
+        setPhotoURL(photo);
+      } else {
+        const result = await formatPhoto(photoPath);
+        setPhotoURL(result);
+      }
+    };
+
+    fetchPhoto();
+  }, [photo, photoPath]);
+
+  // Refresh signed URL on error
+  const handleError = async (e) => {
+    e.target.onerror = null;
+    if (!info.photo) return;
+    const result = await formatPhoto(info.photo);
+    e.target.src = result;
+  };
+
+  if (!info || Object.keys(info).length === 0) return null;
+
+  return (
+    <div className="photo-container">
+      <img
+        src={photoURL}
+        alt="Member"
+        className={imgClass}
+        onError={handleError}
+      />
+      <h1>{primaryName}</h1>
+      {secondaryName && <h2>{secondaryName}</h2>}
+    </div>
+  );
 };
 
 export default memo(MemberPhotoCard);

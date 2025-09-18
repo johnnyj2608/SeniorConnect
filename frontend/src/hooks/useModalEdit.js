@@ -116,7 +116,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
 
     const handleAdd = useCallback(() => {
         setLocalData((prevData) => {
-            const updatedData = [...prevData];
+            const updatedData = [...(prevData ?? [])];
             if (type === 'authorizations') {
                 const activeAuthIndex = getActiveAuthIndex(updatedData);
                 const activeAuth = updatedData[activeAuthIndex];

@@ -5,30 +5,27 @@ import { MltcContext } from '../../context/MltcContext';
 import { GiftContext } from '../../context/GiftContext';
 import { UserContext } from '../../context/UserContext';
 import { SadcContext } from '../../context/SadcContext';
-import SettingsItem from '../items/SettingsItem';
+import SettingsItem from '../layout/SettingsItem';
 
-const SettingsAdmin = ({ onEdit }) => {
+const SettingsAdmin = ({ openModal }) => {
     const { t } = useTranslation();
     const { user } = useContext(AuthContext);
     const { refreshMltc } = useContext(MltcContext);
     const { refreshGift } = useContext(GiftContext);
     const { refreshUser } = useContext(UserContext);
     const { refreshSadc } = useContext(SadcContext);
-    
-    const handleEdit = async (type) => {
-        if (type === 'mltcs') {
-            const freshMltcs = await refreshMltc();
-            onEdit(type, freshMltcs);
-        } else if (type === 'gifts') {
-            const freshGifts = await refreshGift();
-            onEdit(type, freshGifts);
-        } else if (type === 'users') {
-            const freshUsers = await refreshUser();
-            onEdit(type, freshUsers);
-        } else if (type === 'sadcs') {
-            const freshSadcs = await refreshSadc();
-            onEdit(type, freshSadcs);
-        }
+
+    const handleEdit = (type) => {
+        openModal({
+            type,
+            fetchData: async () => {
+                if (type === 'mltcs' && refreshMltc) return await refreshMltc();
+                if (type === 'gifts' && refreshGift) return await refreshGift();
+                if (type === 'users' && refreshUser) return await refreshUser();
+                if (type === 'sadcs' && refreshSadc) return await refreshSadc();
+                return [];
+            }
+        });
     };
 
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import ModalPage from './ModalPage';
@@ -8,7 +8,7 @@ import SettingsAdmin from '../components/settings/SettingsAdmin';
 import SettingsPreferences from '../components/settings/SettingsPreferences';
 import SettingsData from '../components/settings/SettingsData';
 import SettingsSupport from '../components/settings/SettingsSupport';
-import SettingsItem from '../components/items/SettingsItem';
+import SettingsItem from '../components/layout/SettingsItem';
 
 const scrollToSection = (id) => {
     const section = document.getElementById(id);
@@ -27,13 +27,13 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
         <div className="settings-nav">
             {user?.is_org_admin && (
                 <SettingsItem
-                label={t('settings.admin.label')}
-                isNav
-                isActive={activeSection === 'settings-admin'}
-                onClick={() => {
-                    setActiveSection('settings-admin');
-                    scrollToSection('settings-admin');
-                }}
+                    label={t('settings.admin.label')}
+                    isNav
+                    isActive={activeSection === 'settings-admin'}
+                    onClick={() => {
+                        setActiveSection('settings-admin');
+                        scrollToSection('settings-admin');
+                    }}
                 />
             )}
             <SettingsItem
@@ -41,8 +41,8 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 isNav
                 isActive={activeSection === 'settings-preferences'}
                 onClick={() => {
-                setActiveSection('settings-preferences');
-                scrollToSection('settings-preferences');
+                    setActiveSection('settings-preferences');
+                    scrollToSection('settings-preferences');
                 }}
             />
             <SettingsItem
@@ -50,8 +50,8 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 isNav
                 isActive={activeSection === 'settings-data'}
                 onClick={() => {
-                setActiveSection('settings-data');
-                scrollToSection('settings-data');
+                    setActiveSection('settings-data');
+                    scrollToSection('settings-data');
                 }}
             />
             <SettingsItem
@@ -59,8 +59,8 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 isNav
                 isActive={activeSection === 'settings-support'}
                 onClick={() => {
-                setActiveSection('settings-support');
-                scrollToSection('settings-support');
+                    setActiveSection('settings-support');
+                    scrollToSection('settings-support');
                 }}
             />
             <SettingsItem
@@ -68,8 +68,8 @@ const SettingsNav = ({ activeSection, setActiveSection, t }) => {
                 isNav
                 isActive={activeSection === 'settings-account'}
                 onClick={() => {
-                setActiveSection('settings-account');
-                scrollToSection('settings-account');
+                    setActiveSection('settings-account');
+                    scrollToSection('settings-account');
                 }}
             />
         </div>
@@ -89,19 +89,7 @@ const SettingsPage = () => {
 
     const [activeSection, setActiveSection] = useState(sections[0]?.id || 'settings-preferences');
 
-    const {
-        modalOpen,
-        modalData,
-        openModal,
-        closeModal,
-      } = useModalOpen();
-
-    const handleModalOpen = useCallback(
-        (type, data) => {
-          openModal(type, { data });
-        },
-        [openModal]
-    );
+    const { modalOpen, modalData, openModal, closeModal } = useModalOpen();
 
     return (
         <>
@@ -119,9 +107,9 @@ const SettingsPage = () => {
                 />
 
                 <div className="settings-content">
-                    <SettingsAdmin onEdit={handleModalOpen}/>
+                    <SettingsAdmin openModal={openModal} />
                     <SettingsPreferences />
-                    <SettingsData onEdit={handleModalOpen} />
+                    <SettingsData openModal={openModal} />
                     <SettingsSupport />
                     <SettingsAccount />
                 </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 
-const SearchMembers = ({ value, onChange, onSelect, showInactive, mltcFilter }) => {
+const SearchMembers = ({ value, onChange, onSelect, mltcFilter }) => {
   const { t } = useTranslation();
   const [members, setMembers] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -15,8 +15,8 @@ const SearchMembers = ({ value, onChange, onSelect, showInactive, mltcFilter }) 
         let url = '/core/members/';
         const params = new URLSearchParams();
 
-        if (mltcFilter) params.append('mltc', mltcFilter);
-        if (!showInactive) params.append('active', 'true');
+        if (mltcFilter) params.append('filter', mltcFilter);
+        params.append('unpaginated', 'true');
 
         if ([...params].length > 0) {
           url += `?${params.toString()}`;
@@ -33,7 +33,7 @@ const SearchMembers = ({ value, onChange, onSelect, showInactive, mltcFilter }) 
     };
 
     fetchMembers();
-  }, [mltcFilter, showInactive]);
+  }, [mltcFilter]);
 
   useEffect(() => {
     const q = value?.toLowerCase().trim();

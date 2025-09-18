@@ -1,8 +1,8 @@
 {
     "general": {
         "home": "首页",
-        "members": "成员",
-        "reports": "报告",
+        "members": "会员",
+        "registry": "报告",
         "settings": "设置",
         "select_an_option": "请选择一个选项",
         "result": "结果",
@@ -43,6 +43,7 @@
             "add_member": "添加会员",
             "add_all": "全部添加",
             "clear_mltc": "清除 MLTC",
+            "clear_filters": "清除过滤器",
             "back": "返回"
         },
         "days_of_week": {
@@ -90,7 +91,7 @@
     },
     "model": {
         "mltc": "老人中心保险",
-        "member": "成员",
+        "member": "会员",
         "authorization": "授权",
         "absence": "缺勤",
         "contact": "联系人",
@@ -103,8 +104,7 @@
         "label": "状态",
         "active": "活跃",
         "future": "未来",
-        "expired": "已过期",
-        "member_is_inactive": "成员处于非活跃状态"
+        "expired": "已过期"
     },
     "snapshots": {
         "label": "快照",
@@ -120,30 +120,31 @@
         "welcome": "欢迎, {{name}}",
         "leaving_soon": "即将离开",
         "returning_soon": "即将返回",
-        "no_upcoming_absences": "没有即将缺席的情况",
         "days": "{{count}}天",
-        "no_upcoming_birthdays": "暂无即将到来的生日",
         "tomorrow": "明天",
         "today": "今天",
         "turning_years_old": "将满 {{count}} 岁",
         "audit_log": "审计日志",
-        "no_recent_audits": "最近无审计记录",
-        "no_recent_enrollments": "最近没有注册",
         "create": "已创建",
         "update": "已更新",
         "delete": "已删除",
         "assessments": "评估",
+        "no_available_stats": "没有可用的统计数据",
+        "no_upcoming_absences": "没有即将缺席的情况",
+        "no_upcoming_birthdays": "暂无即将到来的生日",
+        "no_recent_audits": "最近无审计记录",
+        "no_recent_enrollments": "最近没有注册",
         "no_upcoming_assessments": "没有即将进行的评估"
     },
     "members": {
         "mltc_filter": "老人中心保险",
-        "unknown": "未知",
+        "no_mltc": "没有保险",
         "search_members": "搜索成员",
         "search_id_or_name": "搜索编号或姓名",
         "inactive": "未激活",
-        "new": "新会员",
         "all_mltcs": "所有 MLTC",
-        "no_members": "没有成员添加到队列"
+        "no_members": "没有成员添加到队列",
+        "unknown": "未知"
     },
     "member": {
         "confirm_update": "您确定要对该成员{{action}}执行操作吗？",
@@ -246,9 +247,12 @@
             "modal_tooltip": "在设置中创建新的礼品"
         }
     },
-    "reports": {
-        "report_type": "报告类型",
+    "registry": {
+        "registry_type": "报告类型",
         "status_filter": "状态筛选",
+        "members": {
+            "label": "会员"
+        },
         "absences": {
             "label": "缺勤",
             "ongoing": "进行中",
@@ -280,6 +284,10 @@
         },
         "table": {
             "member": "成员",
+            "birth_date": "出生日期",
+            "mltc": "MLTC",
+            "schedule": "日程",
+            "days": "天数",
             "status": "状态",
             "start_date": "开始日期",
             "end_date": "结束日期",

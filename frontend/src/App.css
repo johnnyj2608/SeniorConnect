@@ -707,6 +707,11 @@ input[type="number"]::-webkit-inner-spin-button {
   color: var(--color-text-sub)
 }
 
+.snapshot-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 /* --------------
   Filter Row
 -------------- */
@@ -725,6 +730,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .filter-option {
   display: flex;
+  width: 175px;
   flex-direction: column;
   justify-content: center;
   margin-bottom: 0.5rem;
@@ -736,9 +742,8 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-bottom: 0.1rem;
 }
 
-.filter-content > *:not(:last-child) {
-  max-width: 175px;
-  width: 175px;
+.filter-option.large {
+  width: 300px;
 }
 
 .switch-container {
@@ -748,16 +753,21 @@ input[type="number"]::-webkit-inner-spin-button {
   gap: 10px;
 }
 
-.members-count {
+.filter-text {
   font-size: 20px;
   color: var(--color-text-sub);
   white-space: nowrap;
   margin-top: 1.6rem;
 }
 
-.snapshot-group {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.filter-text.clickable {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.filter-text.clickable:hover {
+  text-decoration: underline;
+  color: var(--color-main-light)
 }
 
 /* --------------
@@ -877,6 +887,15 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 300px;
   border-radius: 8px;
   border: 1px solid var(--color-border);
+}
+
+.member-photo.small {
+  width: 200px;
+  height: 150px;
+}
+
+.member-photo.inactive {
+  border: 5px solid var(--color-danger);
 }
 
 .preview-photo {
@@ -1079,23 +1098,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .member-box-list button {
   width: 100%;
-}
-
-.inactive-banner {
-  position: fixed;
-  top: 55px;
-  left: 0;
-  right: 0;
-  background-color: var(--color-danger-background);
-  color: var(--color-danger);
-  text-align: center;
-  font-weight: bold;
-  padding: 0.5rem;
-  font-size: 1.5rem;
-  border-bottom: 2px solid var(--color-danger);
-  border-radius: 4px;
-  z-index: 99;
-  text-transform: uppercase;
 }
 
 .card-list-item:not(:last-child) {
@@ -1620,69 +1622,69 @@ body.modal-open {
 }
 
 /* --------------
-  Reports
+  Registry
 -------------- */
 
-.reports-content {
+.registry-content {
   overflow-x: auto;
   overscroll-behavior: auto;
 }
 
-.reports-content::-webkit-scrollbar {
+.registry-content::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.reports-content::-webkit-scrollbar-thumb {
+.registry-content::-webkit-scrollbar-thumb {
   background-color: var(--color-border);
   border-radius: 4px;
 }
 
-.report-table {
+.registry-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.report-table tr {
+.registry-table tr {
   font-size: 22px;
   border-bottom: 1px solid var(--color-border);
 }
 
-.report-table th, .report-table td {
+.registry-table th, .registry-table td {
   padding: 15px;
   text-align: left;
   background-color: var(--color-content);
 }
 
-.report-table th {
+.registry-table th {
   padding-top: 0;
   background-color: var(--color-background);
   white-space: nowrap;
 }
 
-.report-table tbody {
+.registry-table tbody {
   border: 1px solid var(--color-border);
 }
 
-.report-link:hover {
+.registry-link:hover {
   color: var(--color-main);
   text-decoration: underline;
 }
 
-.report-dropdown {
+.registry-dropdown {
   display: flex;
   gap: 10px;
 }
 
-.report-table tr.expanded {
+.registry-table tr.expanded {
   border-bottom: none;
 }
 
-.report-table tr.expanded td {
+.registry-table tr.expanded td {
   padding-bottom: 5px;
 }
 
-.report-table tr.expanded + tr td {
+.registry-table tr.expanded + tr td {
   padding-top: 5px;
 }
 
