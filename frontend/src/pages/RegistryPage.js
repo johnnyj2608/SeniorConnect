@@ -11,7 +11,7 @@ import AuditsTable from '../components/tables/AuditsTable';
 import EnrollmentsTable from '../components/tables/EnrollmentsTable';
 import SnapshotsTable from '../components/tables/SnapshotsTable';
 import useFilteredRegistry from '../hooks/useFilteredRegistry';
-import MltcDropdown from '../components/inputs/MltcFilter';
+import MltcFilter from '../components/inputs/MltcFilter';
 
 const registryFilters = {
     absences: [
@@ -121,7 +121,7 @@ const RegistryPage = () => {
                         <div className="filter-option">
                             <label>{t('registry.status_filter')}</label>
                             {registryType === 'members' ? (
-                                <MltcDropdown
+                                <MltcFilter
                                     value={registryFilter}
                                     onChange={setRegistryFilter}
                                 />
