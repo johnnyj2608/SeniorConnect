@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { openFile } from '../../utils/fileUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthContext';
 import CardHome from '../layout/CardHome';
 

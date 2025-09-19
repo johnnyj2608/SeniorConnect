@@ -1,12 +1,12 @@
 import React, { useContext} from 'react'
 import { useTranslation } from 'react-i18next'
-import BirthdaysCard from '../components/cards/HomeBirthdaysCard'
-import AuditLogsCard from '../components/cards/HomeAuditLogsCard'
+import BirthdayCard from '../components/cards/HomeBirthdayCard'
+import AuditLogCard from '../components/cards/HomeAuditLogCard'
 import StatsCard from '../components/cards/HomeStatsCard'
-import AbsencesCard from '../components/cards/HomeAbsencesCard'
-import EnrollmentsCard from '../components/cards/HomeEnrollmentsCard'
-import AssessmentsCard from '../components/cards/HomeAssessmentsCard'
-import SnapshotsCard from '../components/cards/HomeSnapshotsCard'
+import AbsenceCard from '../components/cards/HomeAbsenceCard'
+import EnrollmentCard from '../components/cards/HomeEnrollmentCard'
+import AssessmentCard from '../components/cards/HomeAssessmentCard'
+import SnapshotCard from '../components/cards/HomeSnapshotCard'
 import { AuthContext } from '../context/AuthContext'
 
 const HomePage = () => {
@@ -25,14 +25,14 @@ const HomePage = () => {
       <div className="home-content content-padding">
         <div className="home-main-panel">
           <StatsCard />
-          <AbsencesCard />
-          <EnrollmentsCard />
-          <AssessmentsCard />
-          {(user?.view_snapshots || user?.is_org_admin) && <SnapshotsCard />}
+          <AbsenceCard />
+          <EnrollmentCard />
+          <AssessmentCard />
+          {(user?.view_snapshots || user?.is_org_admin) && <SnapshotCard />}
         </div>
         <div className="home-side-panel">
-          <BirthdaysCard />
-          <AuditLogsCard />
+          <BirthdayCard />
+          <AuditLogCard />
         </div>
       </div>
     </>

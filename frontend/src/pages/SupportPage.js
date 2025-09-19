@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const SupportsPage = () => {
 	const { t, i18n } = useTranslation();

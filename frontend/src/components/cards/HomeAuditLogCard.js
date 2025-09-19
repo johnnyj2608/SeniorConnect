@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import CardHome from '../layout/CardHome';
 import NameDisplay from '../layout/NameDisplay';
 
-const HomeAuditLogsCard = () => {
+const HomeAuditLogCard = () => {
     const { t } = useTranslation();
     const [auditLogs, setAuditLogs] = useState([]);
 
@@ -46,7 +46,7 @@ const HomeAuditLogsCard = () => {
     );
 };
 
-export default HomeAuditLogsCard;
+export default HomeAuditLogCard;
 
 const AuditItem = memo(({ audit }) => {
     const { t } = useTranslation();

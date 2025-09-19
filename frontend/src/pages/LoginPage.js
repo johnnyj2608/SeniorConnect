@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router'
 import PasswordField from '../components/inputs/PasswordField'
 import { AuthContext } from '../context/AuthContext'
 import Loader from '../components/layout/Loader'

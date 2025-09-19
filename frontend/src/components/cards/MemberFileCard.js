@@ -4,7 +4,7 @@ import { ReactComponent as FileIcon } from '../../assets/file.svg';
 import { openFile } from '../../utils/fileUtils';
 import CardMember from '../layout/CardMember';
 
-const MemberFilesCard = ({ data, onEdit }) => {
+const MemberFileCard = ({ data, onEdit }) => {
     const { t } = useTranslation();
     const files = data || [];
 
@@ -28,7 +28,7 @@ const MemberFilesCard = ({ data, onEdit }) => {
     );
 };
 
-export default memo(MemberFilesCard);
+export default memo(MemberFileCard);
 
 const FileItem = memo(({ file }) => {
     const handleClick = () => {

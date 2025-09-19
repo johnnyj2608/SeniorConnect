@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const useMembers = (id, setMemberData) => {
   const { t } = useTranslation();

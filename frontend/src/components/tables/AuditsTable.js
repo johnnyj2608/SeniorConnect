@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import DropdownButton from '../buttons/DropdownButton';
 import { formatDate, formatObjectDisplay, formatTime } from '../../utils/formatUtils';
 import { colorAudit } from '../../utils/colorUtils';

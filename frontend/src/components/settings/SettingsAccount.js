@@ -1,6 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthContext';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import SettingsItem from '../layout/SettingsItem';

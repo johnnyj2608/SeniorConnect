@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../context/AuthContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import MembersTable from '../components/tables/MembersTable';
