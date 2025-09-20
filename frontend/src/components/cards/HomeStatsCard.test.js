@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import '@testing-library/jest-dom';
-import HomeStatsCard, { StatsItem } from './HomeStatsCard';
+import HomeStatsCard from './HomeStatsCard';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { colorStats } from '../../utils/colorUtils';
 

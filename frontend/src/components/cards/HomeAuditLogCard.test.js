@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import '@testing-library/jest-dom';
 import HomeAuditLogCard from './HomeAuditLogCard';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { formatDate } from '../../utils/formatUtils';

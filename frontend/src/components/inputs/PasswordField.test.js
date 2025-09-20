@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import PasswordField from './PasswordField';
 
 jest.mock('react-i18next', () => ({

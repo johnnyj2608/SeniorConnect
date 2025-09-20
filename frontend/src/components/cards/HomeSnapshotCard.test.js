@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import '@testing-library/jest-dom';
 import HomeSnapshotCard from './HomeSnapshotCard';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import { AuthContext } from '../../context/AuthContext';

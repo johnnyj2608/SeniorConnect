@@ -1,7 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import '@testing-library/jest-dom'
 import AddButton from './AddButton'
 
 describe('AddButton component', () => {

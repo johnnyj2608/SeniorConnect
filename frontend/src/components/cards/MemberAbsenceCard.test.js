@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MemberAbsenceCard from './MemberAbsenceCard';
 import { openFile } from '../../utils/fileUtils';
 import { formatDate, formatTime, formatStatus } from '../../utils/formatUtils';

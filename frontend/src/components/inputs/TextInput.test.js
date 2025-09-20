@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import TextInput from './TextInput';
 
 jest.mock('react-i18next', () => ({

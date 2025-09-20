@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MemberAuthCard from './MemberAuthCard';
 import { openFile } from '../../utils/fileUtils';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '@testing-library/jest-dom';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import SearchContacts from './SearchContacts';
 import { formatPhone, normalizeField } from '../../utils/formatUtils';

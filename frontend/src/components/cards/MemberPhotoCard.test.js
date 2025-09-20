@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MemberPhotoCard from './MemberPhotoCard';
 import usePreferences from '../../hooks/usePreferences';
 import { formatPhoto } from '../../utils/formatUtils';

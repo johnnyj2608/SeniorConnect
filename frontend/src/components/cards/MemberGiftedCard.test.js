@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MemberGiftedCard from './MemberGiftedCard';
 import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
