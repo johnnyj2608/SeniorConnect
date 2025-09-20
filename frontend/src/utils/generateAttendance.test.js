@@ -1,11 +1,16 @@
 import generateAttendance from './generateAttendance';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
+import { autoTable } from 'jspdf-autotable';
 
 jest.mock('jszip');
 jest.mock('file-saver', () => ({ saveAs: jest.fn() }));
+jest.mock('jspdf');
+jest.mock('jspdf-autotable');
+jest.mock('../fonts/NotoSansSC-Regular-normal', () => ({}));
 
-describe('generateAttendance', () => {
+describe('generateAttendance (mocked PDF)', () => {
     let zipInstance;
 
     const memberList = {
@@ -28,11 +33,21 @@ describe('generateAttendance', () => {
             generateAsync: jest.fn().mockResolvedValue('fake-blob'),
         };
         JSZip.mockImplementation(() => zipInstance);
+
+        jsPDF.mockImplementation(() => ({
+            internal: { pageSize: { getWidth: () => 210, getHeight: () => 297 } },
+            setFontSize: jest.fn(),
+            setFont: jest.fn(),
+            text: jest.fn(),
+            getTextWidth: jest.fn(() => 50),
+            output: jest.fn(() => 'fake-pdf-blob'),
+        }));
+
+        autoTable.mockImplementation(jest.fn());
     });
 
-    it('calls JSZip methods and saveAs', async () => {
+    it('calls JSZip methods and saveAs quickly', async () => {
         await generateAttendance(memberList, '2025-09', 'TestSadc', 1);
-
         expect(JSZip).toHaveBeenCalled();
         expect(zipInstance.folder).toHaveBeenCalledWith('TestMLTC');
         expect(zipInstance.file).toHaveBeenCalled();
@@ -42,13 +57,12 @@ describe('generateAttendance', () => {
 
     it('uses template 2 when specified', async () => {
         await generateAttendance(memberList, '2025-09', 'TestSadc', 2);
-
         expect(zipInstance.file).toHaveBeenCalled();
         expect(zipInstance.generateAsync).toHaveBeenCalledWith({ type: 'blob' });
         expect(saveAs).toHaveBeenCalledWith('fake-blob', expect.any(String));
     });
 
-    it('opens preview for first member if preview=true', async () => {
+    it('opens preview for first member without calling saveAs', async () => {
         global.URL.createObjectURL = jest.fn(() => 'blob:url');
         global.window.open = jest.fn();
 
