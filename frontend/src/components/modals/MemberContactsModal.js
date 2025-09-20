@@ -42,8 +42,11 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLi
             </div>
 
             <div className="member-detail">
-                <label>{t('member.contacts.label')} *</label>
+                <label htmlFor="contactType">
+                    {t('member.contacts.label')} *
+                </label>
                 <select 
+                    id="contactType"
                     required
                     value={disabled ? '' : current.contact_type || ''} 
                     onChange={(e) => {
@@ -65,8 +68,11 @@ const MemberContactsModal = ({ data, handleChange, activeTab, memberID, handleLi
 
             {isEmergencyContact && (
                 <div className="member-detail">
-                    <label>{t('member.contacts.relationship')} *</label>
+                    <label htmlFor="relationship">
+                        {t('member.contacts.relationship')} *
+                    </label>
                     <select 
+                        id="relationship"
                         required
                         value={disabled ? '' : current.relationship_type || ''} 
                         onChange={handleChange('relationship_type')}

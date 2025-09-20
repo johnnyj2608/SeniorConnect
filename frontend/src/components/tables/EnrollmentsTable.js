@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatDate } from '../../utils/formatUtils';
 import { colorEnrollment } from '../../utils/colorUtils';
 import NameDisplay from '../layout/NameDisplay';
@@ -23,7 +23,7 @@ const EnrollmentsTable = ({ registry }) => {
                 return (
                     <tr key={entry.id}>
                         <td>
-                            <Link to={`/members/${entry.member}`} className="registry-link">
+                            <Link to={`/members/${entry.member_id}`} className="registry-link">
                                 <NameDisplay
                                     sadcId={entry.sadc_member_id}
                                     memberName={entry.member_name}

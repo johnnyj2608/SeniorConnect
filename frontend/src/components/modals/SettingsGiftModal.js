@@ -29,16 +29,17 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
             <div className="modal-header">
                 <h3>{t('general.edit')}{t('settings.admin.gifts.label')}</h3>
                 {type === 'gifteds' && (
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={!!current.received}
-                        onChange={(e) =>
-                            handleChange('received')({ target: { value: e.target.checked } })
-                        }
-                    />
-                    {t('settings.admin.gifts.received')}
-                </label>
+                    <label htmlFor="received-checkbox">
+                        <input
+                            id="received-checkbox"
+                            type="checkbox"
+                            checked={!!current.received}
+                            onChange={(e) =>
+                                handleChange('received')({ target: { value: e.target.checked } })
+                            }
+                        />
+                        {t('settings.admin.gifts.received')}
+                    </label>
                 )}
             </div>
 
@@ -55,8 +56,9 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
             {type !== 'gifteds' && (
                 <>
                     <div className="member-detail">
-                        <label>{t('settings.admin.gifts.mltc')} </label>
+                        <label htmlFor="mltc-select">{t('settings.admin.gifts.mltc')}</label>
                         <select
+                            id="mltc-select"
                             required
                             value={(disabled && type === 'gifts') ? '' : current.mltc || ''}
                             onChange={handleChange('mltc')}
@@ -72,8 +74,9 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                     </div>
 
                     <div className="member-detail">
-                        <label>{t('settings.admin.gifts.birth_month')}</label>
+                        <label htmlFor="birth-month-select">{t('settings.admin.gifts.birth_month')}</label>
                         <select
+                            id="birth-month-select"
                             value={current.birth_month || ''}
                             onChange={handleChange('birth_month')}
                             disabled={disabled}
@@ -98,8 +101,9 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
 
                     {current.expires_at && (
                         <div className="member-detail right">
-                            <label>
+                            <label htmlFor="expires-delete-checkbox">
                                 <input
+                                    id="expires-delete-checkbox"
                                     type="checkbox"
                                     checked={!!current.expires_delete}
                                     onChange={(e) =>
@@ -116,12 +120,12 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                         <button 
                             className="action-button thin"
                             onClick={() => fetchGiftedData('received')}>
-                                {t('settings.admin.gifts.received_list')}
+                            {t('settings.admin.gifts.received_list')}
                         </button>
                         <button 
                             className="action-button thin"
                             onClick={() => fetchGiftedData('unreceived')}>
-                                {t('settings.admin.gifts.unreceived_list')}
+                            {t('settings.admin.gifts.unreceived_list')}
                         </button>
                     </div>
                 </>

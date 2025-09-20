@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../context/AuthContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import SwitchButton from '../components/buttons/SwitchButton';
 import PaginationButtons from '../components/buttons/PaginationButtons';
 import MembersTable from '../components/tables/MembersTable';
@@ -11,7 +11,7 @@ import AuditsTable from '../components/tables/AuditsTable';
 import EnrollmentsTable from '../components/tables/EnrollmentsTable';
 import SnapshotsTable from '../components/tables/SnapshotsTable';
 import useFilteredRegistry from '../hooks/useFilteredRegistry';
-import MltcDropdown from '../components/inputs/MltcFilter';
+import MltcFilter from '../components/inputs/MltcFilter';
 
 const registryFilters = {
     absences: [
@@ -104,8 +104,9 @@ const RegistryPage = () => {
                 <div className="filter-row">
                     <div className="filter-content">
                         <div className="filter-option">
-                            <label>{t('registry.registry_type')}</label>
+                            <label htmlFor="registry-type">{t('registry.registry_type')}</label>
                             <select
+                                id="registry-type"
                                 required
                                 value={registryType}
                                 onChange={(e) => setRegistryType(e.target.value)}
@@ -119,14 +120,15 @@ const RegistryPage = () => {
                         </div>
 
                         <div className="filter-option">
-                            <label>{t('registry.status_filter')}</label>
+                            <label htmlFor="status-filter">{t('registry.status_filter')}</label>
                             {registryType === 'members' ? (
-                                <MltcDropdown
+                                <MltcFilter
                                     value={registryFilter}
                                     onChange={setRegistryFilter}
                                 />
                             ) : (
                                 <select
+                                    id="status-filter"
                                     required
                                     value={registryFilter}
                                     onChange={(e) => setRegistryFilter(e.target.value)}

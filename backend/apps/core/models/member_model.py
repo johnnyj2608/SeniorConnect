@@ -65,7 +65,7 @@ class Member(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
-    deleted_at = models.DateTimeField(null=True, blank=True)
+    deleted_at = models.DateField(null=True, blank=True)
 
     objects = MemberManager()
 

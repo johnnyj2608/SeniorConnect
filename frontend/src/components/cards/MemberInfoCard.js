@@ -15,6 +15,7 @@ const MemberInfoCard = ({ data, onEdit }) => {
             data={info}
             emptyMessage={t('member.info.no_info')}
             onEdit={onEdit}
+            editKey="info"
         >
             <MemberDetail label={t('member.info.sadc_member_id')} value={info.sadc_member_id} />
             <MemberDetail label={t('member.info.last_name')} value={info.last_name} />

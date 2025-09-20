@@ -37,6 +37,7 @@ const ModalPage = ({ data, onClose }) => {
         setActiveTab,
         mltcs,
         sadc,
+        isSaving,
     } = useModalEdit(data, onClose, NO_TABS_TYPE);
 
     const {
@@ -261,6 +262,7 @@ const ModalPage = ({ data, onClose }) => {
                             generateAttendance(queuedMembers, month, sadc.name, sadc.attendance_template);
                             onClose();
                         }}
+                        isSaving={isSaving}
                     />
                 </div>
             </div>

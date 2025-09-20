@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MltcContext } from '../../context/MltcContext';
 
-const MltcDropdown = ({ value, onChange }) => {
+const MltcFilter = ({ value, onChange }) => {
     const { t } = useTranslation();
     const { mltcs, refreshMltc } = useContext(MltcContext);
 
@@ -28,4 +28,4 @@ const MltcDropdown = ({ value, onChange }) => {
     );
 };
 
-export default MltcDropdown;
+export default MltcFilter;

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ContactDetail from '../layout/ContactDetail';
 import CardMember from '../layout/CardMember';
 
-const MemberContactsCard = ({ data, onEdit }) => {
+const MemberContactCard = ({ data, onEdit }) => {
     const { t } = useTranslation();
     const contacts = data || [];
 
@@ -27,4 +27,4 @@ const MemberContactsCard = ({ data, onEdit }) => {
     );
 };
 
-export default memo(MemberContactsCard);
+export default memo(MemberContactCard);

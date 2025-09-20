@@ -3,7 +3,7 @@ import {
   Route,
   Routes,
   useLocation,
-} from "react-router-dom";
+} from "react-router";
 
 import './App.css';
 import './i18n';
@@ -18,7 +18,7 @@ import HomePage from './pages/HomePage';
 import MemberPage from './pages/MemberPage';
 import RegistryPage from './pages/RegistryPage';
 import SettingsPage from './pages/SettingsPage';
-import SupportPage from './pages/SupportPage';
+import SupportsPage from './pages/SupportsPage';
 import LoginPage from './pages/LoginPage';
 
 function Main() {
@@ -46,7 +46,7 @@ function Main() {
             <Route path="/members/:id?" element={<PrivateRoute><MemberPage /></PrivateRoute>} />
             <Route path="/registry" element={<PrivateRoute><RegistryPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
-            <Route path="/support/:section" element={<PrivateRoute><SupportPage /></PrivateRoute>} />
+            <Route path="/support/:section" element={<PrivateRoute><SupportsPage /></PrivateRoute>} />
             <Route path="/login/*" element={<LoginPage />} />
             <Route
               path="*"

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SearchMembers from '../inputs/SearchMembers';
 import AttendanceButton from '../buttons/AttendanceButton';
-import MltcDropdown from '../inputs/MltcFilter';
+import MltcFilter from '../inputs/MltcFilter';
 
 const MemberHeader = ({ navigate, handleOpenAttendance }) => {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ const MemberHeader = ({ navigate, handleOpenAttendance }) => {
         <div className="filter-content">
           <div className="filter-option">
             <label>{t('members.mltc_filter')}</label>
-            <MltcDropdown
+            <MltcFilter
               value={mltcFilter}
               onChange={setMltcFilter}
             />

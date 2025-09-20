@@ -5,7 +5,7 @@ import { formatDate, formatTime, formatStatus } from '../../utils/formatUtils';
 import { openFile } from '../../utils/fileUtils';
 import CardMember from '../layout/CardMember';
 
-const MemberAbsencesCard = ({ data, onEdit }) => {
+const MemberAbsenceCard = ({ data, onEdit }) => {
     const { t } = useTranslation();
     const absences = data || [];
 
@@ -65,4 +65,4 @@ const MemberAbsencesCard = ({ data, onEdit }) => {
     );
 };
 
-export default memo(MemberAbsencesCard);
+export default memo(MemberAbsenceCard);

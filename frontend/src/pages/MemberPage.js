@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import ModalPage from './ModalPage';
 import useModalOpen from '../hooks/useModalOpen';
 import useMembers from '../hooks/useMembers';
 import MemberInfoCard from '../components/cards/MemberInfoCard';
 import MemberAuthCard from '../components/cards/MemberAuthCard';
-import MemberContactsCard from '../components/cards/MemberContactsCard';
-import MemberAbsencesCard from '../components/cards/MemberAbsencesCard';
-import MemberFilesCard from '../components/cards/MemberFilesCard';
+import MemberContactCard from '../components/cards/MemberContactCard';
+import MemberAbsenceCard from '../components/cards/MemberAbsenceCard';
+import MemberFileCard from '../components/cards/MemberFileCard';
 import MemberGiftedCard from '../components/cards/MemberGiftedCard';
 import MemberPhotoCard from '../components/cards/MemberPhotoCard';
 import fetchWithRefresh from '../utils/fetchWithRefresh';
@@ -115,12 +115,12 @@ const MemberPage = () => {
               <MemberAuthCard id={id} data={member.auth} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
-              <MemberContactsCard data={member.contacts} onEdit={handleModalOpen} />
-              <MemberAbsencesCard data={member.absences} onEdit={handleModalOpen} />
+              <MemberContactCard data={member.contacts} onEdit={handleModalOpen} />
+              <MemberAbsenceCard data={member.absences} onEdit={handleModalOpen} />
               <MemberGiftedCard id={id} data={member.gifts} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
-              <MemberFilesCard data={member.files} onEdit={handleModalOpen} />
+              <MemberFileCard data={member.files} onEdit={handleModalOpen} />
             </div>
             <div className="member-row">
               <button className="action-button" onClick={handleStatus}>

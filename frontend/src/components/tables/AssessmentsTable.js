@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatDate, formatTime } from '../../utils/formatUtils';
 import NameDisplay from '../layout/NameDisplay';
 
-const AssesmentsTable = ({ registry }) => {
+const AssessmentsTable = ({ registry }) => {
     const { t } = useTranslation()
 
     return (
@@ -38,4 +38,4 @@ const AssesmentsTable = ({ registry }) => {
     );
 };
 
-export default AssesmentsTable;
+export default AssessmentsTable;

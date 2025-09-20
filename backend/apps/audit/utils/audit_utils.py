@@ -10,7 +10,7 @@ from ..serializers.audit_serializers import AuditLogSerializer
 from rest_framework.pagination import PageNumberPagination
 from backend.access.member_access import check_member_access, member_access_filter
 
-@member_access_filter()
+@member_access_filter(include_deleted=True)
 def getAuditList(request):
     audits = AuditLog.objects.select_related('content_type').filter(
         member_id__in=request.accessible_members_qs

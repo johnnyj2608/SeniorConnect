@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatDate, formatStatus } from '../../utils/formatUtils';
 import { colorAbsence, colorBoolean } from '../../utils/colorUtils';
 import NameDisplay from '../layout/NameDisplay';

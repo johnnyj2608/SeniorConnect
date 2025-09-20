@@ -6,7 +6,11 @@ const CancelButton = ({ onClose }) => {
     const { t } = useTranslation();
     
     return (
-        <button className="action-button" onClick={() => onClose()}>
+        <button 
+            type="button"
+            className="action-button" 
+            onClick={() => onClose()}
+        >
             {t('general.buttons.cancel')}
         </button>
     );
@@ -20,6 +24,7 @@ const DeleteButton = ({ type, showDeleteButton, onDelete, onClearQueue }) => {
     if (type === 'gifteds') {
         return (
             <button 
+                type="button"
                 className="icon-button tooltip"
                 data-tooltip={t('member.gifts.modal_tooltip')}
             >
@@ -30,6 +35,7 @@ const DeleteButton = ({ type, showDeleteButton, onDelete, onClearQueue }) => {
     
     return (
         <button
+            type="button"
             className={`action-button ${type === 'deleted' ? '' : 'destructive'}`}
             onClick={() => {
                 if (type === 'attendance') {
@@ -48,11 +54,14 @@ const DeleteButton = ({ type, showDeleteButton, onDelete, onClearQueue }) => {
     );
 };
 
-const SaveButton = ({ type, hasQueuedMembers, inputLimitExceeded, onSave, onGenerate }) => {
+const SaveButton = ({ type, hasQueuedMembers, inputLimitExceeded, onSave, onGenerate, isSaving }) => {
     const { t } = useTranslation();
     
+    const disabled = isSaving || (type === 'attendance' && !hasQueuedMembers) || inputLimitExceeded;
+
     return (
         <button
+            type="button"
             className="action-button"
             onClick={() => {
                 if (type === 'attendance') {
@@ -61,9 +70,13 @@ const SaveButton = ({ type, hasQueuedMembers, inputLimitExceeded, onSave, onGene
                     onSave();
                 }
             }}
-            disabled={(type === 'attendance' && !hasQueuedMembers) || inputLimitExceeded}
+            disabled={disabled}
         >
-            {type === 'attendance' ? t('general.buttons.generate') : t('general.buttons.save')}
+            {isSaving 
+                ? t('general.buttons.saving') 
+                : type === 'attendance' 
+                ? t('general.buttons.generate') 
+                : t('general.buttons.save')}
         </button>
     );
 };

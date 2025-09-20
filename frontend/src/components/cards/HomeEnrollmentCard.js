@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import NameDisplay from '../layout/NameDisplay';
 import { formatDate } from '../../utils/formatUtils';
 import fetchWithRefresh from '../../utils/fetchWithRefresh';
 import CardHome from '../layout/CardHome';
 
-const HomeEnrollmentsCard = () => {
+const HomeEnrollmentCard = () => {
     const { t } = useTranslation();
     const [enrollments, setEnrollments] = useState([]);
 
@@ -41,7 +41,7 @@ const HomeEnrollmentsCard = () => {
     );
 };
 
-export default HomeEnrollmentsCard;
+export default HomeEnrollmentCard;
 
 const EnrollmentItem = memo(({ enrollment }) => {
     const { t } = useTranslation();

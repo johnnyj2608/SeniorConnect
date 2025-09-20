@@ -38,6 +38,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
     const [localData, setLocalData] = useState(NO_TABS_TYPE.has(type) ? { ...effectiveData } : originalData);
     const [activeTab, setActiveTab] = useState(0);
     const [newTabsCount, setNewTabsCount] = useState(0);
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         document.body.classList.add('modal-open');
@@ -150,183 +151,192 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
     };
 
     const handleSave = async (updatedData) => {
+        if (isSaving) return;
+        setIsSaving(true);
+
         let savedData = null;
         let requiredFields = [];
         let dependentFields = [];
 
-        switch (type) {
-            case 'info':
-                requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
-                if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
-                if (!validateInputLength(updatedData.phone, 10, 'phone', t('member.info.phone'))) return;
-                if (!validateInputLength(updatedData.ssn, 9, 'ssn', t('member.info.ssn'))) return;
-                if (!validateMedicaid(updatedData.medicaid)) return;
+        try {
+            switch (type) {
+                case 'info':
+                    requiredFields = ['sadc_member_id', 'first_name', 'last_name', 'birth_date', 'gender'];
+                    if (!validateRequiredFields('member.info', updatedData, requiredFields)) return;
+                    if (!validateInputLength(updatedData.phone, 10, 'phone', t('member.info.phone'))) return;
+                    if (!validateInputLength(updatedData.ssn, 9, 'ssn', t('member.info.ssn'))) return;
+                    if (!validateMedicaid(updatedData.medicaid)) return;
 
-                const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
-                const memberMethod = id === 'new' ? 'POST' : 'PUT';
-                savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
+                    const memberEndpoint = `/core/members/${id === 'new' ? '' : id + '/'}`;
+                    const memberMethod = id === 'new' ? 'POST' : 'PUT';
+                    savedData = await sendRequest(memberEndpoint, memberMethod, updatedData);
 
-                data.setData(prev => prev ? { ...prev, info: savedData } : prev);
-                break;
+                    data.setData(prev => prev ? { ...prev, info: savedData } : prev);
+                    break;
 
-            case 'authorizations':
-                requiredFields = ['mltc_member_id', 'mltc', 'start_date', 'end_date'];
-                if (!validateRequiredFields('member.authorizations', updatedData, requiredFields)) return;
-                if (!validateDateRange(updatedData)) return;
-                if (!validateInputLength(updatedData, 10, 'cm_phone', t('member.authorizations.phone'))) return;
+                case 'authorizations':
+                    requiredFields = ['mltc_member_id', 'mltc', 'start_date', 'end_date'];
+                    if (!validateRequiredFields('member.authorizations', updatedData, requiredFields)) return;
+                    if (!validateDateRange(updatedData)) return;
+                    if (!validateInputLength(updatedData, 10, 'cm_phone', t('member.authorizations.phone'))) return;
 
-                try {
-                    const response = await fetchWithRefresh(`/core/members/${id}/auth/`);
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch member auth data');
+                    try {
+                        const response = await fetchWithRefresh(`/core/members/${id}/auth/`);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch member auth data');
+                        }
+                        const oldActiveAuth = await response.json();
+                        const oldMLTC = oldActiveAuth?.mltc || null;
+
+                        savedData = await saveDataTabs(updatedData, 'auths', id);
+                        const activeAuth = savedData.find(auth => auth.active === true);
+                        const newMLTC = activeAuth?.mltc || null;
+
+                        sendRequest(`/audit/enrollments/`, 'POST', {
+                            member: id,
+                            old_mltc: oldMLTC,
+                            new_mltc: newMLTC,
+                            change_type: !oldMLTC
+                                ? 'enrollment'
+                                : !newMLTC
+                                ? 'disenrollment'
+                                : 'transfer',
+                            active_auth: activeAuth ? activeAuth.id : null,
+                            change_date: activeAuth ? activeAuth.start_date : null,
+                        });
+
+                        data.setData(prev => {
+                            if (!prev) return prev;
+                            const activeAuthIndex = getActiveAuthIndex(savedData);
+                            if (activeAuthIndex === -1) return { ...prev, auth: null };
+                            return { ...prev, auth: savedData[activeAuthIndex] };
+                        });
+                    } catch (error) {
+                        console.error('Error during auth fetch or enrollment update:', error);
                     }
-                    const oldActiveAuth = await response.json();
-                    const oldMLTC = oldActiveAuth?.mltc || null;
+                    break;
 
-                    savedData = await saveDataTabs(updatedData, 'auths', id);
-                    const activeAuth = savedData.find(auth => auth.active === true);
-                    const newMLTC = activeAuth?.mltc || null;
+                case 'contacts':
+                    requiredFields = ['contact_type', 'name', 'phone'];
+                    dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency_contact' }];
+                    if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
+                    if (!validateInputLength(updatedData, 10, 'phone', t('member.contacts.phone'))) return;
 
-                    sendRequest(`/audit/enrollments/`, 'POST', {
-                        member: id,
-                        old_mltc: oldMLTC,
-                        new_mltc: newMLTC,
-                        change_type: !oldMLTC
-                            ? 'enrollment'
-                            : !newMLTC
-                            ? 'disenrollment'
-                            : 'transfer',
-                        active_auth: activeAuth ? activeAuth.id : null,
-                        change_date: activeAuth ? activeAuth.start_date : null,
-                    });
+                    savedData = await saveDataTabs(updatedData, 'contacts', id);
+
+                    data.setData(prev => prev ? { ...prev, contacts: savedData } : prev);
+                    break;
+
+                case 'absences':
+                    requiredFields = ['absence_type', 'start_date'];
+                    dependentFields = [
+                        { field: 'time', dependsOn: 'absence_type', value: 'assessment' },
+                        { field: 'user', dependsOn: 'absence_type', value: 'assessment' }
+                    ];
+                    if (!validateRequiredFields('member.absences', updatedData, requiredFields, dependentFields)) return;
+                    if (!validateDateRange(updatedData)) return;
+
+                    savedData = await saveDataTabs(updatedData, 'absences', id);
+
+                    data.setData(prev => prev ? { ...prev, absences: savedData } : prev);
+                    break;
+
+                case 'files':
+                    requiredFields = ['name', 'date', 'file'];
+                    if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
+
+                    savedData = await saveDataTabs(updatedData, 'files', id);
+
+                    data.setData(prev => prev ? { ...prev, files: savedData } : prev);
+                    break;
+
+                case 'gifteds':
+                    savedData = await saveDataTabs(updatedData, 'gifteds', id);
 
                     data.setData(prev => {
                         if (!prev) return prev;
-                        const activeAuthIndex = getActiveAuthIndex(savedData);
-                        if (activeAuthIndex === -1) return { ...prev, auth: null };
-                        return { ...prev, auth: savedData[activeAuthIndex] };
-                    });
-                } catch (error) {
-                    console.error('Error during auth fetch or enrollment update:', error);
-                }
-                break;
-
-            case 'contacts':
-                requiredFields = ['contact_type', 'name', 'phone'];
-                dependentFields = [{ field: 'relationship_type', dependsOn: 'contact_type', value: 'emergency_contact' }];
-                if (!validateRequiredFields('member.contacts', updatedData, requiredFields, dependentFields)) return;
-                if (!validateInputLength(updatedData, 10, 'phone', t('member.contacts.phone'))) return;
-
-                savedData = await saveDataTabs(updatedData, 'contacts', id);
-
-                data.setData(prev => prev ? { ...prev, contacts: savedData } : prev);
-                break;
-
-            case 'absences':
-                requiredFields = ['absence_type', 'start_date'];
-                dependentFields = [
-                    { field: 'time', dependsOn: 'absence_type', value: 'assessment' },
-                    { field: 'user', dependsOn: 'absence_type', value: 'assessment' }
-                ];
-                if (!validateRequiredFields('member.absences', updatedData, requiredFields, dependentFields)) return;
-                if (!validateDateRange(updatedData)) return;
-
-                savedData = await saveDataTabs(updatedData, 'absences', id);
-
-                data.setData(prev => prev ? { ...prev, absences: savedData } : prev);
-                break;
-
-            case 'files':
-                requiredFields = ['name', 'date', 'file'];
-                if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
-
-                savedData = await saveDataTabs(updatedData, 'files', id);
-
-                data.setData(prev => prev ? { ...prev, files: savedData } : prev);
-                break;
-
-            case 'gifteds':
-                savedData = await saveDataTabs(updatedData, 'gifteds', id);
-
-                data.setData(prev => {
-                    if (!prev) return prev;
-                
-                    let newGifts = [...prev.gifts];
-                
-                    savedData.forEach(item => {
-                        if (item.received) {
-                            newGifts = newGifts.filter(gift => gift.gift_id !== item.gift_id);
-                        } else {
-                            if (!newGifts.some(gift => gift.gift_id === item.gift_id)) {
-                                const fullGift = allGifts.find(gift => gift.gift_id === item.gift);
-                                if (fullGift) {
-                                    newGifts.push({
-                                        gift_id: fullGift.id,
-                                        name: fullGift.name,
-                                        expires_at: fullGift.expires_at
-                                    });
+                    
+                        let newGifts = [...prev.gifts];
+                    
+                        savedData.forEach(item => {
+                            if (item.received) {
+                                newGifts = newGifts.filter(gift => gift.gift_id !== item.gift_id);
+                            } else {
+                                if (!newGifts.some(gift => gift.gift_id === item.gift_id)) {
+                                    const fullGift = allGifts.find(gift => gift.gift_id === item.gift);
+                                    if (fullGift) {
+                                        newGifts.push({
+                                            gift_id: fullGift.id,
+                                            name: fullGift.name,
+                                            expires_at: fullGift.expires_at
+                                        });
+                                    }
                                 }
                             }
-                        }
-                    });
-                
-                    return { ...prev, gifts: newGifts };
-                });
-                break;
-
-            case 'import':
-                requiredFields = ['name', 'date', 'file'];
-                if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
-
-                const importEndpoint = `/core/members/csv/`;
-                const importMethod = 'POST';
-                sendRequest(importEndpoint, importMethod, updatedData);
-                break;
-
-            case 'users':
-                requiredFields = ['name', 'email'];
-                if (!validateRequiredFields('settings.admin.users', updatedData, requiredFields)) return;
-
-                saveDataTabs(updatedData, 'users', undefined, 'user');
-                break;
-
-            case 'mltcs':
-                requiredFields = ['name'];
-                if (!validateRequiredFields('settings.admin.mltc', updatedData, requiredFields)) return;
-                if (!confirmMltcDeletion(updatedData)) return;
-
-                saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
-                break;
-
-            case 'gifts':
-                requiredFields = ['name'];
-                if (!validateRequiredFields('settings.admin.gifts', updatedData, requiredFields)) return;
-
-                saveDataTabs(updatedData, 'gifts', undefined, 'tenant');
-                break;
-
-            case 'sadcs':
-                requiredFields = ['name', 'email', 'phone', 'address', 'npi'];
-                if (!validateRequiredFields('settings.admin.sadc', updatedData, requiredFields)) return;
-                if (!validateInputLength(updatedData.phone, 10, 'phone', t('settings.admin.sadc.phone'))) return;
-                if (!validateInputLength(updatedData.npi, 10, 'npi', t('settings.admin.sadc.npi'))) return;
-
-                const sadcEndpoint = `/tenant/sadcs/`;
-                const sadcMethod = 'PUT';
-                sendRequest(sadcEndpoint, sadcMethod, updatedData)
-                break;
-
-            case 'deleted':
-                updatedData.forEach(item => {
-                    if (item.deleted) {
-                        sendRequest(`/core/members/${item.id}/`, 'PATCH', {}).catch(error => {
-                            console.error(error);
                         });
-                        }
+                    
+                        return { ...prev, gifts: newGifts };
                     });
-                break;
-            default:
-                console.error("Unknown save type:", type);
+                    break;
+
+                case 'import':
+                    requiredFields = ['name', 'date', 'file'];
+                    if (!validateRequiredFields('member.files', updatedData, requiredFields)) return;
+
+                    const importEndpoint = `/core/members/csv/`;
+                    const importMethod = 'POST';
+                    sendRequest(importEndpoint, importMethod, updatedData);
+                    break;
+
+                case 'users':
+                    requiredFields = ['name', 'email'];
+                    if (!validateRequiredFields('settings.admin.users', updatedData, requiredFields)) return;
+
+                    saveDataTabs(updatedData, 'users', undefined, 'user');
+                    break;
+
+                case 'mltcs':
+                    requiredFields = ['name'];
+                    if (!validateRequiredFields('settings.admin.mltc', updatedData, requiredFields)) return;
+                    if (!confirmMltcDeletion(updatedData)) return;
+
+                    saveDataTabs(updatedData, 'mltcs', undefined, 'tenant');
+                    break;
+
+                case 'gifts':
+                    requiredFields = ['name'];
+                    if (!validateRequiredFields('settings.admin.gifts', updatedData, requiredFields)) return;
+
+                    saveDataTabs(updatedData, 'gifts', undefined, 'tenant');
+                    break;
+
+                case 'sadcs':
+                    requiredFields = ['name', 'email', 'phone', 'address', 'npi'];
+                    if (!validateRequiredFields('settings.admin.sadc', updatedData, requiredFields)) return;
+                    if (!validateInputLength(updatedData.phone, 10, 'phone', t('settings.admin.sadc.phone'))) return;
+                    if (!validateInputLength(updatedData.npi, 10, 'npi', t('settings.admin.sadc.npi'))) return;
+
+                    const sadcEndpoint = `/tenant/sadcs/`;
+                    const sadcMethod = 'PUT';
+                    sendRequest(sadcEndpoint, sadcMethod, updatedData)
+                    break;
+
+                case 'deleted':
+                    updatedData.forEach(item => {
+                        if (item.deleted) {
+                            sendRequest(`/core/members/${item.id}/`, 'PATCH', {}).catch(error => {
+                                console.error(error);
+                            });
+                            }
+                        });
+                    break;
+                default:
+                    console.error("Unknown save type:", type);
+            }
+        } catch (error) {
+            console.error('Error saving data:', error);
+        } finally {
+            setIsSaving(false); 
         }
 
         onClose(savedData?.id);
@@ -345,6 +355,7 @@ function useModalEdit(data, onClose, NO_TABS_TYPE) {
         setActiveTab,
         mltcs,
         sadc,
+        isSaving,
     };
 }
 
