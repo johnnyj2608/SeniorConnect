@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-
 import DragOverlay from './DragOverlay';
 
 jest.mock('react-i18next', () => ({

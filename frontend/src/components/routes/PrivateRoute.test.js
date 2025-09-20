@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from '../../context/AuthContext';
-import { MemoryRouter } from 'react-router';
 import { Navigate } from 'react-router';
 
 // Mock Loader

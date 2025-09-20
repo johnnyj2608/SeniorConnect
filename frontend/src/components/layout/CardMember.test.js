@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-
 import CardMember from './CardMember';
 
 jest.mock('../buttons/EditButton', () => ({ onClick }) => (

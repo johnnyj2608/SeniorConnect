@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import AuditsTable from './AuditsTable';
 import { MemoryRouter } from 'react-router';
 import { formatDate } from '../../utils/formatUtils';

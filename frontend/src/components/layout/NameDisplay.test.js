@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-
 import NameDisplay from './NameDisplay';
 import usePreferences from '../../hooks/usePreferences';
 

@@ -14,7 +14,6 @@ describe('SettingsData', () => {
     beforeEach(() => {
         mockOpenModal = jest.fn();
 
-        // Properly mock URL globally
         global.URL.createObjectURL = jest.fn(() => 'mock-url');
         global.URL.revokeObjectURL = jest.fn();
     });

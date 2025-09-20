@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-
 import ListDetail from './ListDetail';
 
 describe('ListDetail', () => {

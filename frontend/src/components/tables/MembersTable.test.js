@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MembersTable from './MembersTable';
 import { MemoryRouter } from 'react-router';
 import { formatDate, formatSchedule } from '../../utils/formatUtils';
