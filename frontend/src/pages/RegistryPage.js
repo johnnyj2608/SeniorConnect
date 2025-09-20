@@ -104,8 +104,9 @@ const RegistryPage = () => {
                 <div className="filter-row">
                     <div className="filter-content">
                         <div className="filter-option">
-                            <label>{t('registry.registry_type')}</label>
+                            <label htmlFor="registry-type">{t('registry.registry_type')}</label>
                             <select
+                                id="registry-type"
                                 required
                                 value={registryType}
                                 onChange={(e) => setRegistryType(e.target.value)}
@@ -119,7 +120,7 @@ const RegistryPage = () => {
                         </div>
 
                         <div className="filter-option">
-                            <label>{t('registry.status_filter')}</label>
+                            <label htmlFor="status-filter">{t('registry.status_filter')}</label>
                             {registryType === 'members' ? (
                                 <MltcFilter
                                     value={registryFilter}
@@ -127,6 +128,7 @@ const RegistryPage = () => {
                                 />
                             ) : (
                                 <select
+                                    id="status-filter"
                                     required
                                     value={registryFilter}
                                     onChange={(e) => setRegistryFilter(e.target.value)}
