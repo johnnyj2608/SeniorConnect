@@ -19,7 +19,7 @@ import { MltcContext } from '../context/MltcContext';
 import { SadcContext } from '../context/SadcContext';
 import { GiftContext } from '../context/GiftContext';
 
-function useModalEdit(data, onClose, NO_TABS_TYPE) {
+const useModalEdit = (data, onClose, NO_TABS_TYPE) => {
     const { t } = useTranslation();
     const { mltcs } = useContext(MltcContext);
     const { sadc } = useContext(SadcContext);
