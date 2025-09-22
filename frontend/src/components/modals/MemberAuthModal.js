@@ -78,8 +78,9 @@ const MemberAuthModal = ({
             </div>
 
             <div className="member-detail">
-                <label>{t('member.authorizations.mltc')} *</label>
+                <label htmlFor="mltc-select">{t('member.authorizations.mltc')} *</label>
                 <select
+                    id="mltc-select"
                     required
                     value={disabled ? '' : current.mltc || ''}
                     onChange={(e) => {
@@ -125,8 +126,9 @@ const MemberAuthModal = ({
             />
 
             <div className="member-detail">
-                <label>{t('member.authorizations.dx_code')}</label>
+                <label htmlFor="dx-select">{t('member.authorizations.dx_code')}</label>
                 <select
+                    id="dx-select"
                     required
                     value={!disabled && dx_codes?.includes(current.dx_code) ? current.dx_code : ''}
                     onChange={handleChange('dx_code')}

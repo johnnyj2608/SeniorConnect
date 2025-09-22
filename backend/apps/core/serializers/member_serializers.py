@@ -74,7 +74,10 @@ class MemberSerializer(serializers.ModelSerializer):
         if getattr(instance, 'birth_date', None):
             instance.birth_day = instance.birth_date.day
             instance.birth_month = instance.birth_date.month
+
+            instance._skip_audit = True
             instance.save(update_fields=['birth_month', 'birth_day'])
+            del instance._skip_audit
 
         return instance
 

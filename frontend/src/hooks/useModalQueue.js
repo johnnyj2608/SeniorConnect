@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function useModalQueue(data) {
+const useModalQueue = (data) => {
     const initialAvailable = { ...data.data };
     if ('unknown' in initialAvailable) {
         delete initialAvailable.unknown;
@@ -18,8 +18,9 @@ function useModalQueue(data) {
             onMonthChange: () => {},
             addQueue: () => {},
             removeQueue: () => {},
+            addMltcQueue: () => {},
+            clearMltcQueue: () => {},
             clearQueue: () => {},
-            
         };
     }
 
@@ -28,79 +29,78 @@ function useModalQueue(data) {
     };
 
     const addQueue = (member, mltcName) => {
-        setAvailableMembers((prev) => {
-            const updatedMltc = prev[mltcName].filter((m) => m.id !== member.id);
-            return { ...prev, [mltcName]: updatedMltc };
-        });
+        setAvailableMembers(prev => ({
+            ...prev,
+            [mltcName]: prev[mltcName].filter(m => m.id !== member.id),
+        }));
 
-        setQueuedMembers((prev) => {
-            const updatedMltc = prev[mltcName] ? [...prev[mltcName], member] : [member];
-            return { ...prev, [mltcName]: updatedMltc };
-        });
+        setQueuedMembers(prev => ({
+            ...prev,
+            [mltcName]: prev[mltcName] ? [...prev[mltcName], member] : [member],
+        }));
     };
 
     const removeQueue = (memberId, mltcName) => {
-        if (!queuedMembers[mltcName]) return;
+        setQueuedMembers(prevQueued => {
+            const queuedList = prevQueued[mltcName] || [];
+            const removedMember = queuedList.find(m => m.id === memberId);
+            if (!removedMember) return prevQueued;
 
-        const removedMember = queuedMembers[mltcName].find((m) => m.id === memberId);
-        if (!removedMember) return;
+            const updatedQueued = queuedList.filter(m => m.id !== memberId);
 
-        setQueuedMembers((prev) => {
-            const updatedMltc = prev[mltcName].filter((m) => m.id !== memberId);
-            return { ...prev, [mltcName]: updatedMltc };
-        });
+            setAvailableMembers(prevAvailable => ({
+                ...prevAvailable,
+                [mltcName]: prevAvailable[mltcName]
+                    ? [...prevAvailable[mltcName], removedMember]
+                    : [removedMember],
+            }));
 
-        setAvailableMembers((prev) => {
-            const updatedMltc = prev[mltcName] ? [...prev[mltcName], removedMember] : [removedMember];
-            return { ...prev, [mltcName]: updatedMltc };
+            return { ...prevQueued, [mltcName]: updatedQueued };
         });
     };
 
     const addMltcQueue = (mltcName) => {
-        setQueuedMembers((prev) => {
-            const updatedQueued = { ...prev };
-            const available = availableMembers[mltcName] || [];
-    
-            updatedQueued[mltcName] = [...available];
-    
-            return updatedQueued;
-        });
-    
-        setAvailableMembers((prev) => {
-            const updatedAvailable = { ...prev };
-            delete updatedAvailable[mltcName];
-            return updatedAvailable;
+        setQueuedMembers(prev => ({
+            ...prev,
+            [mltcName]: availableMembers[mltcName] ? [...availableMembers[mltcName]] : [],
+        }));
+
+        setAvailableMembers(prev => {
+            const updated = { ...prev };
+            delete updated[mltcName];
+            return updated;
         });
     };
-    
+
     const clearMltcQueue = (mltcName) => {
-        setAvailableMembers((prev) => {
-        const updatedAvailable = { ...prev };
-        const queued = queuedMembers[mltcName] || [];
-        const existing = updatedAvailable[mltcName] || [];
+        setQueuedMembers(prevQueued => {
+            const queued = prevQueued[mltcName] || [];
+            setAvailableMembers(prevAvailable => ({
+                ...prevAvailable,
+                [mltcName]: prevAvailable[mltcName]
+                    ? [...prevAvailable[mltcName], ...queued]
+                    : [...queued],
+            }));
 
-        updatedAvailable[mltcName] = [...queued, ...existing];
-
-        return updatedAvailable;
-    });
-    
-        setQueuedMembers((prev) => {
-            const updatedQueued = { ...prev };
+            const updatedQueued = { ...prevQueued };
             delete updatedQueued[mltcName];
             return updatedQueued;
         });
     };
-    
 
     const clearQueue = () => {
-        setAvailableMembers((prev) => {
-            const merged = { ...prev };
-            Object.entries(queuedMembers).forEach(([mltcName, members]) => {
-                merged[mltcName] = merged[mltcName] ? [...merged[mltcName], ...members] : members;
+        setQueuedMembers(prevQueued => {
+            setAvailableMembers(prevAvailable => {
+                const merged = { ...prevAvailable };
+                Object.entries(prevQueued).forEach(([mltcName, members]) => {
+                    merged[mltcName] = merged[mltcName]
+                        ? [...merged[mltcName], ...members]
+                        : [...members];
+                });
+                return merged;
             });
-            return merged;
+            return {};
         });
-        setQueuedMembers({});
     };
 
     return {
@@ -114,6 +114,6 @@ function useModalQueue(data) {
         clearMltcQueue,
         clearQueue,
     };
-}
+};
 
 export default useModalQueue;

@@ -159,7 +159,7 @@ const formatObjectDisplay = (entry, t) => {
 
   if (model === 'authorization') {
     // Example: "MLTC: 05/01/2024 — 07/01/2024"
-    const parts = entry.object_display.split(/:|—/); 
+    const parts = entry.object_name.split(/:|—/); 
     const mltc = parts[0]?.trim();
     const start = parts[1]?.trim();
     const end = parts[2]?.trim();

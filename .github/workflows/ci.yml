@@ -1,4 +1,4 @@
-name: Django Tests
+name: CI
 
 on:
   push:
@@ -7,10 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  unit-tests:
-    name: Run Unit Tests
+  django-tests:
+    name: Run Django Tests
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:15
@@ -25,18 +24,25 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     env:
       SECRET_KEY: "test-secret-key"
-      FIELD_ENCRYPTION_KEY: "7OUx2ccq2SJHQXxjLdefmXWbKXbaMPPI73Xpj83FN28=" # <-- TEST KEY
+      FIELD_ENCRYPTION_KEY: "7OUx2ccq2SJHQXxjLdefmXWbKXbaMPPI73Xpj83FN28="
       SUPABASE_URL: "http://localhost/test-supabase"
       SUPABASE_KEY: "test-supabase-key"
       SUPABASE_BUCKET: "test-bucket"
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
       DEBUG: "True"
-
     steps:
       - uses: actions/checkout@v3
+
+      # Cache Python dependencies
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -52,5 +58,34 @@ jobs:
       - name: Run migrations
         run: python manage.py migrate
 
-      - name: Run tests in parallel
+      - name: Run tests
         run: pytest -n auto --maxfail=1 --disable-warnings
+
+
+  react-tests:
+    name: Run React Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Cache Node modules
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run tests
+        run: npm test -- --watchAll=false --ci
+        working-directory: frontend

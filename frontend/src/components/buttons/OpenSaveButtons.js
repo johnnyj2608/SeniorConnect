@@ -6,10 +6,20 @@ import { openFile, saveFile } from '../../utils/fileUtils'
 const OpenSaveButtons = ({ file, name }) => {
 	return (
 		<div className="open-save-group">
-			<button className="icon-button" onClick={() => openFile(file)} title="Open">
+			<button
+				className="icon-button"
+				onClick={() => openFile(file)}
+				title="Open"
+				aria-label="Open"
+			>
 				<FileIcon />
 			</button>
-			<button className="icon-button" onClick={() => saveFile(file, name)} title="Download">
+			<button
+				className="icon-button"
+				onClick={() => saveFile(file, name)}
+				title="Download"
+				aria-label="Download"
+			>
 				<SaveIcon />
 			</button>
 		</div>
