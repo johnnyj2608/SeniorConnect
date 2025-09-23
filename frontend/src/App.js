@@ -17,6 +17,7 @@ import Navbar from './components/layout/Navbar';
 import HomePage from './pages/HomePage';
 import MemberPage from './pages/MemberPage';
 import RegistryPage from './pages/RegistryPage';
+import BillingPage from "./pages/BillingPage";
 import SettingsPage from './pages/SettingsPage';
 import SupportsPage from './pages/SupportsPage';
 import LoginPage from './pages/LoginPage';
@@ -45,6 +46,7 @@ function Main() {
             <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
             <Route path="/members/:id?" element={<PrivateRoute><MemberPage /></PrivateRoute>} />
             <Route path="/registry" element={<PrivateRoute><RegistryPage /></PrivateRoute>} />
+            <Route path="/billing" element={<PrivateRoute><BillingPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/support/:section" element={<PrivateRoute><SupportsPage /></PrivateRoute>} />
             <Route path="/login/*" element={<LoginPage />} />
