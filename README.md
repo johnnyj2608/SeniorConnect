@@ -10,7 +10,6 @@
    - [Home Page](#home-page)
    - [Member Page](#member-page)
    - [Registry Page](#registry-page)
-   - [Billing Page](#billing-page)
    - [Settings Page](#settings-page)
 4. [Challenges & Lessons Learned](#challenges--lessons-learned)
    - [Data Consistency Across Departments](#data-consistency-across-departments)
@@ -44,9 +43,10 @@ This system provides a **centralized, secure, and digital Electronic Health Reco
 
 The platform is designed for **social adult day care office workers**, providing a streamlined and secure way to manage patient information efficiently.
 
-**🎬 Demo Video:**  
-[![Senior Connect Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-*Click the image to watch a full demo of the system in action, showcasing a typical user workflow from login to member management.*
+**🎬 Demo Video**  
+[![Senior Connect Demo](https://img.youtube.com/vi/jjr79qNWJ4A/0.jpg)](https://www.youtube.com/watch?v=jjr79qNWJ4A)  
+
+*Watch a full demo of the system in action, showcasing a typical user workflow from login to member management.*
 
 ---
 
@@ -94,9 +94,6 @@ The platform is designed for **social adult day care office workers**, providing
 ### **Registry Page**
 - View **absences, enrollments, audits, and snapshots** in tabular form.
 - Supports **pagination up to 20 items per page**.
-
-### **Billing Page**
-- Integrates with Availity API to submit and track claims efficiently based on each member’s schedule.
 
 ### **Settings Page**
 - **User management**: create, update, delete users, reset passwords via email (**only accessible to organization admins**.)
@@ -150,7 +147,7 @@ The platform is designed for **social adult day care office workers**, providing
 - **Approach:**
   - Frontend: Inline error messages and input masks for key fields.
   - Backend: Validators raise exceptions for invalid or duplicate entries, caught by API responses.
-- **Lesson Learned / Impact:** Fewer mistakes, higher data trustworthiness, and reliable records for reporting and billing.
+- **Lesson Learned / Impact:** Fewer mistakes, higher data trustworthiness, and reliable records for reporting.
 
 ### Automated Reporting & Snapshots
 - **Challenge:** Monthly reports (birthdays, absences, gifts, enrollments, members) used to be **manual and time-consuming**, which often led to mistakes.
@@ -288,3 +285,15 @@ The platform is designed for **social adult day care office workers**, providing
 
 <a name="project-screenshots"></a>
 ## 📸 Project Screenshots
+
+| Login | Home |
+|-------|------|
+| <img src="https://github.com/user-attachments/assets/fcdc03ff-ff1c-4cf3-b3c9-c6db376b5efd" width="400"/> | <img src="https://github.com/user-attachments/assets/d54acea6-a0a7-40ef-b694-72d9e52ad794" width="400"/> |
+
+| Members | Modal |
+|---------|-------|
+| <img src="https://github.com/user-attachments/assets/8cbab5d8-974a-484d-9566-ff36ddd01d58" width="400"/> | <img src="https://github.com/user-attachments/assets/e235a768-e35f-4204-844d-6cc4d50b2349" width="400"/> |
+
+| Settings | Registry |
+|---------|---------|
+| <img src="https://github.com/user-attachments/assets/c63bc80b-556e-417b-b523-f698f4cea1e0" width="400"/> | <img src="https://github.com/user-attachments/assets/ab64a8a5-2bc3-4352-be95-a20b28625dc2" width="400"/> |
