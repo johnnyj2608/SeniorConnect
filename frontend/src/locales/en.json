@@ -166,6 +166,9 @@
             "enrollment": "Enrollment",
             "active": "Active",
             "deleted_at": "Restored At",
+            "photo": "Photo",
+            "enrollment_date": "Enrollment Date",
+            "active_auth": "Active Auth",
             "no_info": "No information available"
         },
         "authorizations": {

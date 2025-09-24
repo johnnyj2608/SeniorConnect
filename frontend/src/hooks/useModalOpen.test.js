@@ -45,7 +45,7 @@ describe('useModalOpen', () => {
             setData: expect.any(Function),
             data,
         });
-        expect(mockRefresh).toHaveBeenCalledTimes(1); // refreshGift
+        expect(mockRefresh).toHaveBeenCalledTimes(2); // refreshMltc + refreshGift
     });
 
     it('opens modal with async fetchData', async () => {

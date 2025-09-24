@@ -64,9 +64,9 @@ const colorStats = (count, change) => {
     }
 
     if (change > 0) {
-        return <span className="green outline">↑ +{count} ({percentChange}%)</span>;
+        return <span className="green outline">↑ +{change} ({percentChange}%)</span>;
     } else if (change < 0) {
-        return <span className="red outline">↓ -{count} ({percentChange}%)</span>;
+        return <span className="red outline">↓ {change} ({percentChange}%)</span>;
     } else {
         return <span>(0%)</span>;
     }

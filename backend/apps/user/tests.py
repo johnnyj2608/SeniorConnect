@@ -127,8 +127,8 @@ def test_user_detail(
         # 2. Admin tries to create an admin user in same SADC → fail
         ("api_client_admin", "newadmin@example.com", "New Admin", "org_setup", True, status.HTTP_400_BAD_REQUEST),
 
-        # 3. Admin tries to create user in another SADC → fail
-        ("api_client_admin", "otheruser@example.com", "Other User", "other_org_setup", False, status.HTTP_404_NOT_FOUND),
+        # 3. Admin tries to create user in another SADC → still succeeds (forced to their own SADC)
+        ("api_client_admin", "otheruser@example.com", "Other User", "other_org_setup", False, status.HTTP_201_CREATED),
 
         # 4. Regular user tries to create any user → fail
         ("api_client_regular", "regularcreate@example.com", "Regular Create", "org_setup", False, status.HTTP_404_NOT_FOUND),

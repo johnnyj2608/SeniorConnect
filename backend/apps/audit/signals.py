@@ -37,6 +37,9 @@ def log_create_update(sender, instance, created, **kwargs):
     if sender not in WHITELISTED_MODELS or getattr(instance, '_skip_audit', False) or kwargs.get('raw', False):
         return
 
+    if sender == Contact:
+        return  # Handled by m2m signal
+
     user = get_current_user()
     user_id, user_name = None, None
     if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
@@ -138,7 +141,7 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
     user_id, user_name = None, None
     if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
         user_id = user.id
-        user_name = f"{user.last_name}, {user.first_name}"
+        user_name = user.name
 
     content_type = ContentType.objects.get_for_model(Contact)
     action_type = AuditLog.CREATE if action == 'post_add' else AuditLog.DELETE

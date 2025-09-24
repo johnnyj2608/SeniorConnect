@@ -18,10 +18,12 @@ const MemberPhotoCard = ({ photo, data, small }) => {
   const photoPath = photo || info.photo;
 
   useEffect(() => {
-    if (!photoPath) return;
+    if (!photoPath) {
+      setPhotoURL("/default-profile.jpg");
+      return;
+    }
 
     const fetchPhoto = async () => {
-      // if backend already gave us a signed URL, just use it
       if (photo) {
         setPhotoURL(photo);
       } else {
@@ -31,7 +33,8 @@ const MemberPhotoCard = ({ photo, data, small }) => {
     };
 
     fetchPhoto();
-  }, [photo, photoPath]);
+  }, [photo, photoPath, info?.id]);
+
 
   // Refresh signed URL on error
   const handleError = async (e) => {

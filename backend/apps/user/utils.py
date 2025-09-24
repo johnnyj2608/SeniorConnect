@@ -32,7 +32,7 @@ def getUserDetail(request, pk):
 def createUser(request):
     current_user = request.user
     data = request.data
-    unauthorized = require_sadc_ownership(data.get('sadc'), current_user) or require_org_admin(current_user)
+    unauthorized = require_org_admin(current_user)
     if unauthorized: return unauthorized
 
     if data.get('is_org_admin'):

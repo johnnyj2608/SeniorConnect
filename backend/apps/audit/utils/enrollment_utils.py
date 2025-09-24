@@ -100,6 +100,7 @@ def getCurrentMonthEnrollmentStats(request):
         .filter(new_mltc__isnull=False)
         .values(name=F('new_mltc'))
         .annotate(count=Count('new_mltc'))
+        .exclude(new_mltc='')
     )
 
     disenroll_count = (
@@ -107,6 +108,7 @@ def getCurrentMonthEnrollmentStats(request):
         .filter(old_mltc__isnull=False)
         .values(name=F('old_mltc'))
         .annotate(count=Count('old_mltc'))
+        .exclude(old_mltc='')
     )
 
     enroll_map = {e['name']: e['count'] for e in enroll_count}

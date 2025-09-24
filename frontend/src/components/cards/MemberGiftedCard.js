@@ -44,6 +44,7 @@ const MemberGiftedCard = ({ id, data, onEdit }) => {
             data={gifts}
             emptyMessage={t('member.gifts.no_gifts')}
             onEdit={handleEdit}
+            editKey="gifted"
         >
             <ul className="card-list">
                 {gifts.map((gift, idx) => (

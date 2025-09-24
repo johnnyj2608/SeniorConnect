@@ -137,7 +137,7 @@ def gifts_unreceived_query(sadc, _, __, ___, gift_id=None):
     ).exclude(id__in=received_member_ids)
 
     if gift.birth_month:
-        qs = qs.filter(birth_date__month=gift.birth_month)
+        qs = qs.filter(birth_month=gift.birth_month)
 
     if gift.mltc:
         qs = qs.filter(active_auth__mltc=gift.mltc)
