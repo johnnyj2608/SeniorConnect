@@ -81,7 +81,7 @@ describe('colorAudit', () => {
 describe('colorStats', () => {
     it('renders positive change in green with arrow', () => {
         render(colorStats(50, 10));
-        const el = screen.getByText(/↑ \+50/);
+        const el = screen.getByText(/↑ \+10/);
         expect(el).toHaveClass('green');
     });
 

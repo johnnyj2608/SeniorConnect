@@ -37,6 +37,9 @@ def log_create_update(sender, instance, created, **kwargs):
     if sender not in WHITELISTED_MODELS or getattr(instance, '_skip_audit', False) or kwargs.get('raw', False):
         return
 
+    if sender == Contact:
+        return  # Handled by m2m signal
+
     user = get_current_user()
     user_id, user_name = None, None
     if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
@@ -45,7 +48,7 @@ def log_create_update(sender, instance, created, **kwargs):
 
     member = get_related_member(instance)
     member_id = member.id if member else None
-    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None
     member_alt_name = member.alt_name if member and member.alt_name else None
 
     action_type = AuditLog.CREATE if created else AuditLog.UPDATE
@@ -111,7 +114,7 @@ def log_delete(sender, instance, **kwargs):
 
     member = get_related_member(instance)
     member_id = member.id if member else None
-    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None
     member_alt_name = member.alt_name if member and member.alt_name else None
 
     AuditLog.objects.create(
@@ -138,7 +141,7 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
     user_id, user_name = None, None
     if user and getattr(user, 'is_authenticated', False) and not isinstance(user, AnonymousUser):
         user_id = user.id
-        user_name = f"{user.last_name}, {user.first_name}"
+        user_name = user.name
 
     content_type = ContentType.objects.get_for_model(Contact)
     action_type = AuditLog.CREATE if action == 'post_add' else AuditLog.DELETE
@@ -149,7 +152,7 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
             user_id=user_id,
             user_name=user_name,
             member_id=member_id,
-            member_name = f"{member.last_name}, {member.first_name}" if member else None,
+            member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None,
             member_alt_name = member.alt_name if member and member.alt_name else None,
             content_type=content_type,
             object_id=instance.pk,

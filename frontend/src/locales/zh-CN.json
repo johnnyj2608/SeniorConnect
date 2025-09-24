@@ -166,6 +166,9 @@
             "enrollment": "注册",
             "active": "活跃",
             "deleted_at": "恢复于",
+            "photo": "照片",
+            "enrollment_date": "注册日期",
+            "active_auth": "有效授权",
             "no_info": "无可用信息"
         },
         "authorizations": {

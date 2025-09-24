@@ -119,12 +119,16 @@ const SettingsGiftModal = ({ type, data, handleChange, activeTab, mltcs, handleL
                     <div className="switch-container">
                         <button 
                             className="action-button thin"
-                            onClick={() => fetchGiftedData('received')}>
+                            onClick={() => fetchGiftedData('received')}
+                            disabled={disabled || current.id === 'new'}
+                        >
                             {t('settings.admin.gifts.received_list')}
                         </button>
                         <button 
                             className="action-button thin"
-                            onClick={() => fetchGiftedData('unreceived')}>
+                            onClick={() => fetchGiftedData('unreceived')}
+                            disabled={disabled || current.id === 'new'}
+                        >
                             {t('settings.admin.gifts.unreceived_list')}
                         </button>
                     </div>

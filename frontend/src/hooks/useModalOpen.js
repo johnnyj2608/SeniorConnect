@@ -22,7 +22,7 @@ const useModalOpen = () => {
         try {
             const resolvedData = fetchData ? await fetchData() : data;
 
-            if ((type === 'authorizations' || type === 'users') && refreshMltc) await refreshMltc();
+            if ((type === 'authorizations' || type === 'users' || type === 'gifts') && refreshMltc) await refreshMltc();
             if ((type === 'attendance' || type === 'info') && refreshSadc) await refreshSadc();
             if (type === 'gifts' && refreshGift) await refreshGift();
             if (type === 'absences' && refreshUser) await refreshUser();

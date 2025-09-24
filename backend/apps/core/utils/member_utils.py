@@ -80,7 +80,7 @@ def createMember(request):
     data.pop('photo', None)
 
     try:
-        serializer = MemberSerializer(data=data)
+        serializer = MemberSerializer(data=data, context={'sadc': request.user.sadc})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         member = serializer.save(sadc=sadc)

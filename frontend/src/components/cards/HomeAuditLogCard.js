@@ -57,7 +57,6 @@ const AuditItem = memo(({ audit }) => {
                 <span className="home-item-primary">
                     <p>
                         <NameDisplay
-                            sadcId={audit.sadc_member_id}
                             memberName={audit.member_name}
                             altName={audit.alt_name}
                         />

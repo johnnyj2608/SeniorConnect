@@ -59,7 +59,6 @@ const EnrollmentItem = memo(({ enrollment }) => {
                 <span className="home-item-primary">
                     <p>
                         <NameDisplay
-                            sadcId={enrollment.sadc_member_id}
                             memberName={enrollment.member_name}
                             altName={enrollment.member_alt_name}
                         />
