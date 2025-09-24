@@ -48,7 +48,7 @@ def log_create_update(sender, instance, created, **kwargs):
 
     member = get_related_member(instance)
     member_id = member.id if member else None
-    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None
     member_alt_name = member.alt_name if member and member.alt_name else None
 
     action_type = AuditLog.CREATE if created else AuditLog.UPDATE
@@ -114,7 +114,7 @@ def log_delete(sender, instance, **kwargs):
 
     member = get_related_member(instance)
     member_id = member.id if member else None
-    member_name = f"{member.last_name}, {member.first_name}" if member else None
+    member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None
     member_alt_name = member.alt_name if member and member.alt_name else None
 
     AuditLog.objects.create(
@@ -152,7 +152,7 @@ def log_contact_membership_change(sender, instance, action, reverse, model, pk_s
             user_id=user_id,
             user_name=user_name,
             member_id=member_id,
-            member_name = f"{member.last_name}, {member.first_name}" if member else None,
+            member_name = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}" if member else None,
             member_alt_name = member.alt_name if member and member.alt_name else None,
             content_type=content_type,
             object_id=instance.pk,

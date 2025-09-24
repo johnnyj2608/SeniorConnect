@@ -68,7 +68,7 @@ def createEnrollment(request):
         return Response({"detail": "Extension, no action required."}, status=status.HTTP_200_OK)
 
     data['member_id'] = member_id
-    data['member_name'] = f"{member.last_name}, {member.first_name}"
+    data['member_name'] = f"{member.sadc_member_id}. {member.last_name}, {member.first_name}"
     data['member_alt_name'] = member.alt_name if member and member.alt_name else None
 
     serializer = EnrollmentSerializer(data=data)
