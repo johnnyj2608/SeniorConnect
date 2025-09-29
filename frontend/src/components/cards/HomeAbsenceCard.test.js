@@ -61,54 +61,38 @@ describe('HomeAbsenceCard', () => {
             expect(screen.getByText(/home.leaving_soon/)).toBeInTheDocument();
             expect(screen.getByText(/home.returning_soon/)).toBeInTheDocument();
 
-            // Leaving absences
-            leavingData.forEach((absence) => {
-                // Member name
+            // Check leaving absences
+            leavingData.forEach(absence => {
                 const link = screen.getByText(absence.member_name).closest('a');
                 expect(link).toBeInTheDocument();
                 expect(link).toHaveAttribute('href', `/members/${absence.member}`);
 
-                // Absence type
-                const absenceTypeEls = screen.getAllByText((content) =>
+                // Absence type text
+                expect(screen.getByText((content) =>
                     content.includes(`member.absences.${absence.absence_type}`)
-                );
-                expect(absenceTypeEls.length).toBeGreaterThan(0);
+                )).toBeInTheDocument();
 
                 // Days until
-                const daysText =
-                    absence.days_until === 0
-                        ? 'home.today'
-                        : absence.days_until === 1
-                        ? 'home.tomorrow'
-                        : 'home.days';
-                expect(
-                    screen.getByText((content) => content.includes(daysText))
-                ).toBeInTheDocument();
+                const daysText = absence.days_until === 0 ? 'home.today' :
+                                 absence.days_until === 1 ? 'home.tomorrow' :
+                                 'home.days';
+                expect(screen.getByText((content) => content.includes(daysText))).toBeInTheDocument();
             });
 
-            // Returning absences
-            returningData.forEach((absence) => {
-                // Member name
+            // Check returning absences
+            returningData.forEach(absence => {
                 const link = screen.getByText(absence.member_name).closest('a');
                 expect(link).toBeInTheDocument();
                 expect(link).toHaveAttribute('href', `/members/${absence.member}`);
 
-                // Absence type
-                const absenceTypeEls = screen.getAllByText((content) =>
+                expect(screen.getByText((content) =>
                     content.includes(`member.absences.${absence.absence_type}`)
-                );
-                expect(absenceTypeEls.length).toBeGreaterThan(0);
+                )).toBeInTheDocument();
 
-                // Days until
-                const daysText =
-                    absence.days_until === 0
-                        ? 'home.today'
-                        : absence.days_until === 1
-                        ? 'home.tomorrow'
-                        : 'home.days';
-                expect(
-                    screen.getByText((content) => content.includes(daysText))
-                ).toBeInTheDocument();
+                const daysText = absence.days_until === 0 ? 'home.today' :
+                                 absence.days_until === 1 ? 'home.tomorrow' :
+                                 'home.days';
+                expect(screen.getByText((content) => content.includes(daysText))).toBeInTheDocument();
             });
         });
     });
