@@ -33,7 +33,7 @@
 
 <a name="overview"></a>
 ## 📖 Overview
-In many adult day care centers, patient data is still recorded on paper. This results in **inconsistent records across departments** and **slow retrieval** when information needs to be shared.
+In many adult day care centers, patient data is still recorded on paper. This results in **inconsistent records across departments** and **slow retrieval** when information needs to be shared. 
 
 This system provides a **centralized, secure, and digital Electronic Health Record (EHR) platform** that ensures:
 - Patient information is **consistent** across staff computers.
@@ -41,7 +41,7 @@ This system provides a **centralized, secure, and digital Electronic Health Reco
 - Access is **role-based** and secured with **two-factor authentication (2FA)** via email.
 - All changes made by users to patient records are **tracked with audit logs**, providing a secure history of edits and deletions.
 
-The platform is designed for **social adult day care office workers**, providing a streamlined and secure way to manage patient information efficiently.
+The platform is designed for **social adult day care office workers**, providing a streamlined and secure way to manage patient information efficiently. Patient data retrieval time was reduced from 30 seconds to 10 seconds per patient, achieving a 67% improvement in efficiency.
 
 **🎬 Demo Video**  
 [![Senior Connect Demo](https://img.youtube.com/vi/jjr79qNWJ4A/0.jpg)](https://www.youtube.com/watch?v=jjr79qNWJ4A)  
