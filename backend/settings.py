@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'backend.apps.core',
     'backend.apps.user',
     'backend.apps.audit',
+    'backend.apps.billing',
 ]
 
 AUTH_USER_MODEL = 'user.User'

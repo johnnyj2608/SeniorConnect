@@ -26,6 +26,7 @@ urlpatterns = [
     path('core/', include('backend.apps.core.urls')),
     path('user/', include('backend.apps.user.urls')),
     path('audit/', include('backend.apps.audit.urls')),
+    path('billing/', include('backend.apps.billing.urls')),
     path('common/', include('backend.apps.common.urls')),
     path('', TemplateView.as_view(template_name='index.html')),
 ]
